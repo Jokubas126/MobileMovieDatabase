@@ -11,16 +11,20 @@ import android.view.ViewGroup;
 
 import com.example.moviesearcher.R;
 
-public class AllMoviesListFragment extends Fragment {
+import butterknife.ButterKnife;
 
+public class MovieDetailsFragment extends Fragment {
 
-    public AllMoviesListFragment() { }
+    private int movieId;
+
+    public MovieDetailsFragment() { }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_all_movies_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
-
 }

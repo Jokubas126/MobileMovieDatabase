@@ -3,16 +3,26 @@ package com.example.moviesearcher.view;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.example.moviesearcher.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class TitleScreenFragment extends Fragment {
 
+    @BindView(R.id.title_screen_proceed_button)
+    ImageButton proceedButton;
 
     public TitleScreenFragment() {}
 
@@ -20,7 +30,19 @@ public class TitleScreenFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_title_screen, container, false);
+        View view = inflater.inflate(R.layout.fragment_title_screen, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        proceedButton.setOnClickListener(v -> onGoToMoviesList());
+    }
+
+    void onGoToMoviesList(){
+        NavDirections action = TitleScreenFragmentDirections.actionMoviesList();
+        Navigation.findNavController(proceedButton).navigate(action);
+    }
 }
