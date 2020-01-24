@@ -1,8 +1,10 @@
-package com.example.moviesearcher;
+package com.example.moviesearcher.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.moviesearcher.R;
 
 public class MainActivity extends AppCompatActivity {
 

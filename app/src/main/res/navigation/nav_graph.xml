@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/titleScreenFragment">
+
+    <fragment
+        android:id="@+id/titleScreenFragment"
+        android:name="com.example.moviesearcher.view.TitleScreenFragment"
+        android:label="fragment_title_screen"
+        tools:layout="@layout/fragment_title_screen">
+        <action
+            android:id="@+id/actionMoviesList"
+            app:destination="@id/allMoviesList" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/allMoviesList"
+        android:name="com.example.moviesearcher.view.AllMoviesListFragment"
+        android:label="fragment_all_movies_list"
+        tools:layout="@layout/fragment_all_movies_list">
+        <action
+            android:id="@+id/actionTypeList"
+            app:destination="@id/movieTypeList" />
+        <action
+            android:id="@+id/actionSettings"
+            app:destination="@id/settings" />
+        <action
+            android:id="@+id/action_allMoviesList_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/movieTypeList"
+        android:name="com.example.moviesearcher.view.MovieTypeListFragment"
+        android:label="fragment_movie_type_list"
+        tools:layout="@layout/fragment_movie_type_list">
+        <action
+            android:id="@+id/actionMoviesList"
+            app:destination="@id/allMoviesList" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settings"
+        android:name="com.example.moviesearcher.view.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/actionMoviesList"
+            app:destination="@id/allMoviesList" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieDetailFragment"
+        android:name="com.example.moviesearcher.view.MovieDetailFragment"
+        android:label="fragment_movie_detail"
+        tools:layout="@layout/fragment_movie_detail" >
+        <action
+            android:id="@+id/action_movieDetailFragment_to_allMoviesList"
+            app:destination="@id/allMoviesList" />
+    </fragment>
+</navigation>
