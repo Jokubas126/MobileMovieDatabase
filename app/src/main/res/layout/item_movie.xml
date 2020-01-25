@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/card_color">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardBackgroundColor="@android:color/transparent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/movie_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/avengers_cover"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="7dp"
+                        android:layout_marginEnd="7dp"
+                        android:layout_marginBottom="7dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/movie_title_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Avengers: Endgame"
+                            android:textAppearance="@style/TitleCard"/>
+
+                        <TextView
+                            android:id="@+id/movie_year_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2019"
+                            android:textAppearance="@style/ContentCard" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="IMDb: "
+                                android:textAppearance="@style/ContentCard"/>
+
+                            <TextView
+                                android:id="@+id/movie_score_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="8.7"
+                                android:textAppearance="@style/ContentCard" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/movie_genre_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Action, Sci-Fi, Comedy"
+                            android:textAppearance="@style/ContentCard" />
+
+                    </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+</LinearLayout>

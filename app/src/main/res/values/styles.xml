@@ -2,10 +2,41 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorBackground</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="TitleCard">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/cardTitle</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ContentCard">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/cardContent</item>
+    </style>
+
+    <style name="TitleDetails">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/cardTitle</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ContentDetails">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/cardContent</item>
+    </style>
+
+    <style name="DescriptionDetails">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/cardContent</item>
     </style>
 
 </resources>
