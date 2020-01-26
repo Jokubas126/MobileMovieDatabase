@@ -1,6 +1,5 @@
-package com.example.moviesearcher.model;
+package com.example.moviesearcher.view;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,17 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviesearcher.R;
+import com.example.moviesearcher.model.Movie;
 
 import java.util.List;
 
 public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>{
 
-    private final Context context;
-    private final List<Movie> movie;
+    private final List<Movie> movieList;
 
-    public MovieGridAdapter(Context context, List<Movie> movie) {
-        this.context = context;
-        this.movie = movie;
+    public MovieGridAdapter(List<Movie> movieList) {
+        this.movieList = movieList;
+    }
+
+    public void updateMovieList(List<Movie> movieList){
+        this.movieList.clear();
+        this.movieList.addAll(movieList);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -34,23 +38,23 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if(position%3 != 0)
-            holder.titleView.setText(movie.get(position).getTitle());
-        else holder.titleView.setText("Avengers: Infinity War");
+        holder.titleView.setText(movieList.get(position).getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return movie.size();
+        return movieList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
+        public View itemView;
         private ImageView movieCover;
         private TextView titleView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.itemView = itemView;
             titleView = itemView.findViewById(R.id.movie_title_view);
         }
     }

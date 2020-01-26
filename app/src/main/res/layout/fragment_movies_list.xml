@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/refresh_layout"
-    tools:context=".view.MoviesListFragment">
+    tools:context=".view.MoviesGridFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,12 +22,19 @@
             android:stretchMode="spacingWidthUniform"
             android:gravity="center"/>
 
+        <TextView
+            android:id="@+id/loading_error_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/loading_list_error"
+            />
+
         <ProgressBar
             android:id="@+id/progress_bar_loading_movie_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone"/>
+            android:layout_centerInParent="true" />
 
     </RelativeLayout>
 

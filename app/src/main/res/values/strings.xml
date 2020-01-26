@@ -3,6 +3,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="IMDb_beginning">IMDb: </string>
+    <string name="loading_list_error">Error occurred while loading a list of movies</string>
+    <string name="IMDb_beginning">IMDb:&#160;</string>
+    <string name="min_ending">&#160;min</string>
     <string name="description">Description:</string>
+    <string name="parenthesisStart">(</string>
+    <string name="parenthesisEnd">)</string>
 </resources>

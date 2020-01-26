@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/moviesList"
-        android:name="com.example.moviesearcher.view.MoviesListFragment"
+        android:name="com.example.moviesearcher.view.MoviesGridFragment"
         android:label="fragment_all_movies_list"
         tools:layout="@layout/fragment_movies_list">
         <action
