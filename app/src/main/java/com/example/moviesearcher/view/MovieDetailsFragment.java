@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.moviesearcher.R;
-import com.example.moviesearcher.model.Movie;
 import com.example.moviesearcher.viewmodel.MovieDetailsViewModel;
 
 import butterknife.BindView;
@@ -26,7 +24,7 @@ public class MovieDetailsFragment extends Fragment {
 
     @BindView(R.id.movie_image_view) ImageView movieImage;
     @BindView(R.id.movie_title_view) TextView titleView;
-    @BindView(R.id.movie_year_view) TextView yearView;
+    @BindView(R.id.movie_release_date_view) TextView yearView;
     @BindView(R.id.movie_language_view) TextView languageView;
     @BindView(R.id.movie_runtime_view) TextView runtimeView;
     @BindView(R.id.movie_score_view) TextView scoreView;

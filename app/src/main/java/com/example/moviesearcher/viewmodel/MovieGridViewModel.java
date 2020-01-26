@@ -8,7 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.moviesearcher.model.Movie;
-import com.example.moviesearcher.model.handlers.JsonMovieHandler;
+import com.example.moviesearcher.model.handlers.JsonHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,19 @@ public class MovieGridViewModel extends AndroidViewModel {
 
     public void refresh(){
 
-        
+        ArrayList<Movie> movieList = new ArrayList<>();
+        movies.setValue(movieList);
+        movieLoadError.setValue(false);
+        loading.setValue(true);
+
+        JsonHandler handler = new JsonHandler();
+        handler.getMoviesFromJson(movieArrayList -> {
+            Log.d("HandlerRequest", "onCreate: REQUEST FROM THE HANDLER MADE");
+            movieList.addAll(handler.getMovieList());
+            movies.setValue(movieList);
+            movieLoadError.setValue(false);
+            loading.setValue(false);
+        });
     }
 
     public MutableLiveData<List<Movie>> getMovies() {

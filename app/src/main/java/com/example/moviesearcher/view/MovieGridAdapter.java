@@ -18,11 +18,11 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
 
     private final List<Movie> movieList;
 
-    public MovieGridAdapter(List<Movie> movieList) {
+    MovieGridAdapter(List<Movie> movieList) {
         this.movieList = movieList;
     }
 
-    public void updateMovieList(List<Movie> movieList){
+    void updateMovieList(List<Movie> movieList){
         this.movieList.clear();
         this.movieList.addAll(movieList);
         notifyDataSetChanged();
@@ -39,6 +39,18 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.titleView.setText(movieList.get(position).getTitle());
+        holder.releaseDateView.setText(movieList.get(position).getReleaseDate());
+        holder.IMDbScoreView.setText(movieList.get(position).getIMDbScore());
+        holder.movieCoverImage.setImageBitmap(movieList.get(position).getCoverImage());
+        StringBuilder genreString = null;
+        for (String genre : movieList.get(position).getGenres()){
+            if (genreString != null){
+                genreString.append(", ").append(genre);
+            } else {
+                genreString = genre == null ? null : new StringBuilder(genre);
+            }
+        }
+        holder.genresView.setText(genreString == null ? null : genreString.toString());
     }
 
     @Override
@@ -48,14 +60,21 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        public View itemView;
-        private ImageView movieCover;
+        View itemView;
+        private ImageView movieCoverImage;
         private TextView titleView;
+        private TextView releaseDateView;
+        private TextView IMDbScoreView;
+        private TextView genresView;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.itemView = itemView;
+            movieCoverImage = itemView.findViewById(R.id.movie_image_view);
             titleView = itemView.findViewById(R.id.movie_title_view);
+            releaseDateView = itemView.findViewById(R.id.movie_release_date_view);
+            IMDbScoreView = itemView.findViewById(R.id.movie_score_view);
+            genresView = itemView.findViewById(R.id.movie_genre_view);
         }
     }
 }

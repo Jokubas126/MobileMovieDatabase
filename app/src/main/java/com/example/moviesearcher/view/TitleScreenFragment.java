@@ -41,7 +41,8 @@ public class TitleScreenFragment extends Fragment {
         proceedButton.setOnClickListener(v -> onGoToMoviesList());
     }
 
-    void onGoToMoviesList(){
+
+    private void onGoToMoviesList(){
         NavDirections action = TitleScreenFragmentDirections.actionMoviesList();
         Navigation.findNavController(proceedButton).navigate(action);
     }

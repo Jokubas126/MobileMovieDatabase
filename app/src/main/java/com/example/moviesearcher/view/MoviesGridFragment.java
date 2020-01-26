@@ -7,13 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.moviesearcher.R;
-import com.example.moviesearcher.model.Movie;
-import com.example.moviesearcher.model.handlers.JsonMovieHandler;
-import com.example.moviesearcher.model.handlers.MovieListAsyncResponse;
 import com.example.moviesearcher.viewmodel.MovieGridViewModel;
 
 import java.util.ArrayList;

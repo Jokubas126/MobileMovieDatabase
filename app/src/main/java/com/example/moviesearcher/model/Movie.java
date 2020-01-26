@@ -1,10 +1,13 @@
 package com.example.moviesearcher.model;
 
+import android.graphics.Bitmap;
+
 import java.util.List;
 
 public class Movie {
 
     private int id = 0;
+    private Bitmap coverImage;
     private String title;
     private String releaseDate;
     private String IMDbScore;
@@ -20,6 +23,14 @@ public class Movie {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Bitmap getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(Bitmap coverImage) {
+        this.coverImage = coverImage;
     }
 
     public String getTitle() {
