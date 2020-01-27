@@ -8,7 +8,7 @@
     <color name="cardTitle">#3C3C3C</color>
     <color name="cardContent">#686868</color>
 
-    <color name="detailsTop">#3D3D3D</color>
+    <color name="detailsTop">#D21B1B1B</color>
     <color name="detailsTitle">#FFFFFF</color>
     <color name="detailsContent">#C2C2C2</color>
 </resources>

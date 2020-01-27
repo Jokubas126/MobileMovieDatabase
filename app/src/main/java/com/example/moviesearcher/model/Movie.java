@@ -8,6 +8,7 @@ public class Movie {
 
     private int id = 0;
     private Bitmap posterImage;
+    private Bitmap backdropImage;
     private String title;
     private String releaseDate;
     private String score;
@@ -31,6 +32,14 @@ public class Movie {
 
     public void setPosterImage(Bitmap posterImage) {
         this.posterImage = posterImage;
+    }
+
+    public Bitmap getBackdropImage() {
+        return backdropImage;
+    }
+
+    public void setBackdropImage(Bitmap backdropImage) {
+        this.backdropImage = backdropImage;
     }
 
     public String getTitle() {

@@ -24,7 +24,7 @@ public class JsonHandler {
     private HashMap<Integer, String> genres = new HashMap<>();
     private Movie movie = new Movie();
 
-    public List<Movie> getMoviesFromJson(final MovieListAsyncResponse callback){
+    public List<Movie> getMovieList(final MovieListAsyncResponse callback){
         genres = getGenres(genresMap -> genres.putAll(genresMap));
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, JsonUtil.POPULAR_MOVIE_LIST_URL, null,
                 response -> {
@@ -38,11 +38,11 @@ public class JsonHandler {
                                 try{
                                     movie.setPosterImage(
                                             BitmapFactory.decodeStream(
-                                                    new URL(JsonUtil.getInstance().getImageUrl(jsonObject.getString("poster_path")))
+                                                    new URL(JsonUtil.getInstance().getPosterImageUrl(jsonObject.getString("poster_path")))
                                                             .openStream()));
                                 } catch (IOException | JSONException e){
                                     e.printStackTrace();
-                                    Log.d("JSONArrayRequest", "getMoviesFromJson: EXCEPTION GETTING POSTER");
+                                    Log.d("JSONArrayRequest", "getMovieList: EXCEPTION GETTING POSTER");
                                 }
                             });
                             thread.start();
@@ -61,7 +61,7 @@ public class JsonHandler {
 
                             try {
                                 thread.join();
-                            } catch (InterruptedException e) { Log.d("JSONArrayRequest", "getMoviesFromJson: EXCEPTION JOINING THREADS"); }
+                            } catch (InterruptedException e) { Log.d("JSONArrayRequest", "getMovieList: EXCEPTION JOINING THREADS"); }
                             movieList.add(movie);
                         }
 
@@ -69,9 +69,7 @@ public class JsonHandler {
                         e.printStackTrace();
                     }
                     if (callback != null) callback.processFinished((ArrayList<Movie>) movieList);
-            }, error -> {
-            Log.d("JSONArrayRequest", "getMoviesFromJson: ERROR OCCURRED");
-            });
+            }, error -> Log.d("JSONArrayRequest", "getMovieList: ERROR OCCURRED"));
         ApplicationRequestHandler.getInstance().addToRequestQueue(jsonObjectRequest);
         return movieList;
     }
@@ -102,18 +100,31 @@ public class JsonHandler {
                 JsonUtil.getInstance().getMovieDetailsURL(movieId), null,
                 response -> {
                     try {
-                        Thread thread = new Thread(() -> {
+                        Thread threadPoster = new Thread(() -> {
                             try {
                                 movie.setPosterImage(
                                         BitmapFactory.decodeStream(
-                                                new URL(JsonUtil.getInstance().getImageUrl(response.getString("poster_path")))
+                                                new URL(JsonUtil.getInstance().getPosterImageUrl(response.getString("poster_path")))
                                                         .openStream()));
                             } catch (IOException | JSONException e) {
                                 Log.d("JSONArrayRequest", "getMovieDetails: EXCEPTION GETTING POSTER");
                                 e.printStackTrace();
                             }
                         });
-                        thread.start();
+                        threadPoster.start();
+
+                        Thread threadBackdrop = new Thread(() -> {
+                            try {
+                                movie.setBackdropImage(
+                                        BitmapFactory.decodeStream(
+                                                new URL(JsonUtil.getInstance().getBackdropImageUrl(response.getString("backdrop_path")))
+                                                        .openStream()));
+                            } catch (IOException | JSONException e) {
+                                Log.d("JSONArrayRequest", "getMovieDetails: EXCEPTION GETTING POSTER");
+                                e.printStackTrace();
+                            }
+                        });
+                        threadBackdrop.start();
 
                         movie.setId(movieId);
                         movie.setTitle(response.getString("title"));
@@ -138,8 +149,9 @@ public class JsonHandler {
                         movie.setDescription(response.getString("overview"));
 
                         try {
-                            thread.join();
-                        } catch (InterruptedException e) { Log.d("JSONArrayRequest", "getMoviesFromJson: EXCEPTION JOINING THREADS"); }
+                            threadPoster.join();
+                            threadBackdrop.join();
+                        } catch (InterruptedException e) { Log.d("JSONArrayRequest", "getMovieDetails: EXCEPTION JOINING THREADS"); }
                     } catch (JSONException e){
                         e.printStackTrace();
                         Log.d("JSONArrayRequest", "getMovieDetails: EXCEPTION OCCURRED");

@@ -31,7 +31,7 @@ public class MovieGridViewModel extends AndroidViewModel {
         loading.setValue(true);
 
         JsonHandler handler = new JsonHandler();
-        handler.getMoviesFromJson(movieArrayList -> {
+        handler.getMovieList(movieArrayList -> {
             Log.d("HandlerRequest", "onCreate: REQUEST FROM THE HANDLER MADE");
             movieList.addAll(handler.getMovieList());
             movies.setValue(movieList);

@@ -11,17 +11,18 @@ import com.example.moviesearcher.view.MovieDetailsFragmentArgs;
 
 public class MovieDetailsViewModel extends ViewModel {
 
-    private MutableLiveData<Movie> currentMovie = new MutableLiveData<Movie>();
-
+    private MutableLiveData<Movie> currentMovie = new MutableLiveData<>();
+    private MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
     public void fetch(Bundle arguments){
         Movie movie = new Movie();
-
+        loading.setValue(true);
         new Thread(() -> {
             if (arguments != null){
                 movie.setId(MovieDetailsFragmentArgs.fromBundle(arguments).getMovieId());
                 new JsonHandler().getMovieDetails(movie.getId(), retrievedMovie -> {
                     currentMovie.setValue(retrievedMovie);
+                    loading.setValue(false);
                 });
             }
         }).start();
@@ -29,5 +30,9 @@ public class MovieDetailsViewModel extends ViewModel {
 
     public MutableLiveData<Movie> getCurrentMovie() {
         return currentMovie;
+    }
+
+    public MutableLiveData<Boolean> getLoading() {
+        return loading;
     }
 }
