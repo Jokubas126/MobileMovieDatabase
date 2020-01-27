@@ -23,7 +23,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/movie_image_view"
+                    android:id="@+id/movie_poster_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -57,17 +57,17 @@
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="IMDb: "
-                                android:textAppearance="@style/ContentCard"/>
-
-                            <TextView
                                 android:id="@+id/movie_score_view"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="8.7"
                                 android:textAppearance="@style/ContentCard" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/score_ending"
+                                android:textAppearance="@style/ContentCard"/>
 
                         </LinearLayout>
 

@@ -7,12 +7,12 @@ import java.util.List;
 public class Movie {
 
     private int id = 0;
-    private Bitmap coverImage;
+    private Bitmap posterImage;
     private String title;
     private String releaseDate;
-    private String IMDbScore;
+    private String score;
     private List<String> genres;
-    private String language;
+    private List<String> productionCountries;
     private int runtime;
     private String description;
     private boolean isAdult;
@@ -25,12 +25,12 @@ public class Movie {
         this.id = id;
     }
 
-    public Bitmap getCoverImage() {
-        return coverImage;
+    public Bitmap getPosterImage() {
+        return posterImage;
     }
 
-    public void setCoverImage(Bitmap coverImage) {
-        this.coverImage = coverImage;
+    public void setPosterImage(Bitmap posterImage) {
+        this.posterImage = posterImage;
     }
 
     public String getTitle() {
@@ -49,12 +49,12 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-    public String getIMDbScore() {
-        return IMDbScore;
+    public String getScore() {
+        return score;
     }
 
-    public void setIMDbScore(String IMDbScore) {
-        this.IMDbScore = IMDbScore;
+    public void setScore(String score) {
+        this.score = score;
     }
 
     public List<String> getGenres() {
@@ -65,12 +65,12 @@ public class Movie {
         this.genres = genres;
     }
 
-    public String getLanguage() {
-        return language;
+    public List<String> getProductionCountries() {
+        return productionCountries;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setProductionCountries(List<String> productionCountries) {
+        this.productionCountries = productionCountries;
     }
 
     public int getRuntime() {

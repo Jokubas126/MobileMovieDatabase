@@ -12,9 +12,7 @@
         tools:layout="@layout/fragment_title_screen">
         <action
             android:id="@+id/actionMoviesList"
-            app:destination="@id/moviesList"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:destination="@id/moviesList" />
     </fragment>
 
     <fragment

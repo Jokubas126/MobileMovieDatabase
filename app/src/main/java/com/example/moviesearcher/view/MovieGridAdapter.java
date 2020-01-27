@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviesearcher.R;
@@ -40,8 +42,8 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.titleView.setText(movieList.get(position).getTitle());
         holder.releaseDateView.setText(movieList.get(position).getReleaseDate());
-        holder.IMDbScoreView.setText(movieList.get(position).getIMDbScore());
-        holder.movieCoverImage.setImageBitmap(movieList.get(position).getCoverImage());
+        holder.IMDbScoreView.setText(movieList.get(position).getScore());
+        holder.movieCoverImage.setImageBitmap(movieList.get(position).getPosterImage());
         StringBuilder genreString = null;
         for (String genre : movieList.get(position).getGenres()){
             if (genreString != null){
@@ -70,11 +72,18 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.itemView = itemView;
-            movieCoverImage = itemView.findViewById(R.id.movie_image_view);
+            movieCoverImage = itemView.findViewById(R.id.movie_poster_view);
             titleView = itemView.findViewById(R.id.movie_title_view);
             releaseDateView = itemView.findViewById(R.id.movie_release_date_view);
             IMDbScoreView = itemView.findViewById(R.id.movie_score_view);
             genresView = itemView.findViewById(R.id.movie_genre_view);
+
+            this.itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                int movieId = movieList.get(position).getId();
+                NavDirections action = MoviesGridFragmentDirections.actionMovieDetails(movieId);
+                Navigation.findNavController(itemView).navigate(action);
+            });
         }
     }
 }

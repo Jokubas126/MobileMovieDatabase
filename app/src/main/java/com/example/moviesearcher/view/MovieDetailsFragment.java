@@ -22,10 +22,10 @@ import butterknife.ButterKnife;
 
 public class MovieDetailsFragment extends Fragment {
 
-    @BindView(R.id.movie_image_view) ImageView movieImage;
+    @BindView(R.id.movie_poster_view) ImageView moviePosterView;
     @BindView(R.id.movie_title_view) TextView titleView;
     @BindView(R.id.movie_release_date_view) TextView yearView;
-    @BindView(R.id.movie_language_view) TextView languageView;
+    @BindView(R.id.movie_countries_view) TextView countriesView;
     @BindView(R.id.movie_runtime_view) TextView runtimeView;
     @BindView(R.id.movie_score_view) TextView scoreView;
     @BindView(R.id.movie_genre_view) TextView genreView;
@@ -49,29 +49,37 @@ public class MovieDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel.class);
-        viewModel.fetch();
+        viewModel.fetch(getArguments());
         observeViewModel();
     }
 
     private void observeViewModel(){
-        viewModel.getMovie().observe(this, movie -> {
-            if (movie != null){
-                titleView.setText(movie.getTitle());
-                yearView.setText(movie.getReleaseDate());
-                languageView.setText(movie.getLanguage());
-                String runtimeText = String.valueOf(movie.getRuntime()) + getResources().getString(R.string.min_ending);
-                runtimeView.setText(runtimeText);
-                scoreView.setText(movie.getIMDbScore());
-                for(String genre : movie.getGenres()){
-                    if (genreView.getText() != null && !genreView.getText().toString().equals("")){
-                        String genreText = genreView.getText().toString() + ", " + genre;
-                        genreView.setText(genreText);
-                    } else {
-                        genreView.setText(genre);
+        viewModel.getCurrentMovie().observe(this, movie -> {
+                if (movie != null){
+                    titleView.setText(movie.getTitle());
+                    yearView.setText(movie.getReleaseDate());
+                    for(String country : movie.getProductionCountries()) {
+                        if (countriesView.getText() != null && !countriesView.getText().toString().equals("")) {
+                            String countryText = countriesView.getText().toString() + ", " + country;
+                            countriesView.setText(countryText);
+                        } else {
+                            countriesView.setText(country);
+                        }
                     }
+                    String runtimeText = movie.getRuntime() + getResources().getString(R.string.min_ending);
+                    runtimeView.setText(runtimeText);
+                    scoreView.setText(movie.getScore());
+                    for(String genre : movie.getGenres()){
+                        if (genreView.getText() != null && !genreView.getText().toString().equals("")){
+                            String genreText = genreView.getText().toString() + ", " + genre;
+                            genreView.setText(genreText);
+                        } else {
+                            genreView.setText(genre);
+                        }
+                    }
+                    descriptionView.setText(movie.getDescription());
+                    moviePosterView.setImageBitmap(movie.getPosterImage());
                 }
-                descriptionView.setText(movie.getDescription());
-            }
         });
     }
 }
