@@ -1,4 +1,4 @@
-package com.example.moviesearcher.view;
+package com.example.moviesearcher.view.details;
 
 
 import android.os.Bundle;
@@ -8,23 +8,31 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.moviesearcher.R;
+import com.example.moviesearcher.model.util.FragmentInflaterUtil;
 import com.example.moviesearcher.viewmodel.MovieDetailsViewModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MovieDetailsFragment extends Fragment {
+public class MovieDetailsFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.information_layout) LinearLayout informationLayout;
+    @BindView(R.id.information_layout) RelativeLayout informationLayout;
     @BindView(R.id.movie_poster_view) ImageView moviePosterView;
     @BindView(R.id.backdrop_image_view) ImageView backdropImageView;
     @BindView(R.id.movie_title_view) TextView titleView;
@@ -33,8 +41,9 @@ public class MovieDetailsFragment extends Fragment {
     @BindView(R.id.movie_runtime_view) TextView runtimeView;
     @BindView(R.id.movie_score_view) TextView scoreView;
     @BindView(R.id.movie_genre_view) TextView genreView;
-    @BindView(R.id.movie_description_view) TextView descriptionView;
     @BindView(R.id.progress_bar_loading_details) ProgressBar progressBar;
+
+    @BindView(R.id.details_bottom_navigation) BottomNavigationView bottomNavigationView;
 
     private MovieDetailsViewModel viewModel;
 
@@ -51,6 +60,8 @@ public class MovieDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         viewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel.class);
         viewModel.fetch(getArguments());
@@ -84,7 +95,10 @@ public class MovieDetailsFragment extends Fragment {
                             genreView.setText(genre);
                         }
                     }
-                    descriptionView.setText(movie.getDescription());
+                    Bundle args = new Bundle();
+                    args.putString("description", movie.getDescription());
+                    FragmentInflaterUtil.replaceFragment(getFragmentManager(), new DescriptionFragment(),
+                            R.id.movie_details_container, args);
                 }
         });
 
@@ -95,5 +109,34 @@ public class MovieDetailsFragment extends Fragment {
                     informationLayout.setVisibility(View.GONE);
             }
         });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.description_menu_item:
+                Log.d("DETAILS VIEW", "onNavigationItemSelected: DESCRIPTION SELECTED");
+                Bundle argsDescr = new Bundle();
+                argsDescr.putString("description", Objects.requireNonNull(viewModel.getCurrentMovie().getValue()).getDescription());
+                FragmentInflaterUtil.replaceFragment(getFragmentManager(), new DescriptionFragment(),
+                        R.id.movie_details_container, argsDescr);
+                break;
+
+            case R.id.videos_menu_item:
+                Log.d("DETAILS VIEW", "onNavigationItemSelected: VIDEOS SELECTED");
+                FragmentInflaterUtil.replaceFragment(getFragmentManager(), new VideosFragment(),
+                        R.id.movie_details_container);
+                break;
+
+            case R.id.cast_menu_item:
+                Log.d("DETAILS VIEW", "onNavigationItemSelected: CAST SELECTED");
+                Bundle argsCast = new Bundle();
+                argsCast.putInt("movieId", Objects.requireNonNull(viewModel.getCurrentMovie().getValue()).getId());
+                FragmentInflaterUtil.replaceFragment(getFragmentManager(), new CastFragment(),
+                        R.id.movie_details_container, argsCast);
+                break;
+        }
+
+        return false;
     }
 }
