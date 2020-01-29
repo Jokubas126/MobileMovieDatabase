@@ -12,17 +12,14 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviesearcher.R;
-import com.example.moviesearcher.model.Movie;
+import com.example.moviesearcher.model.data.Movie;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>{
 
-    private final List<Movie> movieList;
-
-    MovieGridAdapter(List<Movie> movieList) {
-        this.movieList = movieList;
-    }
+    private final List<Movie> movieList = new ArrayList<>();
 
     void updateMovieList(List<Movie> movieList){
         this.movieList.clear();

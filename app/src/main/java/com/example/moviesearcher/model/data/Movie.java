@@ -1,10 +1,10 @@
-package com.example.moviesearcher.model;
+package com.example.moviesearcher.model.data;
 
 import android.graphics.Bitmap;
 
 import java.util.List;
 
-public class Movie {
+public class Movie{
 
     private int id = 0;
     private Bitmap posterImage;

@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 public class MoviesGridFragment extends Fragment {
 
     private MovieGridViewModel viewModel;
-    private MovieGridAdapter gridAdapter = new MovieGridAdapter(new ArrayList<>());
+    private MovieGridAdapter gridAdapter = new MovieGridAdapter();
 
     @BindView(R.id.movie_grid_view)
     RecyclerView recyclerView;
@@ -46,9 +46,7 @@ public class MoviesGridFragment extends Fragment {
     public MoviesGridFragment() { }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movies_list, container, false);
         ButterKnife.bind(this, view);
         return view;

@@ -1,9 +1,9 @@
 package com.example.moviesearcher.model.handlers;
 
-import com.example.moviesearcher.model.Movie;
+import com.example.moviesearcher.model.data.Movie;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface MovieListAsyncResponse {
-    void processFinished(ArrayList<Movie> movieArrayList);
+    void processFinished(List<Movie> movieList);
 }

@@ -5,9 +5,9 @@ import android.os.Bundle;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.moviesearcher.model.Movie;
+import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.handlers.JsonHandler;
-import com.example.moviesearcher.view.MovieDetailsFragmentArgs;
+import com.example.moviesearcher.view.details.MovieDetailsFragmentArgs;
 
 public class MovieDetailsViewModel extends ViewModel {
 
@@ -15,17 +15,18 @@ public class MovieDetailsViewModel extends ViewModel {
     private MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
     public void fetch(Bundle arguments){
-        Movie movie = new Movie();
         loading.setValue(true);
         new Thread(() -> {
-            if (arguments != null){
+            if (arguments != null) {
+                Movie movie = new Movie();
                 movie.setId(MovieDetailsFragmentArgs.fromBundle(arguments).getMovieId());
                 new JsonHandler().getMovieDetails(movie.getId(), retrievedMovie -> {
-                    currentMovie.setValue(retrievedMovie);
+                    currentMovie.setValue((Movie) retrievedMovie);
                     loading.setValue(false);
                 });
             }
         }).start();
+
     }
 
     public MutableLiveData<Movie> getCurrentMovie() {

@@ -5,7 +5,8 @@ import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.moviesearcher.model.Movie;
+import com.example.moviesearcher.model.data.Movie;
+import com.example.moviesearcher.model.data.Person;
 import com.example.moviesearcher.model.util.JsonUtil;
 
 import org.json.JSONArray;
@@ -20,13 +21,13 @@ import java.util.List;
 
 public class JsonHandler {
 
-    private List<Movie> movieList = new ArrayList<>();
     private HashMap<Integer, String> genres = new HashMap<>();
-    private Movie movie = new Movie();
 
-    public List<Movie> getMovieList(final MovieListAsyncResponse callback){
+    public void getMovieList(final MovieListAsyncResponse callback){
+        new Thread(() -> {
+        List<Movie> movieList = new ArrayList<>();
         genres = getGenres(genresMap -> genres.putAll(genresMap));
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, JsonUtil.POPULAR_MOVIE_LIST_URL, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, JsonUtil.POPULAR_MOVIE_LIST_URL, null,
                 response -> {
                     try{
                         JSONArray jsonArray = response.getJSONArray("results");
@@ -68,14 +69,14 @@ public class JsonHandler {
                     }catch (JSONException e){
                         e.printStackTrace();
                     }
-                    if (callback != null) callback.processFinished((ArrayList<Movie>) movieList);
+                    if (callback != null) callback.processFinished(movieList);
             }, error -> Log.d("JSONArrayRequest", "getMovieList: ERROR OCCURRED"));
-        ApplicationRequestHandler.getInstance().addToRequestQueue(jsonObjectRequest);
-        return movieList;
+        ApplicationRequestHandler.getInstance().addToRequestQueue(request);
+        }).start();
     }
 
     private HashMap<Integer, String> getGenres( final GenresMapAsyncResponse callback){
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, JsonUtil.MOVIE_GENRES_URL, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, JsonUtil.MOVIE_GENRES_URL, null,
                 response -> {
                     try {
                         JSONArray array = response.getJSONArray("genres");
@@ -91,13 +92,15 @@ public class JsonHandler {
                     if (callback != null) callback.processFinished(genres);
                 }, error -> Log.d("JSONArrayRequest", "getGenres: ERROR OCCURRED"));
 
-        ApplicationRequestHandler.getInstance().addToRequestQueue(jsonObjectRequest);
+        ApplicationRequestHandler.getInstance().addToRequestQueue(request);
         return genres;
     }
 
-    public Movie getMovieDetails(int movieId, final MovieDetailsAsyncResponse callback){
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                JsonUtil.getInstance().getMovieDetailsURL(movieId), null,
+    public void getMovieDetails(int movieId, final ObjectAsyncResponse callback){
+        new Thread(() -> {
+        Movie movie = new Movie();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
+                JsonUtil.getInstance().getMovieDetailsUrl(movieId), null,
                 response -> {
                     try {
                         Thread threadPoster = new Thread(() -> {
@@ -160,11 +163,71 @@ public class JsonHandler {
                 }, error -> {
                     Log.d("JSONArrayRequest", "getMovieDetails: ERROR OCCURRED");
                 });
-        ApplicationRequestHandler.getInstance().addToRequestQueue(jsonObjectRequest);
-        return movie;
+        ApplicationRequestHandler.getInstance().addToRequestQueue(request);
+        }).start();
     }
 
-    public List<Movie> getMovieList() {
-        return movieList;
+    public void getPeople(int movieId, PersonListAsyncResponse callback) {
+        Thread methodThread = new Thread(() -> {
+        List<Person> cast = new ArrayList<>();
+        List<Person> crew = new ArrayList<>();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, JsonUtil.getInstance().getPeopleUrl(movieId), null,
+                response -> {
+                    try {
+                        JSONArray castArray = response.getJSONArray("cast");
+                        for (int i = 0; i < castArray.length(); i++){
+                            if (i > 9)
+                                break;
+                            Person person = new Person();
+                            JSONObject object = castArray.getJSONObject(i);
+
+                            Thread thread = new Thread(() -> {
+                                try {
+                                    person.setProfileImage(BitmapFactory.decodeStream(
+                                            new URL(JsonUtil.getInstance().getProfileImageUrl(
+                                                    object.getString("profile_path"))).openStream()));
+                                } catch (JSONException | IOException e) { e.printStackTrace(); }
+                            });
+                            thread.start();
+
+                            person.setName(object.getString("name"));
+                            person.setPosition(object.getString("character"));
+
+                            thread.join();
+                            cast.add(person);
+                        }
+                        JSONArray crewArray = response.getJSONArray("crew");
+                        for (int i = 0; i < crewArray.length(); i++){
+                            if (i > 9)
+                                break;
+                            Person person = new Person();
+                            JSONObject object = crewArray.getJSONObject(i);
+
+                            Thread thread = new Thread(() -> {
+                                try {
+                                    person.setProfileImage(BitmapFactory.decodeStream(
+                                            new URL(JsonUtil.getInstance().getProfileImageUrl(
+                                                    object.getString("profile_path"))).openStream()));
+                                } catch (JSONException | IOException e) { e.printStackTrace(); }
+                            });
+                            thread.start();
+
+                            person.setName(object.getString("name"));
+                            person.setPosition(object.getString("job"));
+
+                            thread.join();
+                            crew.add(person);
+                        }
+                    } catch (JSONException e) { e.printStackTrace(); }
+                    if (callback != null) callback.processFinished(cast, crew);
+                }, error -> {});
+        ApplicationRequestHandler.getInstance().addToRequestQueue(request);
+        });
+        methodThread.start();
+        try {
+            methodThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

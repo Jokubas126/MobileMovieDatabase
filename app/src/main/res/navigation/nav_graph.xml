@@ -52,7 +52,7 @@
     </fragment>
     <fragment
         android:id="@+id/movieDetails"
-        android:name="com.example.moviesearcher.view.MovieDetailsFragment"
+        android:name="com.example.moviesearcher.view.details.MovieDetailsFragment"
         android:label="fragment_movie_details"
         tools:layout="@layout/fragment_movie_details">
         <action

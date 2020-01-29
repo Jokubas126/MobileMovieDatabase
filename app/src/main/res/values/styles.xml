@@ -37,4 +37,16 @@
         <item name="android:textColor">@color/cardContent</item>
     </style>
 
+    <style name="PersonName">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/personDetails</item>
+    </style>
+
+    <style name="PersonPosition">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/personDetails</item>
+    </style>
+
 </resources>
