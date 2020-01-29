@@ -2,6 +2,8 @@ package com.example.moviesearcher.view.details;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -15,12 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.model.data.Person;
+import com.example.moviesearcher.model.util.JsonUtil;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder> {
 
-    final Handler handler = new Handler();
     private Activity activity;
     private final List<Person> people;
 
@@ -46,12 +50,21 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.nameView.setText(people.get(position).getName());
         holder.positionView.setText(people.get(position).getPosition());
-        if (people.get(position).getProfileImage() != null)
-            holder.imageView.setImageBitmap(people.get(position).getProfileImage());
-        else {
-            holder.imageView.setImageResource(R.drawable.blank_profile_picture);
+        if (people.get(position).getProfileImageUrl() != null){
+            Thread thread = new Thread(() -> {
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeStream(new URL(JsonUtil.getInstance().getProfileImageUrl(people.get(position).getProfileImageUrl())).openStream());
+                        activity.runOnUiThread(() -> holder.imageView.setImageBitmap(bitmap));
+                } catch (IOException e) { e.printStackTrace(); }
+            });
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) { e.printStackTrace(); }
         }
     }
+
+
 
     @Override
     public int getItemCount() {

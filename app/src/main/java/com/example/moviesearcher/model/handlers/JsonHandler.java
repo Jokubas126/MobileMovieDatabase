@@ -181,19 +181,11 @@ public class JsonHandler {
                             Person person = new Person();
                             JSONObject object = castArray.getJSONObject(i);
 
-                            Thread thread = new Thread(() -> {
-                                try {
-                                    person.setProfileImage(BitmapFactory.decodeStream(
-                                            new URL(JsonUtil.getInstance().getProfileImageUrl(
-                                                    object.getString("profile_path"))).openStream()));
-                                } catch (JSONException | IOException e) { e.printStackTrace(); }
-                            });
-                            thread.start();
-
                             person.setName(object.getString("name"));
                             person.setPosition(object.getString("character"));
-
-                            thread.join();
+                            person.setProfileImageUrl(object.getString("profile_path"));
+                            if (person.getProfileImageUrl().equals("null"))
+                                person.setProfileImageUrl(null);
                             cast.add(person);
                         }
                         JSONArray crewArray = response.getJSONArray("crew");
@@ -202,20 +194,11 @@ public class JsonHandler {
                                 break;
                             Person person = new Person();
                             JSONObject object = crewArray.getJSONObject(i);
-
-                            Thread thread = new Thread(() -> {
-                                try {
-                                    person.setProfileImage(BitmapFactory.decodeStream(
-                                            new URL(JsonUtil.getInstance().getProfileImageUrl(
-                                                    object.getString("profile_path"))).openStream()));
-                                } catch (JSONException | IOException e) { e.printStackTrace(); }
-                            });
-                            thread.start();
-
                             person.setName(object.getString("name"));
                             person.setPosition(object.getString("job"));
-
-                            thread.join();
+                            person.setProfileImageUrl(object.getString("profile_path"));
+                            if (person.getProfileImageUrl().equals("null"))
+                                person.setProfileImageUrl(null);
                             crew.add(person);
                         }
                     } catch (JSONException e) { e.printStackTrace(); }
@@ -226,8 +209,6 @@ public class JsonHandler {
         methodThread.start();
         try {
             methodThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        } catch (InterruptedException e) { e.printStackTrace(); }
     }
 }

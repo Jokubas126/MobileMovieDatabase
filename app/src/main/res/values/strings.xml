@@ -9,4 +9,6 @@
     <string name="description">Description:</string>
     <string name="parenthesisStart">(</string>
     <string name="parenthesisEnd">)</string>
+    <string name="main_cast">Main cast:</string>
+    <string name="main_crew">Main crew:</string>
 </resources>

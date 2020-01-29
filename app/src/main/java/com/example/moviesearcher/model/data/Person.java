@@ -1,18 +1,10 @@
 package com.example.moviesearcher.model.data;
 
-import android.graphics.Bitmap;
-
 public class Person{
 
-    private Bitmap profileImage;
     private String name;
     private String position;
-
-    public Bitmap getProfileImage() { return profileImage; }
-
-    public void setProfileImage(Bitmap profileImage) {
-        this.profileImage = profileImage;
-    }
+    private String profileImageUrl;
 
     public String getName() {
         return name;
@@ -29,4 +21,8 @@ public class Person{
     public void setPosition(String position) {
         this.position = position;
     }
+
+    public String getProfileImageUrl() { return profileImageUrl; }
+
+    public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
 }

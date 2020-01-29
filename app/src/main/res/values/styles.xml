@@ -31,6 +31,12 @@
         <item name="android:textColor">@color/detailsContent</item>
     </style>
 
+    <style name="SectionTitleDetails">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
     <style name="DescriptionDetails">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>

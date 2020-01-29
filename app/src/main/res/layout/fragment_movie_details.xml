@@ -138,21 +138,19 @@
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--<ScrollView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/details_bottom_navigation"
             android:layout_below="@id/main_details_layout"
-            android:scrollbars="vertical">-->
+            android:scrollbars="vertical">
 
             <LinearLayout
                 android:id="@+id/movie_details_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/details_bottom_navigation"
-                android:layout_below="@id/main_details_layout"
                 android:orientation="vertical"/>
-        <!--</ScrollView>-->
+        </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/details_bottom_navigation"

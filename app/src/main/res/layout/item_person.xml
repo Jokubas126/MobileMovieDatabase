@@ -20,7 +20,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="3"
                 android:scaleType="centerCrop"
-                android:src="@drawable/cast"/>
+                android:src="@drawable/blank_profile_picture"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -34,14 +34,12 @@
                     android:id="@+id/person_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Brad Pitt"
                     android:textAppearance="@style/PersonName"/>
 
                 <TextView
                     android:id="@+id/person_position"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Roy McBride"
                     android:textAppearance="@style/PersonPosition" />
 
             </LinearLayout>

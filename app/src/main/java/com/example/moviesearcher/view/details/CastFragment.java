@@ -35,11 +35,9 @@ public class CastFragment extends Fragment {
     @BindView(R.id.cast_recycler_view) RecyclerView castView;
     @BindView(R.id.crew_recycler_view) RecyclerView crewView;
 
-    private PeopleAdapter castAdapter = new PeopleAdapter(getActivity(), new ArrayList<>());
-    //private PeopleAdapter crewAdapter = new PeopleAdapter(new ArrayList<>());
+    private PeopleAdapter castAdapter;
+    private PeopleAdapter crewAdapter;
     private CastViewModel viewModel;
-
-    final Handler handler = new Handler();
 
     @Nullable
     @Override
@@ -56,17 +54,18 @@ public class CastFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(CastViewModel.class);
         viewModel.fetch(getArguments());
 
-
+        castAdapter = new PeopleAdapter(getActivity(), new ArrayList<>());
         castView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         castView.setAdapter(castAdapter);
 
-        /*crewView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        crewView.setAdapter(crewAdapter);*/
+        crewAdapter = new PeopleAdapter(getActivity(), new ArrayList<>());
+        crewView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        crewView.setAdapter(crewAdapter);
 
         observeViewModel();
     }
 
-    private void observeViewModel(){
+    private synchronized void observeViewModel(){
         viewModel.getCast().observe(this, cast -> {
             if (cast != null) {
                 castLayout.setVisibility(View.VISIBLE);
@@ -75,13 +74,13 @@ public class CastFragment extends Fragment {
             }
         });
 
-        /*viewModel.getCrew().observe(this, crew -> {
+        viewModel.getCrew().observe(this, crew -> {
             if (crew != null){
                 crewLayout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
                 crewAdapter.updatePeopleList(crew);
             }
-        });*/
+        });
 
         viewModel.getLoading().observe(this, isLoading -> {
             if(isLoading != null){
@@ -92,6 +91,5 @@ public class CastFragment extends Fragment {
                 }
             }
         });
-
     }
 }
