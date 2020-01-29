@@ -1,11 +1,5 @@
 package com.example.moviesearcher.view.details;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,21 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.model.data.Person;
+import com.example.moviesearcher.model.util.ConverterUtil;
 import com.example.moviesearcher.model.util.JsonUtil;
 
-import java.io.IOException;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder> {
 
-    private Activity activity;
-    private final List<Person> people;
-
-    PeopleAdapter(Activity activity, List<Person> people) {
-        this.activity = activity;
-        this.people = people;
-    }
+    private final List<Person> people = new ArrayList<>();
 
     void updatePeopleList(List<Person> list){
         people.clear();
@@ -50,18 +38,8 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.nameView.setText(people.get(position).getName());
         holder.positionView.setText(people.get(position).getPosition());
-        if (people.get(position).getProfileImageUrl() != null){
-            Thread thread = new Thread(() -> {
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeStream(new URL(JsonUtil.getInstance().getProfileImageUrl(people.get(position).getProfileImageUrl())).openStream());
-                        activity.runOnUiThread(() -> holder.imageView.setImageBitmap(bitmap));
-                } catch (IOException e) { e.printStackTrace(); }
-            });
-            thread.start();
-            try {
-                thread.join();
-            } catch (InterruptedException e) { e.printStackTrace(); }
-        }
+        if (people.get(position).getProfileImageUrl() != null)
+            holder.imageView.setImageBitmap(ConverterUtil.HttpPathToBitmap(JsonUtil.getInstance().getProfileImageUrl(people.get(position).getProfileImageUrl())));
     }
 
 

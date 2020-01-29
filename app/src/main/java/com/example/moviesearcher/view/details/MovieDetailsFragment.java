@@ -1,6 +1,8 @@
 package com.example.moviesearcher.view.details;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,10 +22,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.moviesearcher.R;
+import com.example.moviesearcher.model.util.ConverterUtil;
 import com.example.moviesearcher.model.util.FragmentInflaterUtil;
+import com.example.moviesearcher.model.util.JsonUtil;
 import com.example.moviesearcher.viewmodel.MovieDetailsViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -71,9 +77,8 @@ public class MovieDetailsFragment extends Fragment implements BottomNavigationVi
     private void observeViewModel(){
         viewModel.getCurrentMovie().observe(this, movie -> {
                 if (movie != null){
-                    informationLayout.setVisibility(View.VISIBLE);
-                    backdropImageView.setImageBitmap(movie.getBackdropImage());
-                    moviePosterView.setImageBitmap(movie.getPosterImage());
+                    moviePosterView.setImageBitmap(ConverterUtil.HttpPathToBitmap(JsonUtil.getInstance().getPosterImageUrl(movie.getPosterImageUrl())));
+                    backdropImageView.setImageBitmap(ConverterUtil.HttpPathToBitmap(JsonUtil.getInstance().getBackdropImageUrl(movie.getBackdropImageUrl())));
                     titleView.setText(movie.getTitle());
                     yearView.setText(movie.getReleaseDate());
                     for(String country : movie.getProductionCountries()) {
@@ -95,10 +100,13 @@ public class MovieDetailsFragment extends Fragment implements BottomNavigationVi
                             genreView.setText(genre);
                         }
                     }
+
                     Bundle args = new Bundle();
                     args.putString("description", movie.getDescription());
                     FragmentInflaterUtil.replaceFragment(getFragmentManager(), new DescriptionFragment(),
                             R.id.movie_details_container, args);
+
+                    informationLayout.setVisibility(View.VISIBLE);
                 }
         });
 

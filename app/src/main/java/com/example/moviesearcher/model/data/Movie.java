@@ -7,8 +7,10 @@ import java.util.List;
 public class Movie{
 
     private int id = 0;
-    private Bitmap posterImage;
-    private Bitmap backdropImage;
+    /*private Bitmap posterImage;
+    private Bitmap backdropImage;*/
+    private String posterImageUrl;
+    private String backdropImageUrl;
     private String title;
     private String releaseDate;
     private String score;
@@ -26,7 +28,7 @@ public class Movie{
         this.id = id;
     }
 
-    public Bitmap getPosterImage() {
+    /*public Bitmap getPosterImage() {
         return posterImage;
     }
 
@@ -40,6 +42,22 @@ public class Movie{
 
     public void setBackdropImage(Bitmap backdropImage) {
         this.backdropImage = backdropImage;
+    }*/
+
+    public String getPosterImageUrl() {
+        return posterImageUrl;
+    }
+
+    public void setPosterImageUrl(String posterImageUrl) {
+        this.posterImageUrl = posterImageUrl;
+    }
+
+    public String getBackdropImageUrl() {
+        return backdropImageUrl;
+    }
+
+    public void setBackdropImageUrl(String backdropImageUrl) {
+        this.backdropImageUrl = backdropImageUrl;
     }
 
     public String getTitle() {

@@ -15,9 +15,9 @@ public class JsonUtil {
     private static final String API_KEY = "c6c88c6e91d206e35fa6aff0b9d1cc36";
     private static final String BASE_URL = "https://api.themoviedb.org";
 
-    private static final String BASE_PROFILE_IMAGE_URL = "https://image.tmdb.org/t/p/w185";
-    private static final String BASE_POSTER_IMAGE_URL = "https://image.tmdb.org/t/p/w300";
-    private static final String BASE_BACKDROP_IMAGE_URL = "https://image.tmdb.org/t/p/w500";
+    private static final String BASE_PROFILE_IMAGE_URL = "https://image.tmdb.org/t/p/w300";
+    private static final String BASE_POSTER_IMAGE_URL = "https://image.tmdb.org/t/p/w400";
+    private static final String BASE_BACKDROP_IMAGE_URL = "https://image.tmdb.org/t/p/w780";
 
     // ending can go from 1 to 1000
     public static final String POPULAR_MOVIE_LIST_URL = "https://api.themoviedb.org/3/movie/popular?api_key=c6c88c6e91d206e35fa6aff0b9d1cc36&page=1";

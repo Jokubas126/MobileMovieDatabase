@@ -13,16 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.viewmodel.CastViewModel;
 
-import java.util.ArrayList;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,8 +33,8 @@ public class CastFragment extends Fragment {
     @BindView(R.id.cast_recycler_view) RecyclerView castView;
     @BindView(R.id.crew_recycler_view) RecyclerView crewView;
 
-    private PeopleAdapter castAdapter;
-    private PeopleAdapter crewAdapter;
+    private PeopleAdapter castAdapter = new PeopleAdapter();
+    private PeopleAdapter crewAdapter = new PeopleAdapter();
     private CastViewModel viewModel;
 
     @Nullable
@@ -54,12 +52,12 @@ public class CastFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(CastViewModel.class);
         viewModel.fetch(getArguments());
 
-        castAdapter = new PeopleAdapter(getActivity(), new ArrayList<>());
         castView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        castView.setItemAnimator(new DefaultItemAnimator());
         castView.setAdapter(castAdapter);
 
-        crewAdapter = new PeopleAdapter(getActivity(), new ArrayList<>());
         crewView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        crewView.setItemAnimator(new DefaultItemAnimator());
         crewView.setAdapter(crewAdapter);
 
         observeViewModel();

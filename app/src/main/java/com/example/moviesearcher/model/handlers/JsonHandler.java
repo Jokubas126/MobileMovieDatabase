@@ -35,19 +35,9 @@ public class JsonHandler {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             Movie movie = new Movie();
 
-                            Thread thread = new Thread(() -> {
-                                try{
-                                    movie.setPosterImage(
-                                            BitmapFactory.decodeStream(
-                                                    new URL(JsonUtil.getInstance().getPosterImageUrl(jsonObject.getString("poster_path")))
-                                                            .openStream()));
-                                } catch (IOException | JSONException e){
-                                    e.printStackTrace();
-                                    Log.d("JSONArrayRequest", "getMovieList: EXCEPTION GETTING POSTER");
-                                }
-                            });
-                            thread.start();
-
+                            movie.setPosterImageUrl(jsonObject.getString("poster_path"));
+                            if (movie.getPosterImageUrl().equals("null"))
+                                movie.setPosterImageUrl(null);
                             movie.setId(jsonObject.getInt("id"));
                             movie.setTitle(jsonObject.getString("title"));
                             movie.setReleaseDate(jsonObject.getString("release_date"));
@@ -59,10 +49,6 @@ public class JsonHandler {
                                 genresList.add(genres.get(genresIds.getInt(j)));
                             }
                             movie.setGenres(genresList);
-
-                            try {
-                                thread.join();
-                            } catch (InterruptedException e) { Log.d("JSONArrayRequest", "getMovieList: EXCEPTION JOINING THREADS"); }
                             movieList.add(movie);
                         }
 
@@ -102,32 +88,14 @@ public class JsonHandler {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
                 JsonUtil.getInstance().getMovieDetailsUrl(movieId), null,
                 response -> {
-                    try {
-                        Thread threadPoster = new Thread(() -> {
-                            try {
-                                movie.setPosterImage(
-                                        BitmapFactory.decodeStream(
-                                                new URL(JsonUtil.getInstance().getPosterImageUrl(response.getString("poster_path")))
-                                                        .openStream()));
-                            } catch (IOException | JSONException e) {
-                                Log.d("JSONArrayRequest", "getMovieDetails: EXCEPTION GETTING POSTER");
-                                e.printStackTrace();
-                            }
-                        });
-                        threadPoster.start();
+                    try{
+                        if (response.getString("poster_path").equals("null"))
+                            movie.setPosterImageUrl(null);
+                        else movie.setPosterImageUrl(response.getString("poster_path"));
 
-                        Thread threadBackdrop = new Thread(() -> {
-                            try {
-                                movie.setBackdropImage(
-                                        BitmapFactory.decodeStream(
-                                                new URL(JsonUtil.getInstance().getBackdropImageUrl(response.getString("backdrop_path")))
-                                                        .openStream()));
-                            } catch (IOException | JSONException e) {
-                                Log.d("JSONArrayRequest", "getMovieDetails: EXCEPTION GETTING POSTER");
-                                e.printStackTrace();
-                            }
-                        });
-                        threadBackdrop.start();
+                        if (response.getString("backdrop_path").equals("null"))
+                            movie.setBackdropImageUrl(null);
+                        else movie.setBackdropImageUrl(response.getString("backdrop_path"));
 
                         movie.setId(movieId);
                         movie.setTitle(response.getString("title"));
@@ -151,10 +119,6 @@ public class JsonHandler {
                         movie.setScore(response.getString("vote_average"));
                         movie.setDescription(response.getString("overview"));
 
-                        try {
-                            threadPoster.join();
-                            threadBackdrop.join();
-                        } catch (InterruptedException e) { Log.d("JSONArrayRequest", "getMovieDetails: EXCEPTION JOINING THREADS"); }
                     } catch (JSONException e){
                         e.printStackTrace();
                         Log.d("JSONArrayRequest", "getMovieDetails: EXCEPTION OCCURRED");

@@ -27,8 +27,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/avengers_cover"/>
+                    android:adjustViewBounds="true" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -42,14 +41,12 @@
                             android:id="@+id/movie_title_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Avengers: Endgame"
                             android:textAppearance="@style/TitleCard"/>
 
                         <TextView
                             android:id="@+id/movie_release_date_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2019"
                             android:textAppearance="@style/ContentCard" />
 
                         <LinearLayout
@@ -60,7 +57,6 @@
                                 android:id="@+id/movie_score_view"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="8.7"
                                 android:textAppearance="@style/ContentCard" />
 
                             <TextView
@@ -75,7 +71,7 @@
                             android:id="@+id/movie_genre_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Action, Sci-Fi, Comedy"
+
                             android:textAppearance="@style/ContentCard" />
 
                     </LinearLayout>

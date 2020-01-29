@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 public class MoviesGridFragment extends Fragment {
 
     private MovieGridViewModel viewModel;
-    private MovieGridAdapter gridAdapter = new MovieGridAdapter();
+    private MovieGridAdapter gridAdapter;
 
     @BindView(R.id.movie_grid_view)
     RecyclerView recyclerView;
@@ -59,18 +59,24 @@ public class MoviesGridFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(MovieGridViewModel.class);
         viewModel.refresh();
 
+        gridAdapter = new MovieGridAdapter(getActivity(), new ArrayList<>());
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(gridAdapter);
 
         observeViewModel();
+
+        refreshLayout.setOnRefreshListener(() -> {
+            viewModel.refresh();
+            refreshLayout.setRefreshing(false);
+        });
     }
 
     private void observeViewModel(){
         viewModel.getMovies().observe(this, movies -> {
             if (movies != null){
-                recyclerView.setVisibility(View.VISIBLE);
                 gridAdapter.updateMovieList(movies);
+                recyclerView.setVisibility(View.VISIBLE);
             }
         });
 

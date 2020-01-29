@@ -1,5 +1,8 @@
 package com.example.moviesearcher.view;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +16,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.model.data.Movie;
+import com.example.moviesearcher.model.util.ConverterUtil;
+import com.example.moviesearcher.model.util.JsonUtil;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>{
 
-    private final List<Movie> movieList = new ArrayList<>();
+    private Activity activity;
+    private final List<Movie> movieList;
+
+    public MovieGridAdapter(Activity activity, List<Movie> movieList) {
+        this.activity = activity;
+        this.movieList = movieList;
+    }
 
     void updateMovieList(List<Movie> movieList){
         this.movieList.clear();
@@ -40,7 +53,9 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
         holder.titleView.setText(movieList.get(position).getTitle());
         holder.releaseDateView.setText(movieList.get(position).getReleaseDate());
         holder.IMDbScoreView.setText(movieList.get(position).getScore());
-        holder.movieCoverImage.setImageBitmap(movieList.get(position).getPosterImage());
+
+        holder.posterView.setImageBitmap(ConverterUtil.HttpPathToBitmap(JsonUtil.getInstance().getPosterImageUrl(movieList.get(position).getPosterImageUrl())));
+
         StringBuilder genreString = null;
         for (String genre : movieList.get(position).getGenres()){
             if (genreString != null){
@@ -60,7 +75,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
     class ViewHolder extends RecyclerView.ViewHolder {
 
         View itemView;
-        private ImageView movieCoverImage;
+        private ImageView posterView;
         private TextView titleView;
         private TextView releaseDateView;
         private TextView IMDbScoreView;
@@ -69,7 +84,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.itemView = itemView;
-            movieCoverImage = itemView.findViewById(R.id.movie_poster_view);
+            posterView = itemView.findViewById(R.id.movie_poster_view);
             titleView = itemView.findViewById(R.id.movie_title_view);
             releaseDateView = itemView.findViewById(R.id.movie_release_date_view);
             IMDbScoreView = itemView.findViewById(R.id.movie_score_view);
