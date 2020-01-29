@@ -1,8 +1,6 @@
 package com.example.moviesearcher.view;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,26 +15,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.util.ConverterUtil;
-import com.example.moviesearcher.model.util.JsonUtil;
+import com.example.moviesearcher.model.util.UrlUtil;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>{
 
-    private Activity activity;
-    private final List<Movie> movieList;
-
-    public MovieGridAdapter(Activity activity, List<Movie> movieList) {
-        this.activity = activity;
-        this.movieList = movieList;
-    }
+    private final List<Movie> movieList = new ArrayList<>();
 
     void updateMovieList(List<Movie> movieList){
-        this.movieList.clear();
-        this.movieList.addAll(movieList);
+        Thread t = new Thread(() -> {
+            this.movieList.clear();
+            this.movieList.addAll(movieList);
+        });
+        t.start();
+        try { t.join();
+        } catch (InterruptedException e) { e.printStackTrace(); }
         notifyDataSetChanged();
     }
 
@@ -54,7 +49,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
         holder.releaseDateView.setText(movieList.get(position).getReleaseDate());
         holder.IMDbScoreView.setText(movieList.get(position).getScore());
 
-        holder.posterView.setImageBitmap(ConverterUtil.HttpPathToBitmap(JsonUtil.getInstance().getPosterImageUrl(movieList.get(position).getPosterImageUrl())));
+        holder.posterView.setImageBitmap(ConverterUtil.HttpPathToBitmap(UrlUtil.getPosterImageUrl(movieList.get(position).getPosterImageUrl())));
 
         StringBuilder genreString = null;
         for (String genre : movieList.get(position).getGenres()){

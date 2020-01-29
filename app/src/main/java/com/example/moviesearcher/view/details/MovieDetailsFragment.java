@@ -1,8 +1,6 @@
 package com.example.moviesearcher.view.details;
 
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,13 +21,10 @@ import android.widget.TextView;
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.model.util.ConverterUtil;
 import com.example.moviesearcher.model.util.FragmentInflaterUtil;
-import com.example.moviesearcher.model.util.JsonUtil;
+import com.example.moviesearcher.model.util.UrlUtil;
 import com.example.moviesearcher.viewmodel.MovieDetailsViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -77,17 +71,15 @@ public class MovieDetailsFragment extends Fragment implements BottomNavigationVi
     private void observeViewModel(){
         viewModel.getCurrentMovie().observe(this, movie -> {
                 if (movie != null){
-                    moviePosterView.setImageBitmap(ConverterUtil.HttpPathToBitmap(JsonUtil.getInstance().getPosterImageUrl(movie.getPosterImageUrl())));
-                    backdropImageView.setImageBitmap(ConverterUtil.HttpPathToBitmap(JsonUtil.getInstance().getBackdropImageUrl(movie.getBackdropImageUrl())));
+                    moviePosterView.setImageBitmap(ConverterUtil.HttpPathToBitmap(UrlUtil.getPosterImageUrl(movie.getPosterImageUrl())));
+                    backdropImageView.setImageBitmap(ConverterUtil.HttpPathToBitmap(UrlUtil.getBackdropImageUrl(movie.getBackdropImageUrl())));
                     titleView.setText(movie.getTitle());
                     yearView.setText(movie.getReleaseDate());
                     for(String country : movie.getProductionCountries()) {
                         if (countriesView.getText() != null && !countriesView.getText().toString().equals("")) {
                             String countryText = countriesView.getText().toString() + ", " + country;
                             countriesView.setText(countryText);
-                        } else {
-                            countriesView.setText(country);
-                        }
+                        } else { countriesView.setText(country); }
                     }
                     String runtimeText = movie.getRuntime() + getResources().getString(R.string.min_ending);
                     runtimeView.setText(runtimeText);
@@ -96,9 +88,7 @@ public class MovieDetailsFragment extends Fragment implements BottomNavigationVi
                         if (genreView.getText() != null && !genreView.getText().toString().equals("")){
                             String genreText = genreView.getText().toString() + ", " + genre;
                             genreView.setText(genreText);
-                        } else {
-                            genreView.setText(genre);
-                        }
+                        } else { genreView.setText(genre); }
                     }
 
                     Bundle args = new Bundle();

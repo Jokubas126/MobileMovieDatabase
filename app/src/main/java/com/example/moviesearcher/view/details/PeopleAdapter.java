@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.model.data.Person;
 import com.example.moviesearcher.model.util.ConverterUtil;
-import com.example.moviesearcher.model.util.JsonUtil;
+import com.example.moviesearcher.model.util.UrlUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         holder.nameView.setText(people.get(position).getName());
         holder.positionView.setText(people.get(position).getPosition());
         if (people.get(position).getProfileImageUrl() != null)
-            holder.imageView.setImageBitmap(ConverterUtil.HttpPathToBitmap(JsonUtil.getInstance().getProfileImageUrl(people.get(position).getProfileImageUrl())));
+            holder.imageView.setImageBitmap(ConverterUtil.HttpPathToBitmap(UrlUtil.getProfileImageUrl(people.get(position).getProfileImageUrl())));
     }
 
 

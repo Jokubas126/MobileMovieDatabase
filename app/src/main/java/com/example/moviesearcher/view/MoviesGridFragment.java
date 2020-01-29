@@ -21,27 +21,18 @@ import android.widget.TextView;
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.viewmodel.MovieGridViewModel;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MoviesGridFragment extends Fragment {
 
     private MovieGridViewModel viewModel;
-    private MovieGridAdapter gridAdapter;
+    private MovieGridAdapter gridAdapter = new MovieGridAdapter();
 
-    @BindView(R.id.movie_grid_view)
-    RecyclerView recyclerView;
-
-    @BindView(R.id.loading_error_text_view)
-    TextView errorTextView;
-
-    @BindView(R.id.progress_bar_loading_movie_list)
-    ProgressBar progressBar;
-
-    @BindView(R.id.refresh_layout)
-    SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.movie_grid_view) RecyclerView recyclerView;
+    @BindView(R.id.loading_error_text_view) TextView errorTextView;
+    @BindView(R.id.progress_bar_loading_movie_list) ProgressBar progressBar;
+    @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
 
     public MoviesGridFragment() { }
 
@@ -59,7 +50,6 @@ public class MoviesGridFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(MovieGridViewModel.class);
         viewModel.refresh();
 
-        gridAdapter = new MovieGridAdapter(getActivity(), new ArrayList<>());
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(gridAdapter);

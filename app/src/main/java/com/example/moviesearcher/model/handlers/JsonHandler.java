@@ -1,20 +1,17 @@
 package com.example.moviesearcher.model.handlers;
 
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.data.Person;
-import com.example.moviesearcher.model.util.JsonUtil;
+import com.example.moviesearcher.model.util.UrlUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +24,7 @@ public class JsonHandler {
         new Thread(() -> {
         List<Movie> movieList = new ArrayList<>();
         genres = getGenres(genresMap -> genres.putAll(genresMap));
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, JsonUtil.POPULAR_MOVIE_LIST_URL, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieListUrl(UrlUtil.KEY_POPULAR, 1), null,
                 response -> {
                     try{
                         JSONArray jsonArray = response.getJSONArray("results");
@@ -62,7 +59,7 @@ public class JsonHandler {
     }
 
     private HashMap<Integer, String> getGenres( final GenresMapAsyncResponse callback){
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, JsonUtil.MOVIE_GENRES_URL, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieGenresUrl(), null,
                 response -> {
                     try {
                         JSONArray array = response.getJSONArray("genres");
@@ -86,7 +83,7 @@ public class JsonHandler {
         new Thread(() -> {
         Movie movie = new Movie();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-                JsonUtil.getInstance().getMovieDetailsUrl(movieId), null,
+                UrlUtil.getMovieDetailsUrl(movieId), null,
                 response -> {
                     try{
                         if (response.getString("poster_path").equals("null"))
@@ -135,12 +132,12 @@ public class JsonHandler {
         Thread methodThread = new Thread(() -> {
         List<Person> cast = new ArrayList<>();
         List<Person> crew = new ArrayList<>();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, JsonUtil.getInstance().getPeopleUrl(movieId), null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getPeopleUrl(movieId), null,
                 response -> {
                     try {
                         JSONArray castArray = response.getJSONArray("cast");
                         for (int i = 0; i < castArray.length(); i++){
-                            if (i > 9)
+                            if (i > 15)
                                 break;
                             Person person = new Person();
                             JSONObject object = castArray.getJSONObject(i);
@@ -154,7 +151,7 @@ public class JsonHandler {
                         }
                         JSONArray crewArray = response.getJSONArray("crew");
                         for (int i = 0; i < crewArray.length(); i++){
-                            if (i > 9)
+                            if (i > 15)
                                 break;
                             Person person = new Person();
                             JSONObject object = crewArray.getJSONObject(i);

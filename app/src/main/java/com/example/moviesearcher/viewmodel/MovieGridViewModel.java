@@ -1,7 +1,6 @@
 package com.example.moviesearcher.viewmodel;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -10,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.handlers.JsonHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MovieGridViewModel extends AndroidViewModel {
@@ -27,15 +25,13 @@ public class MovieGridViewModel extends AndroidViewModel {
         movieLoadError.setValue(false);
         loading.setValue(true);
         new Thread(() -> new JsonHandler().getMovieList(list -> {
-            Log.d("HandlerRequest", "onCreate: REQUEST FROM THE HANDLER MADE");
-            try {
-                movies.setValue(list);
-                movieLoadError.setValue(false);
-                loading.setValue(false);
-            } catch (Exception e){
-                Log.d("HandlerRequest", "onCreate: REQUEST FAILED");
+            if (list.isEmpty()){
                 movies.setValue(null);
                 movieLoadError.setValue(true);
+                loading.setValue(false);
+            } else {
+                movies.setValue(list);
+                movieLoadError.setValue(false);
                 loading.setValue(false);
             }
         })).start();
