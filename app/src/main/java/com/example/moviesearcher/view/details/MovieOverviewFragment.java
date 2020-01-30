@@ -69,7 +69,7 @@ public class MovieOverviewFragment extends Fragment implements BottomNavigationV
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         viewModel = ViewModelProviders.of(this).get(MovieOverviewViewModel.class);
-        viewModel.fetch(getArguments());
+        viewModel.fetch(getActivity(), getArguments());
         observeViewModel();
     }
 
@@ -126,7 +126,6 @@ public class MovieOverviewFragment extends Fragment implements BottomNavigationV
                 }
                 break;
         }
-
         return false;
     }
 

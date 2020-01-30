@@ -57,7 +57,7 @@ public class MovieCastFragment extends Fragment implements BottomNavigationView.
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(CastViewModel.class);
-        viewModel.fetch(getArguments());
+        viewModel.fetch(getActivity(), getArguments());
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 

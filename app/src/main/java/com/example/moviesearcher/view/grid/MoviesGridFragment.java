@@ -49,7 +49,7 @@ public class MoviesGridFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewModel = ViewModelProviders.of(this).get(MovieGridViewModel.class);
         viewModel.setActivity(getActivity());
-        viewModel.fetch();
+        viewModel.refresh();
 
         gridAdapter = new MovieGridAdapter(getActivity());
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -74,12 +74,6 @@ public class MoviesGridFragment extends Fragment {
             viewModel.refresh();
             refreshLayout.setRefreshing(false);
         });
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        viewModel.clearAll();
     }
 
     private void observeViewModel(){

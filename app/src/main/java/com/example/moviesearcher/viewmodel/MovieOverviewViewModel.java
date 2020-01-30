@@ -1,5 +1,6 @@
 package com.example.moviesearcher.viewmodel;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.lifecycle.MutableLiveData;
@@ -14,13 +15,15 @@ public class MovieOverviewViewModel extends ViewModel {
     private MutableLiveData<Movie> currentMovie = new MutableLiveData<>();
     private MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
-    public void fetch(Bundle arguments){
+    public void fetch(Activity activity, Bundle arguments){
         loading.setValue(true);
         new Thread(() -> {
             if (arguments != null) {
                 new JsonHandler().getMovieDetails(arguments.getInt(BundleUtil.KEY_MOVIE_ID), retrievedMovie -> {
-                    currentMovie.setValue((Movie) retrievedMovie);
-                    loading.setValue(false);
+                    activity.runOnUiThread(() -> {
+                        currentMovie.setValue((Movie) retrievedMovie);
+                        loading.setValue(false);
+                    });
                 });
             }
         }).start();

@@ -12,6 +12,7 @@ import com.example.moviesearcher.model.handlers.JsonHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MovieGridViewModel extends AndroidViewModel {
 
@@ -28,31 +29,21 @@ public class MovieGridViewModel extends AndroidViewModel {
     }
 
     public void refresh(){
-        clearAll();
         movieLoadError.setValue(false);
         loading.setValue(true);
         page = 1;
-        new Thread(() -> new JsonHandler().getMovieList(page, list -> {
-            if (list.isEmpty()){
-                activity.runOnUiThread(() -> {
-                    movies.setValue(null);
-                    movieLoadError.setValue(true);
-                    loading.setValue(false);
-                });
-            } else {
-                activity.runOnUiThread(() -> {
-                    movies.setValue(list);
-                    movieLoadError.setValue(false);
-                    loading.setValue(false);
-                });
-            }
-        })).start();
+        clearAll();
+        getMovieList();
     }
 
     public void fetch(){
         movieLoadError.setValue(false);
         loading.setValue(true);
         page++;
+        getMovieList();
+    }
+
+    private void getMovieList(){
         new Thread(() -> new JsonHandler().getMovieList(page, list -> {
             if (list.isEmpty()){
                 activity.runOnUiThread(() -> {
@@ -62,18 +53,16 @@ public class MovieGridViewModel extends AndroidViewModel {
                 });
             } else {
                 activity.runOnUiThread(() -> {
-                    movies.setValue(list);
-                    movieLoadError.setValue(false);
-                    loading.setValue(false);
+                        movies.setValue(list);
+                        movieLoadError.setValue(false);
+                        loading.setValue(false);
                 });
             }
         })).start();
     }
 
-    public void clearAll(){
-        List<Movie> movieList = new ArrayList<>();
-        movies.setValue(movieList);
-        page = 0;
+    private void clearAll(){
+        movies.setValue(new ArrayList<>());
     }
 
     public void setActivity(Activity activity) {

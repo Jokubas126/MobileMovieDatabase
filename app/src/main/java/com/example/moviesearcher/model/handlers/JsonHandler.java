@@ -28,8 +28,8 @@ public class JsonHandler {
             genres = getGenres(genresMap -> genres.putAll(genresMap));
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieListUrl(UrlUtil.KEY_POPULAR, page), null,
                     response -> {
-                        new Thread(() -> {
-                            try{
+                        Thread movieListThread = new Thread(() -> {
+                            try {
                                 JSONArray jsonArray = response.getJSONArray(MovieDbUtil.KEY_MOVIE_ARRAY);
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -50,10 +50,15 @@ public class JsonHandler {
                                     movie.setGenres(genresList);
                                     movieList.add(movie);
                                 }
-                            }catch (JSONException e){ Log.d("JSONArrayRequest", "getMovieList: EXCEPTION OCCURRED"); }
+                            } catch (JSONException e) {
+                                Log.d("JSONArrayRequest", "getMovieList: EXCEPTION OCCURRED");
+                            }
                             if (callback != null) callback.processFinished(movieList);
-                        }).start();
-                    }, error -> Log.d("JSONArrayRequest", "getMovieList: ERROR OCCURRED"));
+                        });
+                        movieListThread.setPriority(6);
+                        movieListThread.start();
+                    },
+                    error -> Log.d("JSONArrayRequest", "getMovieList: ERROR OCCURRED"));
             ApplicationRequestHandler.getInstance().addToRequestQueue(request);
         }).start();
     }
@@ -61,18 +66,21 @@ public class JsonHandler {
     private HashMap<Integer, String> getGenres( final GenresMapAsyncResponse callback){
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieGenresUrl(), null,
                 response -> {
-                    try {
-                        JSONArray array = response.getJSONArray(MovieDbUtil.KEY_MOVIE_GENRES_ARRAY);
-                    for (int i = 0; i < array.length(); i++){
-                            genres.put(
-                                    array.getJSONObject(i).getInt(MovieDbUtil.KEY_ID),
-                                    array.getJSONObject(i).getString(MovieDbUtil.KEY_NAME)
-                            );
-                        }
-                    } catch (JSONException e) { Log.d("JSONArrayRequest", "getGenres: EXCEPTION OCCURRED");}
-                    if (callback != null) callback.processFinished(genres);
+                    Thread genreThread = new Thread (() -> {
+                        try {
+                            JSONArray array = response.getJSONArray(MovieDbUtil.KEY_MOVIE_GENRES_ARRAY);
+                            for (int i = 0; i < array.length(); i++){
+                                genres.put(
+                                        array.getJSONObject(i).getInt(MovieDbUtil.KEY_ID),
+                                        array.getJSONObject(i).getString(MovieDbUtil.KEY_NAME)
+                                );
+                            }
+                        } catch (JSONException e) { Log.d("JSONArrayRequest", "getGenres: EXCEPTION OCCURRED");}
+                        if (callback != null) callback.processFinished(genres);
+                    });
+                    genreThread.setPriority(10);
+                    genreThread.start();
                 }, error -> Log.d("JSONArrayRequest", "getGenres: ERROR OCCURRED"));
-
         ApplicationRequestHandler.getInstance().addToRequestQueue(request);
         return genres;
     }
@@ -124,52 +132,45 @@ public class JsonHandler {
     }
 
     public void getPeople(int movieId, PersonListAsyncResponse callback) {
-        Thread peopleThread = new Thread(() -> {
+        new Thread(() -> {
         List<Person> cast = new ArrayList<>();
         List<Person> crew = new ArrayList<>();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getPeopleUrl(movieId), null,
-                response -> {
-                    new Thread(() -> {
-                        try {
-                            JSONArray castArray = response.getJSONArray(MovieDbUtil.KEY_CAST_ARRAY);
-                            for (int i = 0; i < castArray.length(); i++){
-                                if (i > 15)
-                                    break;
-                                Person person = new Person();
-                                JSONObject object = castArray.getJSONObject(i);
+                response -> new Thread(() -> {
+                    try {
+                        JSONArray castArray = response.getJSONArray(MovieDbUtil.KEY_CAST_ARRAY);
+                        for (int i = 0; i < castArray.length(); i++){
+                            if (i > 15) // for maximum amount of people
+                                break;
+                            Person person = new Person();
+                            JSONObject object = castArray.getJSONObject(i);
 
-                                person.setName(object.getString(MovieDbUtil.KEY_NAME));
-                                person.setPosition(object.getString(MovieDbUtil.KEY_CAST_POSITION));
-                                person.setProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH));
-                                if (person.getProfileImageUrl().equals("null"))
-                                    person.setProfileImageUrl(null);
-                                cast.add(person);
-                            }
-                            JSONArray crewArray = response.getJSONArray(MovieDbUtil.KEY_CREW_ARRAY);
-                            for (int i = 0; i < crewArray.length(); i++){
-                                if (i > 15)
-                                    break;
-                                Person person = new Person();
-                                JSONObject object = crewArray.getJSONObject(i);
-                                person.setName(object.getString(MovieDbUtil.KEY_NAME));
-                                person.setPosition(object.getString(MovieDbUtil.KEY_CREW_POSITION));
-                                person.setProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH));
-                                if (person.getProfileImageUrl().equals("null"))
-                                    person.setProfileImageUrl(null);
-                                crew.add(person);
-                            }
-                        } catch (JSONException e) { Log.d("JSONArrayRequest", "getPeople: EXCEPTION OCCURRED"); }
-                        if (callback != null) callback.processFinished(cast, crew);
-                    }).start();
-                }, error -> Log.d("JSONArrayRequest", "getPeople: ERROR OCCURRED"));
+                            person.setName(object.getString(MovieDbUtil.KEY_NAME));
+                            person.setPosition(object.getString(MovieDbUtil.KEY_CAST_POSITION));
+                            person.setProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH));
+                            if (person.getProfileImageUrl().equals("null"))
+                                person.setProfileImageUrl(null);
+                            cast.add(person);
+                        }
+                        JSONArray crewArray = response.getJSONArray(MovieDbUtil.KEY_CREW_ARRAY);
+                        for (int i = 0; i < crewArray.length(); i++){
+                            if (i > 15) // for maximum amount of people
+                                break;
+                            Person person = new Person();
+                            JSONObject object = crewArray.getJSONObject(i);
+                            person.setName(object.getString(MovieDbUtil.KEY_NAME));
+                            person.setPosition(object.getString(MovieDbUtil.KEY_CREW_POSITION));
+                            person.setProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH));
+                            if (person.getProfileImageUrl().equals("null"))
+                                person.setProfileImageUrl(null);
+                            crew.add(person);
+                        }
+                    } catch (JSONException e) { Log.d("JSONArrayRequest", "getPeople: EXCEPTION OCCURRED"); }
+                    if (callback != null) callback.processFinished(cast, crew);
+                }).start()
+                , error -> Log.d("JSONArrayRequest", "getPeople: ERROR OCCURRED"));
         ApplicationRequestHandler.getInstance().addToRequestQueue(request);
 
-        });
-        peopleThread.start();
-        try {
-            peopleThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 }
