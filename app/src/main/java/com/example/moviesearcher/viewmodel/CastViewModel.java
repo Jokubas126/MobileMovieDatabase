@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.moviesearcher.model.data.Person;
 import com.example.moviesearcher.model.handlers.JsonHandler;
+import com.example.moviesearcher.model.util.BundleUtil;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class CastViewModel extends ViewModel {
         loading.setValue(true);
         new Thread(() -> {
             if (args != null){
-                new JsonHandler().getPeople(args.getInt("movieId"),
+                new JsonHandler().getPeople(args.getInt(BundleUtil.KEY_MOVIE_ID),
                         (castList, crewList) -> {
                             cast.setValue(castList);
                             crew.setValue(crewList);

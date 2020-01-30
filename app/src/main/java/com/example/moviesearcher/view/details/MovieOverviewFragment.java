@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.moviesearcher.R;
+import com.example.moviesearcher.model.util.BundleUtil;
 import com.example.moviesearcher.model.util.ConverterUtil;
 import com.example.moviesearcher.model.util.UrlUtil;
 import com.example.moviesearcher.viewmodel.MovieOverviewViewModel;
@@ -113,14 +114,14 @@ public class MovieOverviewFragment extends Fragment implements BottomNavigationV
         switch (menuItem.getItemId()){
             case R.id.trailers_menu_item:
                 if (getArguments() != null) {
-                    NavDirections action = MovieOverviewFragmentDirections.actionMovieTrailers(getArguments().getInt("movieId"));
+                    NavDirections action = MovieOverviewFragmentDirections.actionMovieTrailers(getArguments().getInt(BundleUtil.KEY_MOVIE_ID));
                     Navigation.findNavController(bottomNavigationView).navigate(action);
                 }
                 break;
 
             case R.id.cast_menu_item:
                 if (getArguments() != null) {
-                    NavDirections action = MovieOverviewFragmentDirections.actionMovieCast(getArguments().getInt("movieId"));
+                    NavDirections action = MovieOverviewFragmentDirections.actionMovieCast(getArguments().getInt(BundleUtil.KEY_MOVIE_ID));
                     Navigation.findNavController(bottomNavigationView).navigate(action);
                 }
                 break;

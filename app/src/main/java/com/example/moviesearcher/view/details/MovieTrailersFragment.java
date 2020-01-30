@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.example.moviesearcher.R;
+import com.example.moviesearcher.model.util.BundleUtil;
 import com.example.moviesearcher.viewmodel.MovieTrailersViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -68,14 +69,14 @@ public class MovieTrailersFragment extends Fragment implements BottomNavigationV
         switch (menuItem.getItemId()){
             case R.id.overview_menu_item:
                 if (getArguments() != null) {
-                    NavDirections action = MovieTrailersFragmentDirections.actionMovieOverview(getArguments().getInt("movieId"));
+                    NavDirections action = MovieTrailersFragmentDirections.actionMovieOverview(getArguments().getInt(BundleUtil.KEY_MOVIE_ID));
                     Navigation.findNavController(bottomNavigationView).navigate(action);
                 }
                 break;
 
             case R.id.cast_menu_item:
                 if (getArguments() != null) {
-                    NavDirections action = MovieTrailersFragmentDirections.actionMovieCast(getArguments().getInt("movieId"));
+                    NavDirections action = MovieTrailersFragmentDirections.actionMovieCast(getArguments().getInt(BundleUtil.KEY_MOVIE_ID));
                     Navigation.findNavController(bottomNavigationView).navigate(action);
                 }
                 break;
