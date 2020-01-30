@@ -129,7 +129,7 @@ public class JsonHandler {
     }
 
     public void getPeople(int movieId, PersonListAsyncResponse callback) {
-        Thread methodThread = new Thread(() -> {
+        new Thread(() -> {
         List<Person> cast = new ArrayList<>();
         List<Person> crew = new ArrayList<>();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getPeopleUrl(movieId), null,
@@ -166,10 +166,6 @@ public class JsonHandler {
                     if (callback != null) callback.processFinished(cast, crew);
                 }, error -> {});
         ApplicationRequestHandler.getInstance().addToRequestQueue(request);
-        });
-        methodThread.start();
-        try {
-            methodThread.join();
-        } catch (InterruptedException e) { e.printStackTrace(); }
+        }).start();
     }
 }
