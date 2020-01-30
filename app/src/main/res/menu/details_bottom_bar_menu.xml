@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/overview_menu_item"
-        android:title="Overview"
-        android:icon="@drawable/ic_overview"/>
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/overview_menu_item"
+            android:title="Overview"
+            android:icon="@drawable/ic_overview"/>
 
-    <item
-        android:id="@+id/trailers_menu_item"
-        android:title="Trailers"
-        android:icon="@drawable/ic_trailers"/>
+        <item
+            android:id="@+id/trailers_menu_item"
+            android:title="Trailers"
+            android:icon="@drawable/ic_trailers"/>
 
-    <item
-        android:id="@+id/cast_menu_item"
-        android:title="Cast"
-        android:icon="@drawable/ic_cast"/>
+        <item
+            android:id="@+id/cast_menu_item"
+            android:title="Cast"
+            android:icon="@drawable/ic_cast"/>
+
+    </group>
+
+
 
 </menu>
