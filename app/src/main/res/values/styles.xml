@@ -7,6 +7,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="WelcomeActivityText">
+        <item name="android:textSize">33sp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="TitleCard">
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/cardTitle</item>

@@ -3,46 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/titleScreenFragment">
+    app:startDestination="@id/moviesList">
 
     <fragment
-        android:id="@+id/titleScreenFragment"
-        android:name="com.example.moviesearcher.view.TitleScreenFragment"
-        android:label="Movie Searcher"
-        tools:layout="@layout/fragment_title_screen">
+        android:id="@+id/moviesList"
+        android:name="com.example.moviesearcher.view.grid.MoviesGridFragment"
+        android:label="Movies"
+        tools:layout="@layout/fragment_movies_grid">
         <action
-            android:id="@+id/action_movies_list"
-            app:destination="@id/movieList" />
-    </fragment>
-
-    <navigation
-        android:id="@+id/movieList"
-        android:label="movieList"
-        app:startDestination="@id/moviesList">
-        <fragment
-            android:id="@+id/moviesList"
-            android:name="com.example.moviesearcher.view.grid.MoviesGridFragment"
-            android:label="Movies"
-            tools:layout="@layout/fragment_movies_grid"/>
-        <action
-            android:id="@+id/action_movie_details"
+            android:id="@+id/action_moviesList_to_movieDetails"
             app:destination="@id/movieDetails" />
-    </navigation>
+    </fragment>
+    <action
+        android:id="@+id/action_movie_details"
+        app:destination="@id/movieDetails" />
 
     <navigation
         android:id="@+id/movieDetails"
         android:label="movieDetails"
-        app:startDestination="@id/movieOverview">
-
+        app:startDestination="@id/movieOverview"
+        >
         <argument
             android:name="movieId"
             app:argType="integer" />
-
         <fragment
             android:id="@+id/movieCast"
             android:name="com.example.moviesearcher.view.details.MovieCastFragment"
             android:label="Cast and Crew"
-            tools:layout="@layout/fragment_movie_cast">
+            tools:layout="@layout/fragment_movie_cast"
+            app:popUpTo="@id/moviesList">
             <argument
                 android:name="movieId"
                 app:argType="integer" />
@@ -51,7 +40,8 @@
             android:id="@+id/movieTrailers"
             android:name="com.example.moviesearcher.view.details.MovieTrailersFragment"
             android:label="Trailers"
-            tools:layout="@layout/fragment_movie_trailers">
+            tools:layout="@layout/fragment_movie_trailers"
+            app:popUpTo="@id/moviesList">
             <argument
                 android:name="movieId"
                 app:argType="integer" />
@@ -67,13 +57,19 @@
         </fragment>
         <action
             android:id="@+id/action_movie_cast"
-            app:destination="@id/movieCast" />
+            app:destination="@id/movieCast"
+            app:popUpTo="@id/moviesList"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_movie_trailers"
-            app:destination="@id/movieTrailers" />
+            app:destination="@id/movieTrailers"
+            app:popUpTo="@id/moviesList"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/actionMovieOverview"
-            app:destination="@id/movieOverview" />
+            app:destination="@id/movieOverview"
+            app:popUpTo="@id/moviesList"
+            app:popUpToInclusive="true"/>
 
     </navigation>
 
