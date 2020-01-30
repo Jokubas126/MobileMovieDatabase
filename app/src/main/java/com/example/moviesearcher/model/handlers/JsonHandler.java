@@ -6,6 +6,7 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.data.Person;
+import com.example.moviesearcher.model.util.ConverterUtil;
 import com.example.moviesearcher.model.util.UrlUtil;
 
 import org.json.JSONArray;
@@ -20,41 +21,41 @@ public class JsonHandler {
 
     private HashMap<Integer, String> genres = new HashMap<>();
 
-    public void getMovieList(final MovieListAsyncResponse callback){
-        new Thread(() -> {
-        List<Movie> movieList = new ArrayList<>();
-        genres = getGenres(genresMap -> genres.putAll(genresMap));
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieListUrl(UrlUtil.KEY_POPULAR, 1), null,
-                response -> {
-                    try{
-                        JSONArray jsonArray = response.getJSONArray("results");
-                        for (int i = 0; i < jsonArray.length(); i++){
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            Movie movie = new Movie();
+    public void getMovieList(int page, final MovieListAsyncResponse callback){
+        new Thread(() ->{
+            List<Movie> movieList = new ArrayList<>();
+            genres = getGenres(genresMap -> genres.putAll(genresMap));
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieListUrl(UrlUtil.KEY_POPULAR, page), null,
+                    response -> {
+                        Thread responseThread = new Thread(() -> {
+                            try{
+                                JSONArray jsonArray = response.getJSONArray("results");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    Movie movie = new Movie();
 
-                            movie.setPosterImageUrl(jsonObject.getString("poster_path"));
-                            if (movie.getPosterImageUrl().equals("null"))
-                                movie.setPosterImageUrl(null);
-                            movie.setId(jsonObject.getInt("id"));
-                            movie.setTitle(jsonObject.getString("title"));
-                            movie.setReleaseDate(jsonObject.getString("release_date"));
-                            movie.setScore(jsonObject.getString("vote_average"));
+                                    movie.setPosterImage(ConverterUtil.HttpPathToBitmap(UrlUtil.getPosterImageUrl(jsonObject.getString("poster_path"))));
+                                    movie.setId(jsonObject.getInt("id"));
+                                    movie.setTitle(jsonObject.getString("title"));
+                                    movie.setReleaseDate(jsonObject.getString("release_date"));
+                                    movie.setScore(jsonObject.getString("vote_average"));
 
-                            JSONArray genresIds = jsonObject.getJSONArray("genre_ids");
-                            List<String> genresList = new ArrayList<>();
-                            for (int j = 0; j < genresIds.length(); j++){
-                                genresList.add(genres.get(genresIds.getInt(j)));
+                                    JSONArray genresIds = jsonObject.getJSONArray("genre_ids");
+                                    List<String> genresList = new ArrayList<>();
+                                    for (int j = 0; j < genresIds.length(); j++) {
+                                        genresList.add(genres.get(genresIds.getInt(j)));
+                                    }
+                                    movie.setGenres(genresList);
+                                    movieList.add(movie);
+                                }
+                            }catch (JSONException e){
+                                e.printStackTrace();
                             }
-                            movie.setGenres(genresList);
-                            movieList.add(movie);
-                        }
-
-                    }catch (JSONException e){
-                        e.printStackTrace();
-                    }
-                    if (callback != null) callback.processFinished(movieList);
-            }, error -> Log.d("JSONArrayRequest", "getMovieList: ERROR OCCURRED"));
-        ApplicationRequestHandler.getInstance().addToRequestQueue(request);
+                            if (callback != null) callback.processFinished(movieList);
+                        });
+                        responseThread.start();
+                    }, error -> Log.d("JSONArrayRequest", "getMovieList: ERROR OCCURRED"));
+            ApplicationRequestHandler.getInstance().addToRequestQueue(request);
         }).start();
     }
 

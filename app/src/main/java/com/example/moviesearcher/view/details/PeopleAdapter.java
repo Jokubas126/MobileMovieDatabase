@@ -21,7 +21,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
 
     private final List<Person> people = new ArrayList<>();
 
-    void updatePeopleList(List<Person> list){
+    public void updatePeopleList(List<Person> list){
         people.clear();
         people.addAll(list);
         notifyDataSetChanged();

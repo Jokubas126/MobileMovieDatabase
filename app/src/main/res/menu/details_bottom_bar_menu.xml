@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/description_menu_item"
-        android:title="Description"
-        android:icon="@drawable/ic_description"/>
+        android:id="@+id/overview_menu_item"
+        android:title="Overview"
+        android:icon="@drawable/ic_overview"/>
 
     <item
-        android:id="@+id/videos_menu_item"
-        android:title="Videos"
-        android:icon="@drawable/ic_videos"/>
+        android:id="@+id/trailers_menu_item"
+        android:title="Trailers"
+        android:icon="@drawable/ic_trailers"/>
 
     <item
         android:id="@+id/cast_menu_item"

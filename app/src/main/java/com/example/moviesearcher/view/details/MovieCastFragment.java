@@ -1,46 +1,53 @@
 package com.example.moviesearcher.view.details;
 
+
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.viewmodel.CastViewModel;
-
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CastFragment extends Fragment {
+
+public class MovieCastFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.crew_layout) LinearLayout crewLayout;
     @BindView(R.id.cast_layout) LinearLayout castLayout;
-    @BindView(R.id.progress_bar_loading_cast) ProgressBar progressBar;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.cast_recycler_view) RecyclerView castView;
     @BindView(R.id.crew_recycler_view) RecyclerView crewView;
+
+    @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
     private PeopleAdapter castAdapter = new PeopleAdapter();
     private PeopleAdapter crewAdapter = new PeopleAdapter();
     private CastViewModel viewModel;
 
-    @Nullable
+    public MovieCastFragment() { }
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_cast, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_movie_cast, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -48,9 +55,10 @@ public class CastFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         viewModel = ViewModelProviders.of(this).get(CastViewModel.class);
         viewModel.fetch(getArguments());
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         castView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         castView.setItemAnimator(new DefaultItemAnimator());
@@ -63,7 +71,7 @@ public class CastFragment extends Fragment {
         observeViewModel();
     }
 
-    private synchronized void observeViewModel(){
+    private void observeViewModel(){
         viewModel.getCast().observe(this, cast -> {
             if (cast != null) {
                 castLayout.setVisibility(View.VISIBLE);
@@ -89,5 +97,26 @@ public class CastFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.trailers_menu_item:
+                if (getArguments() != null) {
+                    NavDirections action = MovieCastFragmentDirections.actionMovieTrailers(getArguments().getInt("movieId"));
+                    Navigation.findNavController(bottomNavigationView).navigate(action);
+                }
+                break;
+
+            case R.id.overview_menu_item:
+                if (getArguments() != null) {
+                    NavDirections action = MovieCastFragmentDirections.actionMovieOverview(getArguments().getInt("movieId"));
+                    Navigation.findNavController(bottomNavigationView).navigate(action);
+                }
+                break;
+        }
+
+        return false;
     }
 }

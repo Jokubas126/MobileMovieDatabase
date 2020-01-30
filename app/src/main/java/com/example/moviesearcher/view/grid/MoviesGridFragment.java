@@ -1,4 +1,4 @@
-package com.example.moviesearcher.view;
+package com.example.moviesearcher.view.grid;
 
 
 import android.os.Bundle;
@@ -27,18 +27,20 @@ import butterknife.ButterKnife;
 public class MoviesGridFragment extends Fragment {
 
     private MovieGridViewModel viewModel;
-    private MovieGridAdapter gridAdapter = new MovieGridAdapter();
+    private MovieGridAdapter gridAdapter;
 
     @BindView(R.id.movie_grid_view) RecyclerView recyclerView;
     @BindView(R.id.loading_error_text_view) TextView errorTextView;
     @BindView(R.id.progress_bar_loading_movie_list) ProgressBar progressBar;
     @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
 
+    private boolean isDown = true;
+
     public MoviesGridFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_movies_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_movies_grid, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -48,13 +50,27 @@ public class MoviesGridFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = ViewModelProviders.of(this).get(MovieGridViewModel.class);
-        viewModel.refresh();
+        viewModel.setActivity(getActivity());
+        viewModel.fetch();
 
+        gridAdapter = new MovieGridAdapter(getActivity());
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(gridAdapter);
 
         observeViewModel();
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1) && isDown) {
+                    isDown = false;
+                    viewModel.fetch();
+                    isDown = true;
+                }
+            }
+        });
 
         refreshLayout.setOnRefreshListener(() -> {
             viewModel.refresh();
@@ -81,7 +97,6 @@ public class MoviesGridFragment extends Fragment {
                 progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
                 if (isLoading){
                     errorTextView.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.GONE);
                 }
             }
         });

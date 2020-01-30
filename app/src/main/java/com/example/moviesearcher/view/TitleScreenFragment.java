@@ -21,11 +21,9 @@ import butterknife.ButterKnife;
 
 public class TitleScreenFragment extends Fragment {
 
-    @BindView(R.id.title_screen_proceed_button)
-    ImageButton proceedButton;
+    @BindView(R.id.title_screen_proceed_button) ImageButton proceedButton;
 
     public TitleScreenFragment() {}
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
