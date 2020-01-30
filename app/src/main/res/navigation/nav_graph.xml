@@ -8,58 +8,73 @@
     <fragment
         android:id="@+id/titleScreenFragment"
         android:name="com.example.moviesearcher.view.TitleScreenFragment"
-        android:label="fragment_title_screen"
+        android:label="Movie Searcher"
         tools:layout="@layout/fragment_title_screen">
         <action
-            android:id="@+id/actionMoviesList"
-            app:destination="@id/moviesList" />
+            android:id="@+id/action_movies_list"
+            app:destination="@id/movieList" />
     </fragment>
 
-    <fragment
-        android:id="@+id/moviesList"
-        android:name="com.example.moviesearcher.view.MoviesGridFragment"
-        android:label="fragment_all_movies_list"
-        tools:layout="@layout/fragment_movies_list">
+    <navigation
+        android:id="@+id/movieList"
+        android:label="movieList"
+        app:startDestination="@id/moviesList">
+        <fragment
+            android:id="@+id/moviesList"
+            android:name="com.example.moviesearcher.view.grid.MoviesGridFragment"
+            android:label="Movies"
+            tools:layout="@layout/fragment_movies_grid"/>
         <action
-            android:id="@+id/actionMovieTypeList"
-            app:destination="@id/movieTypeList" />
-        <action
-            android:id="@+id/actionSettings"
-            app:destination="@id/settings" />
-        <action
-            android:id="@+id/actionMovieDetails"
+            android:id="@+id/action_movie_details"
             app:destination="@id/movieDetails" />
-    </fragment>
+    </navigation>
 
-    <fragment
-        android:id="@+id/movieTypeList"
-        android:name="com.example.moviesearcher.view.MovieTypeListFragment"
-        android:label="fragment_movie_type_list"
-        tools:layout="@layout/fragment_movie_type_list">
-        <action
-            android:id="@+id/actionMoviesList"
-            app:destination="@id/moviesList" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/settings"
-        android:name="com.example.moviesearcher.view.SettingsFragment"
-        android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings">
-        <action
-            android:id="@+id/actionMoviesList"
-            app:destination="@id/moviesList" />
-    </fragment>
-    <fragment
+    <navigation
         android:id="@+id/movieDetails"
-        android:name="com.example.moviesearcher.view.details.MovieDetailsFragment"
-        android:label="fragment_movie_details"
-        tools:layout="@layout/fragment_movie_details">
-        <action
-            android:id="@+id/actionMoviesList"
-            app:destination="@id/moviesList" />
+        android:label="movieDetails"
+        app:startDestination="@id/movieOverview">
+
         <argument
             android:name="movieId"
             app:argType="integer" />
-    </fragment>
+
+        <fragment
+            android:id="@+id/movieCast"
+            android:name="com.example.moviesearcher.view.details.MovieCastFragment"
+            android:label="Cast and Crew"
+            tools:layout="@layout/fragment_movie_cast">
+            <argument
+                android:name="movieId"
+                app:argType="integer" />
+        </fragment>
+        <fragment
+            android:id="@+id/movieTrailers"
+            android:name="com.example.moviesearcher.view.details.MovieTrailersFragment"
+            android:label="Trailers"
+            tools:layout="@layout/fragment_movie_trailers">
+            <argument
+                android:name="movieId"
+                app:argType="integer" />
+        </fragment>
+        <fragment
+            android:id="@+id/movieOverview"
+            android:name="com.example.moviesearcher.view.details.MovieOverviewFragment"
+            android:label="Overview"
+            tools:layout="@layout/fragment_movie_overview">
+            <argument
+                android:name="movieId"
+                app:argType="integer" />
+        </fragment>
+        <action
+            android:id="@+id/action_movie_cast"
+            app:destination="@id/movieCast" />
+        <action
+            android:id="@+id/action_movie_trailers"
+            app:destination="@id/movieTrailers" />
+        <action
+            android:id="@+id/actionMovieOverview"
+            app:destination="@id/movieOverview" />
+
+    </navigation>
+
 </navigation>

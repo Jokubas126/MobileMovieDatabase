@@ -7,8 +7,8 @@ import java.util.List;
 public class Movie{
 
     private int id = 0;
-    /*private Bitmap posterImage;
-    private Bitmap backdropImage;*/
+    private Bitmap posterImage;
+    private Bitmap backdropImage;
     private String posterImageUrl;
     private String backdropImageUrl;
     private String title;
@@ -28,7 +28,7 @@ public class Movie{
         this.id = id;
     }
 
-    /*public Bitmap getPosterImage() {
+    public Bitmap getPosterImage() {
         return posterImage;
     }
 
@@ -42,7 +42,7 @@ public class Movie{
 
     public void setBackdropImage(Bitmap backdropImage) {
         this.backdropImage = backdropImage;
-    }*/
+    }
 
     public String getPosterImageUrl() {
         return posterImageUrl;

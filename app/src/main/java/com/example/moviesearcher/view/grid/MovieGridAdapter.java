@@ -1,4 +1,4 @@
-package com.example.moviesearcher.view;
+package com.example.moviesearcher.view.grid;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -14,24 +14,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.model.data.Movie;
-import com.example.moviesearcher.model.util.ConverterUtil;
-import com.example.moviesearcher.model.util.UrlUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>{
 
+    private Activity activity;
     private final List<Movie> movieList = new ArrayList<>();
 
+    MovieGridAdapter(Activity activity) {
+        this.activity = activity;
+    }
+
     void updateMovieList(List<Movie> movieList){
-        Thread t = new Thread(() -> {
+        if (movieList.size() == 0)
             this.movieList.clear();
-            this.movieList.addAll(movieList);
-        });
-        t.start();
-        try { t.join();
-        } catch (InterruptedException e) { e.printStackTrace(); }
+        this.movieList.addAll(movieList);
         notifyDataSetChanged();
     }
 
@@ -45,21 +44,22 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.titleView.setText(movieList.get(position).getTitle());
-        holder.releaseDateView.setText(movieList.get(position).getReleaseDate());
-        holder.IMDbScoreView.setText(movieList.get(position).getScore());
+        activity.runOnUiThread(() -> {
+            holder.titleView.setText(movieList.get(position).getTitle());
+            holder.releaseDateView.setText(movieList.get(position).getReleaseDate());
+            holder.IMDbScoreView.setText(movieList.get(position).getScore());
 
-        holder.posterView.setImageBitmap(ConverterUtil.HttpPathToBitmap(UrlUtil.getPosterImageUrl(movieList.get(position).getPosterImageUrl())));
-
-        StringBuilder genreString = null;
-        for (String genre : movieList.get(position).getGenres()){
-            if (genreString != null){
-                genreString.append(", ").append(genre);
-            } else {
-                genreString = genre == null ? null : new StringBuilder(genre);
+            holder.posterView.setImageBitmap(movieList.get(position).getPosterImage());
+            StringBuilder genreString = null;
+            for (String genre : movieList.get(position).getGenres()){
+                if (genreString != null){
+                    genreString.append(", ").append(genre);
+                } else {
+                    genreString = genre == null ? null : new StringBuilder(genre);
+                }
             }
-        }
-        holder.genresView.setText(genreString == null ? null : genreString.toString());
+            holder.genresView.setText(genreString == null ? null : genreString.toString());
+        });
     }
 
     @Override
@@ -78,12 +78,14 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.itemView = itemView;
-            posterView = itemView.findViewById(R.id.movie_poster_view);
-            titleView = itemView.findViewById(R.id.movie_title_view);
-            releaseDateView = itemView.findViewById(R.id.movie_release_date_view);
-            IMDbScoreView = itemView.findViewById(R.id.movie_score_view);
-            genresView = itemView.findViewById(R.id.movie_genre_view);
+            activity.runOnUiThread(() -> {
+                this.itemView = itemView;
+                posterView = itemView.findViewById(R.id.movie_poster_view);
+                titleView = itemView.findViewById(R.id.movie_title_view);
+                releaseDateView = itemView.findViewById(R.id.movie_release_date_view);
+                IMDbScoreView = itemView.findViewById(R.id.movie_score_view);
+                genresView = itemView.findViewById(R.id.movie_genre_view);
+            });
 
             this.itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
