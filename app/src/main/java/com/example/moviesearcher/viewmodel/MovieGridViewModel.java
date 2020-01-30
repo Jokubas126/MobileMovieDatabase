@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.handlers.JsonHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieGridViewModel extends AndroidViewModel {
@@ -27,6 +28,7 @@ public class MovieGridViewModel extends AndroidViewModel {
     }
 
     public void refresh(){
+        clearAll();
         movieLoadError.setValue(false);
         loading.setValue(true);
         page = 1;
@@ -66,6 +68,12 @@ public class MovieGridViewModel extends AndroidViewModel {
                 });
             }
         })).start();
+    }
+
+    public void clearAll(){
+        List<Movie> movieList = new ArrayList<>();
+        movies.setValue(movieList);
+        page = 0;
     }
 
     public void setActivity(Activity activity) {

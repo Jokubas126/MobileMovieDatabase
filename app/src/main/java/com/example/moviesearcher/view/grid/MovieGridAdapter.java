@@ -28,6 +28,8 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.View
     }
 
     void updateMovieList(List<Movie> movieList){
+        if (movieList.size() == 0)
+            this.movieList.clear();
         this.movieList.addAll(movieList);
         notifyDataSetChanged();
     }

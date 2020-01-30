@@ -47,8 +47,6 @@ public class MoviesGridFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
         viewModel = ViewModelProviders.of(this).get(MovieGridViewModel.class);
         viewModel.setActivity(getActivity());
         viewModel.fetch();
@@ -76,6 +74,12 @@ public class MoviesGridFragment extends Fragment {
             viewModel.refresh();
             refreshLayout.setRefreshing(false);
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        viewModel.clearAll();
     }
 
     private void observeViewModel(){
