@@ -16,15 +16,11 @@ public class ConverterUtil {
             try {
                 if (imagePath != null)
                     bitmap[0] = BitmapFactory.decodeStream(new URL(imagePath).openStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException e) { e.printStackTrace(); }
         });
         thread.start();
-        try {
-            thread.join();
+        try { thread.join();
         } catch (InterruptedException e) { e.printStackTrace(); }
-
         return bitmap[0];
 
     }
