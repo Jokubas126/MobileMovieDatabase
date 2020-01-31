@@ -27,8 +27,6 @@ public class MovieGridViewModel extends AndroidViewModel {
         super(application);
     }
 
-
-
     public void refresh(){
         movieLoadError.setValue(false);
         loading.setValue(true);

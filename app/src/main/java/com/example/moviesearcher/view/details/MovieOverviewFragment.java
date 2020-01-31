@@ -47,7 +47,7 @@ public class MovieOverviewFragment extends Fragment implements BottomNavigationV
 
     private MovieOverviewViewModel viewModel;
 
-    public MovieOverviewFragment() {}
+    public MovieOverviewFragment(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
