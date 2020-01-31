@@ -41,18 +41,13 @@ public class MovieOverviewFragment extends Fragment implements BottomNavigationV
     @BindView(R.id.movie_score_view) TextView scoreView;
     @BindView(R.id.movie_genre_view) TextView genreView;
     @BindView(R.id.movie_description_view) TextView descriptionView;
-    @BindView(R.id.progress_bar_loading_details) ProgressBar progressBar;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
 
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
     private MovieOverviewViewModel viewModel;
 
-    public MovieOverviewFragment() { }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    public MovieOverviewFragment(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -7,15 +7,22 @@
     tools:context=".view.details.MovieOverviewFragment">
 
     <ProgressBar
-        android:id="@+id/progress_bar_loading_details"
+        android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <RelativeLayout
         android:id="@+id/information_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/main_details_layout"
@@ -34,20 +41,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:tint="@color/detailsTop"
+                android:tintMode="src_over"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:scaleType="centerCrop"
-                android:tintMode="src_over"
-                android:tint="@color/detailsTop"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/movie_poster_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
                 android:adjustViewBounds="true"
+                android:padding="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
@@ -151,8 +158,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -174,10 +181,12 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
         app:itemIconTint="@android:color/white"
         app:itemTextColor="@android:color/white"
-        app:menu="@menu/details_bottom_bar_menu"/>
+        app:menu="@menu/details_bottom_bar_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

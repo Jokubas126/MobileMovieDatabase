@@ -11,8 +11,11 @@
         android:label="Movies"
         tools:layout="@layout/fragment_movies_grid">
         <action
-            android:id="@+id/action_moviesList_to_movieDetails"
+            android:id="@+id/actionMovieDetails"
             app:destination="@id/movieDetails" />
+        <action
+            android:id="@+id/actionCategories"
+            app:destination="@id/categoriesFragment" />
     </fragment>
     <action
         android:id="@+id/action_movie_details"
@@ -21,8 +24,7 @@
     <navigation
         android:id="@+id/movieDetails"
         android:label="movieDetails"
-        app:startDestination="@id/movieOverview"
-        >
+        app:startDestination="@id/movieOverview">
         <argument
             android:name="movieId"
             app:argType="integer" />
@@ -59,18 +61,31 @@
             android:id="@+id/action_movie_cast"
             app:destination="@id/movieCast"
             app:popUpTo="@id/moviesList"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="false"/>
         <action
             android:id="@+id/action_movie_trailers"
             app:destination="@id/movieTrailers"
             app:popUpTo="@id/moviesList"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="false"/>
         <action
             android:id="@+id/actionMovieOverview"
             app:destination="@id/movieOverview"
             app:popUpTo="@id/moviesList"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="false"/>
 
     </navigation>
+    <action
+        android:id="@+id/action_global_moviesList"
+        app:destination="@id/moviesList" />
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.example.moviesearcher.view.CategoriesFragment"
+        android:label="Categories"
+        tools:layout="@layout/fragment_categories" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.example.moviesearcher.view.AboutFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_about" />
 
 </navigation>

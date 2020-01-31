@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,19 +10,25 @@
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation"
-        android:scrollbars="vertical">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <LinearLayout
                 android:id="@+id/cast_layout"
@@ -45,8 +51,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:scrollbars="horizontal"
-                        android:scrollbarStyle="outsideInset"/>
+                        android:scrollbarStyle="outsideInset"
+                        android:scrollbars="horizontal" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -63,7 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/main_crew"
-                    android:textAppearance="@style/SectionTitleDetails"/>
+                    android:textAppearance="@style/SectionTitleDetails" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -74,8 +80,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:scrollbars="horizontal"
-                        android:scrollbarStyle="outsideInset"/>
+                        android:scrollbarStyle="outsideInset"
+                        android:scrollbars="horizontal" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -91,6 +97,9 @@
         android:background="@color/colorPrimary"
         app:itemIconTint="@android:color/white"
         app:itemTextColor="@android:color/white"
-        app:menu="@menu/details_bottom_bar_menu"/>
+        app:menu="@menu/details_bottom_bar_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

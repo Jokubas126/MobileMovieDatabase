@@ -1,10 +1,14 @@
 package com.example.moviesearcher.view.grid;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -18,10 +22,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.moviesearcher.R;
+import com.example.moviesearcher.view.MainActivity;
 import com.example.moviesearcher.viewmodel.MovieGridViewModel;
 import com.google.android.material.navigation.NavigationView;
 
@@ -37,17 +43,12 @@ public class MoviesGridFragment extends Fragment {
     @BindView(R.id.loading_error_text_view) TextView errorTextView;
     @BindView(R.id.progress_bar_loading_movie_list) ProgressBar progressBar;
     @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
-    @BindView(R.id.drawer_navigation_view) NavigationView navView;
+    @BindView(R.id.grid_movies_fragment)
+    LinearLayout fragmentLayout;
 
     private boolean isDown = true;
 
     public MoviesGridFragment() { }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +59,6 @@ public class MoviesGridFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setupDrawerContent(navView);
 
         viewModel = ViewModelProviders.of(this).get(MovieGridViewModel.class);
         viewModel.setActivity(getActivity());
@@ -111,24 +111,6 @@ public class MoviesGridFragment extends Fragment {
                 }
             }
         });
+
     }
-
-    private void setupDrawerContent(NavigationView navigationView){
-        navigationView.setNavigationItemSelectedListener(menuItem -> {
-            switch (menuItem.getItemId()){
-                case R.id.sort:
-                    Log.d("Drawer selection", "onNavigationItemSelected: SORT");
-                    drawerLayout.closeDrawers();
-                    return true;
-
-                case R.id.filter:
-                    Log.d("Drawer selection", "onNavigationItemSelected: FILTER");
-                    drawerLayout.closeDrawers();
-                    return true;
-            }
-            return false;
-        });
-    }
-
-
 }

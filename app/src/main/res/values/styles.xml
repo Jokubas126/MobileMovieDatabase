@@ -1,14 +1,32 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorBackground</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+
+    <style name="ItemCategoryTextAppearance">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="ItemTextAppearance">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/navigationViewItem</item>
     </style>
 
     <style name="WelcomeActivityText">
         <item name="android:textSize">33sp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TitleHeaderText">
+        <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textStyle">bold</item>
     </style>
