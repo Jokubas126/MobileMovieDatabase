@@ -1,29 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout_menu">
 
     <group android:checkableBehavior="single">
 
-        <item android:title="drawer_menu">
+        <item
+            android:id="@+id/menu_general_category"
+            android:title="General">
+            <menu>
+                <item android:id="@+id/menu_categories"
+                    android:title="Browse Categories" />
+            </menu>
+        </item>
 
-            <item android:id="@+id/categories"
-                android:title="Categories"
-                />
+        <item
+            android:id="@+id/menu_movie_category"
+            android:title="Movies">
+            <menu>
+                <item
+                    android:id="@+id/menu_popular"
+                    android:title="Most Popular"
+                    android:checked="true" />
+                <item
+                    android:id="@+id/menu_top_rated"
+                    android:title="Top Rated"/>
+                <item
+                    android:id="@+id/menu_latest"
+                    android:title="The Latest"/>
+                <item
+                    android:id="@+id/menu_now_playing"
+                    android:title="Now Playing"/>
+                <item
+                    android:id="@+id/menu_upcoming"
+                    android:title="Upcoming" />
+            </menu>
+        </item>
 
-            <item android:id="@+id/filter"
-                android:title="Filter by"/>
-
-            <item
-                android:title="Other">
-                <menu>
-                    <item
-                        android:id="@+id/nav_about_us"
-                        android:title="About" />
-                </menu>
-            </item>
-
+        <item
+            android:id="@+id/menu_other_category"
+            android:title="Other">
+            <menu>
+                <item
+                    android:id="@+id/menu_about"
+                    android:title="About" />
+            </menu>
         </item>
 
     </group>

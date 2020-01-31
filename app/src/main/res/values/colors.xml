@@ -5,6 +5,9 @@
     <color name="colorBackground">#E0E7FF</color>
     <color name="colorCardBackground">#E4E7FC</color>
 
+    <color name="colorNavigationViewBackground">#E4E7FC</color>
+    <color name="navigationViewItem">#686868</color>
+
     <color name="cardTitle">#3C3C3C</color>
     <color name="cardContent">#686868</color>
 

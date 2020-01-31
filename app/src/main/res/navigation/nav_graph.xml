@@ -11,8 +11,11 @@
         android:label="Movies"
         tools:layout="@layout/fragment_movies_grid">
         <action
-            android:id="@+id/action_moviesList_to_movieDetails"
+            android:id="@+id/actionMovieDetails"
             app:destination="@id/movieDetails" />
+        <action
+            android:id="@+id/actionCategories"
+            app:destination="@id/categoriesFragment" />
     </fragment>
     <action
         android:id="@+id/action_movie_details"
@@ -74,5 +77,15 @@
     <action
         android:id="@+id/action_global_moviesList"
         app:destination="@id/moviesList" />
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.example.moviesearcher.view.CategoriesFragment"
+        android:label="Categories"
+        tools:layout="@layout/fragment_categories" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.example.moviesearcher.view.AboutFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_about" />
 
 </navigation>
