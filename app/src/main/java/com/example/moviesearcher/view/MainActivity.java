@@ -1,10 +1,12 @@
 package com.example.moviesearcher.view;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.model.util.BundleUtil;
+import com.example.moviesearcher.model.util.ConverterUtil;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -24,12 +27,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavController navController;
     private NavigationView navigationView;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
 
         navigationView = findViewById(R.id.navigation_view);
@@ -37,6 +41,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navController = Navigation.findNavController(this, R.id.host_fragment);
         NavigationUI.setupWithNavController(toolbar, navController, drawerLayout);
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() != R.id.moviesList)
+                toolbar.setTitle(destination.getLabel());
+            else{
+                if (arguments != null)
+                    toolbar.setTitle(ConverterUtil.bundleKeyToToolbarTitle(arguments.getString(BundleUtil.KEY_MOVIE_LIST_TYPE)));
+            }
+        });
 
         prepareMenuItemCategoryStyle();
     }
@@ -58,34 +70,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Bundle bundle = new Bundle();
         switch (menuItem.getItemId()){
             case R.id.menu_categories:
-                Log.d("Drawer selection", "onNavigationItemSelected: CATEGORIES");
                 navController.navigate(R.id.categoriesFragment);
                 drawerLayout.closeDrawers();
                 return true;
 
             case R.id.menu_popular:
-                bundle.clear();
                 bundle.putString(BundleUtil.KEY_MOVIE_LIST_TYPE, BundleUtil.KEY_POPULAR);
                 navController.navigate(R.id.moviesList, bundle);
                 drawerLayout.closeDrawers();
                 return true;
 
             case R.id.menu_top_rated:
-                bundle.clear();
                 bundle.putString(BundleUtil.KEY_MOVIE_LIST_TYPE, BundleUtil.KEY_TOP_RATED);
                 navController.navigate(R.id.moviesList, bundle);
                 drawerLayout.closeDrawers();
                 return true;
 
             case R.id.menu_now_playing:
-                bundle.clear();
                 bundle.putString(BundleUtil.KEY_MOVIE_LIST_TYPE, BundleUtil.KEY_NOW_PLAYING);
                 navController.navigate(R.id.moviesList, bundle);
                 drawerLayout.closeDrawers();
                 return true;
 
             case R.id.menu_upcoming:
-                bundle.clear();
                 bundle.putString(BundleUtil.KEY_MOVIE_LIST_TYPE, BundleUtil.KEY_UPCOMING);
                 navController.navigate(R.id.moviesList, bundle);
                 drawerLayout.closeDrawers();

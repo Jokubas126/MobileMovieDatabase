@@ -22,6 +22,20 @@ public class ConverterUtil {
         try { thread.join();
         } catch (InterruptedException e) { e.printStackTrace(); }
         return bitmap[0];
+    }
+
+    public static String bundleKeyToToolbarTitle(String key){
+        if (key != null){
+            StringBuilder title = new StringBuilder();
+            String[] array = key.split("_");
+
+            for(String stringPart: array){
+                String s1 = stringPart.substring(0, 1).toUpperCase();
+                stringPart = s1 + stringPart.substring(1);
+                title.append(stringPart).append(" ");
+            }
+            return title.append("Movies").toString();
+        } else return "Popular Movies";
 
     }
 

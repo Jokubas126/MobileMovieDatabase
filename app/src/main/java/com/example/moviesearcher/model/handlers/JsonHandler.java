@@ -30,7 +30,7 @@ public class JsonHandler {
                     response -> {
                         Thread movieListThread = new Thread(() -> {
                             try {
-                                
+
                                 JSONArray jsonArray = response.getJSONArray(MovieDbUtil.KEY_MOVIE_ARRAY);
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
