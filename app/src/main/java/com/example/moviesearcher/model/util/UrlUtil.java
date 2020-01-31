@@ -4,8 +4,6 @@ public class UrlUtil {
 
     private UrlUtil(){}
 
-    public static final String KEY_POPULAR = "popular";
-
     private static final String API_KEY = "c6c88c6e91d206e35fa6aff0b9d1cc36";
     private static final String BASE_URL = "https://api.themoviedb.org";
 

@@ -22,14 +22,15 @@ public class JsonHandler {
 
     private HashMap<Integer, String> genres = new HashMap<>();
 
-    public void getMovieList(int page, final MovieListAsyncResponse callback){
+    public void getMovieList(String listKey, int page, final MovieListAsyncResponse callback){
         new Thread(() ->{
             List<Movie> movieList = new ArrayList<>();
             genres = getGenres(genresMap -> genres.putAll(genresMap));
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieListUrl(UrlUtil.KEY_POPULAR, page), null,
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieListUrl(listKey, page), null,
                     response -> {
                         Thread movieListThread = new Thread(() -> {
                             try {
+                                
                                 JSONArray jsonArray = response.getJSONArray(MovieDbUtil.KEY_MOVIE_ARRAY);
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);

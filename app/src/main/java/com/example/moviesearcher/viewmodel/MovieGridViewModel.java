@@ -1,19 +1,19 @@
 package com.example.moviesearcher.viewmodel;
 
 import android.app.Activity;
-import android.app.Application;
+import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.handlers.JsonHandler;
+import com.example.moviesearcher.model.util.BundleUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieGridViewModel extends AndroidViewModel {
+public class MovieGridViewModel extends ViewModel {
 
     private Activity activity;
 
@@ -22,9 +22,20 @@ public class MovieGridViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
     private int page;
+    private String listKey;
 
-    public MovieGridViewModel(@NonNull Application application) {
-        super(application);
+    public void initFetch(Activity activity, Bundle args){
+        this.activity = activity;
+        movieLoadError.setValue(false);
+        loading.setValue(true);
+        if (args != null)
+            listKey = args.getString(BundleUtil.KEY_MOVIE_LIST_TYPE);
+        if (listKey == null)
+            listKey = BundleUtil.KEY_POPULAR;
+
+        page = 1;
+        clearAll();
+        getMovieList();
     }
 
     public void refresh(){
@@ -43,7 +54,7 @@ public class MovieGridViewModel extends AndroidViewModel {
     }
 
     private void getMovieList(){
-        new Thread(() -> new JsonHandler().getMovieList(page, list -> {
+        new Thread(() -> new JsonHandler().getMovieList(listKey, page, list -> {
             if (list.isEmpty()){
                 activity.runOnUiThread(() -> {
                     movies.setValue(null);
@@ -62,10 +73,6 @@ public class MovieGridViewModel extends AndroidViewModel {
 
     private void clearAll(){
         movies.setValue(new ArrayList<>());
-    }
-
-    public void setActivity(Activity activity) {
-        this.activity = activity;
     }
 
     public MutableLiveData<List<Movie>> getMovies() {

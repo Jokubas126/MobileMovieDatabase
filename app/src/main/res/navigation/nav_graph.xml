@@ -16,6 +16,10 @@
         <action
             android:id="@+id/actionCategories"
             app:destination="@id/categoriesFragment" />
+        <argument
+            android:name="key_category"
+            app:argType="string"
+            android:defaultValue="popular" />
     </fragment>
     <action
         android:id="@+id/action_movie_details"

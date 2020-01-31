@@ -1,12 +1,10 @@
 package com.example.moviesearcher.view;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
@@ -14,11 +12,11 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.moviesearcher.R;
+import com.example.moviesearcher.model.util.BundleUtil;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -40,13 +38,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navController = Navigation.findNavController(this, R.id.host_fragment);
         NavigationUI.setupWithNavController(toolbar, navController, drawerLayout);
 
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == controller.getGraph().getStartDestination()){
-                if (navigationView.getCheckedItem() != null)
-                    navigationView.getCheckedItem().setChecked(false);
-            }
-        });
-
         prepareMenuItemCategoryStyle();
     }
 
@@ -63,34 +54,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onBackPressed() {
-        if (navigationView.getCheckedItem() != null)
-            navigationView.getCheckedItem().setChecked(false);
-        if (drawerLayout.isDrawerOpen(navigationView))
-            drawerLayout.closeDrawers();
-        else super.onBackPressed();
-    }
-
-    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        Bundle bundle = new Bundle();
         switch (menuItem.getItemId()){
             case R.id.menu_categories:
                 Log.d("Drawer selection", "onNavigationItemSelected: CATEGORIES");
                 navController.navigate(R.id.categoriesFragment);
                 drawerLayout.closeDrawers();
-                menuItem.setChecked(true);
+                return true;
+
+            case R.id.menu_popular:
+                bundle.clear();
+                bundle.putString(BundleUtil.KEY_MOVIE_LIST_TYPE, BundleUtil.KEY_POPULAR);
+                navController.navigate(R.id.moviesList, bundle);
+                drawerLayout.closeDrawers();
+                return true;
+
+            case R.id.menu_top_rated:
+                bundle.clear();
+                bundle.putString(BundleUtil.KEY_MOVIE_LIST_TYPE, BundleUtil.KEY_TOP_RATED);
+                navController.navigate(R.id.moviesList, bundle);
+                drawerLayout.closeDrawers();
+                return true;
+
+            case R.id.menu_now_playing:
+                bundle.clear();
+                bundle.putString(BundleUtil.KEY_MOVIE_LIST_TYPE, BundleUtil.KEY_NOW_PLAYING);
+                navController.navigate(R.id.moviesList, bundle);
+                drawerLayout.closeDrawers();
+                return true;
+
+            case R.id.menu_upcoming:
+                bundle.clear();
+                bundle.putString(BundleUtil.KEY_MOVIE_LIST_TYPE, BundleUtil.KEY_UPCOMING);
+                navController.navigate(R.id.moviesList, bundle);
+                drawerLayout.closeDrawers();
                 return true;
 
             case R.id.menu_about:
                 navController.navigate(R.id.aboutFragment);
                 drawerLayout.closeDrawers();
-                menuItem.setChecked(true);
-                return true;
-
-            case R.id.menu_popular:
-                navController.navigate(R.id.moviesList);
-                drawerLayout.closeDrawers();
-                menuItem.setChecked(true);
                 return true;
         }
         return false;

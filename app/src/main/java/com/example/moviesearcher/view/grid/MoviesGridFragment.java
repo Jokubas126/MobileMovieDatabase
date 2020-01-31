@@ -61,8 +61,7 @@ public class MoviesGridFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         viewModel = ViewModelProviders.of(this).get(MovieGridViewModel.class);
-        viewModel.setActivity(getActivity());
-        viewModel.refresh();
+        viewModel.initFetch(getActivity(), getArguments());
 
         gridAdapter = new MovieGridAdapter(getActivity());
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
