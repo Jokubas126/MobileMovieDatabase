@@ -20,13 +20,13 @@
     </style>
 
     <style name="WelcomeActivityText">
-        <item name="android:textSize">33sp</item>
+        <item name="android:textSize">40sp</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TitleHeaderText">
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -64,7 +64,7 @@
     <style name="DescriptionDetails">
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/cardContent</item>
+        <item name="android:textColor">@color/detailsDescription</item>
     </style>
 
     <style name="PersonName">

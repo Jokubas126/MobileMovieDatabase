@@ -6,6 +6,8 @@ public class MovieDbUtil {
 
     public static final String KEY_ID = "id";
     public static final String KEY_NAME = "name";
+    public static final String KEY_CURRENT_PAGE = "page";
+    public static final String KEY_TOTAL_PAGES = "total_pages";
 
     // MOVIES
 

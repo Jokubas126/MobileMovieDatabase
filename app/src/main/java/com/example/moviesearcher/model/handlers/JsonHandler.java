@@ -22,45 +22,49 @@ public class JsonHandler {
 
     private HashMap<Integer, String> genres = new HashMap<>();
 
+    private int currentListTotalPages;
+
     public void getMovieList(String listKey, int page, final MovieListAsyncResponse callback){
         new Thread(() ->{
-            List<Movie> movieList = new ArrayList<>();
-            genres = getGenres(genresMap -> genres.putAll(genresMap));
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieListUrl(listKey, page), null,
-                    response -> {
-                        Thread movieListThread = new Thread(() -> {
-                            try {
+            if (page <= currentListTotalPages || currentListTotalPages == 0){
+                List<Movie> movieList = new ArrayList<>();
+                genres = getGenres(genresMap -> genres.putAll(genresMap));
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieListUrl(listKey, page), null,
+                        response -> {
+                            Thread movieListThread = new Thread(() -> {
+                                try {
+                                    currentListTotalPages = response.getInt(MovieDbUtil.KEY_TOTAL_PAGES);
+                                    JSONArray jsonArray = response.getJSONArray(MovieDbUtil.KEY_MOVIE_ARRAY);
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                        Movie movie = new Movie();
+                                        movie.setPosterImage(
+                                                ConverterUtil.HttpPathToBitmap(
+                                                        UrlUtil.getPosterImageUrl(jsonObject.getString(MovieDbUtil.KEY_POSTER_PATH))));
+                                        movie.setId(jsonObject.getInt(MovieDbUtil.KEY_ID));
+                                        movie.setTitle(jsonObject.getString(MovieDbUtil.KEY_MOVIE_TITLE));
+                                        movie.setReleaseDate(jsonObject.getString(MovieDbUtil.KEY_RELEASE_DATE));
+                                        movie.setScore(jsonObject.getString(MovieDbUtil.KEY_MOVIE_SCORE));
 
-                                JSONArray jsonArray = response.getJSONArray(MovieDbUtil.KEY_MOVIE_ARRAY);
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    Movie movie = new Movie();
-                                    movie.setPosterImage(
-                                            ConverterUtil.HttpPathToBitmap(
-                                                    UrlUtil.getPosterImageUrl(jsonObject.getString(MovieDbUtil.KEY_POSTER_PATH))));
-                                    movie.setId(jsonObject.getInt(MovieDbUtil.KEY_ID));
-                                    movie.setTitle(jsonObject.getString(MovieDbUtil.KEY_MOVIE_TITLE));
-                                    movie.setReleaseDate(jsonObject.getString(MovieDbUtil.KEY_RELEASE_DATE));
-                                    movie.setScore(jsonObject.getString(MovieDbUtil.KEY_MOVIE_SCORE));
-
-                                    JSONArray genresIds = jsonObject.getJSONArray(MovieDbUtil.KEY_MOVIE_GENRE_IDS_ARRAY);
-                                    List<String> genresList = new ArrayList<>();
-                                    for (int j = 0; j < genresIds.length(); j++) {
-                                        genresList.add(genres.get(genresIds.getInt(j)));
+                                        JSONArray genresIds = jsonObject.getJSONArray(MovieDbUtil.KEY_MOVIE_GENRE_IDS_ARRAY);
+                                        List<String> genresList = new ArrayList<>();
+                                        for (int j = 0; j < genresIds.length(); j++) {
+                                            genresList.add(genres.get(genresIds.getInt(j)));
+                                        }
+                                        movie.setGenres(genresList);
+                                        movieList.add(movie);
                                     }
-                                    movie.setGenres(genresList);
-                                    movieList.add(movie);
+                                } catch (JSONException e) {
+                                    Log.d("JSONArrayRequest", "getMovieList: EXCEPTION OCCURRED");
                                 }
-                            } catch (JSONException e) {
-                                Log.d("JSONArrayRequest", "getMovieList: EXCEPTION OCCURRED");
-                            }
-                            if (callback != null) callback.processFinished(movieList);
-                        });
-                        movieListThread.setPriority(6);
-                        movieListThread.start();
-                    },
-                    error -> Log.d("JSONArrayRequest", "getMovieList: ERROR OCCURRED"));
-            ApplicationRequestHandler.getInstance().addToRequestQueue(request);
+                                if (callback != null) callback.processFinished(movieList);
+                            });
+                            movieListThread.setPriority(6);
+                            movieListThread.start();
+                        },
+                        error -> Log.d("JSONArrayRequest", "getMovieList: ERROR OCCURRED"));
+                ApplicationRequestHandler.getInstance().addToRequestQueue(request);
+            }
         }).start();
     }
 

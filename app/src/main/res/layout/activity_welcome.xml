@@ -7,6 +7,14 @@
     android:background="@color/colorBackground"
     tools:context=".view.WelcomeActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTintMode="src_over"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background"
+        android:tint="@color/tintBackgroundImage" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_top"
         android:layout_width="wrap_content"
@@ -45,7 +53,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toTopOf="@+id/guideline_top" />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/welcome_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,19 +63,20 @@
         android:text="Welcome to"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toTopOf="@+id/guideline_bottom"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline_bottom"/>-->
 
     <TextView
         android:id="@+id/title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="25dp"
         android:paddingBottom="25dp"
         android:text="Movie Searcher"
         android:textAlignment="center"
         android:textAppearance="@style/WelcomeActivityText"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/welcome_text" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline_bottom" />
 
     <!--<ImageButton
         android:id="@+id/title_screen_proceed_button"

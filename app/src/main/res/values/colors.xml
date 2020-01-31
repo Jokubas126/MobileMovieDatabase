@@ -3,9 +3,11 @@
     <color name="colorPrimary">#F92814</color>
     <color name="colorAccent">#F92814</color>
     <color name="colorBackground">#E0E7FF</color>
-    <color name="colorCardBackground">#E4E7FC</color>
+    <color name="colorCardBackground">#B2EAEDFD</color>
 
-    <color name="colorNavigationViewBackground">#E4E7FC</color>
+    <color name="tintBackgroundImage">#CBE4E7FC</color>
+
+    <color name="colorNavigationViewBackground">#E6E4E7FC</color>
     <color name="navigationViewItem">#686868</color>
 
     <color name="cardTitle">#3C3C3C</color>
@@ -14,6 +16,7 @@
     <color name="detailsTop">#D21B1B1B</color>
     <color name="detailsTitle">#FFFFFF</color>
     <color name="detailsContent">#C2C2C2</color>
+    <color name="detailsDescription">#363636</color>
 
     <color name="personDetails">#202020</color>
 </resources>
