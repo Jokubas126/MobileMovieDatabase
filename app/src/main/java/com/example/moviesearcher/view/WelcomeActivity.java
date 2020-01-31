@@ -8,8 +8,6 @@ import android.os.Handler;
 
 import com.example.moviesearcher.R;
 
-import java.util.Objects;
-
 public class WelcomeActivity extends AppCompatActivity {
 
     @Override
@@ -17,11 +15,9 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        Objects.requireNonNull(getSupportActionBar()).hide();
-
         new Handler().postDelayed(() -> {
             startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
             finish();
-        },  2000);
+        },  1000);
     }
 }

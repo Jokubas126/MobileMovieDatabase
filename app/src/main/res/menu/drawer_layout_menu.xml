@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout_menu">
 
-    <item android:id="@+id/sort"
-        android:title="Sort by"/>
+    <group android:checkableBehavior="single">
 
-    <item android:id="@+id/filter"
-        android:title="Filter by"/>
+        <item android:title="drawer_menu">
+
+            <item android:id="@+id/categories"
+                android:title="Categories"
+                />
+
+            <item android:id="@+id/filter"
+                android:title="Filter by"/>
+
+            <item
+                android:title="Other">
+                <menu>
+                    <item
+                        android:id="@+id/nav_about_us"
+                        android:title="About" />
+                </menu>
+            </item>
+
+        </item>
+
+    </group>
+
+
 
 </menu>
