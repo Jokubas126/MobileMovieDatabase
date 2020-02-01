@@ -1,4 +1,4 @@
-package com.example.moviesearcher.model.util;
+package com.example.moviesearcher.util;
 
 public class UrlUtil {
 

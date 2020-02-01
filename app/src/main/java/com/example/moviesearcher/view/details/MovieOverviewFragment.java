@@ -19,7 +19,7 @@ import android.widget.RelativeLayout;
 
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.databinding.FragmentMovieOverviewBinding;
-import com.example.moviesearcher.model.util.BundleUtil;
+import com.example.moviesearcher.util.BundleUtil;
 import com.example.moviesearcher.viewmodel.MovieOverviewViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

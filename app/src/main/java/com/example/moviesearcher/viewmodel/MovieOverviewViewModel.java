@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.handlers.JsonHandler;
-import com.example.moviesearcher.model.util.BundleUtil;
+import com.example.moviesearcher.util.BundleUtil;
 
 public class MovieOverviewViewModel extends ViewModel {
 

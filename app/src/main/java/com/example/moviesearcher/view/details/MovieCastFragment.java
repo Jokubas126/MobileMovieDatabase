@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.example.moviesearcher.R;
-import com.example.moviesearcher.model.util.BundleUtil;
+import com.example.moviesearcher.util.BundleUtil;
 import com.example.moviesearcher.viewmodel.CastViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

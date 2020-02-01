@@ -6,8 +6,8 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.data.Person;
-import com.example.moviesearcher.model.util.MovieDbUtil;
-import com.example.moviesearcher.model.util.UrlUtil;
+import com.example.moviesearcher.util.MovieDbUtil;
+import com.example.moviesearcher.util.UrlUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +38,7 @@ public class JsonHandler {
                                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                                         Movie movie = new Movie();
 
-                                        movie.setPosterImage(UrlUtil.getPosterImageUrl(jsonObject.getString(MovieDbUtil.KEY_POSTER_PATH)));
+                                        movie.setPosterImageUrl(UrlUtil.getPosterImageUrl(jsonObject.getString(MovieDbUtil.KEY_POSTER_PATH)));
                                         movie.setId(jsonObject.getInt(MovieDbUtil.KEY_ID));
                                         movie.setTitle(jsonObject.getString(MovieDbUtil.KEY_MOVIE_TITLE));
                                         movie.setReleaseDate(jsonObject.getString(MovieDbUtil.KEY_RELEASE_DATE));
@@ -97,12 +97,12 @@ public class JsonHandler {
                     new Thread(() -> {
                         try{
                             if (response.getString(MovieDbUtil.KEY_POSTER_PATH).equals("null"))
-                                movie.setPosterImage(null);
-                            else movie.setPosterImage(UrlUtil.getPosterImageUrl(response.getString(MovieDbUtil.KEY_POSTER_PATH)));
+                                movie.setPosterImageUrl(null);
+                            else movie.setPosterImageUrl(UrlUtil.getPosterImageUrl(response.getString(MovieDbUtil.KEY_POSTER_PATH)));
 
                             if (response.getString(MovieDbUtil.KEY_BACKDROP_PATH).equals("null"))
-                                movie.setBackdropImage(null);
-                            else movie.setBackdropImage(UrlUtil.getBackdropImageUrl(response.getString(MovieDbUtil.KEY_BACKDROP_PATH)));
+                                movie.setBackdropImageUrl(null);
+                            else movie.setBackdropImageUrl(UrlUtil.getBackdropImageUrl(response.getString(MovieDbUtil.KEY_BACKDROP_PATH)));
 
                             movie.setId(movieId);
                             movie.setTitle(response.getString(MovieDbUtil.KEY_MOVIE_TITLE));
@@ -151,7 +151,7 @@ public class JsonHandler {
                             person.setName(object.getString(MovieDbUtil.KEY_NAME));
                             person.setPosition(object.getString(MovieDbUtil.KEY_CAST_POSITION));
                             if (!object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH).equals("null"))
-                                person.setProfileImage(UrlUtil.getProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH)));
+                                person.setProfileImageUrl(UrlUtil.getProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH)));
                             cast.add(person);
                         }
                         JSONArray crewArray = response.getJSONArray(MovieDbUtil.KEY_CREW_ARRAY);
@@ -163,7 +163,7 @@ public class JsonHandler {
                             person.setName(object.getString(MovieDbUtil.KEY_NAME));
                             person.setPosition(object.getString(MovieDbUtil.KEY_CREW_POSITION));
                             if (!object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH).equals("null"))
-                                person.setProfileImage(UrlUtil.getProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH)));
+                                person.setProfileImageUrl(UrlUtil.getProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH)));
                             crew.add(person);
                         }
                     } catch (JSONException e) { Log.d("JSONArrayRequest", "getPeople: EXCEPTION OCCURRED"); }

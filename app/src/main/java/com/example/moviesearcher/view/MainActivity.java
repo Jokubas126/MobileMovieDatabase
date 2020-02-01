@@ -1,25 +1,22 @@
 package com.example.moviesearcher.view;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.moviesearcher.R;
-import com.example.moviesearcher.model.util.BundleUtil;
-import com.example.moviesearcher.model.util.ConverterUtil;
+import com.example.moviesearcher.util.BundleUtil;
+import com.example.moviesearcher.util.ConverterUtil;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{

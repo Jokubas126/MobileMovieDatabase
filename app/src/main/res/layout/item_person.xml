@@ -49,7 +49,7 @@
                     android:layout_height="0dp"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    android:imageBitmap="@{person.profileImage}"
+                    android:imageUrl="@{person.profileImageUrl}"
                     app:layout_constraintBottom_toTopOf="@+id/guideline"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

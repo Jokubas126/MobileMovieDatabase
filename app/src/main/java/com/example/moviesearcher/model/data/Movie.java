@@ -1,16 +1,12 @@
 package com.example.moviesearcher.model.data;
 
-import android.graphics.Bitmap;
-
-import com.example.moviesearcher.model.util.ConverterUtil;
+import com.example.moviesearcher.util.ConverterUtil;
 
 import java.util.List;
 
 public class Movie{
 
     private int id = 0;
-    private Bitmap posterImage;
-    private Bitmap backdropImage;
     private String title;
     private String releaseDate;
     private String score;
@@ -18,6 +14,8 @@ public class Movie{
     private String productionCountries;
     private int runtime;
     private String description;
+    private String posterImageUrl;
+    private String backdropImageUrl;
 
     public int getId() {
         return id;
@@ -27,20 +25,20 @@ public class Movie{
         this.id = id;
     }
 
-    public Bitmap getPosterImage() {
-        return posterImage;
+    public void setPosterImageUrl(String posterImageUrl) {
+        this.posterImageUrl = posterImageUrl;
     }
 
-    public Bitmap getBackdropImage() {
-        return backdropImage;
+    public String getPosterImageUrl() {
+        return posterImageUrl;
     }
 
-    public void setPosterImage(String posterImageUrl) {
-        posterImage = ConverterUtil.HttpPathToBitmap(posterImageUrl);
+    public void setBackdropImageUrl(String backdropImageUrl) {
+        this.backdropImageUrl = backdropImageUrl;
     }
 
-    public void setBackdropImage(String backdropImageUrl) {
-        backdropImage = ConverterUtil.HttpPathToBitmap(backdropImageUrl);
+    public String getBackdropImageUrl() {
+        return backdropImageUrl;
     }
 
     public String getTitle() {
