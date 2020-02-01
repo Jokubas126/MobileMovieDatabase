@@ -1,34 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <data>
+        <variable
+            name="movie"
+            type="com.example.moviesearcher.model.data.Movie" />
+        <variable
+            name="listener"
+            type="com.example.moviesearcher.view.grid.MovieClickListener" />
 
-    <RelativeLayout
+    </data>
+    
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:card_view="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@drawable/card_color">
+        android:layout_margin="5dp">
 
-        <androidx.cardview.widget.CardView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:cardBackgroundColor="@android:color/transparent">
+            android:layout_height="wrap_content"
+            android:background="@color/colorCardBackground">
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="1dp"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:onClick="@{listener::onMovieClicked}"
+                app:cardBackgroundColor="@android:color/transparent">
 
-                <ImageView
-                    android:id="@+id/movie_poster_view"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/empty_image"/>
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/movie_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.valueOf(movie.id)}"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:id="@+id/movie_poster_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:gravity="center_horizontal"
+                        android:imageBitmap="@{movie.posterImage}"
+                        android:src="@drawable/empty_image" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -42,12 +61,14 @@
                             android:id="@+id/movie_title_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@style/TitleCard"/>
+                            android:text="@{movie.title}"
+                            android:textAppearance="@style/TitleCard" />
 
                         <TextView
                             android:id="@+id/movie_release_date_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="@{movie.releaseDate}"
                             android:textAppearance="@style/ContentCard" />
 
                         <LinearLayout
@@ -58,13 +79,14 @@
                                 android:id="@+id/movie_score_view"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="@{movie.score}"
                                 android:textAppearance="@style/ContentCard" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/score_ending"
-                                android:textAppearance="@style/ContentCard"/>
+                                android:textAppearance="@style/ContentCard" />
 
                         </LinearLayout>
 
@@ -72,11 +94,12 @@
                             android:id="@+id/movie_genre_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-
+                            android:text="@{movie.genres}"
                             android:textAppearance="@style/ContentCard" />
 
                     </LinearLayout>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-    </RelativeLayout>
-</LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

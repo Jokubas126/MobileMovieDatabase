@@ -2,6 +2,8 @@ package com.example.moviesearcher.model.data;
 
 import android.graphics.Bitmap;
 
+import com.example.moviesearcher.model.util.ConverterUtil;
+
 import java.util.List;
 
 public class Movie{
@@ -9,16 +11,13 @@ public class Movie{
     private int id = 0;
     private Bitmap posterImage;
     private Bitmap backdropImage;
-    private String posterImageUrl;
-    private String backdropImageUrl;
     private String title;
     private String releaseDate;
     private String score;
-    private List<String> genres;
-    private List<String> productionCountries;
+    private String genres;
+    private String productionCountries;
     private int runtime;
     private String description;
-    private boolean isAdult;
 
     public int getId() {
         return id;
@@ -32,32 +31,16 @@ public class Movie{
         return posterImage;
     }
 
-    public void setPosterImage(Bitmap posterImage) {
-        this.posterImage = posterImage;
-    }
-
     public Bitmap getBackdropImage() {
         return backdropImage;
     }
 
-    public void setBackdropImage(Bitmap backdropImage) {
-        this.backdropImage = backdropImage;
+    public void setPosterImage(String posterImageUrl) {
+        posterImage = ConverterUtil.HttpPathToBitmap(posterImageUrl);
     }
 
-    public String getPosterImageUrl() {
-        return posterImageUrl;
-    }
-
-    public void setPosterImageUrl(String posterImageUrl) {
-        this.posterImageUrl = posterImageUrl;
-    }
-
-    public String getBackdropImageUrl() {
-        return backdropImageUrl;
-    }
-
-    public void setBackdropImageUrl(String backdropImageUrl) {
-        this.backdropImageUrl = backdropImageUrl;
+    public void setBackdropImage(String backdropImageUrl) {
+        backdropImage = ConverterUtil.HttpPathToBitmap(backdropImageUrl);
     }
 
     public String getTitle() {
@@ -84,19 +67,27 @@ public class Movie{
         this.score = score;
     }
 
-    public List<String> getGenres() {
-        return genres;
+    public void setGenres(List<String> genresList) {
+        new Thread(() -> genres = ConverterUtil.stringListToString(genresList)).start();
     }
 
-    public void setGenres(List<String> genres) {
+    public void setGenres(String genres){
         this.genres = genres;
     }
 
-    public List<String> getProductionCountries() {
+    public String getGenres() {
+        return genres;
+    }
+
+    public String getProductionCountries() {
         return productionCountries;
     }
 
-    public void setProductionCountries(List<String> productionCountries) {
+    public void setProductionCountries(List<String> productionCountriesList) {
+        new Thread(() -> productionCountries = ConverterUtil.stringListToString(productionCountriesList)).start();
+    }
+
+    public void setProductionCountries(String productionCountries) {
         this.productionCountries = productionCountries;
     }
 
@@ -114,13 +105,5 @@ public class Movie{
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public boolean isAdult() {
-        return isAdult;
-    }
-
-    public void setAdult(boolean adult) {
-        isAdult = adult;
     }
 }

@@ -6,7 +6,6 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.data.Person;
-import com.example.moviesearcher.model.util.ConverterUtil;
 import com.example.moviesearcher.model.util.MovieDbUtil;
 import com.example.moviesearcher.model.util.UrlUtil;
 
@@ -38,9 +37,8 @@ public class JsonHandler {
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                                         Movie movie = new Movie();
-                                        movie.setPosterImage(
-                                                ConverterUtil.HttpPathToBitmap(
-                                                        UrlUtil.getPosterImageUrl(jsonObject.getString(MovieDbUtil.KEY_POSTER_PATH))));
+
+                                        movie.setPosterImage(UrlUtil.getPosterImageUrl(jsonObject.getString(MovieDbUtil.KEY_POSTER_PATH)));
                                         movie.setId(jsonObject.getInt(MovieDbUtil.KEY_ID));
                                         movie.setTitle(jsonObject.getString(MovieDbUtil.KEY_MOVIE_TITLE));
                                         movie.setReleaseDate(jsonObject.getString(MovieDbUtil.KEY_RELEASE_DATE));
@@ -80,12 +78,12 @@ public class JsonHandler {
                                         array.getJSONObject(i).getString(MovieDbUtil.KEY_NAME)
                                 );
                             }
-                        } catch (JSONException e) { Log.d("JSONArrayRequest", "getGenres: EXCEPTION OCCURRED");}
+                        } catch (JSONException e) { Log.d("JSONArrayRequest", "getGenresList: EXCEPTION OCCURRED");}
                         if (callback != null) callback.processFinished(genres);
                     });
                     genreThread.setPriority(10);
                     genreThread.start();
-                }, error -> Log.d("JSONArrayRequest", "getGenres: ERROR OCCURRED"));
+                }, error -> Log.d("JSONArrayRequest", "getGenresList: ERROR OCCURRED"));
         ApplicationRequestHandler.getInstance().addToRequestQueue(request);
         return genres;
     }
@@ -99,12 +97,12 @@ public class JsonHandler {
                     new Thread(() -> {
                         try{
                             if (response.getString(MovieDbUtil.KEY_POSTER_PATH).equals("null"))
-                                movie.setPosterImageUrl(null);
-                            else movie.setPosterImageUrl(response.getString(MovieDbUtil.KEY_POSTER_PATH));
+                                movie.setPosterImage(null);
+                            else movie.setPosterImage(UrlUtil.getPosterImageUrl(response.getString(MovieDbUtil.KEY_POSTER_PATH)));
 
                             if (response.getString(MovieDbUtil.KEY_BACKDROP_PATH).equals("null"))
-                                movie.setBackdropImageUrl(null);
-                            else movie.setBackdropImageUrl(response.getString(MovieDbUtil.KEY_BACKDROP_PATH));
+                                movie.setBackdropImage(null);
+                            else movie.setBackdropImage(UrlUtil.getBackdropImageUrl(response.getString(MovieDbUtil.KEY_BACKDROP_PATH)));
 
                             movie.setId(movieId);
                             movie.setTitle(response.getString(MovieDbUtil.KEY_MOVIE_TITLE));
@@ -145,29 +143,27 @@ public class JsonHandler {
                     try {
                         JSONArray castArray = response.getJSONArray(MovieDbUtil.KEY_CAST_ARRAY);
                         for (int i = 0; i < castArray.length(); i++){
-                            if (i > 15) // for maximum amount of people
+                            if (i > 10) // for maximum amount of people
                                 break;
                             Person person = new Person();
                             JSONObject object = castArray.getJSONObject(i);
 
                             person.setName(object.getString(MovieDbUtil.KEY_NAME));
                             person.setPosition(object.getString(MovieDbUtil.KEY_CAST_POSITION));
-                            person.setProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH));
-                            if (person.getProfileImageUrl().equals("null"))
-                                person.setProfileImageUrl(null);
+                            if (!object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH).equals("null"))
+                                person.setProfileImage(UrlUtil.getProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH)));
                             cast.add(person);
                         }
                         JSONArray crewArray = response.getJSONArray(MovieDbUtil.KEY_CREW_ARRAY);
                         for (int i = 0; i < crewArray.length(); i++){
-                            if (i > 15) // for maximum amount of people
+                            if (i > 10) // for maximum amount of people
                                 break;
                             Person person = new Person();
                             JSONObject object = crewArray.getJSONObject(i);
                             person.setName(object.getString(MovieDbUtil.KEY_NAME));
                             person.setPosition(object.getString(MovieDbUtil.KEY_CREW_POSITION));
-                            person.setProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH));
-                            if (person.getProfileImageUrl().equals("null"))
-                                person.setProfileImageUrl(null);
+                            if (!object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH).equals("null"))
+                                person.setProfileImage(UrlUtil.getProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH)));
                             crew.add(person);
                         }
                     } catch (JSONException e) { Log.d("JSONArrayRequest", "getPeople: EXCEPTION OCCURRED"); }

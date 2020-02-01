@@ -1,79 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="165dp"
-    android:layout_height="290dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@android:color/transparent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        app:cardBackgroundColor="@android:color/transparent">
+    <data>
+        <variable
+            name="person"
+            type="com.example.moviesearcher.model.data.Person" />
+    </data>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="165dp"
+        android:layout_height="290dp"
+        android:background="@android:color/transparent"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@color/colorCardBackground">
+            android:layout_margin="5dp"
+            app:cardBackgroundColor="@android:color/transparent">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.73"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No Image"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/guideline"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <ImageView
-                android:id="@+id/person_image_view"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toTopOf="@+id/guideline"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="match_parent"
+                android:background="@color/colorCardBackground"
+                android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                android:paddingStart="3dp"
-                android:paddingEnd="3dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline">
-
-                <TextView
-                    android:id="@+id/person_name"
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/PersonName" />
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.73" />
 
                 <TextView
-                    android:id="@+id/person_position"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/PersonPosition" />
+                    android:text="No Image"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toTopOf="@+id/guideline"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+                <ImageView
+                    android:id="@+id/person_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:imageBitmap="@{person.profileImage}"
+                    app:layout_constraintBottom_toTopOf="@+id/guideline"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="vertical"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="3dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/guideline">
 
-    </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/person_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{person.name}"
+                        android:textAppearance="@style/PersonName" />
 
-</FrameLayout>
+                    <TextView
+                        android:id="@+id/person_position"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{person.position}"
+                        android:textAppearance="@style/PersonPosition" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </FrameLayout>
+
+</layout>

@@ -1,10 +1,14 @@
 package com.example.moviesearcher.model.data;
 
+import android.graphics.Bitmap;
+
+import com.example.moviesearcher.model.util.ConverterUtil;
+
 public class Person{
 
     private String name;
     private String position;
-    private String profileImageUrl;
+    private Bitmap profileImage;
 
     public String getName() {
         return name;
@@ -22,7 +26,15 @@ public class Person{
         this.position = position;
     }
 
-    public String getProfileImageUrl() { return profileImageUrl; }
+    public void setProfileImage(String profileImageUrl) {
+        profileImage = ConverterUtil.HttpPathToBitmap(profileImageUrl);
+    }
 
-    public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
+    public Bitmap getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(Bitmap profileImage) {
+        this.profileImage = profileImage;
+    }
 }

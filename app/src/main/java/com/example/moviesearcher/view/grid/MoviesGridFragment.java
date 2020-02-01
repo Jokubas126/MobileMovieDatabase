@@ -27,9 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.moviesearcher.R;
-import com.example.moviesearcher.view.MainActivity;
 import com.example.moviesearcher.viewmodel.MovieGridViewModel;
-import com.google.android.material.navigation.NavigationView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +35,7 @@ import butterknife.ButterKnife;
 public class MoviesGridFragment extends Fragment {
 
     private MovieGridViewModel viewModel;
-    private MovieGridAdapter gridAdapter;
+    private MovieGridAdapter gridAdapter = new MovieGridAdapter();
 
     @BindView(R.id.movie_grid_view) RecyclerView recyclerView;
     @BindView(R.id.loading_error_text_view) TextView errorTextView;
@@ -63,7 +61,6 @@ public class MoviesGridFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(MovieGridViewModel.class);
         viewModel.initFetch(getActivity(), getArguments());
 
-        gridAdapter = new MovieGridAdapter(getActivity());
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(gridAdapter);

@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 public class ConverterUtil {
 
@@ -37,6 +38,20 @@ public class ConverterUtil {
             return title.append("Movies").toString();
         } else return "Popular Movies";
 
+    }
+
+    public static String stringListToString(List<String> list){
+        StringBuilder stringBuilder = null;
+        for (String word : list){
+            if (stringBuilder != null){
+                stringBuilder.append(", ").append(word);
+            } else {
+                stringBuilder = word == null ? null : new StringBuilder(word);
+            }
+        }
+        if (stringBuilder != null) {
+            return stringBuilder.toString();
+        } else return null;
     }
 
 }

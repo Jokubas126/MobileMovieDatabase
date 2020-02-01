@@ -36,7 +36,6 @@ public class MovieCastFragment extends Fragment implements BottomNavigationView.
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.cast_recycler_view) RecyclerView castView;
     @BindView(R.id.crew_recycler_view) RecyclerView crewView;
-
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
     private PeopleAdapter castAdapter = new PeopleAdapter();
