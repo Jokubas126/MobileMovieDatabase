@@ -15,7 +15,9 @@ public class ConverterUtil {
 
     private ConverterUtil(){}
 
-    public static void loadImage(ImageView imageView, String url, CircularProgressDrawable progressDrawable){
+    // ---------------- Image related -------------//
+
+    private static void loadImageFromUrl(ImageView imageView, String url, CircularProgressDrawable progressDrawable){
         RequestOptions options = new RequestOptions()
                 .placeholder(progressDrawable)
                 .error(android.R.drawable.screen_background_light_transparent);
@@ -26,7 +28,7 @@ public class ConverterUtil {
                 .into(imageView);
     }
 
-    public static CircularProgressDrawable getProgressDrawable(Context context){
+    private static CircularProgressDrawable getProgressDrawable(Context context){
         CircularProgressDrawable cpd = new CircularProgressDrawable(context);
         cpd.setStrokeWidth(10f);
         cpd.setCenterRadius(50f);
@@ -36,8 +38,10 @@ public class ConverterUtil {
 
     @BindingAdapter("android:imageUrl")
     public static void loadImage(ImageView imageView, String url){
-        loadImage(imageView, url, getProgressDrawable(imageView.getContext()));
+        loadImageFromUrl(imageView, url, getProgressDrawable(imageView.getContext()));
     }
+
+    // ---------------- Text related -------------//
 
     public static String bundleKeyToToolbarTitle(String key){
         if (key != null){

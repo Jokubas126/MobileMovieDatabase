@@ -6,12 +6,11 @@ public class MovieDbUtil {
 
     public static final String KEY_ID = "id";
     public static final String KEY_NAME = "name";
-    public static final String KEY_CURRENT_PAGE = "page";
     public static final String KEY_TOTAL_PAGES = "total_pages";
 
     // MOVIES
 
-    public static final String KEY_MOVIE_ARRAY = "results";
+    public static final String KEY_RESULT_ARRAY = "results";
     public static final String KEY_MOVIE_TITLE = "title";
     public static final String KEY_RELEASE_DATE = "release_date";
     public static final String KEY_MOVIE_SCORE = "vote_average";
@@ -35,4 +34,11 @@ public class MovieDbUtil {
     public static final String KEY_CREW_POSITION = "job";
     public static final String KEY_PROFILE_IMAGE_PATH = "profile_path";
 
+
+    // TRAILER
+    public static final String KEY_VIDEO_SITE = "site";
+    public static final String KEY_YOUTUBE_SITE = "YouTube";
+    public static final String KEY_VIDEO_TYPE = "type";
+    public static final String KEY_TRAILER_TYPE = "Trailer";
+    public static final String KEY_VIDEO = "key";
 }

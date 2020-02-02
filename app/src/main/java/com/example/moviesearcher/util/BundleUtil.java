@@ -10,4 +10,7 @@ public class BundleUtil {
     public static final String KEY_LATEST = "latest";
     public static final String KEY_NOW_PLAYING = "now_playing";
     public static final String KEY_UPCOMING = "upcoming";
+
+    public static final String KEY_SEEKING_POINT = "seekingPoint";
+    public static final String KEY_VIDEO = "videoKey";
 }

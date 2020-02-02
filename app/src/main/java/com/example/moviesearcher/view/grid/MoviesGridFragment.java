@@ -1,15 +1,9 @@
 package com.example.moviesearcher.view.grid;
 
-
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -17,9 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -41,8 +33,7 @@ public class MoviesGridFragment extends Fragment {
     @BindView(R.id.loading_error_text_view) TextView errorTextView;
     @BindView(R.id.progress_bar_loading_movie_list) ProgressBar progressBar;
     @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.grid_movies_fragment)
-    LinearLayout fragmentLayout;
+    @BindView(R.id.grid_movies_fragment) LinearLayout fragmentLayout;
 
     private boolean isDown = true;
 
@@ -86,20 +77,20 @@ public class MoviesGridFragment extends Fragment {
     }
 
     private void observeViewModel(){
-        viewModel.getMovies().observe(this, movies -> {
+        viewModel.getMovies().observe(getViewLifecycleOwner(), movies -> {
             if (movies != null){
                 gridAdapter.updateMovieList(movies);
                 recyclerView.setVisibility(View.VISIBLE);
             }
         });
 
-        viewModel.getMovieLoadError().observe(this, isError -> {
+        viewModel.getMovieLoadError().observe(getViewLifecycleOwner(), isError -> {
             if (isError != null){
                 errorTextView.setVisibility(isError ? View.VISIBLE : View.GONE);
             }
         });
 
-        viewModel.getLoading().observe(this, isLoading -> {
+        viewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading != null){
                 progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
                 if (isLoading){

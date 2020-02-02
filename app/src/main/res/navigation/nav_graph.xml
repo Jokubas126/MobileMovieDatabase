@@ -43,11 +43,11 @@
                 app:argType="integer" />
         </fragment>
         <fragment
-            android:id="@+id/movieTrailers"
-            android:name="com.example.moviesearcher.view.details.MovieTrailersFragment"
-            android:label="Trailers"
-            tools:layout="@layout/fragment_movie_trailers"
-            app:popUpTo="@id/moviesList">
+            android:id="@+id/movieMedia"
+            android:name="com.example.moviesearcher.view.details.MovieMediaFragment"
+            android:label="Media"
+            app:popUpTo="@id/moviesList"
+            tools:layout="@layout/fragment_movie_media">
             <argument
                 android:name="movieId"
                 app:argType="integer" />
@@ -67,8 +67,8 @@
             app:popUpTo="@id/moviesList"
             app:popUpToInclusive="false"/>
         <action
-            android:id="@+id/action_movie_trailers"
-            app:destination="@id/movieTrailers"
+            android:id="@+id/action_movie_media"
+            app:destination="@id/movieMedia"
             app:popUpTo="@id/moviesList"
             app:popUpToInclusive="false"/>
         <action

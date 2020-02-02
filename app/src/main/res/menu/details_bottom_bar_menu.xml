@@ -9,9 +9,9 @@
             android:icon="@drawable/ic_overview" />
 
         <item
-            android:id="@+id/trailers_menu_item"
-            android:title="Trailers"
-            android:icon="@drawable/ic_trailers"/>
+            android:id="@+id/media_menu_item"
+            android:title="Media"
+            android:icon="@drawable/ic_media"/>
 
         <item
             android:id="@+id/cast_menu_item"

@@ -15,12 +15,8 @@
         xmlns:card_view="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorCardBackground">
+        android:layout_margin="5dp"
+        android:background="@color/colorCardBackground">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -44,6 +40,7 @@
                         android:id="@+id/movie_poster_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
                         android:adjustViewBounds="true"
                         android:gravity="center_horizontal"
                         android:imageUrl="@{movie.posterImageUrl}"
@@ -100,6 +97,5 @@
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-        </RelativeLayout>
     </LinearLayout>
 </layout>

@@ -1,4 +1,4 @@
-package com.example.moviesearcher.model.handlers;
+package com.example.moviesearcher.model.handlers.responses;
 
 import java.util.HashMap;
 

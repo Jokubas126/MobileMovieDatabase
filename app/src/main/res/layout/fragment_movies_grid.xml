@@ -19,13 +19,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/movie_grid_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:columnWidth="150dp"
-                android:numColumns="2"
-                android:verticalSpacing="10dp"
-                android:horizontalSpacing="10dp"
-                android:stretchMode="spacingWidthUniform"
-                android:gravity="center"/>
+                android:layout_height="match_parent" />
 
             <TextView
                 android:id="@+id/loading_error_text_view"

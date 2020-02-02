@@ -6,6 +6,11 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.data.Person;
+import com.example.moviesearcher.model.data.Video;
+import com.example.moviesearcher.model.handlers.responses.GenresMapAsyncResponse;
+import com.example.moviesearcher.model.handlers.responses.MovieListAsyncResponse;
+import com.example.moviesearcher.model.handlers.responses.ObjectAsyncResponse;
+import com.example.moviesearcher.model.handlers.responses.PersonListAsyncResponse;
 import com.example.moviesearcher.util.MovieDbUtil;
 import com.example.moviesearcher.util.UrlUtil;
 
@@ -33,7 +38,7 @@ public class JsonHandler {
                             Thread movieListThread = new Thread(() -> {
                                 try {
                                     currentListTotalPages = response.getInt(MovieDbUtil.KEY_TOTAL_PAGES);
-                                    JSONArray jsonArray = response.getJSONArray(MovieDbUtil.KEY_MOVIE_ARRAY);
+                                    JSONArray jsonArray = response.getJSONArray(MovieDbUtil.KEY_RESULT_ARRAY);
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                                         Movie movie = new Movie();
@@ -131,6 +136,31 @@ public class JsonHandler {
                     }).start();
                 }, error -> Log.d("JSONArrayRequest", "getMovieDetails: ERROR OCCURRED"));
         ApplicationRequestHandler.getInstance().addToRequestQueue(request);
+        }).start();
+    }
+
+    public void getTrailer(int movieId, ObjectAsyncResponse callback){
+        new Thread(() -> {
+            JsonObjectRequest request = new JsonObjectRequest(
+                    Request.Method.GET, UrlUtil.getMovieVideosUrl(movieId), null,
+                    response -> new Thread(() -> {
+                        try {
+                            JSONArray array = response.getJSONArray(MovieDbUtil.KEY_RESULT_ARRAY);
+                            for (int i = 0; i < array.length(); i++){
+                                JSONObject object = array.getJSONObject(i);
+                                if (object.getString(MovieDbUtil.KEY_VIDEO_SITE).equals(MovieDbUtil.KEY_YOUTUBE_SITE)
+                                        && object.getString(MovieDbUtil.KEY_VIDEO_TYPE).equals(MovieDbUtil.KEY_TRAILER_TYPE)){
+                                    Video video = new Video();
+                                    video.setKey(object.getString(MovieDbUtil.KEY_VIDEO));
+                                    video.setName(object.getString(MovieDbUtil.KEY_NAME));
+                                    if (callback != null) callback.processFinished(video);
+                                    break;
+                                }
+                            }
+                        } catch (JSONException e) {
+                            Log.d("JSONObjectRequest", "getVideos: EXCEPTION OCCURRED"); }
+                    }).start(), error -> Log.d("JSONObjectRequest", "getVideos: ERROR OCCURRED"));
+            ApplicationRequestHandler.getInstance().addToRequestQueue(request);
         }).start();
     }
 

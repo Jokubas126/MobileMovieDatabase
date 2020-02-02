@@ -31,7 +31,6 @@ public class MovieOverviewFragment extends Fragment implements BottomNavigationV
 
     @BindView(R.id.information_layout) RelativeLayout informationLayout;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
-
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
     private FragmentMovieOverviewBinding fragmentView;
@@ -42,7 +41,6 @@ public class MovieOverviewFragment extends Fragment implements BottomNavigationV
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         fragmentView = DataBindingUtil.inflate(inflater, R.layout.fragment_movie_overview, container,false);
         ButterKnife.bind(this, fragmentView.getRoot());
         return fragmentView.getRoot();
@@ -60,14 +58,14 @@ public class MovieOverviewFragment extends Fragment implements BottomNavigationV
     }
 
     private void observeViewModel(){
-        viewModel.getCurrentMovie().observe(this, movie -> {
+        viewModel.getCurrentMovie().observe(getViewLifecycleOwner(), movie -> {
             if (movie != null){
                 fragmentView.setMovie(movie);
                 informationLayout.setVisibility(View.VISIBLE);
             }
         });
 
-        viewModel.getLoading().observe(this, isLoading -> {
+        viewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading != null){
                 progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
                 if(isLoading)
@@ -79,9 +77,9 @@ public class MovieOverviewFragment extends Fragment implements BottomNavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
-            case R.id.trailers_menu_item:
+            case R.id.media_menu_item:
                 if (getArguments() != null) {
-                    NavDirections action = MovieOverviewFragmentDirections.actionMovieTrailers(getArguments().getInt(BundleUtil.KEY_MOVIE_ID));
+                    NavDirections action = MovieOverviewFragmentDirections.actionMovieMedia(getArguments().getInt(BundleUtil.KEY_MOVIE_ID));
                     Navigation.findNavController(bottomNavigationView).navigate(action);
                 }
                 break;

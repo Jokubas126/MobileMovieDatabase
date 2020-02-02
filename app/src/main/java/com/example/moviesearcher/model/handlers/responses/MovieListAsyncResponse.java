@@ -1,4 +1,4 @@
-package com.example.moviesearcher.model.handlers;
+package com.example.moviesearcher.model.handlers.responses;
 
 import com.example.moviesearcher.model.data.Movie;
 

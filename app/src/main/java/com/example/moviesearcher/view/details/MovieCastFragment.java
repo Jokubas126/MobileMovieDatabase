@@ -72,7 +72,7 @@ public class MovieCastFragment extends Fragment implements BottomNavigationView.
     }
 
     private void observeViewModel(){
-        viewModel.getCast().observe(this, cast -> {
+        viewModel.getCast().observe(getViewLifecycleOwner(), cast -> {
             if (cast != null) {
                 castLayout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
@@ -80,7 +80,7 @@ public class MovieCastFragment extends Fragment implements BottomNavigationView.
             }
         });
 
-        viewModel.getCrew().observe(this, crew -> {
+        viewModel.getCrew().observe(getViewLifecycleOwner(), crew -> {
             if (crew != null){
                 crewLayout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
@@ -88,7 +88,7 @@ public class MovieCastFragment extends Fragment implements BottomNavigationView.
             }
         });
 
-        viewModel.getLoading().observe(this, isLoading -> {
+        viewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> {
             if(isLoading != null){
                 progressBar.setVisibility(isLoading? View.VISIBLE : View.GONE);
                 if (isLoading){
@@ -102,9 +102,9 @@ public class MovieCastFragment extends Fragment implements BottomNavigationView.
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
-            case R.id.trailers_menu_item:
+            case R.id.media_menu_item:
                 if (getArguments() != null) {
-                    NavDirections action = MovieCastFragmentDirections.actionMovieTrailers(getArguments().getInt(BundleUtil.KEY_MOVIE_ID));
+                    NavDirections action = MovieCastFragmentDirections.actionMovieMedia(getArguments().getInt(BundleUtil.KEY_MOVIE_ID));
                     Navigation.findNavController(bottomNavigationView).navigate(action);
                 }
                 break;
