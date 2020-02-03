@@ -46,7 +46,7 @@ public class JsonHandler {
                                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                                         Movie movie = new Movie();
 
-                                        movie.setPosterImageUrl(UrlUtil.getPosterImageUrl(jsonObject.getString(MovieDbUtil.KEY_POSTER_PATH)));
+                                        movie.setPosterImageUrl(UrlUtil.getImageUrl(jsonObject.getString(MovieDbUtil.KEY_POSTER_PATH)));
                                         movie.setId(jsonObject.getInt(MovieDbUtil.KEY_ID));
                                         movie.setTitle(jsonObject.getString(MovieDbUtil.KEY_MOVIE_TITLE));
                                         movie.setReleaseDate(jsonObject.getString(MovieDbUtil.KEY_RELEASE_DATE));
@@ -101,43 +101,36 @@ public class JsonHandler {
         Movie movie = new Movie();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
                 UrlUtil.getMovieDetailsUrl(movieId), null,
-                response -> {
-                    new Thread(() -> {
-                        try{
-                            if (response.getString(MovieDbUtil.KEY_POSTER_PATH).equals("null"))
-                                movie.setPosterImageUrl(null);
-                            else movie.setPosterImageUrl(UrlUtil.getPosterImageUrl(response.getString(MovieDbUtil.KEY_POSTER_PATH)));
+                response -> new Thread(() -> {
+                    try{
+                        movie.setPosterImageUrl(UrlUtil.getImageUrl(response.getString(MovieDbUtil.KEY_POSTER_PATH)));
+                        movie.setBackdropImageUrl(UrlUtil.getImageUrl(response.getString(MovieDbUtil.KEY_BACKDROP_PATH)));
 
-                            if (response.getString(MovieDbUtil.KEY_BACKDROP_PATH).equals("null"))
-                                movie.setBackdropImageUrl(null);
-                            else movie.setBackdropImageUrl(UrlUtil.getBackdropImageUrl(response.getString(MovieDbUtil.KEY_BACKDROP_PATH)));
+                        movie.setId(movieId);
+                        movie.setTitle(response.getString(MovieDbUtil.KEY_MOVIE_TITLE));
+                        movie.setReleaseDate(response.getString(MovieDbUtil.KEY_RELEASE_DATE));
 
-                            movie.setId(movieId);
-                            movie.setTitle(response.getString(MovieDbUtil.KEY_MOVIE_TITLE));
-                            movie.setReleaseDate(response.getString(MovieDbUtil.KEY_RELEASE_DATE));
+                        JSONArray countries = response.getJSONArray(MovieDbUtil.KEY_PRODUCTION_COUNTRIES_ARRAY);
+                        List<String> countryList = new ArrayList<>();
+                        for (int i = 0; i < countries.length(); i++){
+                            countryList.add(countries.getJSONObject(i).getString(MovieDbUtil.KEY_COUNTRY_ISO_CODE));
+                        }
+                        movie.setProductionCountries(countryList);
 
-                            JSONArray countries = response.getJSONArray(MovieDbUtil.KEY_PRODUCTION_COUNTRIES_ARRAY);
-                            List<String> countryList = new ArrayList<>();
-                            for (int i = 0; i < countries.length(); i++){
-                                countryList.add(countries.getJSONObject(i).getString(MovieDbUtil.KEY_COUNTRY_ISO_CODE));
-                            }
-                            movie.setProductionCountries(countryList);
+                        JSONArray genres = response.getJSONArray(MovieDbUtil.KEY_MOVIE_GENRES_ARRAY);
+                        List<String> genresList = new ArrayList<>();
+                        for (int i = 0; i < genres.length(); i++){
+                            genresList.add(genres.getJSONObject(i).getString(MovieDbUtil.KEY_NAME));
+                        }
+                        movie.setGenres(genresList);
 
-                            JSONArray genres = response.getJSONArray(MovieDbUtil.KEY_MOVIE_GENRES_ARRAY);
-                            List<String> genresList = new ArrayList<>();
-                            for (int i = 0; i < genres.length(); i++){
-                                genresList.add(genres.getJSONObject(i).getString(MovieDbUtil.KEY_NAME));
-                            }
-                            movie.setGenres(genresList);
+                        movie.setRuntime(response.getInt(MovieDbUtil.KEY_MOVIE_RUNTIME));
+                        movie.setScore(response.getString(MovieDbUtil.KEY_MOVIE_SCORE));
+                        movie.setDescription(response.getString(MovieDbUtil.KEY_MOVIE_DESCRIPTION));
 
-                            movie.setRuntime(response.getInt(MovieDbUtil.KEY_MOVIE_RUNTIME));
-                            movie.setScore(response.getString(MovieDbUtil.KEY_MOVIE_SCORE));
-                            movie.setDescription(response.getString(MovieDbUtil.KEY_MOVIE_DESCRIPTION));
-
-                        } catch (JSONException e){ Log.d("JSONArrayRequest", "getMovieDetails: EXCEPTION OCCURRED"); }
-                        if (callback != null) callback.processFinished(movie);
-                    }).start();
-                }, error -> Log.d("JSONArrayRequest", "getMovieDetails: ERROR OCCURRED"));
+                    } catch (JSONException e){ Log.d("JSONArrayRequest", "getMovieDetails: EXCEPTION OCCURRED"); }
+                    if (callback != null) callback.processFinished(movie);
+                }).start(), error -> Log.d("JSONArrayRequest", "getMovieDetails: ERROR OCCURRED"));
         ApplicationRequestHandler.getInstance().addToRequestQueue(request);
         }).start();
     }
@@ -176,13 +169,13 @@ public class JsonHandler {
                         try {
                             JSONArray backdropArray = response.getJSONArray("backdrops");
                             for (int i = 0; i < backdropArray.length(); i++){
-                                backdropPaths.add(UrlUtil.getMediaImageUrl(backdropArray.getJSONObject(i).getString("file_path")));
+                                backdropPaths.add(UrlUtil.getImageUrl(backdropArray.getJSONObject(i).getString("file_path")));
                             }
                             JSONArray posterArray = response.getJSONArray("posters");
                             for (int i = 0; i < posterArray.length(); i++){
                                 if (i > 7)
                                     break;
-                                posterPaths.add(UrlUtil.getMediaImageUrl(posterArray.getJSONObject(i).getString("file_path")));
+                                posterPaths.add(UrlUtil.getImageUrl(posterArray.getJSONObject(i).getString("file_path")));
                             }
                         } catch (JSONException e) { Log.d("JSONObjectRequest", "getImages: EXCEPTION OCCURRED"); }
                         if(callback != null) callback.processFinished(backdropPaths, posterPaths);
@@ -207,7 +200,7 @@ public class JsonHandler {
                             person.setName(object.getString(MovieDbUtil.KEY_NAME));
                             person.setPosition(object.getString(MovieDbUtil.KEY_CAST_POSITION));
                             if (!object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH).equals("null"))
-                                person.setProfileImageUrl(UrlUtil.getProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH)));
+                                person.setProfileImageUrl(UrlUtil.getImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH)));
                             cast.add(person);
                         }
                         JSONArray crewArray = response.getJSONArray(MovieDbUtil.KEY_CREW_ARRAY);
@@ -218,7 +211,7 @@ public class JsonHandler {
                             person.setName(object.getString(MovieDbUtil.KEY_NAME));
                             person.setPosition(object.getString(MovieDbUtil.KEY_CREW_POSITION));
                             if (!object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH).equals("null"))
-                                person.setProfileImageUrl(UrlUtil.getProfileImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH)));
+                                person.setProfileImageUrl(UrlUtil.getImageUrl(object.getString(MovieDbUtil.KEY_PROFILE_IMAGE_PATH)));
                             crew.add(person);
                         }
                     } catch (JSONException e) { Log.d("JSONArrayRequest", "getPeople: EXCEPTION OCCURRED"); }

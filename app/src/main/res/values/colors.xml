@@ -16,7 +16,7 @@
     <color name="detailsTop">#D21B1B1B</color>
     <color name="detailsTitle">#FFFFFF</color>
     <color name="detailsContent">#C2C2C2</color>
-    <color name="detailsDescription">#363636</color>
+    <color name="detailsDescription">#242424</color>
 
     <color name="personDetails">#202020</color>
 </resources>

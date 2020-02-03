@@ -6,6 +6,7 @@
         <variable
             name="movie"
             type="com.example.moviesearcher.model.data.Movie" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -89,49 +90,23 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:includeFontPadding="false"
-                            android:paddingBottom="10dp"
+                            android:paddingBottom="5dp"
                             android:text="@{movie.title}"
                             android:textAppearance="@style/TitleDetails" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/movie_release_date_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{movie.releaseDate}"
+                            android:textAppearance="@style/ContentDetails" />
 
-                            <TextView
-                                android:id="@+id/movie_release_date_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@{movie.releaseDate}"
-                                android:textAppearance="@style/ContentDetails" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:paddingStart="5dp"
-                                    android:text="@string/parenthesisStart"
-                                    android:textAppearance="@style/ContentDetails"
-                                    tools:ignore="RtlSymmetry" />
-
-                                <TextView
-                                    android:id="@+id/movie_countries_view"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@{movie.productionCountries}"
-                                    android:textAppearance="@style/ContentDetails" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/parenthesisEnd"
-                                    android:textAppearance="@style/ContentDetails" />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/movie_countries_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{movie.productionCountries}"
+                            android:textAppearance="@style/ContentDetails" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
