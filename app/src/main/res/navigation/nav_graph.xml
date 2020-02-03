@@ -83,7 +83,7 @@
         app:destination="@id/moviesList" />
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="com.example.moviesearcher.view.CategoriesFragment"
+        android:name="com.example.moviesearcher.view.categories.CategoriesFragment"
         android:label="Categories"
         tools:layout="@layout/fragment_categories" />
     <fragment

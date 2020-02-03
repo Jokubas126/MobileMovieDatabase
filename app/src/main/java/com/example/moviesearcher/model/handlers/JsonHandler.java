@@ -74,7 +74,7 @@ public class JsonHandler {
         }).start();
     }
 
-    private HashMap<Integer, String> getGenres( final GenresMapAsyncResponse callback){
+    public HashMap<Integer, String> getGenres( final GenresMapAsyncResponse callback){
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieGenresUrl(), null,
                 response -> {
                     Thread genreThread = new Thread (() -> {
