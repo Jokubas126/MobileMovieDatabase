@@ -3,11 +3,14 @@ package com.example.moviesearcher.model.handlers;
 import android.util.Log;
 
 import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.data.Person;
 import com.example.moviesearcher.model.data.Video;
 import com.example.moviesearcher.model.handlers.responses.GenresMapAsyncResponse;
+import com.example.moviesearcher.model.handlers.responses.ImageListAsyncResponse;
 import com.example.moviesearcher.model.handlers.responses.MovieListAsyncResponse;
 import com.example.moviesearcher.model.handlers.responses.ObjectAsyncResponse;
 import com.example.moviesearcher.model.handlers.responses.PersonListAsyncResponse;
@@ -160,6 +163,30 @@ public class JsonHandler {
                         } catch (JSONException e) {
                             Log.d("JSONObjectRequest", "getVideos: EXCEPTION OCCURRED"); }
                     }).start(), error -> Log.d("JSONObjectRequest", "getVideos: ERROR OCCURRED"));
+            ApplicationRequestHandler.getInstance().addToRequestQueue(request);
+        }).start();
+    }
+
+    public void getImages(int movieId, ImageListAsyncResponse callback){
+        new Thread(() -> {
+            List<String> backdropPaths = new ArrayList<>();
+            List<String> posterPaths = new ArrayList<>();
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieImagesUrl(movieId), null,
+                    response -> new Thread (() -> {
+                        try {
+                            JSONArray backdropArray = response.getJSONArray("backdrops");
+                            for (int i = 0; i < backdropArray.length(); i++){
+                                backdropPaths.add(UrlUtil.getMediaImageUrl(backdropArray.getJSONObject(i).getString("file_path")));
+                            }
+                            JSONArray posterArray = response.getJSONArray("posters");
+                            for (int i = 0; i < posterArray.length(); i++){
+                                if (i > 5)
+                                    break;
+                                posterPaths.add(UrlUtil.getMediaImageUrl(posterArray.getJSONObject(i).getString("file_path")));
+                            }
+                        } catch (JSONException e) { Log.d("JSONObjectRequest", "getImages: EXCEPTION OCCURRED"); }
+                        if(callback != null) callback.processFinished(backdropPaths, posterPaths);
+                    }).start(), error -> Log.d("JSONObjectRequest", "getImages: ERROR OCCURRED"));
             ApplicationRequestHandler.getInstance().addToRequestQueue(request);
         }).start();
     }

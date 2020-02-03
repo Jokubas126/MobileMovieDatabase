@@ -15,6 +15,8 @@ import java.util.List;
 public class MovieMediaViewModel extends ViewModel {
 
     private MutableLiveData<Video> trailer = new MutableLiveData<>();
+    private MutableLiveData<List<String>> posterList = new MutableLiveData<>();
+    private MutableLiveData<List<String>> backdropList = new MutableLiveData<>();
     private MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
     public void fetch(Activity activity, Bundle args){
@@ -25,11 +27,25 @@ public class MovieMediaViewModel extends ViewModel {
                         trailer.setValue((Video) video);
                         loading.setValue(false);
                     }));
+            new JsonHandler().getImages(args.getInt(BundleUtil.KEY_MOVIE_ID),
+                    (backdropPathList, posterPathList) ->
+                            activity.runOnUiThread(() -> {
+                                posterList.setValue(posterPathList);
+                                backdropList.setValue(backdropPathList);
+                    }));
         }
     }
 
     public MutableLiveData<Video> getTrailer() {
         return trailer;
+    }
+
+    public MutableLiveData<List<String>> getPosterList() {
+        return posterList;
+    }
+
+    public MutableLiveData<List<String>> getBackdropList() {
+        return backdropList;
     }
 
     public MutableLiveData<Boolean> getLoading() {

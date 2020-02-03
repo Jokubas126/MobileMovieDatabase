@@ -8,18 +8,25 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.moviesearcher.R;
+import com.example.moviesearcher.model.data.Video;
 import com.example.moviesearcher.util.BundleUtil;
 import com.example.moviesearcher.util.YoutubeUtil;
 import com.example.moviesearcher.viewmodel.MovieMediaViewModel;
@@ -38,10 +45,14 @@ public class MovieMediaFragment extends Fragment implements BottomNavigationView
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
     @BindView(R.id.video_name) TextView trailerName;
     @BindView(R.id.youtube_fragment) FrameLayout youtubeFrame;
+    @BindView(R.id.poster_recycler_view) RecyclerView posterView;
+    @BindView(R.id.backdrop_recycler_view) RecyclerView backdropView;
 
     private YouTubePlayerFragment youTubePlayerFragment = YouTubePlayerFragment.newInstance();
-
     private MovieMediaViewModel viewModel;
+
+    private ImageAdapter posterAdapter = new ImageAdapter();
+    private ImageAdapter backdropAdapter = new ImageAdapter();
 
     public MovieMediaFragment() { }
 
@@ -62,19 +73,39 @@ public class MovieMediaFragment extends Fragment implements BottomNavigationView
         viewModel = ViewModelProviders.of(this).get(MovieMediaViewModel.class);
         viewModel.fetch(getActivity(), getArguments());
 
+        posterView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        posterView.setItemAnimator(new DefaultItemAnimator());
+        posterView.setAdapter(posterAdapter);
+
+        backdropView.setLayoutManager(new LinearLayoutManager(getContext()));
+        backdropView.setItemAnimator(new DefaultItemAnimator());
+        backdropView.setAdapter(backdropAdapter);
+
         observeViewModel();
+
+
     }
 
     private void observeViewModel(){
         viewModel.getTrailer().observe(getViewLifecycleOwner(), trailer -> {
-            trailerName.setText(trailer.getName());
-            if (getActivity() != null){
-                getActivity().getFragmentManager().beginTransaction().replace(youtubeFrame.getId(), youTubePlayerFragment).commit();
-                initializeYoutubePlayer(trailer.getKey());
+            if (trailer != null){
+                trailerName.setText(trailer.getName());
+                if (getActivity() != null){
+                    getActivity().getFragmentManager().beginTransaction().replace(youtubeFrame.getId(), youTubePlayerFragment).commit();
+                    initializeYoutubePlayer(trailer.getKey());
+                }
             }
-            informationLayout.setVisibility(View.VISIBLE);
         });
-
+        viewModel.getPosterList().observe(getViewLifecycleOwner(), posterList -> {
+            if (posterList != null){
+                posterAdapter.updateImagePathList(posterList);
+            }
+        });
+        viewModel.getBackdropList().observe(getViewLifecycleOwner(), backdropList -> {
+            if (backdropList != null){
+                backdropAdapter.updateImagePathList(backdropList);
+            }
+        });
         viewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading != null){
                 progressBar.setVisibility(isLoading? View.VISIBLE : View.GONE);
@@ -89,8 +120,8 @@ public class MovieMediaFragment extends Fragment implements BottomNavigationView
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
                 youTubePlayer.setFullscreen(false);
                 youTubePlayer.setShowFullscreenButton(false);
-                youTubePlayer.loadVideo(key);
-                Log.d("YoutubePlayer", "onInitializationFailure: failed to initialize");
+                youTubePlayer.cueVideo(key);
+                Log.d("YoutubePlayer", "onInitializationFailure: successfully to initialized");
             }
 
             @Override

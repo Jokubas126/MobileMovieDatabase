@@ -11,6 +11,7 @@ public class UrlUtil {
     private static final String BASE_PROFILE_IMAGE_URL = "https://image.tmdb.org/t/p/w300";
     private static final String BASE_POSTER_IMAGE_URL = "https://image.tmdb.org/t/p/w400";
     private static final String BASE_BACKDROP_IMAGE_URL = "https://image.tmdb.org/t/p/w780";
+    private static final String BASE_MEDIA_IMAGE_URL = "https://image.tmdb.org/t/p/w780";
 
     private static final String BASE_GENRES_URL = "https://api.themoviedb.org/3/genre/movie";
     private static final String BASE_MOVIE_URL = "https://api.themoviedb.org/3/movie/";
@@ -29,6 +30,8 @@ public class UrlUtil {
     public static String getPosterImageUrl(String imagePath){ return BASE_POSTER_IMAGE_URL + imagePath; }
     public static String getBackdropImageUrl(String imagePath){ return BASE_BACKDROP_IMAGE_URL + imagePath; }
     public static String getProfileImageUrl(String imagePath){ return BASE_PROFILE_IMAGE_URL + imagePath; }
+    public static String getMediaImageUrl(String imagePath) { return BASE_MEDIA_IMAGE_URL + imagePath; }
 
     public static String getMovieVideosUrl(int id){ return BASE_MOVIE_URL + id + "/videos?api_key=" + API_KEY + LANGUAGE_KEY; }
+    public static String getMovieImagesUrl(int id) {return  BASE_MOVIE_URL + id + "/images?api_key=" + API_KEY + "&language=en"; }
 }
