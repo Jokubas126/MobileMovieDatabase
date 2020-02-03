@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,15 @@ public class MoviesGridFragment extends Fragment {
 
     private boolean isDown = true;
 
+    private StaggeredGridLayoutManager layoutManager;
+    private Parcelable state;
+
     public MoviesGridFragment() { }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,9 +61,17 @@ public class MoviesGridFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(MovieGridViewModel.class);
         viewModel.initFetch(getActivity(), getArguments());
 
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(gridAdapter);
+        if (state != null){
+
+            layoutManager.onRestoreInstanceState(state);
+        }
+
+
 
         observeViewModel();
 
@@ -99,5 +116,11 @@ public class MoviesGridFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        state = layoutManager.onSaveInstanceState();
     }
 }

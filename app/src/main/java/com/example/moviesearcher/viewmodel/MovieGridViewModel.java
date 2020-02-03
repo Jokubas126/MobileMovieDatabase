@@ -32,10 +32,13 @@ public class MovieGridViewModel extends ViewModel {
             listKey = args.getString(BundleUtil.KEY_MOVIE_LIST_TYPE);
         if (listKey == null)
             listKey = BundleUtil.KEY_POPULAR;
-
-        page = 1;
-        clearAll();
-        getMovieList();
+        if (page == 0){
+            page = 1;
+            clearAll();
+            getMovieList();
+        } else {
+            loading.setValue(false);
+        }
     }
 
     public void refresh(){

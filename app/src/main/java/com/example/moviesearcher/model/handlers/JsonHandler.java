@@ -180,7 +180,7 @@ public class JsonHandler {
                             }
                             JSONArray posterArray = response.getJSONArray("posters");
                             for (int i = 0; i < posterArray.length(); i++){
-                                if (i > 5)
+                                if (i > 7)
                                     break;
                                 posterPaths.add(UrlUtil.getMediaImageUrl(posterArray.getJSONObject(i).getString("file_path")));
                             }
@@ -200,8 +200,7 @@ public class JsonHandler {
                     try {
                         JSONArray castArray = response.getJSONArray(MovieDbUtil.KEY_CAST_ARRAY);
                         for (int i = 0; i < castArray.length(); i++){
-                            if (i > 10) // for maximum amount of people
-                                break;
+
                             Person person = new Person();
                             JSONObject object = castArray.getJSONObject(i);
 
@@ -213,8 +212,7 @@ public class JsonHandler {
                         }
                         JSONArray crewArray = response.getJSONArray(MovieDbUtil.KEY_CREW_ARRAY);
                         for (int i = 0; i < crewArray.length(); i++){
-                            if (i > 10) // for maximum amount of people
-                                break;
+
                             Person person = new Person();
                             JSONObject object = crewArray.getJSONObject(i);
                             person.setName(object.getString(MovieDbUtil.KEY_NAME));
