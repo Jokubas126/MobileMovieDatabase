@@ -1,2 +1,2 @@
-include ':app', ':YouTubeAndroidPlayerApi'
-rootProject.name='MovieSearcher'
+include ':app'
+rootProject.name='MobileMovieDatabase'
