@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="25dp"
         android:paddingBottom="25dp"
-        android:text="Movie Searcher"
+        android:text="@string/app_name"
         android:textAlignment="center"
         android:textAppearance="@style/WelcomeActivityText"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
