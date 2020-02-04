@@ -1,12 +1,18 @@
 package com.example.moviesearcher.model.data;
 
-public class Genre {
+import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
+
+import java.util.List;
+
+public class Category extends ExpandableGroup<Subcategory> {
     private int id;
     private String name;
 
-    public int getId() {
-        return id;
+    public Category(String title, List<Subcategory> items) {
+        super(title, items);
     }
+
+    public int getId() { return id; }
 
     public void setId(int id) {
         this.id = id;

@@ -82,8 +82,6 @@ public class MovieMediaFragment extends Fragment implements BottomNavigationView
         backdropView.setAdapter(backdropAdapter);
 
         observeViewModel();
-
-
     }
 
     private void observeViewModel(){

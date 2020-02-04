@@ -73,7 +73,7 @@
         android:paddingBottom="25dp"
         android:text="@string/app_name"
         android:textAlignment="center"
-        android:textAppearance="@style/WelcomeActivityText"
+        android:textAppearance="@style/WelcomeActivityTitle"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/guideline_bottom" />

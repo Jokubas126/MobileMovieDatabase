@@ -10,6 +10,10 @@
     <color name="colorNavigationViewBackground">#E6E4E7FC</color>
     <color name="navigationViewItem">#686868</color>
 
+    <color name="colorCategoryBackground">#E1E2E5FA</color>
+    <color name="colorSubcategoryBackground">#B2EAEDFD</color>
+    <color name="colorSubcategoryText">#3D3D47</color>
+
     <color name="cardTitle">#3C3C3C</color>
     <color name="cardContent">#686868</color>
 

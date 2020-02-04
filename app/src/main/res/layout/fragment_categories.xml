@@ -5,9 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".view.categories.CategoriesFragment">
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/genres_recycler_view"
+        android:id="@+id/categories_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:background="@null"/>
 
 </FrameLayout>

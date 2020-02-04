@@ -92,21 +92,21 @@
                             android:includeFontPadding="false"
                             android:paddingBottom="5dp"
                             android:text="@{movie.title}"
-                            android:textAppearance="@style/TitleDetails" />
+                            android:textAppearance="@style/TitleOverview" />
 
                         <TextView
                             android:id="@+id/movie_release_date_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{movie.releaseDate}"
-                            android:textAppearance="@style/ContentDetails" />
+                            android:textAppearance="@style/ContentOverview" />
 
                         <TextView
                             android:id="@+id/movie_countries_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{movie.productionCountries}"
-                            android:textAppearance="@style/ContentDetails" />
+                            android:textAppearance="@style/ContentOverview" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -117,13 +117,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@{String.valueOf(movie.runtime)}"
-                                android:textAppearance="@style/ContentDetails" />
+                                android:textAppearance="@style/ContentOverview" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/min_ending"
-                                android:textAppearance="@style/ContentDetails" />
+                                android:textAppearance="@style/ContentOverview" />
 
                         </LinearLayout>
 
@@ -136,13 +136,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@{movie.score}"
-                                android:textAppearance="@style/ContentDetails" />
+                                android:textAppearance="@style/ContentOverview" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/score_ending"
-                                android:textAppearance="@style/ContentDetails" />
+                                android:textAppearance="@style/ContentOverview" />
 
                         </LinearLayout>
 
@@ -151,7 +151,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{movie.genres}"
-                            android:textAppearance="@style/ContentDetails" />
+                            android:textAppearance="@style/ContentOverview" />
 
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
