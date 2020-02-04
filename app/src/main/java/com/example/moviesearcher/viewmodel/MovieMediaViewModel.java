@@ -3,6 +3,7 @@ package com.example.moviesearcher.viewmodel;
 import android.app.Activity;
 import android.os.Bundle;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -36,19 +37,19 @@ public class MovieMediaViewModel extends ViewModel {
         }
     }
 
-    public MutableLiveData<Video> getTrailer() {
+    public LiveData<Video> getTrailer() {
         return trailer;
     }
 
-    public MutableLiveData<List<String>> getPosterList() {
+    public LiveData<List<String>> getPosterList() {
         return posterList;
     }
 
-    public MutableLiveData<List<String>> getBackdropList() {
+    public LiveData<List<String>> getBackdropList() {
         return backdropList;
     }
 
-    public MutableLiveData<Boolean> getLoading() {
+    public LiveData<Boolean> getLoading() {
         return loading;
     }
 }

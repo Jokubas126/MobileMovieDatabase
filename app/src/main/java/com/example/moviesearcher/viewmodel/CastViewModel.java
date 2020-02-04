@@ -3,6 +3,7 @@ package com.example.moviesearcher.viewmodel;
 import android.app.Activity;
 import android.os.Bundle;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -33,15 +34,15 @@ public class CastViewModel extends ViewModel {
 
     }
 
-    public MutableLiveData<List<Person>> getCast() {
+    public LiveData<List<Person>> getCast() {
         return cast;
     }
 
-    public MutableLiveData<List<Person>> getCrew() {
+    public LiveData<List<Person>> getCrew() {
         return crew;
     }
 
-    public MutableLiveData<Boolean> getLoading() {
+    public LiveData<Boolean> getLoading() {
         return loading;
     }
 }

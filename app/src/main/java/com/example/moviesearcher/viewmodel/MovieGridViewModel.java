@@ -3,6 +3,7 @@ package com.example.moviesearcher.viewmodel;
 import android.app.Activity;
 import android.os.Bundle;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -78,15 +79,15 @@ public class MovieGridViewModel extends ViewModel {
         movies.setValue(new ArrayList<>());
     }
 
-    public MutableLiveData<List<Movie>> getMovies() {
+    public LiveData<List<Movie>> getMovies() {
         return movies;
     }
 
-    public MutableLiveData<Boolean> getMovieLoadError() {
+    public LiveData<Boolean> getMovieLoadError() {
         return movieLoadError;
     }
 
-    public MutableLiveData<Boolean> getLoading() {
+    public LiveData<Boolean> getLoading() {
         return loading;
     }
 }

@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.example.moviesearcher.R;
-import com.example.moviesearcher.model.data.Category;
 import com.example.moviesearcher.model.data.Subcategory;
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
@@ -19,7 +18,7 @@ import java.util.List;
 
 public class CategoryAdapter extends ExpandableRecyclerViewAdapter<CategoryAdapter.CategoryViewHolder, CategoryAdapter.SubcategoryViewHolder> {
 
-    public CategoryAdapter(List<? extends ExpandableGroup> groups) {
+    CategoryAdapter(List<? extends ExpandableGroup> groups) {
         super(groups);
     }
 

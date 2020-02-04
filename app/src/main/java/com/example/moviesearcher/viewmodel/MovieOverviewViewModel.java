@@ -3,6 +3,7 @@ package com.example.moviesearcher.viewmodel;
 import android.app.Activity;
 import android.os.Bundle;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -19,21 +20,20 @@ public class MovieOverviewViewModel extends ViewModel {
         loading.setValue(true);
         new Thread(() -> {
             if (arguments != null) {
-                new JsonHandler().getMovieDetails(arguments.getInt(BundleUtil.KEY_MOVIE_ID), retrievedMovie -> {
-                    activity.runOnUiThread(() -> {
-                        currentMovie.setValue((Movie) retrievedMovie);
-                        loading.setValue(false);
-                    });
-                });
+                new JsonHandler().getMovieDetails(arguments.getInt(BundleUtil.KEY_MOVIE_ID),
+                        retrievedMovie -> activity.runOnUiThread(() -> {
+                    currentMovie.setValue((Movie) retrievedMovie);
+                    loading.setValue(false);
+                }));
             }
         }).start();
     }
 
-    public MutableLiveData<Movie> getCurrentMovie() {
+    public LiveData<Movie> getCurrentMovie() {
         return currentMovie;
     }
 
-    public MutableLiveData<Boolean> getLoading() {
+    public LiveData<Boolean> getLoading() {
         return loading;
     }
 }

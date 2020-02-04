@@ -91,6 +91,8 @@ public class JsonHandler {
                     });
                     genreThread.setPriority(10);
                     genreThread.start();
+                    try { genreThread.join();
+                    } catch (InterruptedException e) { e.printStackTrace(); }
                 }, error -> Log.d("JSONArrayRequest", "getGenresList: ERROR OCCURRED"));
         ApplicationRequestHandler.getInstance().addToRequestQueue(request);
         return genres;

@@ -20,7 +20,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="35dp"
-                android:text="@{subcategory.name}"
                 android:textAppearance="@style/SubcategoryTextAppearance" />
 
         </LinearLayout>
