@@ -7,10 +7,16 @@ import android.os.Parcelable;
 public class Subcategory implements Parcelable {
 
     private int id;
+    private String stringId;
     private String name;
 
     public Subcategory(int id, String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public Subcategory(String stringId, String name) {
+        this.stringId = stringId;
         this.name = name;
     }
 
@@ -31,6 +37,14 @@ public class Subcategory implements Parcelable {
     public int getId() { return id; }
 
     public void setId(int id) { this.id = id; }
+
+    public String getStringId() {
+        return stringId;
+    }
+
+    public void setStringId(String stringId) {
+        this.stringId = stringId;
+    }
 
     public String getName() {
         return name;

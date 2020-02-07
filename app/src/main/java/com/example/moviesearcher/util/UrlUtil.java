@@ -13,6 +13,10 @@ public class UrlUtil {
     private static final String BASE_GENRES_URL = "https://api.themoviedb.org/3/genre/movie";
     private static final String BASE_MOVIE_URL = "https://api.themoviedb.org/3/movie/";
 
+    private static final String BASE_DISCOVER_URL = "https://api.themoviedb.org/3/discover/movie?api_key=c6c88c6e91d206e35fa6aff0b9d1cc36&sort_by=popularity.desc&page=1";
+
+    private static final String BASE_CONFIGURATION_LANGUAGES = "https://api.themoviedb.org/3/configuration/languages?api_key=";
+
     public static String getMovieListUrl(String key, int page){
         return BASE_MOVIE_URL + key + "?api_key=" + API_KEY + LANGUAGE_KEY + "&page=" + page;
     }
@@ -28,4 +32,15 @@ public class UrlUtil {
 
     public static String getMovieVideosUrl(int id){ return BASE_MOVIE_URL + id + "/videos?api_key=" + API_KEY + LANGUAGE_KEY; }
     public static String getMovieImagesUrl(int id) {return  BASE_MOVIE_URL + id + "/images?api_key=" + API_KEY + "&language=en"; }
+
+    public static String getLanguagesUrl(){ return  BASE_CONFIGURATION_LANGUAGES + API_KEY; }
+
+    public static String getDiscoverUrl(int genreId, String languageKey){
+        String url = BASE_DISCOVER_URL;
+        if (genreId != 0)
+            url = url + "&with_genres=" + genreId;
+        if (languageKey != null)
+            url = url + "&with_original_language=" + languageKey;
+        return url;
+    }
 }

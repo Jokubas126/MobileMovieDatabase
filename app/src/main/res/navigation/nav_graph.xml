@@ -20,6 +20,10 @@
             android:name="key_category"
             app:argType="string"
             android:defaultValue="popular" />
+        <argument
+            android:name="subcategory"
+            app:argType="com.example.moviesearcher.model.data.Subcategory"
+            app:nullable="true" />
     </fragment>
     <action
         android:id="@+id/action_movie_details"
@@ -85,7 +89,11 @@
         android:id="@+id/categoriesFragment"
         android:name="com.example.moviesearcher.view.categories.CategoriesFragment"
         android:label="Categories"
-        tools:layout="@layout/fragment_categories" />
+        tools:layout="@layout/fragment_categories" >
+        <action
+            android:id="@+id/actionMoviesList"
+            app:destination="@+id/moviesList" />
+    </fragment>
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.example.moviesearcher.view.AboutFragment"

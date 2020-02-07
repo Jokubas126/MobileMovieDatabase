@@ -54,8 +54,7 @@ public class ConverterUtil {
                 title.append(stringPart).append(" ");
             }
             return title.append("Movies").toString();
-        } else return "Popular Movies";
-
+        } else return "Most Popular Movies";
     }
 
     public static String stringListToString(List<String> list){

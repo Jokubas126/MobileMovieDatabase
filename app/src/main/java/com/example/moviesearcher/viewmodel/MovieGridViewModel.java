@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.moviesearcher.model.data.Movie;
+import com.example.moviesearcher.model.data.Subcategory;
 import com.example.moviesearcher.model.handlers.JsonHandler;
 import com.example.moviesearcher.util.BundleUtil;
 
@@ -24,14 +25,17 @@ public class MovieGridViewModel extends ViewModel {
 
     private int page;
     private String listKey;
+    private Subcategory subcategory;
 
     public void initFetch(Activity activity, Bundle args){
         this.activity = activity;
         movieLoadError.setValue(false);
         loading.setValue(true);
-        if (args != null)
+        if (args != null){
             listKey = args.getString(BundleUtil.KEY_MOVIE_LIST_TYPE);
-        if (listKey == null)
+            subcategory = args.getParcelable(BundleUtil.KEY_SUBCATEGORY);
+        }
+        if (listKey == null && subcategory == null)
             listKey = BundleUtil.KEY_POPULAR;
         if (page == 0){
             page = 1;
@@ -58,7 +62,7 @@ public class MovieGridViewModel extends ViewModel {
     }
 
     private void getMovieList(){
-        new Thread(() -> new JsonHandler().getMovieList(listKey, page, list -> {
+        new Thread(() -> new JsonHandler().getMovieList(listKey, subcategory, page, list -> {
             if (list.isEmpty()){
                 activity.runOnUiThread(() -> {
                     movies.setValue(null);

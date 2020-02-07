@@ -6,6 +6,7 @@ public class MovieDbUtil {
 
     public static final String KEY_ID = "id";
     public static final String KEY_NAME = "name";
+    public static final String KEY_ENGLISH_NAME = "english_name";
     public static final String KEY_TOTAL_PAGES = "total_pages";
 
     // MOVIES
@@ -19,7 +20,7 @@ public class MovieDbUtil {
     public static final String KEY_POSTER_PATH = "poster_path";
     public static final String KEY_BACKDROP_PATH = "backdrop_path";
     public static final String KEY_PRODUCTION_COUNTRIES_ARRAY = "production_countries";
-    public static final String KEY_COUNTRY_ISO_CODE = "iso_3166_1";
+
 
     // GENRES
 
@@ -41,4 +42,8 @@ public class MovieDbUtil {
     public static final String KEY_VIDEO_TYPE = "type";
     public static final String KEY_TRAILER_TYPE = "Trailer";
     public static final String KEY_VIDEO = "key";
+
+    // ISO CODES
+    public static final String KEY_COUNTRY_ISO_CODE = "iso_3166_1";
+    public static final String KEY_LANGUAGE_ISO_CODE = "iso_639_1";
 }

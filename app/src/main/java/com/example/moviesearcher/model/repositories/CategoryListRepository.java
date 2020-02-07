@@ -22,7 +22,11 @@ public class CategoryListRepository {
 
             categoryList.add(genreMapToCategory(genresMap));
 
-            callback.onProcessFinished(categoryList);
+            new JsonHandler().getLanguages(subcategoryList -> {
+                sortList(subcategoryList);
+                categoryList.add(new Category("Language", subcategoryList));
+                callback.onProcessFinished(categoryList);
+            });
         });
     }
 
@@ -34,7 +38,11 @@ public class CategoryListRepository {
         for (int i = 0; i < genreIds.size(); i++){
             subcategoryList.add(new Subcategory(genreIds.get(i), genreNames.get(i)));
         }
-        Collections.sort(subcategoryList, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        sortList(subcategoryList);
         return new Category("Genres", subcategoryList);
+    }
+
+    private void sortList(List<Subcategory> list){
+        Collections.sort(list, (o1, o2) -> o1.getName().compareTo(o2.getName()));
     }
 }

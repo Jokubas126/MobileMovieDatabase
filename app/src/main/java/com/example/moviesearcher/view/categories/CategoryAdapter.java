@@ -5,7 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NavigationRes;
 import androidx.annotation.NonNull;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.model.data.Subcategory;
@@ -59,17 +62,27 @@ public class CategoryAdapter extends ExpandableRecyclerViewAdapter<CategoryAdapt
         }
     }
 
-    class SubcategoryViewHolder extends ChildViewHolder {
+    class SubcategoryViewHolder extends ChildViewHolder implements View.OnClickListener {
 
         private TextView titleView;
+        private Subcategory subcategory;
 
         SubcategoryViewHolder(View itemView) {
             super(itemView);
             titleView = itemView.findViewById(R.id.title_view);
+            itemView.setOnClickListener(this);
         }
 
-        void onBind(Subcategory subcategory){
+        void onBind(Subcategory subcategory) {
             titleView.setText(subcategory.getName());
+            this.subcategory = subcategory;
+        }
+
+
+        @Override
+        public void onClick(View v) {
+            NavDirections action = CategoriesFragmentDirections.actionMoviesList(subcategory);
+            Navigation.findNavController(v).navigate(action);
         }
     }
 }

@@ -5,15 +5,19 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.moviesearcher.model.data.Movie;
 import com.example.moviesearcher.model.data.Person;
+import com.example.moviesearcher.model.data.Subcategory;
 import com.example.moviesearcher.model.data.Video;
 import com.example.moviesearcher.model.handlers.responses.GenresMapAsyncResponse;
 import com.example.moviesearcher.model.handlers.responses.ImageListAsyncResponse;
 import com.example.moviesearcher.model.handlers.responses.MovieListAsyncResponse;
 import com.example.moviesearcher.model.handlers.responses.ObjectAsyncResponse;
 import com.example.moviesearcher.model.handlers.responses.PersonListAsyncResponse;
+import com.example.moviesearcher.model.handlers.responses.SubcategoryListAsyncResponse;
+import com.example.moviesearcher.model.repositories.MovieListRepository;
 import com.example.moviesearcher.util.MovieDbUtil;
 import com.example.moviesearcher.util.UrlUtil;
 
@@ -31,42 +35,21 @@ public class JsonHandler {
 
     private int currentListTotalPages;
 
-    public void getMovieList(String listKey, int page, final MovieListAsyncResponse callback){
+    public void getMovieList(String listKey, Subcategory subcategory, int page, final MovieListAsyncResponse callback){
         new Thread(() ->{
             if (page <= currentListTotalPages || currentListTotalPages == 0){
-                List<Movie> movieList = new ArrayList<>();
                 genres = getGenres(genresMap -> genres.putAll(genresMap));
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, UrlUtil.getMovieListUrl(listKey, page), null,
+                String url = "";
+                if (listKey != null)
+                    url = UrlUtil.getMovieListUrl(listKey, page);
+                else if (subcategory != null)
+                    url = UrlUtil.getDiscoverUrl(subcategory.getId(), subcategory.getStringId());
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                         response -> {
-                            Thread movieListThread = new Thread(() -> {
-                                try {
-                                    currentListTotalPages = response.getInt(MovieDbUtil.KEY_TOTAL_PAGES);
-                                    JSONArray jsonArray = response.getJSONArray(MovieDbUtil.KEY_RESULT_ARRAY);
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                        Movie movie = new Movie();
-
-                                        movie.setPosterImageUrl(UrlUtil.getImageUrl(jsonObject.getString(MovieDbUtil.KEY_POSTER_PATH)));
-                                        movie.setId(jsonObject.getInt(MovieDbUtil.KEY_ID));
-                                        movie.setTitle(jsonObject.getString(MovieDbUtil.KEY_MOVIE_TITLE));
-                                        movie.setReleaseDate(jsonObject.getString(MovieDbUtil.KEY_RELEASE_DATE));
-                                        movie.setScore(jsonObject.getString(MovieDbUtil.KEY_MOVIE_SCORE));
-
-                                        JSONArray genresIds = jsonObject.getJSONArray(MovieDbUtil.KEY_MOVIE_GENRE_IDS_ARRAY);
-                                        List<String> genresList = new ArrayList<>();
-                                        for (int j = 0; j < genresIds.length(); j++) {
-                                            genresList.add(genres.get(genresIds.getInt(j)));
-                                        }
-                                        movie.setGenres(genresList);
-                                        movieList.add(movie);
-                                    }
-                                } catch (JSONException e) {
-                                    Log.d("JSONArrayRequest", "getMovieList: EXCEPTION OCCURRED");
-                                }
-                                if (callback != null) callback.processFinished(movieList);
-                            });
-                            movieListThread.setPriority(6);
-                            movieListThread.start();
+                            try {
+                                currentListTotalPages = response.getInt(MovieDbUtil.KEY_TOTAL_PAGES);
+                                new MovieListRepository().fetchData(response, genres, callback);
+                            } catch (JSONException e) { e.printStackTrace(); }
                         },
                         error -> Log.d("JSONArrayRequest", "getMovieList: ERROR OCCURRED"));
                 ApplicationRequestHandler.getInstance().addToRequestQueue(request);
@@ -222,6 +205,28 @@ public class JsonHandler {
                 , error -> Log.d("JSONArrayRequest", "getPeople: ERROR OCCURRED"));
         ApplicationRequestHandler.getInstance().addToRequestQueue(request);
 
+        }).start();
+    }
+
+    public void getLanguages(SubcategoryListAsyncResponse callback){
+        new Thread(() -> {
+            List<Subcategory> subcategoryList = new ArrayList<>();
+
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, UrlUtil.getLanguagesUrl(), null,
+                    response -> {
+                        new Thread(() -> {
+                            try {
+                                for (int i = 0; i < response.length(); i++){
+                                    JSONObject object = response.getJSONObject(i);
+                                    subcategoryList.add(new Subcategory(object.getString(MovieDbUtil.KEY_LANGUAGE_ISO_CODE), object.getString(MovieDbUtil.KEY_ENGLISH_NAME)));
+                                }
+                            } catch (JSONException e) { e.printStackTrace(); }
+                            if (callback != null) callback.processFinished(subcategoryList);
+                        }).start();
+                    }, error -> {
+
+                    });
+            ApplicationRequestHandler.getInstance().addToRequestQueue(request);
         }).start();
     }
 }
