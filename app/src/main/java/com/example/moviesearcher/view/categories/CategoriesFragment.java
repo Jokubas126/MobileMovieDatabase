@@ -14,17 +14,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.viewmodel.CategoriesViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.apptik.widget.MultiSlider;
 
-public class CategoriesFragment extends Fragment {
+public class CategoriesFragment extends Fragment implements MultiSlider.OnThumbValueChangeListener {
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.categories_recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.release_year_slider) MultiSlider slider;
+    @BindView(R.id.release_year_slider_min_value) TextView minYearView;
+    @BindView(R.id.release_year_slider_max_value) TextView maxYearView;
+
 
     private CategoryAdapter adapter;
 
@@ -47,6 +53,7 @@ public class CategoriesFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(CategoriesViewModel.class);
         viewModel.fetch(getActivity());
 
+        slider.setOnThumbValueChangeListener(this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         if (getContext() != null) // added this due to IDE complaining
@@ -74,5 +81,14 @@ public class CategoriesFragment extends Fragment {
                 recyclerView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
             }
         });
+    }
+
+    @Override
+    public void onValueChanged(MultiSlider multiSlider, MultiSlider.Thumb thumb, int thumbIndex, int value) {
+        if (thumbIndex == 0)
+            minYearView.setText(String.valueOf(value));
+        if (thumbIndex == 1){
+            maxYearView.setText(String.valueOf(value));
+        }
     }
 }
