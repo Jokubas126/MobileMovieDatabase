@@ -1,6 +1,7 @@
 package com.example.moviesearcher.util;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
@@ -8,6 +9,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.moviesearcher.model.data.Subcategory;
 
 import java.util.List;
 
@@ -43,17 +45,23 @@ public class ConverterUtil {
 
     // ---------------- Text related -------------//
 
-    public static String bundleKeyToToolbarTitle(String key){
-        if (key != null){
-            StringBuilder title = new StringBuilder();
-            String[] array = key.split("_");
+    public static String bundleToToolbarTitle(Bundle args){
+        if (args != null){
+            String key = args.getString(BundleUtil.KEY_MOVIE_LIST_TYPE);
+            Subcategory subcategory = args.getParcelable(BundleUtil.KEY_SUBCATEGORY);
+            if (key != null) {
+                StringBuilder title = new StringBuilder();
+                String[] array = key.split("_");
 
-            for(String stringPart: array){
-                String s1 = stringPart.substring(0, 1).toUpperCase();
-                stringPart = s1 + stringPart.substring(1);
-                title.append(stringPart).append(" ");
-            }
-            return title.append("Movies").toString();
+                for (String stringPart : array) {
+                    String s1 = stringPart.substring(0, 1).toUpperCase();
+                    stringPart = s1 + stringPart.substring(1);
+                    title.append(stringPart).append(" ");
+                }
+                return title.append("Movies").toString();
+            } else if (subcategory != null){
+                return "Search: " + subcategory.getName();
+            } else return "Most Popular Movies";
         } else return "Most Popular Movies";
     }
 

@@ -8,7 +8,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 toolbar.setTitle(destination.getLabel());
             else{
                 if (arguments != null)
-                    toolbar.setTitle(ConverterUtil.bundleKeyToToolbarTitle(arguments.getString(BundleUtil.KEY_MOVIE_LIST_TYPE)));
+                    toolbar.setTitle(ConverterUtil.bundleToToolbarTitle(arguments));
             }
         });
 
