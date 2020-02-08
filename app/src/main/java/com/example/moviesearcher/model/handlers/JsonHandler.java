@@ -37,23 +37,25 @@ public class JsonHandler {
 
     public void getMovieList(String listKey, Subcategory subcategory, int page, final MovieListAsyncResponse callback){
         new Thread(() ->{
-            if (page <= currentListTotalPages || currentListTotalPages == 0){
-                genres = getGenres(genresMap -> genres.putAll(genresMap));
-                String url = "";
-                if (listKey != null)
-                    url = UrlUtil.getMovieListUrl(listKey, page);
-                else if (subcategory != null)
-                    url = UrlUtil.getDiscoverUrl(subcategory.getId(), subcategory.getStringId());
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                        response -> {
-                            try {
-                                currentListTotalPages = response.getInt(MovieDbUtil.KEY_TOTAL_PAGES);
+            genres = getGenres(genresMap -> genres.putAll(genresMap));
+            String url = "";
+            if (listKey != null)
+                url = UrlUtil.getMovieListUrl(listKey, page);
+            else if (subcategory != null)
+                url = UrlUtil.getDiscoverUrl(subcategory.getId(), subcategory.getStringId(), page);
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                    response -> {
+                        try {
+                            currentListTotalPages = response.getInt(MovieDbUtil.KEY_TOTAL_PAGES);
+                            if (page <= currentListTotalPages){
                                 new MovieListRepository().fetchData(response, genres, callback);
-                            } catch (JSONException e) { e.printStackTrace(); }
-                        },
-                        error -> Log.d("JSONArrayRequest", "getMovieList: ERROR OCCURRED"));
-                ApplicationRequestHandler.getInstance().addToRequestQueue(request);
-            }
+                            } else if (callback != null){
+                                callback.processFinished(null);
+                            }
+                        } catch (JSONException e) { e.printStackTrace(); }
+                    },
+                    error -> Log.d("JSONArrayRequest", "getMovieList: ERROR OCCURRED"));
+            ApplicationRequestHandler.getInstance().addToRequestQueue(request);
         }).start();
     }
 

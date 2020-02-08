@@ -24,6 +24,7 @@ public class MovieGridViewModel extends ViewModel {
     private MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
     private int page;
+    private boolean isListFull;
     private String listKey;
     private Subcategory subcategory;
 
@@ -31,6 +32,7 @@ public class MovieGridViewModel extends ViewModel {
         this.activity = activity;
         movieLoadError.setValue(false);
         loading.setValue(true);
+        isListFull = false;
         if (args != null){
             listKey = args.getString(BundleUtil.KEY_MOVIE_LIST_TYPE);
             subcategory = args.getParcelable(BundleUtil.KEY_SUBCATEGORY);
@@ -47,6 +49,7 @@ public class MovieGridViewModel extends ViewModel {
     }
 
     public void refresh(){
+        isListFull = false;
         movieLoadError.setValue(false);
         loading.setValue(true);
         page = 1;
@@ -55,25 +58,26 @@ public class MovieGridViewModel extends ViewModel {
     }
 
     public void fetch(){
-        movieLoadError.setValue(false);
-        loading.setValue(true);
-        page++;
-        getMovieList();
+        if (!isListFull){
+            movieLoadError.setValue(false);
+            loading.setValue(true);
+            page++;
+            getMovieList();
+        }
     }
 
     private void getMovieList(){
         new Thread(() -> new JsonHandler().getMovieList(listKey, subcategory, page, list -> {
-            if (list.isEmpty()){
+            if (list == null){
                 activity.runOnUiThread(() -> {
-                    movies.setValue(null);
-                    movieLoadError.setValue(true);
+                    isListFull = true;
                     loading.setValue(false);
                 });
             } else {
                 activity.runOnUiThread(() -> {
-                        movies.setValue(list);
-                        movieLoadError.setValue(false);
-                        loading.setValue(false);
+                    movies.setValue(list);
+                    movieLoadError.setValue(false);
+                    loading.setValue(false);
                 });
             }
         })).start();
