@@ -27,15 +27,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavController navController;
     private NavigationView navigationView;
 
-    private Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         drawerLayout = findViewById(R.id.drawer_layout);
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         navigationView = findViewById(R.id.navigation_view);
@@ -85,7 +83,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
             }
 
-            @Override public boolean onQueryTextChange(String newText) { return false; }
+            @Override public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()){
+                    Bundle bundle = new Bundle();
+                    bundle.putString(BundleUtil.KEY_SEARCH_QUERY, null);
+                    navController.navigate(R.id.moviesList, bundle);
+                }
+                return false;
+            }
         });
         return true;
     }
