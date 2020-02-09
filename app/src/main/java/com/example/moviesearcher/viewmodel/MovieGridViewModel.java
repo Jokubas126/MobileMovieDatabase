@@ -14,6 +14,7 @@ import com.example.moviesearcher.util.BundleUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MovieGridViewModel extends ViewModel {
 
@@ -28,6 +29,7 @@ public class MovieGridViewModel extends ViewModel {
     private String listKey;
     private Subcategory subcategory;
     private String startYear, endYear;
+    private String searchKey;
 
     public void initFetch(Activity activity, Bundle args){
         this.activity = activity;
@@ -39,8 +41,9 @@ public class MovieGridViewModel extends ViewModel {
             subcategory = args.getParcelable(BundleUtil.KEY_SUBCATEGORY);
             startYear = args.getString("start_year");
             endYear = args.getString("end_year");
+            searchKey = args.getString(BundleUtil.KEY_SEARCH_QUERY);
         }
-        if (listKey == null && subcategory == null)
+        if (listKey == null && subcategory == null && searchKey == null)
             listKey = BundleUtil.KEY_POPULAR;
         if (page == 0){
             page = 1;
@@ -70,10 +73,12 @@ public class MovieGridViewModel extends ViewModel {
     }
 
     private void getMovieList(){
-        new Thread(() -> new JsonHandler().getMovieList(listKey, subcategory, startYear, endYear, page, list -> {
+        new Thread(() -> new JsonHandler().getMovieList(listKey, subcategory, searchKey, startYear, endYear, page, list -> {
             if (list == null){
                 activity.runOnUiThread(() -> {
                     isListFull = true;
+                    if (Objects.requireNonNull(movies.getValue()).isEmpty())
+                        movieLoadError.setValue(true);
                     loading.setValue(false);
                 });
             } else {

@@ -3,8 +3,6 @@ package com.example.moviesearcher.model.handlers;
 import android.util.Log;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.moviesearcher.model.data.Movie;
@@ -35,14 +33,19 @@ public class JsonHandler {
 
     private int currentListTotalPages;
 
-    public void getMovieList(String listKey, Subcategory subcategory, String startYear, String endYear, int page, final MovieListAsyncResponse callback){
+    public void getMovieList(String listKey, Subcategory subcategory, String searchKey, String startYear, String endYear, int page, final MovieListAsyncResponse callback){
         new Thread(() ->{
             genres = getGenres(genresMap -> genres.putAll(genresMap));
             String url = "";
-            if (listKey != null)
-                url = UrlUtil.getMovieListUrl(listKey, page);
-            else if (subcategory != null)
-                url = UrlUtil.getDiscoverUrl(subcategory.getId(), subcategory.getStringId(), startYear, endYear, page);
+            if (searchKey != null)
+                url = UrlUtil.getSearchUrl(searchKey, page);
+            if (searchKey == null){
+                if (listKey != null)
+                    url = UrlUtil.getMovieListUrl(listKey, page);
+                else if (subcategory != null)
+                    url = UrlUtil.getDiscoverUrl(subcategory.getId(), subcategory.getStringId(), startYear, endYear, page);
+            }
+
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                     response -> {
                         try {
@@ -122,7 +125,7 @@ public class JsonHandler {
         }).start();
     }
 
-    public void getTrailer(int movieId, ObjectAsyncResponse callback){
+    public void getTrailer(int movieId, final ObjectAsyncResponse callback){
         new Thread(() -> {
             JsonObjectRequest request = new JsonObjectRequest(
                     Request.Method.GET, UrlUtil.getMovieVideosUrl(movieId), null,
@@ -147,7 +150,7 @@ public class JsonHandler {
         }).start();
     }
 
-    public void getImages(int movieId, ImageListAsyncResponse callback){
+    public void getImages(int movieId, final ImageListAsyncResponse callback){
         new Thread(() -> {
             List<String> backdropPaths = new ArrayList<>();
             List<String> posterPaths = new ArrayList<>();
@@ -171,7 +174,7 @@ public class JsonHandler {
         }).start();
     }
 
-    public void getPeople(int movieId, PersonListAsyncResponse callback) {
+    public void getPeople(int movieId, final PersonListAsyncResponse callback) {
         new Thread(() -> {
         List<Person> cast = new ArrayList<>();
         List<Person> crew = new ArrayList<>();
@@ -210,7 +213,7 @@ public class JsonHandler {
         }).start();
     }
 
-    public void getLanguages(SubcategoryListAsyncResponse callback){
+    public void getLanguages( final SubcategoryListAsyncResponse callback){
         new Thread(() -> {
             List<Subcategory> subcategoryList = new ArrayList<>();
 

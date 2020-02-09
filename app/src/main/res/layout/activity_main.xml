@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MainActivity"
     android:id="@+id/drawer_layout"
     android:background="@color/colorBackground"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
     <ImageView
+        android:contentDescription="background image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:backgroundTintMode="src_over"
@@ -18,27 +18,10 @@
         android:src="@drawable/background"
         android:tint="@color/tintBackgroundImage" />
 
-    <LinearLayout
+    <include
+        layout="@layout/app_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            app:title="Movies"/>
-
-        <fragment
-            android:id="@+id/host_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/nav_graph" />
-
-    </LinearLayout>
+        android:layout_height="match_parent" />
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"

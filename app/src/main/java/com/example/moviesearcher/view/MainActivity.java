@@ -2,7 +2,9 @@ package com.example.moviesearcher.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -24,30 +26,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavController navController;
     private NavigationView navigationView;
+
     private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        navController = Navigation.findNavController(this, R.id.host_fragment);
-        NavigationUI.setupWithNavController(toolbar, navController, drawerLayout);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() != R.id.moviesList)
-                toolbar.setTitle(destination.getLabel());
+            if (destination.getId() != R.id.moviesList  && getSupportActionBar() != null)
+                getSupportActionBar().setTitle(destination.getLabel());
             else{
-                if (arguments != null)
-                    toolbar.setTitle(ConverterUtil.bundleToToolbarTitle(arguments));
+                if (arguments != null && getSupportActionBar() != null)
+                    getSupportActionBar().setTitle(ConverterUtil.bundleToToolbarTitle(arguments));
             }
         });
-
         prepareMenuItemCategoryStyle();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        return NavigationUI.navigateUp(navController, drawerLayout);
     }
 
     private void prepareMenuItemCategoryStyle(){
@@ -60,6 +69,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 tools.setTitle(s);
             }
         }).start();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Bundle bundle = new Bundle();
+                bundle.putString(BundleUtil.KEY_SEARCH_QUERY, query);
+                navController.navigate(R.id.moviesList, bundle);
+                return false;
+            }
+
+            @Override public boolean onQueryTextChange(String newText) { return false; }
+        });
+        return true;
     }
 
     @Override

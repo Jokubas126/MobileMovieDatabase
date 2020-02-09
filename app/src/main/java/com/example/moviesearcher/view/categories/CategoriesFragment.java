@@ -98,7 +98,7 @@ public class CategoriesFragment extends Fragment implements MultiSlider.OnThumbV
 
     @Override
     public void onSubcategoryClicked(View view, Subcategory subcategory) {
-        NavDirections action = CategoriesFragmentDirections.actionMoviesList(subcategory, minYearView.getText().toString(), maxYearView.getText().toString());
+        NavDirections action = CategoriesFragmentDirections.actionMoviesList(subcategory, minYearView.getText().toString(), maxYearView.getText().toString(), null);
         Navigation.findNavController(view).navigate(action);
     }
 }

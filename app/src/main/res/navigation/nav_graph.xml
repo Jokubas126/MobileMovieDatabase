@@ -30,6 +30,10 @@
         <argument
             android:name="end_year"
             app:argType="string" />
+        <argument
+            android:name="key_search"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <action
         android:id="@+id/action_movie_details"

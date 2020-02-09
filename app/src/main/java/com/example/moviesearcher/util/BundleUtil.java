@@ -10,4 +10,5 @@ public class BundleUtil {
     public static final String KEY_NOW_PLAYING = "now_playing";
     public static final String KEY_UPCOMING = "upcoming";
     public static final String KEY_SUBCATEGORY = "subcategory";
+    public static final String KEY_SEARCH_QUERY = "key_search";
 }

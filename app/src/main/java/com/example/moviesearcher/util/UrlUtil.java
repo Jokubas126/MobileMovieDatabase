@@ -13,6 +13,7 @@ public class UrlUtil {
     private static final String BASE_GENRES_URL = "https://api.themoviedb.org/3/genre/movie";
     private static final String BASE_MOVIE_URL = "https://api.themoviedb.org/3/movie/";
 
+    private static final String BASE_SEARCH_URL = "https://api.themoviedb.org/3/search/movie?api_key=";
     private static final String BASE_DISCOVER_URL = "https://api.themoviedb.org/3/discover/movie?api_key=c6c88c6e91d206e35fa6aff0b9d1cc36&sort_by=popularity.desc&page=";
 
     private static final String BASE_CONFIGURATION_LANGUAGES = "https://api.themoviedb.org/3/configuration/languages?api_key=";
@@ -34,6 +35,10 @@ public class UrlUtil {
     public static String getMovieImagesUrl(int id) {return  BASE_MOVIE_URL + id + "/images?api_key=" + API_KEY + "&language=en"; }
 
     public static String getLanguagesUrl(){ return  BASE_CONFIGURATION_LANGUAGES + API_KEY; }
+
+    public static String getSearchUrl(String searchKey, int page){
+        return BASE_SEARCH_URL + API_KEY + LANGUAGE_KEY + "&query=" + searchKey + "&page=" + page;
+    }
 
     public static String getDiscoverUrl(int genreId, String languageKey, String startYear, String endYear, int page){
         String url = BASE_DISCOVER_URL + page;
