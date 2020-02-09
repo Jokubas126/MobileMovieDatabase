@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,20 +19,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.moviesearcher.R;
+import com.example.moviesearcher.model.data.Subcategory;
 import com.example.moviesearcher.viewmodel.CategoriesViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.apptik.widget.MultiSlider;
 
-public class CategoriesFragment extends Fragment implements MultiSlider.OnThumbValueChangeListener {
+public class CategoriesFragment extends Fragment implements MultiSlider.OnThumbValueChangeListener, CategoryAdapter.OnSubcategoryClickedListener {
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.categories_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.release_year_slider) MultiSlider slider;
     @BindView(R.id.release_year_slider_min_value) TextView minYearView;
     @BindView(R.id.release_year_slider_max_value) TextView maxYearView;
-
 
     private CategoryAdapter adapter;
 
@@ -66,10 +68,10 @@ public class CategoriesFragment extends Fragment implements MultiSlider.OnThumbV
         viewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             if (categories != null){
                 if (recyclerView.getAdapter() == null){
-                    adapter = new CategoryAdapter(categories);
+                    adapter = new CategoryAdapter(categories, this);
                     recyclerView.setAdapter(adapter);
                 } else {
-                    CategoryAdapter adapter = new CategoryAdapter(categories);
+                    CategoryAdapter adapter = new CategoryAdapter(categories, this);
                     recyclerView.swapAdapter(adapter, true);
                 }
             }
@@ -86,9 +88,17 @@ public class CategoriesFragment extends Fragment implements MultiSlider.OnThumbV
     @Override
     public void onValueChanged(MultiSlider multiSlider, MultiSlider.Thumb thumb, int thumbIndex, int value) {
         if (thumbIndex == 0)
-            minYearView.setText(String.valueOf(value));
+            if (value != multiSlider.getMin())
+                minYearView.setText(String.valueOf(value));
+            else minYearView.setText("∞");
         if (thumbIndex == 1){
             maxYearView.setText(String.valueOf(value));
         }
+    }
+
+    @Override
+    public void onSubcategoryClicked(View view, Subcategory subcategory) {
+        NavDirections action = CategoriesFragmentDirections.actionMoviesList(subcategory, minYearView.getText().toString(), maxYearView.getText().toString());
+        Navigation.findNavController(view).navigate(action);
     }
 }

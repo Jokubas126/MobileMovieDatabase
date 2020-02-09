@@ -37,7 +37,7 @@
             android:id="@+id/release_year_slider_min_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1950"
+            android:text="∞"
             android:textAppearance="@style/SubcategoryTextAppearance"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -56,6 +56,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:drawThumbsApart="true"
+            app:thumbColor="@color/colorPrimary"
+            app:rangeColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/release_year_slider_min_value"

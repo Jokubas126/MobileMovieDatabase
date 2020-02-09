@@ -35,8 +35,11 @@ public class UrlUtil {
 
     public static String getLanguagesUrl(){ return  BASE_CONFIGURATION_LANGUAGES + API_KEY; }
 
-    public static String getDiscoverUrl(int genreId, String languageKey, int page){
+    public static String getDiscoverUrl(int genreId, String languageKey, String startYear, String endYear, int page){
         String url = BASE_DISCOVER_URL + page;
+        if (!startYear.equals("∞"))
+            url = url + "&primary_release_date.gte=" + startYear + "-01-01";
+        url = url + "&primary_release_date.lte=" + endYear + "-12-31";
         if (genreId != 0)
             url = url + "&with_genres=" + genreId;
         if (languageKey != null)

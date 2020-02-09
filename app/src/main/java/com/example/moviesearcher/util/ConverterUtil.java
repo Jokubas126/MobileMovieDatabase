@@ -61,8 +61,8 @@ public class ConverterUtil {
                 return title.append("Movies").toString();
             } else if (subcategory != null){
                 return "Search: " + subcategory.getName();
-            } else return "Most Popular Movies";
-        } else return "Most Popular Movies";
+            } else return "Popular Movies";
+        } else return "Popular Movies";
     }
 
     public static String stringListToString(List<String> list){

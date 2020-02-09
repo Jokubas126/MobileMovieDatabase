@@ -20,7 +20,7 @@
             <menu>
                 <item
                     android:id="@+id/menu_popular"
-                    android:title="Most Popular"
+                    android:title="Popular"
                     android:checked="true" />
                 <item
                     android:id="@+id/menu_top_rated"

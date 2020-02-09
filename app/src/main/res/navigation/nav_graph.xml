@@ -24,6 +24,12 @@
             android:name="subcategory"
             app:argType="com.example.moviesearcher.model.data.Subcategory"
             app:nullable="true" />
+        <argument
+            android:name="start_year"
+            app:argType="string" />
+        <argument
+            android:name="end_year"
+            app:argType="string" />
     </fragment>
     <action
         android:id="@+id/action_movie_details"

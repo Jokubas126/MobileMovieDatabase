@@ -35,14 +35,14 @@ public class JsonHandler {
 
     private int currentListTotalPages;
 
-    public void getMovieList(String listKey, Subcategory subcategory, int page, final MovieListAsyncResponse callback){
+    public void getMovieList(String listKey, Subcategory subcategory, String startYear, String endYear, int page, final MovieListAsyncResponse callback){
         new Thread(() ->{
             genres = getGenres(genresMap -> genres.putAll(genresMap));
             String url = "";
             if (listKey != null)
                 url = UrlUtil.getMovieListUrl(listKey, page);
             else if (subcategory != null)
-                url = UrlUtil.getDiscoverUrl(subcategory.getId(), subcategory.getStringId(), page);
+                url = UrlUtil.getDiscoverUrl(subcategory.getId(), subcategory.getStringId(), startYear, endYear, page);
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                     response -> {
                         try {

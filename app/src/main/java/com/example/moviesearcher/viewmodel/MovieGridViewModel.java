@@ -27,6 +27,7 @@ public class MovieGridViewModel extends ViewModel {
     private boolean isListFull;
     private String listKey;
     private Subcategory subcategory;
+    private String startYear, endYear;
 
     public void initFetch(Activity activity, Bundle args){
         this.activity = activity;
@@ -36,6 +37,8 @@ public class MovieGridViewModel extends ViewModel {
         if (args != null){
             listKey = args.getString(BundleUtil.KEY_MOVIE_LIST_TYPE);
             subcategory = args.getParcelable(BundleUtil.KEY_SUBCATEGORY);
+            startYear = args.getString("start_year");
+            endYear = args.getString("end_year");
         }
         if (listKey == null && subcategory == null)
             listKey = BundleUtil.KEY_POPULAR;
@@ -67,7 +70,7 @@ public class MovieGridViewModel extends ViewModel {
     }
 
     private void getMovieList(){
-        new Thread(() -> new JsonHandler().getMovieList(listKey, subcategory, page, list -> {
+        new Thread(() -> new JsonHandler().getMovieList(listKey, subcategory, startYear, endYear, page, list -> {
             if (list == null){
                 activity.runOnUiThread(() -> {
                     isListFull = true;
