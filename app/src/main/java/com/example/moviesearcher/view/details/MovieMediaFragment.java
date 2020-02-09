@@ -41,6 +41,8 @@ import butterknife.ButterKnife;
 public class MovieMediaFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener{
 
     @BindView(R.id.information_layout) LinearLayout informationLayout;
+    @BindView(R.id.poster_layout) LinearLayout posterLayout;
+    @BindView(R.id.backdrop_layout) LinearLayout backdropLayout;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
     @BindView(R.id.video_name) TextView trailerName;
@@ -95,13 +97,15 @@ public class MovieMediaFragment extends Fragment implements BottomNavigationView
             }
         });
         viewModel.getPosterList().observe(getViewLifecycleOwner(), posterList -> {
-            if (posterList != null){
+            if (posterList != null && !posterList.isEmpty()){
                 posterAdapter.updateImagePathList(posterList);
+                posterLayout.setVisibility(View.VISIBLE);
             }
         });
         viewModel.getBackdropList().observe(getViewLifecycleOwner(), backdropList -> {
-            if (backdropList != null){
+            if (backdropList != null && !backdropList.isEmpty()){
                 backdropAdapter.updateImagePathList(backdropList);
+                backdropLayout.setVisibility(View.VISIBLE);
             }
         });
         viewModel.getLoading().observe(getViewLifecycleOwner(), isLoading -> {

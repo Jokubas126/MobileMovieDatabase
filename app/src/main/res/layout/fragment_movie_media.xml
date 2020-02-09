@@ -45,31 +45,48 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="Posters:"
-                    android:textAppearance="@style/SectionTitleDetails"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/poster_recycler_view"
+                <LinearLayout
+                    android:id="@+id/poster_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="Backdrops:"
-                    android:textAppearance="@style/SectionTitleDetails"/>
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/backdrop_recycler_view"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="Posters:"
+                        android:textAppearance="@style/SectionTitleDetails"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/poster_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/backdrop_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="Backdrops:"
+                        android:textAppearance="@style/SectionTitleDetails"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/backdrop_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
