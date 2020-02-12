@@ -1,5 +1,5 @@
 # Mobile Movie Database (MMDb)
-This application was made as a hobby. It is used for searching for movies by their genre, release date and original language or a title keyword, also being able to search the 4 different categories: popularity, vote average, upcoming and now playing. The information is retrieved from [The Movie Database (TMDb)](https://www.themoviedb.org).
+This application was made as a hobby. It is used for searching movies by their genre, release date and original language or a title keyword, also being able to search the 4 different categories: popularity, vote average, upcoming and now playing. The information is retrieved from [The Movie Database (TMDb)](https://www.themoviedb.org).
 
 # What I learned
 ### General
