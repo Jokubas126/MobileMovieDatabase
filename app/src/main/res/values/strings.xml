@@ -39,5 +39,5 @@
 
     <!-- About app fragment -->
 
-    <string name="about_app">This application was made as a hobby. It is used to search for movies by their genre, release date and original language, also being able to search the 4 different categories: popularity, vote average, upcoming and now playing. The information is retrieved from The Movie Database (TMDb).</string>
+    <string name="about_app">This application was made as a hobby. It is used for searching for movies by their genre, release date and original language or a title keyword, also being able to search the 4 different categories: popularity, vote average, upcoming and now playing. The information is retrieved from The Movie Database (TMDb).</string>
 </resources>

@@ -28,12 +28,17 @@ android {
 }
 
 def lifecycleExtensionVersion = '1.1.1'
-def butterknifeVersion = '10.2.1'
+def butterKnifeVersion = '10.2.1'
 def supportVersion = '28.0.0'
-def navVersion = '2.2.0'
+def navVersion = '2.2.1'
 def glideVersion = '4.11.0'
 def volleyVersion = '1.1.1'
-def preferencesVersion = '1.0.0'
+def materialVersion = '1.1.0'
+def recyclerViewVersion = '1.1.0'
+def expandableRecyclerViewVersion = '1.3'
+def cardViewVersion = '1.0.0'
+def gridLayoutVersion = '1.0.5'
+def multiSliderVersion = '1.3'
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -41,21 +46,19 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "com.android.support:design:$supportVersion"
     implementation "android.arch.lifecycle:extensions:$lifecycleExtensionVersion"
-    implementation "com.jakewharton:butterknife:$butterknifeVersion"
+    implementation "com.jakewharton:butterknife:$butterKnifeVersion"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
     implementation "com.android.volley:volley:$volleyVersion"
     implementation "androidx.navigation:navigation-fragment:$navVersion"
     implementation "androidx.navigation:navigation-ui:$navVersion"
     implementation "com.github.bumptech.glide:glide:$glideVersion"
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation "androidx.preference:preference:$preferencesVersion"
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'com.thoughtbot:expandablerecyclerview:1.3'
-    implementation 'com.thoughtbot:expandablecheckrecyclerview:1.4'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.etsy.android.grid:library:1.0.5'
-    implementation 'io.apptik.widget:multislider:1.3'
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
+    implementation "com.thoughtbot:expandablerecyclerview:$expandableRecyclerViewVersion"
+    implementation "androidx.cardview:cardview:$cardViewVersion"
+    implementation "com.etsy.android.grid:library:$gridLayoutVersion"
+    implementation "io.apptik.widget:multislider:$multiSliderVersion"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
