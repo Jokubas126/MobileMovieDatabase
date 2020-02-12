@@ -20,14 +20,14 @@
         android:id="@+id/release_date_layout"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_margin="20dp"
+        android:layout_margin="@dimen/general_margin_double"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Release year"
+            android:text="@string/release_year_title"
             android:textAppearance="@style/MainCategoryTextAppearance"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
             android:id="@+id/release_year_slider_min_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="∞"
+            android:text="@string/infinity"
             android:textAppearance="@style/SubcategoryTextAppearance"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -46,7 +46,7 @@
             android:id="@+id/release_year_slider_max_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2020"
+            android:text="@string/max_release_date_value"
             android:textAppearance="@style/SubcategoryTextAppearance"
             app:layout_constraintBottom_toTopOf="@+id/release_year_slider"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -71,7 +71,7 @@
         android:id="@+id/categories_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/general_margin_double"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

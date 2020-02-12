@@ -17,7 +17,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     private List<String> imagePathList = new ArrayList<>();
 
-    public void updateImagePathList(List<String> list){
+    void updateImagePathList(List<String> list){
         imagePathList.clear();
         imagePathList.addAll(list);
         notifyDataSetChanged();

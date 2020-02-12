@@ -12,10 +12,9 @@
     </data>
 
     <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:card_view="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="@dimen/general_margin_half"
         android:background="@color/colorCardBackground">
 
             <androidx.cardview.widget.CardView
@@ -38,20 +37,20 @@
 
                     <ImageView
                         android:id="@+id/movie_poster_view"
+                        android:contentDescription="@string/movie_image"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="1dp"
                         android:adjustViewBounds="true"
                         android:gravity="center_horizontal"
-                        android:imageUrl="@{movie.posterImageUrl}"
-                        android:src="@drawable/empty_image" />
+                        android:imageUrl="@{movie.posterImageUrl}"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="7dp"
-                        android:layout_marginEnd="7dp"
-                        android:layout_marginBottom="7dp"
+                        android:layout_marginStart="@dimen/general_margin_half"
+                        android:layout_marginEnd="@dimen/general_margin_half"
+                        android:layout_marginBottom="@dimen/general_margin_half"
                         android:orientation="vertical">
 
                         <TextView

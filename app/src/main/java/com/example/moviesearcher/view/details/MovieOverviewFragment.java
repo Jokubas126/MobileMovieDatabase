@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -15,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.databinding.FragmentMovieOverviewBinding;
@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 
 public class MovieOverviewFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.information_layout) RelativeLayout informationLayout;
+    @BindView(R.id.information_layout) ConstraintLayout informationLayout;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 

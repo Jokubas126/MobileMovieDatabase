@@ -1,15 +1,43 @@
 <resources>
+
+    <!-- General -->
+
     <string name="app_name">Mobile Movie Database</string>
 
     <string name="action_search">Search</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loading_list_empty">There are no movies to display</string>
+
+    <!-- Image descriptions -->
+
+    <string name="background_image">Background image</string>
+    <string name="app_icon">The main icon of application</string>
+    <string name="movie_image">Movie image</string>
+    <string name="person_image">Person profile image</string>
+    <string name="empty_image">No image</string>
+
+    <!-- Section names -->
+
+    <string name="main_cast_section">Main cast:</string>
+    <string name="main_crew_section">Main crew:</string>
+    <string name="description_section">Description:</string>
+    <string name="posters_section">Posters:</string>
+    <string name="backdrops_section">Backdrops:</string>
+
+    <!-- Release date related -->
+
+    <string name="release_year_title">Release year</string>
+    <string name="infinity">∞</string>
+    <string name="max_release_date_value">2020</string>
+
+    <!-- Parts for movie details -->
+
     <string name="score_ending">/10</string>
     <string name="min_ending">&#160;min</string>
-    <string name="description">Description:</string>
     <string name="parenthesisStart">(</string>
     <string name="parenthesisEnd">)</string>
-    <string name="main_cast">Main cast:</string>
-    <string name="main_crew">Main crew:</string>
+
+    <!-- About app fragment -->
+
+    <string name="about_app">This application was made as a hobby. It is used to search for movies by their genre, release date and original language, also being able to search the 4 different categories: popularity, vote average, upcoming and now playing. The information is retrieved from The Movie Database (TMDb).</string>
 </resources>

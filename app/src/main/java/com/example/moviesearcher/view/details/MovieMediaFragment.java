@@ -12,23 +12,20 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.moviesearcher.R;
-import com.example.moviesearcher.model.data.Video;
 import com.example.moviesearcher.util.BundleUtil;
-import com.example.moviesearcher.util.YoutubeUtil;
+import com.example.moviesearcher.util.YoutubeConfig;
 import com.example.moviesearcher.viewmodel.MovieMediaViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -50,7 +47,7 @@ public class MovieMediaFragment extends Fragment implements BottomNavigationView
     @BindView(R.id.poster_recycler_view) RecyclerView posterView;
     @BindView(R.id.backdrop_recycler_view) RecyclerView backdropView;
 
-    private YouTubePlayerFragment youTubePlayerFragment = YouTubePlayerFragment.newInstance();
+    private YouTubePlayerFragment youTubePlayerFragment = YouTubePlayerFragment.newInstance(); // cannot use support fragment due to unknown reasons
     private MovieMediaViewModel viewModel;
 
     private ImageAdapter posterAdapter = new ImageAdapter();
@@ -117,7 +114,7 @@ public class MovieMediaFragment extends Fragment implements BottomNavigationView
     }
 
     private void initializeYoutubePlayer(String key){
-        youTubePlayerFragment.initialize(YoutubeUtil.API_KEY, new YouTubePlayer.OnInitializedListener() {
+        youTubePlayerFragment.initialize(YoutubeConfig.API_KEY, new YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
                 youTubePlayer.setFullscreen(false);

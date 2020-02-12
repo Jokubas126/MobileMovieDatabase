@@ -18,7 +18,7 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="Movies"
-            app:menu="@menu/search_menu"/>
+            app:menu="@menu/toolbar_menu"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

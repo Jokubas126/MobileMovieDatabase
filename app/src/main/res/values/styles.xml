@@ -55,13 +55,13 @@
     <!-- Movie Grid Fragment -->
 
     <style name="TitleCard">
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">25sp</item>
         <item name="android:textColor">@color/cardTitle</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ContentCard">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/cardContent</item>
     </style>
