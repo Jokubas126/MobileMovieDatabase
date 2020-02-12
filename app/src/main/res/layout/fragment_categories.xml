@@ -16,65 +16,71 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/release_date_layout"
-        android:layout_height="wrap_content"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_margin="@dimen/general_margin_double"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/release_year_title"
-            android:textAppearance="@style/MainCategoryTextAppearance"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/release_year_slider_min_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/infinity"
-            android:textAppearance="@style/SubcategoryTextAppearance"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-        <TextView
-            android:id="@+id/release_year_slider_max_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/max_release_date_value"
-            android:textAppearance="@style/SubcategoryTextAppearance"
-            app:layout_constraintBottom_toTopOf="@+id/release_year_slider"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <io.apptik.widget.MultiSlider
-            android:id="@+id/release_year_slider"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:drawThumbsApart="true"
-            app:thumbColor="@color/colorPrimary"
-            app:rangeColor="@color/colorPrimary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/release_year_slider_min_value"
-            app:scaleMax="2020"
-            app:scaleMin="1950"
-            app:thumbNumber="2" />
+            android:orientation="vertical">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/release_date_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/general_margin_double">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/categories_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/general_margin_double"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/release_date_layout" />
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/release_year_title"
+                    android:textAppearance="@style/MainCategoryTextAppearance"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/release_year_slider_min_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/infinity"
+                    android:textAppearance="@style/SubcategoryTextAppearance"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+                <TextView
+                    android:id="@+id/release_year_slider_max_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/max_release_date_value"
+                    android:textAppearance="@style/SubcategoryTextAppearance"
+                    app:layout_constraintBottom_toTopOf="@+id/release_year_slider"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <io.apptik.widget.MultiSlider
+                    android:id="@+id/release_year_slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:drawThumbsApart="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/release_year_slider_min_value"
+                    app:rangeColor="@color/colorPrimary"
+                    app:scaleMax="2020"
+                    app:scaleMin="1950"
+                    app:thumbColor="@color/colorPrimary"
+                    app:thumbNumber="2" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/categories_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/general_margin_double" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
