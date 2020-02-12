@@ -8,10 +8,13 @@ This application was made as a hobby. It is used for searching for movies by the
 * Data binding
 * Usage of [Android Jetpack](https://developer.android.com/jetpack)
 * Parsing JSON from REST API using [Volley library](https://github.com/google/volley)
+* Usage of [Glide library](https://bumptech.github.io/glide/) to fetch images from url
 * Usage of [YoutubePlayer](https://developers.google.com/youtube/android/player)
 
 ### UI components
 * RecyclerView with StaggeredGridLayout, horizontal and vertical LinearLayouts
-* DrawerLayout
+* DrawerLayout with NavigationView
 * BottomNavigationView
 * NestedScrollView
+* MultiSlider
+* ProgressBar for loading screen view
