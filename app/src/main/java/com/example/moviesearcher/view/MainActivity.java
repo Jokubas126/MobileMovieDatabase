@@ -14,13 +14,20 @@ import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.moviesearcher.R;
 import com.example.moviesearcher.util.BundleUtil;
 import com.example.moviesearcher.util.ConverterUtil;
 import com.google.android.material.navigation.NavigationView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+    @BindView(R.id.background_image_view) ImageView backgroundView;
 
     private DrawerLayout drawerLayout;
     private NavController navController;
@@ -30,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
+        Glide.with(this).load(R.drawable.background).into(backgroundView);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);

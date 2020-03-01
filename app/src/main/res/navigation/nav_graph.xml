@@ -18,8 +18,8 @@
             app:destination="@id/categoriesFragment" />
         <argument
             android:name="key_category"
-            app:argType="string"
-            android:defaultValue="popular" />
+            android:defaultValue="popular"
+            app:argType="string" />
         <argument
             android:name="subcategory"
             app:argType="com.example.moviesearcher.model.data.Subcategory"
@@ -50,8 +50,8 @@
             android:id="@+id/movieCast"
             android:name="com.example.moviesearcher.view.details.MovieCastFragment"
             android:label="Cast and Crew"
-            tools:layout="@layout/fragment_movie_cast"
-            app:popUpTo="@id/moviesList">
+            app:popUpTo="@id/moviesList"
+            tools:layout="@layout/fragment_movie_cast">
             <argument
                 android:name="movieId"
                 app:argType="integer" />
@@ -79,17 +79,17 @@
             android:id="@+id/action_movie_cast"
             app:destination="@id/movieCast"
             app:popUpTo="@id/moviesList"
-            app:popUpToInclusive="false"/>
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_movie_media"
             app:destination="@id/movieMedia"
             app:popUpTo="@id/moviesList"
-            app:popUpToInclusive="false"/>
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/actionMovieOverview"
             app:destination="@id/movieOverview"
             app:popUpTo="@id/moviesList"
-            app:popUpToInclusive="false"/>
+            app:popUpToInclusive="false" />
 
     </navigation>
     <action
@@ -99,7 +99,7 @@
         android:id="@+id/categoriesFragment"
         android:name="com.example.moviesearcher.view.categories.CategoriesFragment"
         android:label="Categories"
-        tools:layout="@layout/fragment_categories" >
+        tools:layout="@layout/fragment_categories">
         <action
             android:id="@+id/actionMoviesList"
             app:destination="@+id/moviesList" />

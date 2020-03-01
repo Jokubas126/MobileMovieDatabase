@@ -25,7 +25,7 @@ public class CategoryAdapter extends ExpandableRecyclerViewAdapter<CategoryAdapt
         this.subcategoryClickedListener = subcategoryClickedListener;
     }
 
-    public interface OnSubcategoryClickedListener{
+    public interface OnSubcategoryClickedListener {
         void onSubcategoryClicked(View view, Subcategory subcategory);
     }
 
@@ -61,7 +61,7 @@ public class CategoryAdapter extends ExpandableRecyclerViewAdapter<CategoryAdapt
             categoryTitleView = itemView.findViewById(R.id.title_view);
         }
 
-        void setCategoryTitle(ExpandableGroup group){
+        void setCategoryTitle(ExpandableGroup group) {
             categoryTitleView.setText(group.getTitle());
         }
     }

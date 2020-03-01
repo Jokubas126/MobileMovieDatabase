@@ -10,12 +10,12 @@
     tools:openDrawer="start">
 
     <ImageView
+        android:id="@+id/background_image_view"
         android:contentDescription="@string/background_image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:backgroundTintMode="src_over"
         android:scaleType="centerCrop"
-        android:src="@drawable/background"
         android:tint="@color/tintBackgroundImage" />
 
     <include
