@@ -2,7 +2,7 @@ package com.example.moviesearcher.model.repositories;
 
 import com.example.moviesearcher.model.data.Category;
 import com.example.moviesearcher.model.data.Subcategory;
-import com.example.moviesearcher.model.handlers.JsonHandler;
+import com.example.moviesearcher.model.services.MovieDbApiService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,11 +18,11 @@ public class CategoryListRepository {
     }
 
     public void fetchData(CategoryListResponse callback){
-        new JsonHandler().getGenres(genresMap -> {
+        new MovieDbApiService().getGenres(genresMap -> {
 
             categoryList.add(genreMapToCategory(genresMap));
 
-            new JsonHandler().getLanguages(subcategoryList -> {
+            new MovieDbApiService().getLanguages(subcategoryList -> {
                 sortList(subcategoryList);
                 categoryList.add(new Category("Language", subcategoryList));
                 callback.onProcessFinished(categoryList);

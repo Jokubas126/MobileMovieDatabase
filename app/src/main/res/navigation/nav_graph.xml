@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/moviesList"
-        android:name="com.example.moviesearcher.view.grid.MoviesGridFragment"
+        android:name="com.example.moviesearcher.ui.grid.MainGridFragment"
         android:label="Movies"
         tools:layout="@layout/fragment_movies_grid">
         <action
@@ -48,7 +48,7 @@
             app:argType="integer" />
         <fragment
             android:id="@+id/movieCast"
-            android:name="com.example.moviesearcher.view.details.MovieCastFragment"
+            android:name="com.example.moviesearcher.ui.details.cast.CastFragment"
             android:label="Cast and Crew"
             app:popUpTo="@id/moviesList"
             tools:layout="@layout/fragment_movie_cast">
@@ -58,7 +58,7 @@
         </fragment>
         <fragment
             android:id="@+id/movieMedia"
-            android:name="com.example.moviesearcher.view.details.MovieMediaFragment"
+            android:name="com.example.moviesearcher.ui.details.media.MediaFragment"
             android:label="Media"
             app:popUpTo="@id/moviesList"
             tools:layout="@layout/fragment_movie_media">
@@ -68,7 +68,7 @@
         </fragment>
         <fragment
             android:id="@+id/movieOverview"
-            android:name="com.example.moviesearcher.view.details.MovieOverviewFragment"
+            android:name="com.example.moviesearcher.ui.details.overview.OverviewFragment"
             android:label="Overview"
             tools:layout="@layout/fragment_movie_overview">
             <argument
@@ -97,7 +97,7 @@
         app:destination="@id/moviesList" />
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="com.example.moviesearcher.view.categories.CategoriesFragment"
+        android:name="com.example.moviesearcher.ui.categories.CategoriesFragment"
         android:label="Categories"
         tools:layout="@layout/fragment_categories">
         <action
@@ -106,7 +106,7 @@
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.example.moviesearcher.view.AboutFragment"
+        android:name="com.example.moviesearcher.ui.about.AboutFragment"
         android:label="About"
         tools:layout="@layout/fragment_about" />
 

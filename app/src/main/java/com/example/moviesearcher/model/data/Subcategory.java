@@ -10,6 +10,8 @@ public class Subcategory implements Parcelable {
     private String stringId;
     private String name;
 
+    public Subcategory(){}
+
     public Subcategory(int id, String name) {
         this.id = id;
         this.name = name;
@@ -19,20 +21,6 @@ public class Subcategory implements Parcelable {
         this.stringId = stringId;
         this.name = name;
     }
-
-    private Subcategory(Parcel in) {
-        id = in.readInt();
-        name = in.readString();
-    }
-
-    public static final Creator<Subcategory> CREATOR = new Creator<Subcategory>() {
-        @Override public Subcategory createFromParcel(Parcel in) {
-            return new Subcategory(in);
-        }
-        @Override public Subcategory[] newArray(int size) {
-            return new Subcategory[size];
-        }
-    };
 
     public int getId() { return id; }
 
@@ -51,6 +39,15 @@ public class Subcategory implements Parcelable {
     }
 
     public void setName(String name) { this.name = name; }
+
+    public static final Creator<Subcategory> CREATOR = new Creator<Subcategory>() {
+        @Override public Subcategory createFromParcel(Parcel in) {
+            return new Subcategory();
+        }
+        @Override public Subcategory[] newArray(int size) {
+            return new Subcategory[size];
+        }
+    };
 
     @Override public int describeContents() { return 0; }
 

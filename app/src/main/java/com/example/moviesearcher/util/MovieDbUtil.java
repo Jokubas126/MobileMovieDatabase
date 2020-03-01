@@ -21,7 +21,6 @@ public class MovieDbUtil {
     public static final String KEY_BACKDROP_PATH = "backdrop_path";
     public static final String KEY_PRODUCTION_COUNTRIES_ARRAY = "production_countries";
 
-
     // GENRES
 
     public static final String KEY_MOVIE_GENRE_IDS_ARRAY = "genre_ids";
@@ -34,7 +33,6 @@ public class MovieDbUtil {
     public static final String KEY_CREW_ARRAY = "crew";
     public static final String KEY_CREW_POSITION = "job";
     public static final String KEY_PROFILE_IMAGE_PATH = "profile_path";
-
 
     // TRAILER
     public static final String KEY_VIDEO_SITE = "site";

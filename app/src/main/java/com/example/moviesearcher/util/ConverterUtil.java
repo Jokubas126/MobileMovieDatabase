@@ -1,30 +1,20 @@
 package com.example.moviesearcher.util;
 
-import android.content.Context;
-import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
-import android.widget.ImageView;
 
-import androidx.databinding.BindingAdapter;
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.moviesearcher.model.data.Subcategory;
 
 import java.util.List;
 
 public class ConverterUtil {
 
-    private ConverterUtil(){}
-
-
+    private ConverterUtil() {
+    }
 
     // ---------------- Text related -------------//
 
-    public static String bundleToToolbarTitle(Bundle args){
-        if (args != null){
+    public static String bundleToToolbarTitle(Bundle args) {
+        if (args != null) {
             String key = args.getString(BundleUtil.KEY_MOVIE_LIST_TYPE);
             Subcategory subcategory = args.getParcelable(BundleUtil.KEY_SUBCATEGORY);
             if (key != null) {
@@ -37,16 +27,16 @@ public class ConverterUtil {
                     title.append(stringPart).append(" ");
                 }
                 return title.append("Movies").toString();
-            } else if (subcategory != null){
+            } else if (subcategory != null) {
                 return "Search: " + subcategory.getName();
             } else return "Popular Movies";
         } else return "Popular Movies";
     }
 
-    public static String stringListToString(List<String> list){
+    public static String stringListToString(List<String> list) {
         StringBuilder stringBuilder = null;
-        for (String word : list){
-            if (stringBuilder != null){
+        for (String word : list) {
+            if (stringBuilder != null) {
                 stringBuilder.append(", ").append(word);
             } else {
                 stringBuilder = word == null ? null : new StringBuilder(word);

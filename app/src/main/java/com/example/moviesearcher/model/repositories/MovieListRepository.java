@@ -3,7 +3,7 @@ package com.example.moviesearcher.model.repositories;
 import android.util.Log;
 
 import com.example.moviesearcher.model.data.Movie;
-import com.example.moviesearcher.model.handlers.responses.MovieListAsyncResponse;
+import com.example.moviesearcher.model.services.responses.MovieListAsyncResponse;
 import com.example.moviesearcher.util.MovieDbUtil;
 import com.example.moviesearcher.util.UrlUtil;
 
