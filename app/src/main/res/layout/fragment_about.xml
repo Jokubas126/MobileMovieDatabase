@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.about.AboutFragment"
+    android:layout_margin="@dimen/general_margin"
     android:orientation="vertical"
-    android:layout_margin="@dimen/general_margin">
+    tools:context=".ui.MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -13,12 +13,12 @@
         android:layout_gravity="center_horizontal"
         android:paddingBottom="@dimen/general_margin_half"
         android:text="@string/app_name"
-        android:textAppearance="@style/TitleHeaderText"/>
+        android:textAppearance="@style/TitleHeaderText" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/DescriptionDetails"
-        android:text="@string/about_app" />
+        android:text="@string/about_app"
+        android:textAppearance="@style/DescriptionDetails" />
 
 </LinearLayout>
