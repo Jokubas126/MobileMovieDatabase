@@ -11,6 +11,7 @@ import androidx.navigation.Navigation
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.data.Subcategory
 import com.example.moviesearcher.model.services.MovieDbApiService
+import com.example.moviesearcher.model.services.responses.MovieListAsyncResponse
 import com.example.moviesearcher.util.BundleUtil
 import java.util.*
 
@@ -76,22 +77,23 @@ class MainGridViewModel : ViewModel() {
 
     private fun getMovieList() {
         Thread(Runnable {
-            MovieDbApiService().getMovieList(listKey, subcategory, searchKey, startYear, endYear, page) { list: List<Movie>? ->
-                if (list == null) {
-                    activity!!.runOnUiThread {
-                        isListFull = true
-                        if (_movies.value!!.isEmpty())
-                            _error.value = true
-                        _loading.value = false
-                    }
-                } else {
-                    activity!!.runOnUiThread {
-                        _movies.value = list
-                        _error.value = false
-                        _loading.value = false
-                    }
-                }
-            }
+            MovieDbApiService().getMovieList(listKey, subcategory, searchKey, startYear, endYear, page,
+                    MovieListAsyncResponse {
+                        if (it == null) {
+                            activity!!.runOnUiThread {
+                                isListFull = true
+                                if (_movies.value!!.isEmpty())
+                                    _error.value = true
+                                _loading.value = false
+                            }
+                        } else {
+                            activity!!.runOnUiThread {
+                                _movies.value = it
+                                _error.value = false
+                                _loading.value = false
+                            }
+                        }
+                    })
         }).start()
     }
 

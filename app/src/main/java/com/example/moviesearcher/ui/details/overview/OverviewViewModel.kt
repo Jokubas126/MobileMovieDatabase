@@ -7,9 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.services.MovieDbApiService
+import com.example.moviesearcher.model.services.responses.ObjectAsyncResponse
 import com.example.moviesearcher.util.BundleUtil
 
-class OverviewViewModel: ViewModel(){
+class OverviewViewModel : ViewModel() {
 
     private val _currentMovie = MutableLiveData<Movie>()
     private val _loading = MutableLiveData<Boolean>()
@@ -21,13 +22,14 @@ class OverviewViewModel: ViewModel(){
         _loading.value = true
         Thread(Runnable {
             if (arguments != null) {
-                MovieDbApiService().getMovieDetails(arguments.getInt(BundleUtil.KEY_MOVIE_ID)
-                ) { retrievedMovie: Any ->
-                    activity.runOnUiThread {
-                        _currentMovie.value = retrievedMovie as Movie
-                        _loading.setValue(false)
-                    }
-                }
+                MovieDbApiService().getMovieDetails(arguments.getInt(BundleUtil.KEY_MOVIE_ID),
+                        ObjectAsyncResponse {
+                            activity.runOnUiThread {
+                                _currentMovie.value = it as Movie
+                                _loading.setValue(false)
+                            }
+                        }
+                )
             }
         }).start()
     }

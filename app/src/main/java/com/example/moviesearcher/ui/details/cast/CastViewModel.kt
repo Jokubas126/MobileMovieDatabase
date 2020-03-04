@@ -7,9 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.moviesearcher.model.data.Person
 import com.example.moviesearcher.model.services.MovieDbApiService
+import com.example.moviesearcher.model.services.responses.PersonListAsyncResponse
 import com.example.moviesearcher.util.BundleUtil
 
-class CastViewModel: ViewModel() {
+class CastViewModel : ViewModel() {
 
     private val _cast = MutableLiveData<List<Person>>()
     private val _crew = MutableLiveData<List<Person>>()
@@ -23,14 +24,17 @@ class CastViewModel: ViewModel() {
         _loading.value = true
         Thread(Runnable {
             if (args != null) {
-                MovieDbApiService().getPeople(args.getInt(BundleUtil.KEY_MOVIE_ID)
-                ) { castList: List<Person>, crewList: List<Person> ->
-                    activity.runOnUiThread {
-                        _cast.value = castList
-                        _crew.value = crewList
-                        _loading.setValue(false)
-                    }
-                }
+                MovieDbApiService().getPeople(args.getInt(BundleUtil.KEY_MOVIE_ID),
+                        PersonListAsyncResponse { castList, crewList ->
+                            run {
+                                activity.runOnUiThread {
+                                    _cast.value = castList
+                                    _crew.value = crewList
+                                    _loading.setValue(false)
+                                }
+                            }
+                        }
+                )
             }
         }).start()
     }
