@@ -8,8 +8,8 @@ public class Category extends ExpandableGroup<Subcategory> {
     private int id;
     private String name;
 
-    public Category(String title, List<Subcategory> items) {
-        super(title, items);
+    public Category(String name, List<Subcategory> items) {
+        super(name, items);
     }
 
     public int getId() { return id; }
