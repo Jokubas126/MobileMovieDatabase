@@ -1,8 +1,8 @@
 package com.example.moviesearcher.model.data;
 
-import com.example.moviesearcher.util.ConverterUtil;
-
 import java.util.List;
+
+import static com.example.moviesearcher.util.ConverterUtilKt.stringListToString;
 
 public class Movie{
 
@@ -66,7 +66,7 @@ public class Movie{
     }
 
     public void setGenres(List<String> genresList) {
-        new Thread(() -> genres = ConverterUtil.stringListToString(genresList)).start();
+        new Thread(() -> genres = stringListToString(genresList)).start();
     }
 
     public void setGenres(String genres){
@@ -82,7 +82,7 @@ public class Movie{
     }
 
     public void setProductionCountries(List<String> productionCountriesList) {
-        new Thread(() -> productionCountries = ConverterUtil.stringListToString(productionCountriesList)).start();
+        new Thread(() -> productionCountries = stringListToString(productionCountriesList)).start();
     }
 
     public void setProductionCountries(String productionCountries) {

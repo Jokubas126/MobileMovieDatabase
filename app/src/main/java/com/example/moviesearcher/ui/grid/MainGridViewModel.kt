@@ -12,7 +12,7 @@ import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.data.Subcategory
 import com.example.moviesearcher.model.services.MovieDbApiService
 import com.example.moviesearcher.model.services.responses.MovieListAsyncResponse
-import com.example.moviesearcher.util.BundleUtil
+import com.example.moviesearcher.util.*
 import java.util.*
 
 class MainGridViewModel : ViewModel() {
@@ -41,13 +41,13 @@ class MainGridViewModel : ViewModel() {
         _loading.value = true
         isListFull = false
         if (args != null) {
-            listKey = args.getString(BundleUtil.KEY_MOVIE_LIST_TYPE)
-            subcategory = args.getParcelable(BundleUtil.KEY_SUBCATEGORY)
-            startYear = args.getString(BundleUtil.KEY_START_YEAR)
-            endYear = args.getString(BundleUtil.KEY_END_YEAR)
-            searchKey = args.getString(BundleUtil.KEY_SEARCH_QUERY)
+            listKey = args.getString(KEY_MOVIE_LIST_TYPE)
+            subcategory = args.getParcelable(KEY_SUBCATEGORY)
+            startYear = args.getString(KEY_START_YEAR)
+            endYear = args.getString(KEY_END_YEAR)
+            searchKey = args.getString(KEY_SEARCH_QUERY)
         }
-        if (listKey == null && subcategory == null && searchKey == null) listKey = BundleUtil.KEY_POPULAR
+        if (listKey == null && subcategory == null && searchKey == null) listKey = KEY_POPULAR
         if (page == 0) {
             page = 1
             clearAll()

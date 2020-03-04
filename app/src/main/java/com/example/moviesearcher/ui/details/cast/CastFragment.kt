@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -18,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Person
-import com.example.moviesearcher.util.BundleUtil
+import com.example.moviesearcher.util.KEY_MOVIE_ID
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_movie_cast.*
 
@@ -92,11 +91,11 @@ class CastFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.media_menu_item -> if (arguments != null) {
-                val action: NavDirections = CastFragmentDirections.actionMovieMedia(arguments!!.getInt(BundleUtil.KEY_MOVIE_ID))
+                val action: NavDirections = CastFragmentDirections.actionMovieMedia(arguments!!.getInt(KEY_MOVIE_ID))
                 Navigation.findNavController(bottomNavigationView).navigate(action)
             }
             R.id.overview_menu_item -> if (arguments != null) {
-                val action: NavDirections = CastFragmentDirections.actionMovieOverview(arguments!!.getInt(BundleUtil.KEY_MOVIE_ID))
+                val action: NavDirections = CastFragmentDirections.actionMovieOverview(arguments!!.getInt(KEY_MOVIE_ID))
                 Navigation.findNavController(bottomNavigationView).navigate(action)
             }
         }

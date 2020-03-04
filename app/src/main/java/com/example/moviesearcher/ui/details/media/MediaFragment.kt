@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Video
-import com.example.moviesearcher.util.BundleUtil
-import com.example.moviesearcher.util.YoutubeConfig
+import com.example.moviesearcher.util.YOUTUBE_API_KEY
+import com.example.moviesearcher.util.KEY_MOVIE_ID
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -102,7 +102,7 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
     }
 
     private fun initializeYoutubePlayer(key: String) {
-        youTubePlayerFragment.initialize(YoutubeConfig.API_KEY, object : YouTubePlayer.OnInitializedListener {
+        youTubePlayerFragment.initialize(YOUTUBE_API_KEY, object : YouTubePlayer.OnInitializedListener {
             override fun onInitializationSuccess(provider: YouTubePlayer.Provider, youTubePlayer: YouTubePlayer, b: Boolean) {
                 youTubePlayer.setFullscreen(false)
                 youTubePlayer.setShowFullscreenButton(false)
@@ -118,11 +118,11 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.overview_menu_item -> if (arguments != null) {
-                val action: NavDirections = MediaFragmentDirections.actionMovieOverview(arguments!!.getInt(BundleUtil.KEY_MOVIE_ID))
+                val action: NavDirections = MediaFragmentDirections.actionMovieOverview(arguments!!.getInt(KEY_MOVIE_ID))
                 Navigation.findNavController(bottomNavigationView).navigate(action)
             }
             R.id.cast_menu_item -> if (arguments != null) {
-                val action: NavDirections = MediaFragmentDirections.actionMovieCast(arguments!!.getInt(BundleUtil.KEY_MOVIE_ID))
+                val action: NavDirections = MediaFragmentDirections.actionMovieCast(arguments!!.getInt(KEY_MOVIE_ID))
                 Navigation.findNavController(bottomNavigationView).navigate(action)
             }
         }

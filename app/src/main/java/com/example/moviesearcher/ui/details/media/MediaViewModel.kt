@@ -9,7 +9,7 @@ import com.example.moviesearcher.model.data.Video
 import com.example.moviesearcher.model.services.MovieDbApiService
 import com.example.moviesearcher.model.services.responses.ImageListAsyncResponse
 import com.example.moviesearcher.model.services.responses.ObjectAsyncResponse
-import com.example.moviesearcher.util.BundleUtil
+import com.example.moviesearcher.util.KEY_MOVIE_ID
 
 class MediaViewModel : ViewModel() {
     private val _trailer = MutableLiveData<Video>()
@@ -25,14 +25,14 @@ class MediaViewModel : ViewModel() {
     fun fetch(activity: Activity, args: Bundle?) {
         _loading.value = true
         if (args != null) {
-            MovieDbApiService().getTrailer(args.getInt(BundleUtil.KEY_MOVIE_ID), ObjectAsyncResponse {
+            MovieDbApiService().getTrailer(args.getInt(KEY_MOVIE_ID), ObjectAsyncResponse {
                 activity.runOnUiThread {
                     _trailer.value = it as Video
                     _loading.setValue(false)
                 }
             })
 
-            MovieDbApiService().getImages(args.getInt(BundleUtil.KEY_MOVIE_ID),
+            MovieDbApiService().getImages(args.getInt(KEY_MOVIE_ID),
                     ImageListAsyncResponse { backdropPathList, posterPathList ->
                         run {
                             activity.runOnUiThread {

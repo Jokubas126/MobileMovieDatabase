@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.services.MovieDbApiService
 import com.example.moviesearcher.model.services.responses.ObjectAsyncResponse
-import com.example.moviesearcher.util.BundleUtil
+import com.example.moviesearcher.util.KEY_MOVIE_ID
 
 class OverviewViewModel : ViewModel() {
 
@@ -22,7 +22,7 @@ class OverviewViewModel : ViewModel() {
         _loading.value = true
         Thread(Runnable {
             if (arguments != null) {
-                MovieDbApiService().getMovieDetails(arguments.getInt(BundleUtil.KEY_MOVIE_ID),
+                MovieDbApiService().getMovieDetails(arguments.getInt(KEY_MOVIE_ID),
                         ObjectAsyncResponse {
                             activity.runOnUiThread {
                                 _currentMovie.value = it as Movie

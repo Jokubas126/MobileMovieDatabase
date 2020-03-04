@@ -14,8 +14,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
 import com.example.moviesearcher.R
-import com.example.moviesearcher.util.BundleUtil
-import com.example.moviesearcher.util.ConverterUtil
+import com.example.moviesearcher.util.*
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportActionBar!!.title = destination.label
             else {
                 if (arguments != null && supportActionBar != null)
-                    supportActionBar!!.title = ConverterUtil.bundleToToolbarTitle(arguments)
+                    supportActionBar!!.title = bundleToToolbarTitle(arguments)
             }
         }
         prepareDrawerMenuItemCategoryStyle()
@@ -74,7 +73,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 val bundle = Bundle()
-                bundle.putString(BundleUtil.KEY_SEARCH_QUERY, query)
+                bundle.putString(KEY_SEARCH_QUERY, query)
                 navController.navigate(R.id.moviesList, bundle)
                 return false
             }
@@ -82,7 +81,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onQueryTextChange(newText: String): Boolean {
                 if (newText.isEmpty()) {
                     val bundle = Bundle()
-                    bundle.putString(BundleUtil.KEY_SEARCH_QUERY, null)
+                    bundle.putString(KEY_SEARCH_QUERY, null)
                     navController.navigate(R.id.moviesList, bundle)
                 }
                 return false
@@ -100,25 +99,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return true
             }
             R.id.menu_popular -> {
-                bundle.putString(BundleUtil.KEY_MOVIE_LIST_TYPE, BundleUtil.KEY_POPULAR)
+                bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_POPULAR)
                 navController.navigate(R.id.moviesList, bundle)
                 drawerLayout.closeDrawers()
                 return true
             }
             R.id.menu_top_rated -> {
-                bundle.putString(BundleUtil.KEY_MOVIE_LIST_TYPE, BundleUtil.KEY_TOP_RATED)
+                bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_TOP_RATED)
                 navController.navigate(R.id.moviesList, bundle)
                 drawerLayout.closeDrawers()
                 return true
             }
             R.id.menu_now_playing -> {
-                bundle.putString(BundleUtil.KEY_MOVIE_LIST_TYPE, BundleUtil.KEY_NOW_PLAYING)
+                bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_NOW_PLAYING)
                 navController.navigate(R.id.moviesList, bundle)
                 drawerLayout.closeDrawers()
                 return true
             }
             R.id.menu_upcoming -> {
-                bundle.putString(BundleUtil.KEY_MOVIE_LIST_TYPE, BundleUtil.KEY_UPCOMING)
+                bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_UPCOMING)
                 navController.navigate(R.id.moviesList, bundle)
                 drawerLayout.closeDrawers()
                 return true
