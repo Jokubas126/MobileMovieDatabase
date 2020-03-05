@@ -9,7 +9,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -39,7 +39,7 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener, OnSubcategory
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this).get(CategoriesViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(CategoriesViewModel::class.java)
         viewModel.fetch(activity as Activity)
 
         release_year_slider.setOnThumbValueChangeListener(this)

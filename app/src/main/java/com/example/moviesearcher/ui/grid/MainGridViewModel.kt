@@ -9,10 +9,14 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.example.moviesearcher.model.data.Movie
+import com.example.moviesearcher.model.data.MovieResults
 import com.example.moviesearcher.model.data.Subcategory
-import com.example.moviesearcher.model.services.MovieDbApiService
-import com.example.moviesearcher.model.services.responses.MovieListAsyncResponse
+import com.example.moviesearcher.model.repositories.MovieRepository
 import com.example.moviesearcher.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class MainGridViewModel : ViewModel() {
@@ -23,7 +27,7 @@ class MainGridViewModel : ViewModel() {
     private val _error = MutableLiveData<Boolean>()
     private val _loading = MutableLiveData<Boolean>()
 
-    val movies: LiveData<List<Movie>> = _movies
+    var movies: LiveData<List<Movie>> = _movies
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
 
@@ -76,25 +80,34 @@ class MainGridViewModel : ViewModel() {
     }
 
     private fun getMovieList() {
-        Thread(Runnable {
-            MovieDbApiService().getMovieList(listKey, subcategory, searchKey, startYear, endYear, page,
-                    MovieListAsyncResponse {
-                        if (it == null) {
-                            activity!!.runOnUiThread {
-                                isListFull = true
-                                if (_movies.value!!.isEmpty())
-                                    _error.value = true
-                                _loading.value = false
-                            }
-                        } else {
-                            activity!!.runOnUiThread {
-                                _movies.value = it
-                                _error.value = false
-                                _loading.value = false
-                            }
-                        }
-                    })
-        }).start()
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = MovieRepository().getPopularMovies(listKey!!, page)
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    getGenresMap(response.body()!!)
+                } else {
+                    _loading.value = false
+                    _error.value = true
+                }
+            }
+        }
+    }
+
+    private fun getGenresMap(movieResults: MovieResults) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = MovieRepository().getGenreMap()
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    movieResults.formatGenres(response.body()!!)
+                    _movies.value = movieResults.results
+                    _loading.value = false
+                    _error.value = false
+                } else {
+                    _loading.value = false
+                    _error.value = true
+                }
+            }
+        }
     }
 
     private fun clearAll() {

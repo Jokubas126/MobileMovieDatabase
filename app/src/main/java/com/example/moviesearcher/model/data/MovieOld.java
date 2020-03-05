@@ -4,7 +4,7 @@ import java.util.List;
 
 import static com.example.moviesearcher.util.ConverterUtilKt.stringListToString;
 
-public class Movie{
+public class MovieOld {
 
     private int id = 0;
     private String title;

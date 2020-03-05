@@ -4,7 +4,7 @@ private const val API_KEY = "c6c88c6e91d206e35fa6aff0b9d1cc36"
 private const val BASE_URL = "https://api.themoviedb.org"
 private const val LANGUAGE_KEY = "&language=en-US"
 
-private const val BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w780"
+const val BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w780"
 
 private const val BASE_GENRES_URL = "https://api.themoviedb.org/3/genre/movie"
 private const val BASE_MOVIE_URL = "https://api.themoviedb.org/3/movie/"

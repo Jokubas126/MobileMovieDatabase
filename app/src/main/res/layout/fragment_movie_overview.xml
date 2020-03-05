@@ -96,23 +96,23 @@
                         android:text="@{movie.releaseDate}"
                         android:textAppearance="@style/ContentOverview" />
 
-                    <TextView
+                    <!--<TextView
                         android:id="@+id/movie_countries_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{movie.productionCountries}"
-                        android:textAppearance="@style/ContentOverview" />
+                        android:textAppearance="@style/ContentOverview" />-->
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <TextView
+                        <!--<TextView
                             android:id="@+id/movie_runtime_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{String.valueOf(movie.runtime)}"
-                            android:textAppearance="@style/ContentOverview" />
+                            android:textAppearance="@style/ContentOverview" />-->
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -145,7 +145,7 @@
                         android:id="@+id/movie_genre_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{movie.genres}"
+                        android:text="@{movie.genresString}"
                         android:textAppearance="@style/ContentOverview" />
 
                 </LinearLayout>
@@ -172,12 +172,12 @@
                         android:text="@string/description_section"
                         android:textAppearance="@style/SectionTitleDetails" />
 
-                    <TextView
+                    <!--<TextView
                         android:id="@+id/movie_description_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@{movie.description}"
-                        android:textAppearance="@style/DescriptionDetails" />
+                        android:textAppearance="@style/DescriptionDetails" />-->
                 </LinearLayout>
             </ScrollView>
 

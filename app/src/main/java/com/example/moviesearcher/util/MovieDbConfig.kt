@@ -1,6 +1,7 @@
 package com.example.moviesearcher.util
 
 // GENERAL
+const val MOVIE_DB_API_KEY = "c6c88c6e91d206e35fa6aff0b9d1cc36"
 const val KEY_ID = "id"
 const val KEY_NAME = "name"
 const val KEY_ENGLISH_NAME = "english_name"

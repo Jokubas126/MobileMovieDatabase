@@ -5,17 +5,15 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.moviesearcher.model.data.Movie;
+import com.example.moviesearcher.model.data.MovieOld;
 import com.example.moviesearcher.model.data.Person;
 import com.example.moviesearcher.model.data.Subcategory;
 import com.example.moviesearcher.model.data.Video;
 import com.example.moviesearcher.model.services.responses.GenresMapAsyncResponse;
 import com.example.moviesearcher.model.services.responses.ImageListAsyncResponse;
-import com.example.moviesearcher.model.services.responses.MovieListAsyncResponse;
 import com.example.moviesearcher.model.services.responses.ObjectAsyncResponse;
 import com.example.moviesearcher.model.services.responses.PersonListAsyncResponse;
 import com.example.moviesearcher.model.services.responses.SubcategoryListAsyncResponse;
-import com.example.moviesearcher.model.repositories.MovieListRepository;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,39 +29,6 @@ import static com.example.moviesearcher.util.MovieDbUtilKt.*;
 public class MovieDbApiService {
 
     private HashMap<Integer, String> genres = new HashMap<>();
-
-    private int currentListTotalPages;
-
-    public void getMovieList(String listKey, Subcategory subcategory, String searchKey, String startYear, String endYear, int page, final MovieListAsyncResponse callback) {
-        new Thread(() -> {
-            genres = getGenres(genresMap -> genres.putAll(genresMap));
-            String url = "";
-            if (searchKey != null)
-                url = getSearchUrl(searchKey, page);
-            if (searchKey == null) {
-                if (listKey != null)
-                    url = getMovieListUrl(listKey, page);
-                else if (subcategory != null)
-                    url = getDiscoverUrl(subcategory.getId(), subcategory.getStringId(), startYear, endYear, page);
-            }
-
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                    response -> {
-                        try {
-                            currentListTotalPages = response.getInt(KEY_TOTAL_PAGES);
-                            if (page <= currentListTotalPages) {
-                                new MovieListRepository().fetchData(response, genres, callback);
-                            } else if (callback != null) {
-                                callback.processFinished(null);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    },
-                    error -> Log.d("JSONArrayRequest", "getMovieList: ERROR OCCURRED"));
-            ApplicationRequestHandler.getInstance().addToRequestQueue(request);
-        }).start();
-    }
 
     public HashMap<Integer, String> getGenres(final GenresMapAsyncResponse callback) {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getMovieGenresUrl(), null,
@@ -96,40 +61,40 @@ public class MovieDbApiService {
 
     public void getMovieDetails(int movieId, final ObjectAsyncResponse callback) {
         new Thread(() -> {
-            Movie movie = new Movie();
+            MovieOld movieOld = new MovieOld();
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
                     getMovieDetailsUrl(movieId), null,
                     response -> new Thread(() -> {
                         try {
-                            movie.setPosterImageUrl(getImageUrl(response.getString(KEY_POSTER_PATH)));
-                            movie.setBackdropImageUrl(getImageUrl(response.getString(KEY_BACKDROP_PATH)));
+                            movieOld.setPosterImageUrl(getImageUrl(response.getString(KEY_POSTER_PATH)));
+                            movieOld.setBackdropImageUrl(getImageUrl(response.getString(KEY_BACKDROP_PATH)));
 
-                            movie.setId(movieId);
-                            movie.setTitle(response.getString(KEY_MOVIE_TITLE));
-                            movie.setReleaseDate(response.getString(KEY_RELEASE_DATE));
+                            movieOld.setId(movieId);
+                            movieOld.setTitle(response.getString(KEY_MOVIE_TITLE));
+                            movieOld.setReleaseDate(response.getString(KEY_RELEASE_DATE));
 
                             JSONArray countries = response.getJSONArray(KEY_PRODUCTION_COUNTRIES_ARRAY);
                             List<String> countryList = new ArrayList<>();
                             for (int i = 0; i < countries.length(); i++) {
                                 countryList.add(countries.getJSONObject(i).getString(KEY_COUNTRY_ISO_CODE));
                             }
-                            movie.setProductionCountries(countryList);
+                            movieOld.setProductionCountries(countryList);
 
                             JSONArray genres = response.getJSONArray(KEY_MOVIE_GENRES_ARRAY);
                             List<String> genresList = new ArrayList<>();
                             for (int i = 0; i < genres.length(); i++) {
                                 genresList.add(genres.getJSONObject(i).getString(KEY_NAME));
                             }
-                            movie.setGenres(genresList);
+                            movieOld.setGenres(genresList);
 
-                            movie.setRuntime(response.getInt(KEY_MOVIE_RUNTIME));
-                            movie.setScore(response.getString(KEY_MOVIE_SCORE));
-                            movie.setDescription(response.getString(KEY_MOVIE_DESCRIPTION));
+                            movieOld.setRuntime(response.getInt(KEY_MOVIE_RUNTIME));
+                            movieOld.setScore(response.getString(KEY_MOVIE_SCORE));
+                            movieOld.setDescription(response.getString(KEY_MOVIE_DESCRIPTION));
 
                         } catch (JSONException e) {
                             Log.d("JSONArrayRequest", "getMovieDetails: EXCEPTION OCCURRED");
                         }
-                        if (callback != null) callback.processFinished(movie);
+                        if (callback != null) callback.processFinished(movieOld);
                     }).start(), error -> Log.d("JSONArrayRequest", "getMovieDetails: ERROR OCCURRED"));
             ApplicationRequestHandler.getInstance().addToRequestQueue(request);
         }).start();

@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -53,7 +53,7 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this)
 
-        viewModel = ViewModelProviders.of(this).get(MediaViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MediaViewModel::class.java)
         viewModel.fetch(activity as Activity, arguments)
 
         posterView.layoutManager = GridLayoutManager(context, 2)
