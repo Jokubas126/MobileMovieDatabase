@@ -50,7 +50,7 @@
                     android:layout_height="0dp"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/person_image"
-                    android:imageUrl="@{person.profileImageUrl}"
+                    android:imageUrl="@{person.profileImagePath}"
                     android:scaleType="centerCrop"
                     app:layout_constraintBottom_toTopOf="@+id/guideline"
                     app:layout_constraintEnd_toEndOf="parent"

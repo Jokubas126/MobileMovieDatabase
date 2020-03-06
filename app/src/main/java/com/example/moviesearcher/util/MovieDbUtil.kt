@@ -1,7 +1,6 @@
 package com.example.moviesearcher.util
 
 private const val API_KEY = "c6c88c6e91d206e35fa6aff0b9d1cc36"
-private const val BASE_URL = "https://api.themoviedb.org"
 private const val LANGUAGE_KEY = "&language=en-US"
 
 const val BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w780"
@@ -19,10 +18,6 @@ fun getPeopleUrl(id: Int): String? {
 
 fun getImageUrl(imagePath: String): String? {
     return BASE_IMAGE_URL + imagePath
-}
-
-fun getMovieVideosUrl(id: Int): String? {
-    return "$BASE_MOVIE_URL$id/videos?api_key=$API_KEY$LANGUAGE_KEY"
 }
 
 fun getLanguagesUrl(): String? {

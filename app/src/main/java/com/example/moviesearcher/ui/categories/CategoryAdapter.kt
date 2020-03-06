@@ -1,5 +1,6 @@
 package com.example.moviesearcher.ui.categories
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Category
 import com.example.moviesearcher.model.data.Subcategory
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter
+import com.thoughtbot.expandablerecyclerview.listeners.OnGroupClickListener
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder
@@ -41,7 +43,7 @@ class CategoryAdapter(groups: List<Category>?, private val itemClickListener: On
 
     inner class CategoryViewHolder(itemView: View) : GroupViewHolder(itemView) {
         fun onBind(category: Category){
-            itemView.title_view.text = category.title
+            itemView.title_view.text = category.name
         }
     }
 

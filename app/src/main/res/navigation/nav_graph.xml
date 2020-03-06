@@ -48,7 +48,7 @@
             app:argType="integer" />
         <fragment
             android:id="@+id/movieCast"
-            android:name="com.example.moviesearcher.ui.details.cast.CastFragment"
+            android:name="com.example.moviesearcher.ui.details.credits.CreditsFragment"
             android:label="Cast and Crew"
             app:popUpTo="@id/moviesList"
             tools:layout="@layout/fragment_movie_cast">

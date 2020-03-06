@@ -1,17 +1,12 @@
 package com.example.moviesearcher.ui.categories
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavDirections
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,7 +35,7 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener, OnSubcategory
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(CategoriesViewModel::class.java)
-        viewModel.fetch(activity as Activity)
+        viewModel.fetch()
 
         release_year_slider.setOnThumbValueChangeListener(this)
 
@@ -54,13 +49,8 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener, OnSubcategory
     private fun observeViewModel() {
         viewModel.categories.observe(viewLifecycleOwner, Observer<List<Category>> { categories: List<Category>? ->
             if (categories != null) {
-                if (recyclerView.adapter == null) {
-                    adapter = CategoryAdapter(categories, this)
-                    recyclerView.adapter = adapter
-                } else {
-                    val adapter = CategoryAdapter(categories, this)
-                    recyclerView.swapAdapter(adapter, true)
-                }
+                recyclerView.adapter = null
+                recyclerView.adapter = CategoryAdapter(categories, this)
             }
         })
         viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
@@ -72,7 +62,7 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener, OnSubcategory
     }
 
     override fun onValueChanged(multiSlider: MultiSlider, thumb: Thumb?, thumbIndex: Int, value: Int) {
-        //thumbIndexes mean slider sides (0 is left and 1 is right side)
+        //thumbIndexes are slider sides (0 is left and 1 is right side)
         if (thumbIndex == 0)
             if (value != multiSlider.min)
                 release_year_slider_min_value.text = value.toString()
@@ -83,7 +73,6 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener, OnSubcategory
     }
 
     override fun onSubcategoryClicked(view: View?, subcategory: Subcategory?) {
-        val action: NavDirections = CategoriesFragmentDirections.actionMoviesList(subcategory, release_year_slider_min_value.text.toString(), release_year_slider_max_value.text.toString(), null)
-        Navigation.findNavController(view!!).navigate(action)
+        viewModel.onSubcategoryClicked(view, subcategory, release_year_slider_min_value.text.toString(), release_year_slider_max_value.text.toString())
     }
 }

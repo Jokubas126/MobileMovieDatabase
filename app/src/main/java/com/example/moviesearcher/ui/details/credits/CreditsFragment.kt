@@ -1,6 +1,5 @@
-package com.example.moviesearcher.ui.details.cast
+package com.example.moviesearcher.ui.details.credits
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -21,7 +20,7 @@ import com.example.moviesearcher.util.KEY_MOVIE_ID
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_movie_cast.*
 
-class CastFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
+class CreditsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var crewLayout: LinearLayout
     private lateinit var castLayout: LinearLayout
@@ -31,7 +30,7 @@ class CastFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
     private val castAdapter = PeopleAdapter()
     private val crewAdapter = PeopleAdapter()
-    private lateinit var viewModel: CastViewModel
+    private lateinit var viewModel: CreditsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -40,8 +39,8 @@ class CastFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CastViewModel::class.java)
-        viewModel.fetch(activity as Activity, arguments)
+        viewModel = ViewModelProvider(this).get(CreditsViewModel::class.java)
+        viewModel.fetch(arguments)
 
         crewLayout = crew_layout
         castLayout = cast_layout
@@ -62,16 +61,16 @@ class CastFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     private fun observeViewModel() {
         viewModel.cast.observe(viewLifecycleOwner, Observer { cast: List<Person>? ->
             if (cast != null) {
-                castLayout.visibility = View.VISIBLE
-                progress_bar.visibility = View.GONE
                 castAdapter.updatePeopleList(cast)
+                progress_bar.visibility = View.GONE
+                castLayout.visibility = View.VISIBLE
             }
         })
         viewModel.crew.observe(viewLifecycleOwner, Observer { crew: List<Person>? ->
             if (crew != null) {
-                crewLayout.visibility = View.VISIBLE
-                progress_bar.visibility = View.GONE
                 crewAdapter.updatePeopleList(crew)
+                progress_bar.visibility = View.GONE
+                crewLayout.visibility = View.VISIBLE
             }
         })
         viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
@@ -91,11 +90,11 @@ class CastFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.media_menu_item -> if (arguments != null) {
-                val action: NavDirections = CastFragmentDirections.actionMovieMedia(arguments!!.getInt(KEY_MOVIE_ID))
+                val action: NavDirections = CreditsFragmentDirections.actionMovieMedia(arguments!!.getInt(KEY_MOVIE_ID))
                 Navigation.findNavController(bottomNavigationView).navigate(action)
             }
             R.id.overview_menu_item -> if (arguments != null) {
-                val action: NavDirections = CastFragmentDirections.actionMovieOverview(arguments!!.getInt(KEY_MOVIE_ID))
+                val action: NavDirections = CreditsFragmentDirections.actionMovieOverview(arguments!!.getInt(KEY_MOVIE_ID))
                 Navigation.findNavController(bottomNavigationView).navigate(action)
             }
         }

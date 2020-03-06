@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.details.cast
+package com.example.moviesearcher.ui.details.credits
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

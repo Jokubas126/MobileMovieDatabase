@@ -14,11 +14,17 @@ interface MovieApi {
     suspend fun getMovieDetails(@Path("movie_id") movieId: String, @Query("api_key") apiKey: String, @Query("language") language: String?): Response<Movie>
 
     @GET("/3/genre/movie/list")
-    suspend fun getGenreMap(@Query("api_key") apiKey: String): Response<Genres>
+    suspend fun getGenres(@Query("api_key") apiKey: String): Response<Genres>
 
     @GET("/3/movie/{movie_id}/images")
     suspend fun getImages(@Path("movie_id") movieId: String, @Query("api_key") apiKey: String, @Query("language") language: String?): Response<Images>
 
     @GET("/3/movie/{movie_id}/videos")
     suspend fun getVideo(@Path("movie_id") movieId: String, @Query("api_key") apiKey: String, @Query("language") language: String?): Response<VideoResults>
+
+    @GET("/3/movie/{movie_id}/credits")
+    suspend fun getCredits(@Path("movie_id") movieId: String, @Query("api_key") apiKey: String): Response<Credits>
+
+    @GET("/3/configuration/languages")
+    suspend fun getLanguages(@Query("api_key") apiKey: String): Response<List<Subcategory>>
 }
