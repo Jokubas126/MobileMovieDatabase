@@ -20,7 +20,8 @@
 
     <string name="main_cast_section">Main cast:</string>
     <string name="main_crew_section">Main crew:</string>
-    <string name="description_section">Description:</string>
+    <string name="description_section">Description</string>
+    <string name="production_countries_section">Production countries</string>
     <string name="posters_section">Posters:</string>
     <string name="backdrops_section">Backdrops:</string>
 

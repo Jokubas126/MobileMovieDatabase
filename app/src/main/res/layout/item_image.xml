@@ -3,8 +3,8 @@
 
     <data>
         <variable
-            name="imagePath"
-            type="String" />
+            name="image"
+            type="com.example.moviesearcher.model.data.Image" />
     </data>
 
     <LinearLayout
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
-            android:imageUrl="@{imagePath}" />
+            android:imageUrl="@{image.filePath}" />
 
     </LinearLayout>
 </layout>

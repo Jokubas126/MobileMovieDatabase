@@ -12,20 +12,19 @@
     <FrameLayout
         android:layout_width="165dp"
         android:layout_height="290dp"
-        android:background="@android:color/transparent"
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/general_margin_half"
-            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="@dimen/default_card_corner_radius"
+            app:cardBackgroundColor="@color/colorCardBackground"
             app:cardElevation="0dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorCardBackground"
                 android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.Guideline
@@ -59,7 +58,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
-                    android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:orientation="vertical"

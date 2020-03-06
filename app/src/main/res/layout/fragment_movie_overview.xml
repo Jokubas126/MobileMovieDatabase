@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.4" />
+                    app:layout_constraintGuide_percent="0.45" />
 
                 <ImageView
                     android:id="@+id/backdrop_image_view"
@@ -96,23 +96,16 @@
                         android:text="@{movie.releaseDate}"
                         android:textAppearance="@style/ContentOverview" />
 
-                    <!--<TextView
-                        android:id="@+id/movie_countries_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{movie.productionCountries}"
-                        android:textAppearance="@style/ContentOverview" />-->
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <!--<TextView
+                        <TextView
                             android:id="@+id/movie_runtime_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{String.valueOf(movie.runtime)}"
-                            android:textAppearance="@style/ContentOverview" />-->
+                            android:textAppearance="@style/ContentOverview" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -163,21 +156,71 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/general_margin">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/description_section"
-                        android:textAppearance="@style/SectionTitleDetails" />
-
-                    <!--<TextView
-                        android:id="@+id/movie_description_view"
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{movie.description}"
-                        android:textAppearance="@style/DescriptionDetails" />-->
+                        android:layout_margin="@dimen/general_margin_half"
+                        app:cardBackgroundColor="@color/colorCardBackground"
+                        app:cardCornerRadius="@dimen/default_card_corner_radius"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/general_margin">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:text="@string/description_section"
+                                android:textAppearance="@style/SectionTitleDetails" />
+
+                            <TextView
+                                android:id="@+id/movie_description_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:text="@{movie.overview}"
+                                android:textAppearance="@style/DescriptionDetails" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/general_margin_half"
+                        app:cardBackgroundColor="@color/colorCardBackground"
+                        app:cardCornerRadius="@dimen/default_card_corner_radius"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/general_margin">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:text="@string/production_countries_section"
+                                android:textAppearance="@style/SectionTitleDetails" />
+
+                            <TextView
+                                android:id="@+id/movie_countries_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:text="@{movie.productionCountryString}"
+                                android:textAppearance="@style/DescriptionDetails" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
                 </LinearLayout>
             </ScrollView>
 

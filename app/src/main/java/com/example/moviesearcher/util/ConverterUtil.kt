@@ -1,6 +1,9 @@
 package com.example.moviesearcher.util
 
 import android.os.Bundle
+import com.example.moviesearcher.model.data.Country
+import com.example.moviesearcher.model.data.Genre
+import com.example.moviesearcher.model.data.Genres
 import com.example.moviesearcher.model.data.Subcategory
 import java.util.*
 
@@ -37,3 +40,26 @@ fun stringListToString(list: List<String>): String {
     }
     return stringBuilder.toString()
 }
+
+fun stringListToListedString(list: List<String>): String {
+    val stringBuilder = java.lang.StringBuilder()
+    for (word in list) {
+        if (stringBuilder.isNotBlank())
+            stringBuilder.append("\n").append(word)
+        else stringBuilder.append(word)
+    }
+    return stringBuilder.toString()
+}
+
+fun getAnyNameList(list: List<*>?): List<String>{
+    val nameList = mutableListOf<String>()
+    if (list != null) {
+        for (value in list)
+            when (value) {
+                is Genre -> nameList.add(value.name)
+                is Country -> nameList.add(value.name)
+            }
+    }
+    return nameList
+}
+

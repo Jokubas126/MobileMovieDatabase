@@ -1,47 +1,56 @@
 package com.example.moviesearcher.ui.details.media
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.moviesearcher.model.data.Image
 import com.example.moviesearcher.model.data.Video
-import com.example.moviesearcher.model.services.MovieDbApiService
-import com.example.moviesearcher.model.services.responses.ImageListAsyncResponse
-import com.example.moviesearcher.model.services.responses.ObjectAsyncResponse
+import com.example.moviesearcher.model.repositories.MovieRepository
 import com.example.moviesearcher.util.KEY_MOVIE_ID
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MediaViewModel : ViewModel() {
     private val _trailer = MutableLiveData<Video>()
-    private val _posterList = MutableLiveData<List<String>>()
-    private val _backdropList = MutableLiveData<List<String>>()
+    private val _posterList = MutableLiveData<List<Image>>()
+    private val _backdropList = MutableLiveData<List<Image>>()
     private val _loading = MutableLiveData<Boolean>()
 
     val trailer: LiveData<Video> = _trailer
-    val posterList: LiveData<List<String>> = _posterList
-    val backdropList: LiveData<List<String>> = _backdropList
+    val posterList: LiveData<List<Image>> = _posterList
+    val backdropList: LiveData<List<Image>> = _backdropList
     val loading: LiveData<Boolean> = _loading
 
-    fun fetch(activity: Activity, args: Bundle?) {
+    fun fetch(args: Bundle?) {
         _loading.value = true
         if (args != null) {
-            MovieDbApiService().getTrailer(args.getInt(KEY_MOVIE_ID), ObjectAsyncResponse {
-                activity.runOnUiThread {
-                    _trailer.value = it as Video
-                    _loading.setValue(false)
-                }
-            })
+            val movieId = args.getInt(KEY_MOVIE_ID)
+            getImages(movieId)
+            getTrailer(movieId)
+        }
+    }
 
-            MovieDbApiService().getImages(args.getInt(KEY_MOVIE_ID),
-                    ImageListAsyncResponse { backdropPathList, posterPathList ->
-                        run {
-                            activity.runOnUiThread {
-                                _posterList.value = posterPathList
-                                _backdropList.setValue(backdropPathList)
-                            }
-                        }
-                    }
-            )
+    private fun getTrailer(movieId: Int){
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = MovieRepository().getVideo(movieId)
+            withContext(Dispatchers.Main){
+                _trailer.value = response.body()!!.videoList[0]
+                _loading.value = false
+            }
+        }
+    }
+
+    private fun getImages(movieId: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = MovieRepository().getImages(movieId)
+            withContext(Dispatchers.Main) {
+                _posterList.value = response.body()!!.posterList
+                _backdropList.value = response.body()!!.backdropList
+                _loading.value = false
+            }
         }
     }
 }

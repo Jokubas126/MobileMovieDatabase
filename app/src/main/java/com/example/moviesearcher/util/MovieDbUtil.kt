@@ -6,25 +6,12 @@ private const val LANGUAGE_KEY = "&language=en-US"
 
 const val BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w780"
 
-private const val BASE_GENRES_URL = "https://api.themoviedb.org/3/genre/movie"
 private const val BASE_MOVIE_URL = "https://api.themoviedb.org/3/movie/"
 
 private const val BASE_SEARCH_URL = "https://api.themoviedb.org/3/search/movie?api_key="
 private const val BASE_DISCOVER_URL = "https://api.themoviedb.org/3/discover/movie?api_key=c6c88c6e91d206e35fa6aff0b9d1cc36&sort_by=popularity.desc&page="
 
 private const val BASE_CONFIGURATION_LANGUAGES = "https://api.themoviedb.org/3/configuration/languages?api_key="
-
-fun getMovieListUrl(key: String, page: Int): String? {
-    return "$BASE_MOVIE_URL$key?api_key=$API_KEY$LANGUAGE_KEY&page=$page"
-}
-
-fun getMovieGenresUrl(): String? {
-    return "$BASE_GENRES_URL/list?api_key=$API_KEY$LANGUAGE_KEY"
-}
-
-fun getMovieDetailsUrl(id: Int): String? {
-    return "$BASE_MOVIE_URL$id?api_key=$API_KEY$LANGUAGE_KEY"
-}
 
 fun getPeopleUrl(id: Int): String? {
     return "$BASE_MOVIE_URL$id/credits?api_key=$API_KEY"
@@ -36,10 +23,6 @@ fun getImageUrl(imagePath: String): String? {
 
 fun getMovieVideosUrl(id: Int): String? {
     return "$BASE_MOVIE_URL$id/videos?api_key=$API_KEY$LANGUAGE_KEY"
-}
-
-fun getMovieImagesUrl(id: Int): String? {
-    return "$BASE_MOVIE_URL$id/images?api_key=$API_KEY&language=en"
 }
 
 fun getLanguagesUrl(): String? {

@@ -1,6 +1,5 @@
 package com.example.moviesearcher.ui.details.media
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesearcher.R
+import com.example.moviesearcher.model.data.Image
 import com.example.moviesearcher.model.data.Video
 import com.example.moviesearcher.util.YOUTUBE_API_KEY
 import com.example.moviesearcher.util.KEY_MOVIE_ID
@@ -54,7 +54,7 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
         bottomNavigationView.setOnNavigationItemSelectedListener(this)
 
         viewModel = ViewModelProvider(this).get(MediaViewModel::class.java)
-        viewModel.fetch(activity as Activity, arguments)
+        viewModel.fetch(arguments)
 
         posterView.layoutManager = GridLayoutManager(context, 2)
         posterView.itemAnimator = DefaultItemAnimator()
@@ -75,13 +75,13 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
                 initializeYoutubePlayer(trailer.key)
             }
         })
-        viewModel.posterList.observe(viewLifecycleOwner, Observer { posterList: List<String>? ->
+        viewModel.posterList.observe(viewLifecycleOwner, Observer { posterList: List<Image>? ->
             if (!posterList.isNullOrEmpty()) {
                 posterAdapter.updateImagePathList(posterList)
                 poster_layout.visibility = View.VISIBLE
             }
         })
-        viewModel.backdropList.observe(viewLifecycleOwner, Observer { backdropList: List<String>? ->
+        viewModel.backdropList.observe(viewLifecycleOwner, Observer { backdropList: List<Image>? ->
             if (!backdropList.isNullOrEmpty()) {
                 backdropAdapter.updateImagePathList(backdropList)
                 backdrop_layout.visibility = View.VISIBLE
@@ -109,6 +109,7 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
                 youTubePlayer.cueVideo(key)
                 Log.d("YoutubePlayer", "onInitializationFailure: successfully to initialized")
             }
+
             override fun onInitializationFailure(provider: YouTubePlayer.Provider, youTubeInitializationResult: YouTubeInitializationResult) {
                 Log.d("YoutubePlayer", "onInitializationFailure: failed to initialize")
             }

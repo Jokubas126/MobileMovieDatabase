@@ -1,28 +1,58 @@
 package com.example.moviesearcher.model.data
 
+import com.example.moviesearcher.util.KEY_PRODUCTION_COUNTRIES
+import com.example.moviesearcher.util.stringListToString
 import com.google.gson.annotations.SerializedName
 
-class Movie {
-    var id = 0
-    lateinit var title: String
+data class Movie(
+        val id: Int,
+        val title: String,
 
-    @SerializedName("release_date")
-    lateinit var releaseDate: String
+        @SerializedName("release_date")
+        val releaseDate: String,
 
-    @SerializedName("vote_average")
-    lateinit var score: String
+        @SerializedName("vote_average")
+        val score: String,
 
-    @SerializedName("genre_ids")
-    lateinit var genreIds: List<Int>
+        @SerializedName("genre_ids")
+        val genreIds: List<Int>,
 
-    lateinit var genresString: String
-    //private lateinit var productionCountries: String
-    //private var runtime = 0
-    //private lateinit var description: String
+        val genres: List<Genre>,
 
-    @SerializedName("poster_path")
-    lateinit var posterImageUrl: String
+        var genresString: String,
 
-    @SerializedName("backdrop_path")
-    lateinit var backdropImageUrl: String
+        @SerializedName(KEY_PRODUCTION_COUNTRIES)
+        val countryList: List<Country>,
+        var productionCountryString: String,
+
+        val runtime: Int,
+        val overview: String,
+
+        @SerializedName("poster_path")
+        val posterImageUrl: String,
+
+        @SerializedName("backdrop_path")
+        val backdropImageUrl: String
+)
+
+data class MovieResults(
+        @SerializedName("results")
+        var results: List<Movie>
+) {
+
+
+    fun formatGenres(genres: Genres) {
+        for (movie in results) {
+            val genreList = mutableListOf<String>()
+            for (id in movie.genreIds) {
+                for (genre in genres.genreList) {
+                    if (genre.id == id) {
+                        genreList.add(genre.name)
+                        break
+                    }
+                }
+            }
+            movie.genresString = stringListToString(genreList)
+        }
+    }
 }

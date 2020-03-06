@@ -6,13 +6,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesearcher.R
 import com.example.moviesearcher.databinding.ItemImageBinding
+import com.example.moviesearcher.model.data.Image
 import java.util.*
 
 class ImageAdapter: RecyclerView.Adapter<ImageAdapter.ViewHolder>(){
 
-    private val imagePathList: MutableList<String> = ArrayList()
+    private val imagePathList: MutableList<Image> = ArrayList()
 
-    fun updateImagePathList(list: List<String>) {
+    fun updateImagePathList(list: List<Image>) {
         imagePathList.clear()
         imagePathList.addAll(list)
         notifyDataSetChanged()
@@ -35,8 +36,8 @@ class ImageAdapter: RecyclerView.Adapter<ImageAdapter.ViewHolder>(){
     inner class ViewHolder(itemView: ItemImageBinding): RecyclerView.ViewHolder(itemView.root){
         private val view = itemView
 
-        fun onBind(image: String){
-            view.imagePath = image
+        fun onBind(image: Image){
+            view.image = image
         }
     }
 }

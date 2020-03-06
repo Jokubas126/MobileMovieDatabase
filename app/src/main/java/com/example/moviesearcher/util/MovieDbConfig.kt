@@ -2,6 +2,8 @@ package com.example.moviesearcher.util
 
 // GENERAL
 const val MOVIE_DB_API_KEY = "c6c88c6e91d206e35fa6aff0b9d1cc36"
+const val MOVIE_DB_LANGUAGE_EN = "en-US"
+const val MOVIE_DB_IMAGE_LANGUAGE_EN = "en"
 const val KEY_ID = "id"
 const val KEY_NAME = "name"
 const val KEY_ENGLISH_NAME = "english_name"
@@ -18,7 +20,7 @@ const val KEY_MOVIE_RUNTIME = "runtime"
 const val KEY_MOVIE_DESCRIPTION = "overview"
 const val KEY_POSTER_PATH = "poster_path"
 const val KEY_BACKDROP_PATH = "backdrop_path"
-const val KEY_PRODUCTION_COUNTRIES_ARRAY = "production_countries"
+const val KEY_PRODUCTION_COUNTRIES = "production_countries"
 
 // GENRES
 

@@ -14,7 +14,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.example.moviesearcher.R
 import com.example.moviesearcher.databinding.FragmentMovieOverviewBinding
-import com.example.moviesearcher.model.data.MovieOld
+import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.util.KEY_MOVIE_ID
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_movie_overview.*
@@ -37,14 +37,14 @@ class OverviewFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
         bottomNavigationView = bottom_navigation
         bottomNavigationView.setOnNavigationItemSelectedListener(this)
         viewModel = ViewModelProvider(this).get(OverviewViewModel::class.java)
-        viewModel.fetch(activity as Activity, arguments)
+        viewModel.fetch(arguments)
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        viewModel.currentMovie.observe(viewLifecycleOwner, Observer { movie: MovieOld? ->
+        viewModel.currentMovie.observe(viewLifecycleOwner, Observer { movie: Movie? ->
             if (movie != null) {
-                //fragmentView.movie = movie
+                fragmentView.movie = movie
                 information_layout.visibility = View.VISIBLE
             }
         })

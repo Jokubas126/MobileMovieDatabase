@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesearcher.R
 import com.example.moviesearcher.databinding.ItemMovieBinding
 import com.example.moviesearcher.model.data.Movie
-import com.example.moviesearcher.model.data.MovieOld
 
 class MainGridAdapter(private val listener: MovieClickListener): RecyclerView.Adapter<MainGridAdapter.ViewHolder>() {
 
