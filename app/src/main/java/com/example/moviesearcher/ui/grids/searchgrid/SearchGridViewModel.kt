@@ -1,6 +1,5 @@
-package com.example.moviesearcher.ui.grid
+package com.example.moviesearcher.ui.grids.searchgrid
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LiveData
@@ -10,18 +9,16 @@ import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.data.MovieResults
-import com.example.moviesearcher.model.data.Subcategory
 import com.example.moviesearcher.model.repositories.MovieRepository
-import com.example.moviesearcher.util.*
+import com.example.moviesearcher.ui.grids.BaseGridViewModel
+import com.example.moviesearcher.util.KEY_SEARCH_QUERY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
+import java.util.ArrayList
 
-class MainGridViewModel : ViewModel() {
-
-    private var activity: Activity? = null
+class SearchGridViewModel : ViewModel(), BaseGridViewModel{
 
     private val _movies = MutableLiveData<List<Movie>>()
     private val _error = MutableLiveData<Boolean>()
@@ -31,46 +28,22 @@ class MainGridViewModel : ViewModel() {
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
 
-    private var page = 0
+    private var page = 1
     private var isListFull = false
-    private var listKey: String? = null
-    private var subcategory: Subcategory? = null
-    private var startYear: String? = null
-    private var endYear: String? = null
-    private var searchKey: String? = null
+    private var searchQuery: String? = null
 
-    fun initFetch(activity: Activity?, args: Bundle?) {
-        this.activity = activity
-        _error.value = false
-        _loading.value = true
-        isListFull = false
-        if (args != null) {
-            listKey = args.getString(KEY_MOVIE_LIST_TYPE)
-            subcategory = args.getParcelable(KEY_SUBCATEGORY)
-            startYear = args.getString(KEY_START_YEAR)
-            endYear = args.getString(KEY_END_YEAR)
-            searchKey = args.getString(KEY_SEARCH_QUERY)
-        }
-        if (listKey == null && subcategory == null && searchKey == null) listKey = KEY_POPULAR
-        if (page == 0) {
-            page = 1
-            clearAll()
+    override fun fetch(args: Bundle?) {
+        if (args != null){
+            _loading.value = true
+            searchQuery = args.getString(KEY_SEARCH_QUERY)
             getMovieList()
         } else {
-            _loading.setValue(false)
+            _loading.value = false
+            _error.value = true
         }
     }
 
-    fun refresh() {
-        isListFull = false
-        _error.value = false
-        _loading.value = true
-        page = 1
-        clearAll()
-        getMovieList()
-    }
-
-    fun fetch() {
+    override fun addData() {
         if (!isListFull) {
             _error.value = false
             _loading.value = true
@@ -79,12 +52,23 @@ class MainGridViewModel : ViewModel() {
         }
     }
 
-    private fun getMovieList() {
+    override fun refresh() {
+        _error.value = false
+        _loading.value = true
+        page = 1
+        isListFull = false
+        clearMovies()
+        getMovieList()
+    }
+
+    private fun getMovieList(){
         CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository().getPopularMovies(listKey!!, page)
+            val response = MovieRepository().getSearchedMovies(searchQuery!!)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-                    getGenresMap(response.body()!!)
+                    if (page == response.body()!!.totalPages)
+                        isListFull = true
+                    getGenres(response.body()!!)
                 } else {
                     _loading.value = false
                     _error.value = true
@@ -93,7 +77,7 @@ class MainGridViewModel : ViewModel() {
         }
     }
 
-    private fun getGenresMap(movieResults: MovieResults) {
+    private fun getGenres(movieResults: MovieResults) {
         CoroutineScope(Dispatchers.IO).launch {
             val response = MovieRepository().getGenreMap()
             withContext(Dispatchers.Main) {
@@ -110,12 +94,12 @@ class MainGridViewModel : ViewModel() {
         }
     }
 
-    private fun clearAll() {
+    private fun clearMovies() {
         _movies.value = ArrayList()
     }
 
-    fun onMovieClicked(v: View?, movieId: Int) {
-        val action: NavDirections = MainGridFragmentDirections.actionMovieDetails(movieId)
-        Navigation.findNavController(v!!).navigate(action)
+    override fun onMovieClicked(view: View, movieId: Int) {
+        val action: NavDirections = SearchGridFragmentDirections.actionMovieDetails(movieId)
+        Navigation.findNavController(view).navigate(action)
     }
 }

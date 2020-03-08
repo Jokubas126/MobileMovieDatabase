@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.grid
+package com.example.moviesearcher.ui.grids
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +9,12 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.databinding.ItemMovieBinding
 import com.example.moviesearcher.model.data.Movie
 
-class MainGridAdapter(private val listener: MovieClickListener): RecyclerView.Adapter<MainGridAdapter.ViewHolder>() {
+class GridAdapter(private val listener: MovieClickListener): RecyclerView.Adapter<GridAdapter.ViewHolder>() {
 
     private val movieList: MutableList<Movie> = mutableListOf()
 
     interface MovieClickListener {
-        fun onMovieClicked(v: View?)
+        fun onMovieClicked(view: View, movieId: Int)
     }
 
     fun updateMovieList(movieList: List<Movie>) {
@@ -45,7 +45,7 @@ class MainGridAdapter(private val listener: MovieClickListener): RecyclerView.Ad
 
         fun onBind(movie: Movie){
             view.movie = movie
-            view.root.setOnClickListener { listener.onMovieClicked(it) }
+            view.root.setOnClickListener { listener.onMovieClicked(it, movie.id) }
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.example.moviesearcher.ui.categories
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +7,6 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Category
 import com.example.moviesearcher.model.data.Subcategory
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter
-import com.thoughtbot.expandablerecyclerview.listeners.OnGroupClickListener
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder
@@ -20,7 +18,7 @@ class CategoryAdapter(groups: List<Category>?, private val itemClickListener: On
         ) {
 
     interface OnSubcategoryClickedListener {
-        fun onSubcategoryClicked(view: View?, subcategory: Subcategory?)
+        fun onSubcategoryClicked(view: View?, subcategory: Subcategory, categoryName: String)
     }
 
     override fun onCreateGroupViewHolder(parent: ViewGroup?, viewType: Int): CategoryViewHolder {
@@ -38,7 +36,7 @@ class CategoryAdapter(groups: List<Category>?, private val itemClickListener: On
     }
 
     override fun onBindChildViewHolder(holder: SubcategoryViewHolder?, flatPosition: Int, group: ExpandableGroup<*>?, childIndex: Int) {
-        holder!!.onBind(group!!.items[childIndex] as Subcategory)
+        holder!!.onBind(group!!.items[childIndex] as Subcategory, group as Category)
     }
 
     inner class CategoryViewHolder(itemView: View) : GroupViewHolder(itemView) {
@@ -50,9 +48,9 @@ class CategoryAdapter(groups: List<Category>?, private val itemClickListener: On
     inner class SubcategoryViewHolder(itemView: View) : ChildViewHolder(itemView) {
         private val view = itemView
 
-        fun onBind(subcategory: Subcategory){
+        fun onBind(subcategory: Subcategory, category: Category){
             view.title_view.text = subcategory.name
-            view.setOnClickListener { itemClickListener.onSubcategoryClicked(it, subcategory) }
+            view.setOnClickListener { itemClickListener.onSubcategoryClicked(it, subcategory, category.name) }
         }
     }
 }

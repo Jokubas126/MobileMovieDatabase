@@ -3,27 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/moviesList">
+    app:startDestination="@id/typeGridFragment">
+
+    <!-- MOVIE GRID FRAGMENTS -->
 
     <fragment
-        android:id="@+id/moviesList"
-        android:name="com.example.moviesearcher.ui.grid.MainGridFragment"
-        android:label="Movies"
+        android:id="@+id/typeGridFragment"
+        android:name="com.example.moviesearcher.ui.grids.typegrid.TypeGridFragment"
+        android:label="Type"
         tools:layout="@layout/fragment_movies_grid">
         <action
             android:id="@+id/actionMovieDetails"
             app:destination="@id/movieDetails" />
-        <action
-            android:id="@+id/actionCategories"
-            app:destination="@id/categoriesFragment" />
         <argument
             android:name="key_category"
             android:defaultValue="popular"
             app:argType="string" />
-        <argument
-            android:name="subcategory"
-            app:argType="com.example.moviesearcher.model.data.Subcategory"
-            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/discoverGridFragment"
+        android:name="com.example.moviesearcher.ui.grids.discovergrid.DiscoverGridFragment"
+        android:label="Discover"
+        tools:layout="@layout/fragment_movies_grid">
+        <action
+            android:id="@+id/actionMovieDetails"
+            app:destination="@id/movieDetails" />
         <argument
             android:name="start_year"
             app:argType="string" />
@@ -31,13 +36,32 @@
             android:name="end_year"
             app:argType="string" />
         <argument
-            android:name="key_search"
+            android:name="discover_name_key"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="genre_id"
+            app:argType="integer" />
+        <argument
+            android:name="language_key"
             app:argType="string"
             app:nullable="true" />
     </fragment>
-    <action
-        android:id="@+id/action_movie_details"
-        app:destination="@id/movieDetails" />
+
+    <fragment
+        android:id="@+id/searchGridFragment"
+        android:name="com.example.moviesearcher.ui.grids.searchgrid.SearchGridFragment"
+        android:label="@string/action_search"
+        tools:layout="@layout/fragment_movies_grid">
+        <action
+            android:id="@+id/actionMovieDetails"
+            app:destination="@id/movieDetails" />
+        <argument
+            android:name="search_query"
+            app:argType="string" />
+    </fragment>
+
+    <!-- MOVIE DETAILS -->
 
     <navigation
         android:id="@+id/movieDetails"
@@ -47,26 +71,6 @@
             android:name="movieId"
             app:argType="integer" />
         <fragment
-            android:id="@+id/movieCast"
-            android:name="com.example.moviesearcher.ui.details.credits.CreditsFragment"
-            android:label="Cast and Crew"
-            app:popUpTo="@id/moviesList"
-            tools:layout="@layout/fragment_movie_cast">
-            <argument
-                android:name="movieId"
-                app:argType="integer" />
-        </fragment>
-        <fragment
-            android:id="@+id/movieMedia"
-            android:name="com.example.moviesearcher.ui.details.media.MediaFragment"
-            android:label="Media"
-            app:popUpTo="@id/moviesList"
-            tools:layout="@layout/fragment_movie_media">
-            <argument
-                android:name="movieId"
-                app:argType="integer" />
-        </fragment>
-        <fragment
             android:id="@+id/movieOverview"
             android:name="com.example.moviesearcher.ui.details.overview.OverviewFragment"
             android:label="Overview"
@@ -75,35 +79,52 @@
                 android:name="movieId"
                 app:argType="integer" />
         </fragment>
+        <fragment
+            android:id="@+id/movieMedia"
+            android:name="com.example.moviesearcher.ui.details.media.MediaFragment"
+            android:label="Media"
+            tools:layout="@layout/fragment_movie_media">
+            <argument
+                android:name="movieId"
+                app:argType="integer" />
+        </fragment>
+        <fragment
+            android:id="@+id/movieCast"
+            android:name="com.example.moviesearcher.ui.details.credits.CreditsFragment"
+            android:label="Cast and Crew"
+            tools:layout="@layout/fragment_movie_cast">
+            <argument
+                android:name="movieId"
+                app:argType="integer" />
+        </fragment>
         <action
             android:id="@+id/action_movie_cast"
             app:destination="@id/movieCast"
-            app:popUpTo="@id/moviesList"
-            app:popUpToInclusive="false" />
+            app:popUpTo="@id/movieOverview"/>
         <action
             android:id="@+id/action_movie_media"
             app:destination="@id/movieMedia"
-            app:popUpTo="@id/moviesList"
-            app:popUpToInclusive="false" />
+            app:popUpTo="@id/movieOverview"/>
         <action
             android:id="@+id/actionMovieOverview"
-            app:destination="@id/movieOverview"
-            app:popUpTo="@id/moviesList"
-            app:popUpToInclusive="false" />
+            app:destination="@id/movieOverview" />
 
     </navigation>
-    <action
-        android:id="@+id/action_global_moviesList"
-        app:destination="@id/moviesList" />
+
+    <!-- MOVIE CATEGORIES -->
+
     <fragment
         android:id="@+id/categoriesFragment"
         android:name="com.example.moviesearcher.ui.categories.CategoriesFragment"
         android:label="Categories"
         tools:layout="@layout/fragment_categories">
         <action
-            android:id="@+id/actionMoviesList"
-            app:destination="@+id/moviesList" />
+            android:id="@+id/actionDiscoverGridFragment"
+            app:destination="@id/discoverGridFragment" />
     </fragment>
+
+    <!-- ABOUT -->
+
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.example.moviesearcher.ui.about.AboutFragment"

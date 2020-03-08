@@ -3,10 +3,15 @@
     <!-- General -->
 
     <string name="app_name">Mobile Movie Database</string>
-
     <string name="action_search">Search</string>
-
     <string name="loading_list_empty">There are no movies to display</string>
+
+    <!-- Toolbar titles -->
+
+    <string name="type_fragment">Movies</string>
+    <string name="search_fragment">Search:&#160;</string>
+    <string name="discover_fragment">Discover:&#160;</string>
+
 
     <!-- Image descriptions -->
 

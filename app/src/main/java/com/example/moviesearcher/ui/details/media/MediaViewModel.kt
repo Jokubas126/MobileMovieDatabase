@@ -8,6 +8,8 @@ import com.example.moviesearcher.model.data.Image
 import com.example.moviesearcher.model.data.Video
 import com.example.moviesearcher.model.repositories.MovieRepository
 import com.example.moviesearcher.util.KEY_MOVIE_ID
+import com.example.moviesearcher.util.KEY_TRAILER_TYPE
+import com.example.moviesearcher.util.KEY_YOUTUBE_SITE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,10 +39,18 @@ class MediaViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = MovieRepository().getVideo(movieId)
             withContext(Dispatchers.Main){
-                _trailer.value = response.body()!!.videoList[0]
+                _trailer.value = filterVideos(response.body()!!.videoList)
                 _loading.value = false
             }
         }
+    }
+
+    private fun filterVideos(videoList: List<Video>): Video? {
+        for (video in videoList){
+            if (video.siteType == KEY_YOUTUBE_SITE && video.videoType == KEY_TRAILER_TYPE)
+                return video
+        }
+        return null
     }
 
     private fun getImages(movieId: Int) {

@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
@@ -39,16 +38,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
 
-        navController.addOnDestinationChangedListener { _: NavController?,
-                                                        destination: NavDestination,
-                                                        arguments: Bundle? ->
-            if (destination.id != R.id.moviesList && supportActionBar != null)
-                supportActionBar!!.title = destination.label
-            else {
-                if (arguments != null && supportActionBar != null)
-                    supportActionBar!!.title = bundleToToolbarTitle(arguments)
-            }
-        }
         prepareDrawerMenuItemCategoryStyle()
     }
 
@@ -74,16 +63,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onQueryTextSubmit(query: String): Boolean {
                 val bundle = Bundle()
                 bundle.putString(KEY_SEARCH_QUERY, query)
-                navController.navigate(R.id.moviesList, bundle)
+                navController.popBackStack(navController.currentDestination!!.id, true)
+                navController.navigate(R.id.searchGridFragment, bundle)
                 return false
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                if (newText.isEmpty()) {
-                    val bundle = Bundle()
-                    bundle.putString(KEY_SEARCH_QUERY, null)
-                    navController.navigate(R.id.moviesList, bundle)
-                }
                 return false
             }
         })
@@ -95,39 +80,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (menuItem.itemId) {
             R.id.menu_categories -> {
                 navController.navigate(R.id.categoriesFragment)
-                drawerLayout.closeDrawers()
-                return true
             }
             R.id.menu_popular -> {
                 bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_POPULAR)
-                navController.navigate(R.id.moviesList, bundle)
-                drawerLayout.closeDrawers()
-                return true
+                navController.navigate(R.id.typeGridFragment, bundle)
             }
             R.id.menu_top_rated -> {
                 bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_TOP_RATED)
-                navController.navigate(R.id.moviesList, bundle)
-                drawerLayout.closeDrawers()
-                return true
+                navController.navigate(R.id.typeGridFragment, bundle)
             }
             R.id.menu_now_playing -> {
                 bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_NOW_PLAYING)
-                navController.navigate(R.id.moviesList, bundle)
-                drawerLayout.closeDrawers()
-                return true
+                navController.navigate(R.id.typeGridFragment, bundle)
             }
             R.id.menu_upcoming -> {
                 bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_UPCOMING)
-                navController.navigate(R.id.moviesList, bundle)
-                drawerLayout.closeDrawers()
-                return true
+                navController.navigate(R.id.typeGridFragment, bundle)
             }
             R.id.menu_about -> {
                 navController.navigate(R.id.aboutFragment)
-                drawerLayout.closeDrawers()
-                return true
             }
         }
-        return false
+        drawerLayout.closeDrawers()
+        return true
     }
 }

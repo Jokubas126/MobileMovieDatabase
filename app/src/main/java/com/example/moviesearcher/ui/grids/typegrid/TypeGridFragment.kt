@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.grid
+package com.example.moviesearcher.ui.grids.typegrid
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,13 +15,17 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
-import com.example.moviesearcher.ui.grid.MainGridAdapter.MovieClickListener
+import com.example.moviesearcher.ui.grids.GridAdapter
+import com.example.moviesearcher.ui.grids.GridAdapter.MovieClickListener
+import com.example.moviesearcher.util.KEY_MOVIE_LIST_TYPE
+import com.example.moviesearcher.util.KEY_POPULAR
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
+import java.util.*
 
-class MainGridFragment : Fragment(), MovieClickListener {
+class TypeGridFragment : Fragment(), MovieClickListener {
 
-    private lateinit var viewModel: MainGridViewModel
-    private val gridAdapter = MainGridAdapter(this)
+    private lateinit var viewModel: TypeGridViewModel
+    private val gridAdapter = GridAdapter(this)
 
     private var isDown = true
 
@@ -32,8 +37,8 @@ class MainGridFragment : Fragment(), MovieClickListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(MainGridViewModel::class.java)
-        viewModel.initFetch(activity, arguments)
+        viewModel = ViewModelProvider(this).get(TypeGridViewModel::class.java)
+        viewModel.fetch(arguments)
 
         layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         movie_recycler_view!!.layoutManager = layoutManager
@@ -50,7 +55,7 @@ class MainGridFragment : Fragment(), MovieClickListener {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1) && isDown) {
                     isDown = false
-                    viewModel.fetch()
+                    viewModel.addData()
                     isDown = true
                 }
             }
@@ -87,13 +92,27 @@ class MainGridFragment : Fragment(), MovieClickListener {
         })
     }
 
+    @ExperimentalStdlibApi
+    override fun onResume() {
+        super.onResume()
+        val listType = arguments?.getString(KEY_MOVIE_LIST_TYPE)
+        (activity as AppCompatActivity).supportActionBar?.title =
+                if (listType != null) {
+                    val title = StringBuilder()
+                    val array = listType.split("_").toTypedArray()
+                    for (stringPart in array)
+                        title.append(stringPart.capitalize(Locale.getDefault())).append(" ")
+
+                    title.append(resources.getString(R.string.type_fragment)).toString()
+                } else KEY_POPULAR.capitalize(Locale.ROOT) + " " + resources.getString(R.string.type_fragment)
+    }
+
     override fun onPause() {
         super.onPause()
         state = layoutManager!!.onSaveInstanceState()
     }
 
-    override fun onMovieClicked(v: View?) {
-        val movieId = (v!!.findViewById<View>(R.id.movie_id) as TextView).text.toString().toInt()
-        viewModel.onMovieClicked(v, movieId)
+    override fun onMovieClicked(view: View, movieId: Int) {
+        viewModel.onMovieClicked(view, movieId)
     }
 }

@@ -2,6 +2,7 @@ package com.example.moviesearcher.model.data
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.example.moviesearcher.util.KEY_ENGLISH_NAME
 import com.example.moviesearcher.util.KEY_LANGUAGE_ISO_CODE
 import com.google.gson.annotations.SerializedName
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
@@ -21,7 +22,7 @@ class Subcategory() : Parcelable {
     @SerializedName(KEY_LANGUAGE_ISO_CODE)
     lateinit var code: String
 
-    @SerializedName("english_name")
+    @SerializedName(KEY_ENGLISH_NAME)
     lateinit var name: String
 
     // ------- Parcel part ----------//

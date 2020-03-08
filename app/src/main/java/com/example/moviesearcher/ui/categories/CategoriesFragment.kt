@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.fragment_categories.*
 class CategoriesFragment : Fragment(), OnThumbValueChangeListener, OnSubcategoryClickedListener {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: CategoryAdapter
 
     private lateinit var viewModel: CategoriesViewModel
 
@@ -48,10 +47,9 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener, OnSubcategory
 
     private fun observeViewModel() {
         viewModel.categories.observe(viewLifecycleOwner, Observer<List<Category>> { categories: List<Category>? ->
-            if (categories != null) {
-                recyclerView.adapter = null
+            if (categories != null)
                 recyclerView.adapter = CategoryAdapter(categories, this)
-            }
+
         })
         viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
             if (isLoading != null) {
@@ -72,7 +70,7 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener, OnSubcategory
         }
     }
 
-    override fun onSubcategoryClicked(view: View?, subcategory: Subcategory?) {
-        viewModel.onSubcategoryClicked(view, subcategory, release_year_slider_min_value.text.toString(), release_year_slider_max_value.text.toString())
+    override fun onSubcategoryClicked(view: View?, subcategory: Subcategory, categoryName: String) {
+        viewModel.onSubcategoryClicked(view, subcategory, categoryName, release_year_slider_min_value.text.toString(), release_year_slider_max_value.text.toString())
     }
 }

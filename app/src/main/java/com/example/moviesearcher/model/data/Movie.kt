@@ -1,42 +1,44 @@
 package com.example.moviesearcher.model.data
 
-import com.example.moviesearcher.util.KEY_PRODUCTION_COUNTRIES
-import com.example.moviesearcher.util.stringListToString
+import com.example.moviesearcher.util.*
 import com.google.gson.annotations.SerializedName
 
 data class Movie(
         val id: Int,
         val title: String,
 
-        @SerializedName("release_date")
+        @SerializedName(KEY_MOVIE_RELEASE_DATE)
         val releaseDate: String,
 
-        @SerializedName("vote_average")
+        @SerializedName(KEY_MOVIE_SCORE)
         val score: String,
 
-        @SerializedName("genre_ids")
+        @SerializedName(KEY_MOVIE_GENRE_ID_LIST)
         val genreIds: List<Int>,
 
         val genres: List<Genre>,
 
         var genresString: String,
 
-        @SerializedName(KEY_PRODUCTION_COUNTRIES)
+        @SerializedName(KEY_MOVIE_PRODUCTION_COUNTRY_LIST)
         val countryList: List<Country>,
         var productionCountryString: String,
 
         val runtime: Int,
         val overview: String,
 
-        @SerializedName("poster_path")
+        @SerializedName(KEY_MOVIE_POSTER_PATH)
         val posterImageUrl: String,
 
-        @SerializedName("backdrop_path")
+        @SerializedName(KEY_MOVIE_BACKDROP_PATH)
         val backdropImageUrl: String
 )
 
 data class MovieResults(
-        @SerializedName("results")
+        @SerializedName(KEY_TOTAL_PAGES)
+        var totalPages: Int,
+
+        @SerializedName(KEY_RESULT_LIST)
         var results: List<Movie>
 ) {
 

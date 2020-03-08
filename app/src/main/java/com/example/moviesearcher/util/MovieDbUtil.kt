@@ -1,38 +1,63 @@
 package com.example.moviesearcher.util
 
-private const val API_KEY = "c6c88c6e91d206e35fa6aff0b9d1cc36"
-private const val LANGUAGE_KEY = "&language=en-US"
-
+// GENERAL
+const val MOVIE_DB_API_KEY = "c6c88c6e91d206e35fa6aff0b9d1cc36"
 const val BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w780"
+const val MOVIE_DB_LANGUAGE_EN = "en-US"
+const val MOVIE_DB_IMAGE_LANGUAGE_EN = "en"
+const val KEY_RESULT_LIST = "results"
+const val KEY_ID = "id"
+const val KEY_NAME = "name"
+const val KEY_ENGLISH_NAME = "english_name"
+const val KEY_TOTAL_PAGES = "total_pages"
 
-private const val BASE_MOVIE_URL = "https://api.themoviedb.org/3/movie/"
+// QUERIES
+const val QUERY_API_KEY = "api_key"
+const val QUERY_LANGUAGE = "language"
+const val QUERY_PAGE = "page"
+const val QUERY_RELEASE_DATE_START = "primary_release_date.gte"
+const val QUERY_RELEASE_DATE_END = "primary_release_date.lte"
+const val QUERY_GENRES = "with_genres"
+const val QUERY_ORIGINAL_LANGUAGE = "with_original_language"
+const val QUERY_SEARCH_QUERY = "query"
 
-private const val BASE_SEARCH_URL = "https://api.themoviedb.org/3/search/movie?api_key="
-private const val BASE_DISCOVER_URL = "https://api.themoviedb.org/3/discover/movie?api_key=c6c88c6e91d206e35fa6aff0b9d1cc36&sort_by=popularity.desc&page="
+// PATHS
+const val PATH_MOVIE_ID = "movie_id"
+const val PATH_MOVIE_LIST_TYPE = "list_type"
 
-private const val BASE_CONFIGURATION_LANGUAGES = "https://api.themoviedb.org/3/configuration/languages?api_key="
+// MOVIE
+const val KEY_MOVIE_TITLE = "title"
+const val KEY_MOVIE_RELEASE_DATE = "release_date"
+const val KEY_MOVIE_SCORE = "vote_average"
+const val KEY_MOVIE_RUNTIME = "runtime"
+const val KEY_MOVIE_DESCRIPTION = "overview"
+const val KEY_MOVIE_POSTER_PATH = "poster_path"
+const val KEY_MOVIE_BACKDROP_PATH = "backdrop_path"
+const val KEY_MOVIE_PRODUCTION_COUNTRY_LIST = "production_countries"
 
-fun getPeopleUrl(id: Int): String? {
-    return "$BASE_MOVIE_URL$id/credits?api_key=$API_KEY"
-}
+// GENRES
+const val KEY_MOVIE_GENRE_ID_LIST = "genre_ids"
+const val KEY_MOVIE_GENRES_LIST = "genres"
 
-fun getImageUrl(imagePath: String): String? {
-    return BASE_IMAGE_URL + imagePath
-}
+// CAST AND CREW
+const val KEY_CAST_LIST = "cast"
+const val KEY_CAST_POSITION = "character"
+const val KEY_CREW_LIST = "crew"
+const val KEY_CREW_POSITION = "job"
+const val KEY_PROFILE_IMAGE_PATH = "profile_path"
 
-fun getLanguagesUrl(): String? {
-    return BASE_CONFIGURATION_LANGUAGES + API_KEY
-}
+// IMAGES
+const val KEY_POSTER_LIST = "posters"
+const val KEY_BACKDROP_LIST = "backdrops"
+const val KEY_IMAGE_FILE_PATH = "file_path"
 
-fun getSearchUrl(searchKey: String, page: Int): String? {
-    return "$BASE_SEARCH_URL$API_KEY$LANGUAGE_KEY&query=$searchKey&page=$page"
-}
+// TRAILER
+const val KEY_VIDEO_SITE = "site"
+const val KEY_YOUTUBE_SITE = "YouTube"
+const val KEY_VIDEO_TYPE = "type"
+const val KEY_TRAILER_TYPE = "Trailer"
+const val KEY_VIDEO = "key"
 
-fun getDiscoverUrl(genreId: Int, languageKey: String?, startYear: String, endYear: String, page: Int): String? {
-    var url = BASE_DISCOVER_URL + page
-    if (startYear != "∞") url = "$url&primary_release_date.gte=$startYear-01-01"
-    url = "$url&primary_release_date.lte=$endYear-12-31"
-    if (genreId != 0) url = "$url&with_genres=$genreId"
-    if (languageKey != null) url = "$url&with_original_language=$languageKey"
-    return url
-}
+// ISO CODES
+const val KEY_COUNTRY_ISO_CODE = "iso_3166_1"
+const val KEY_LANGUAGE_ISO_CODE = "iso_639_1"
