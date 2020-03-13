@@ -11,17 +11,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Category
-import com.example.moviesearcher.model.data.Subcategory
-import com.example.moviesearcher.ui.categories.CategoryAdapter.OnSubcategoryClickedListener
 import com.google.android.material.appbar.AppBarLayout
 import io.apptik.widget.MultiSlider
 import io.apptik.widget.MultiSlider.OnThumbValueChangeListener
 import io.apptik.widget.MultiSlider.Thumb
 import kotlinx.android.synthetic.main.fragment_categories.*
 
-class CategoriesFragment : Fragment(), OnThumbValueChangeListener, OnSubcategoryClickedListener, CategoryRecyclerView.AppBarTracking {
+class CategoriesFragment : Fragment(), OnThumbValueChangeListener,
+    CategoryRecyclerView.AppBarTracking,
+    MenuItem.OnMenuItemClickListener {
 
     private lateinit var recyclerView: CategoryRecyclerView
+    private lateinit var categoryAdapter: CategoryAdapter
 
     private lateinit var viewModel: CategoriesViewModel
 
@@ -54,8 +55,14 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener, OnSubcategory
         viewModel.categories.observe(
             viewLifecycleOwner,
             Observer<List<Category>> { categories: List<Category>? ->
-                if (categories != null)
-                    recyclerView.adapter = CategoryAdapter(categories, this)
+                if (categories != null) {
+                    categoryAdapter = CategoryAdapter(categories)
+                    recyclerView.adapter = categoryAdapter
+                    categoryAdapter.setChildClickListener { _, checked, group, childIndex ->
+                        viewModel.onSubcategoryClicked(checked, group as Category, childIndex)
+                    }
+                }
+
                 ViewCompat.setNestedScrollingEnabled(recyclerView, false)
             })
     }
@@ -76,48 +83,50 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener, OnSubcategory
         }
     }
 
-
-
-    override fun onSubcategoryClicked(view: View?, subcategory: Subcategory, categoryName: String) {
-        viewModel.onSubcategoryClicked(
-            view,
-            subcategory,
-            categoryName,
-            release_year_slider_min_value.text.toString(),
-            release_year_slider_max_value.text.toString()
-        )
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.action_confirm) {
+            viewModel.onConfirmSelectionClicked(
+                view!!,
+                release_year_slider_min_value.text.toString(),
+                release_year_slider_max_value.text.toString()
+            )
+        }
+        return true
     }
 
-    private var mAppBarOffset: Int = 0
-    private var mAppBarIdle = false
-    private var mAppBarMaxOffset: Int = 0
+    // --------- Toolbar functionality ------------//
+
+    private var appBarOffset: Int = 0
+    private var appBarIdle = false
+    private var appBarMaxOffset: Int = 0
 
     private var isExpanded: Boolean = false
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        menu.findItem(R.id.action_confirm).isVisible = true
         menu.findItem(R.id.action_search).isVisible = false
+        val confirmItem = menu.findItem(R.id.action_confirm)
+        confirmItem.isVisible = true
+        confirmItem.setOnMenuItemClickListener(this)
     }
 
-    private fun setupToolbar(){
+    private fun setupToolbar() {
         (activity as AppCompatActivity).supportActionBar!!.hide()
         (activity as AppCompatActivity).setSupportActionBar(collapsing_toolbar)
         activity!!.invalidateOptionsMenu()
         app_bar.addOnOffsetChangedListener(
-            AppBarLayout.OnOffsetChangedListener {
-                    appBarLayout, verticalOffset ->
-            mAppBarOffset = verticalOffset
-            val totalScrollRange = appBarLayout.totalScrollRange
-            val progress = (-verticalOffset).toFloat() / totalScrollRange
-            arrowImageView.rotation = 180 + progress * 180
-            isExpanded = verticalOffset == 0;
-            mAppBarIdle = mAppBarOffset >= 0 || mAppBarOffset <= mAppBarMaxOffset
-            if (mAppBarIdle)
-                setExpandAndCollapseEnabled(isExpanded)
-        })
+            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+                appBarOffset = verticalOffset
+                val totalScrollRange = appBarLayout.totalScrollRange
+                val progress = (-verticalOffset).toFloat() / totalScrollRange
+                arrowImageView.rotation = 180 + progress * 180
+                isExpanded = verticalOffset == 0;
+                appBarIdle = appBarOffset >= 0 || appBarOffset <= appBarMaxOffset
+                if (appBarIdle)
+                    setExpandAndCollapseEnabled(isExpanded)
+            })
 
-        app_bar.post(Runnable { mAppBarMaxOffset = -app_bar.totalScrollRange })
+        app_bar.post { appBarMaxOffset = -app_bar.totalScrollRange }
         recyclerView.setAppBarTracking(this)
 
         expandCollapseButton.setOnClickListener {
@@ -130,6 +139,6 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener, OnSubcategory
         recyclerView.isNestedScrollingEnabled = enabled
     }
 
-    override fun isAppBarExpanded(): Boolean = mAppBarOffset == 0
-    override fun isAppBarIdle(): Boolean = mAppBarIdle
+    override fun isAppBarExpanded(): Boolean = appBarOffset == 0
+    override fun isAppBarIdle(): Boolean = appBarIdle
 }

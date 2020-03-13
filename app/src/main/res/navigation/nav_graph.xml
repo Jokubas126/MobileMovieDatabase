@@ -36,9 +36,8 @@
             android:name="end_year"
             app:argType="string" />
         <argument
-            android:name="discover_name_key"
-            app:argType="string"
-            app:nullable="true" />
+            android:name="discover_name_array"
+            app:argType="string[]" />
         <argument
             android:name="genre_id"
             app:argType="integer" />

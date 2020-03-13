@@ -16,14 +16,10 @@ import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder
 import kotlinx.android.synthetic.main.item_category.view.*
 import kotlinx.android.synthetic.main.item_subcategory.view.*
 
-class CategoryAdapter(groups: List<Category>?, private val itemClickListener: OnSubcategoryClickedListener) :
+class CategoryAdapter(groups: List<Category>?) :
     CheckableChildRecyclerViewAdapter<CategoryAdapter.CategoryViewHolder, CategoryAdapter.SubcategoryViewHolder>(
         groups
     ) {
-
-    interface OnSubcategoryClickedListener {
-        fun onSubcategoryClicked(view: View?, subcategory: Subcategory, categoryName: String)
-    }
 
     override fun onCreateGroupViewHolder(parent: ViewGroup?, viewType: Int): CategoryViewHolder {
         val view =

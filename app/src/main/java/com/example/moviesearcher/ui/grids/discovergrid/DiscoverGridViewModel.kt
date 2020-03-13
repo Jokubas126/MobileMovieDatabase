@@ -11,17 +11,14 @@ import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.data.MovieResults
 import com.example.moviesearcher.model.repositories.MovieRepository
 import com.example.moviesearcher.ui.grids.BaseGridViewModel
-import com.example.moviesearcher.util.KEY_END_YEAR
-import com.example.moviesearcher.util.KEY_GENRE_ID
-import com.example.moviesearcher.util.KEY_LANGUAGE
-import com.example.moviesearcher.util.KEY_START_YEAR
+import com.example.moviesearcher.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList
 
-class DiscoverGridViewModel: ViewModel(), BaseGridViewModel {
+class DiscoverGridViewModel : ViewModel(), BaseGridViewModel {
 
     private val _movies = MutableLiveData<List<Movie>>()
     private val _error = MutableLiveData<Boolean>()
@@ -39,8 +36,8 @@ class DiscoverGridViewModel: ViewModel(), BaseGridViewModel {
     private var languageKey: String? = null
     private var genreId: Int = 0
 
-    override fun fetch(args: Bundle?){
-        if (args != null){
+    override fun fetch(args: Bundle?) {
+        if (args != null) {
             _error.value = false
             _loading.value = true
             startYear = args.getString(KEY_START_YEAR)
@@ -48,7 +45,7 @@ class DiscoverGridViewModel: ViewModel(), BaseGridViewModel {
             languageKey = args.getString(KEY_LANGUAGE)
             genreId = args.getInt(KEY_GENRE_ID)
             getMovieList()
-        } else{
+        } else {
             _error.value = true
             _loading.value = false
         }
@@ -76,11 +73,12 @@ class DiscoverGridViewModel: ViewModel(), BaseGridViewModel {
         val formattedList = formatQueries()
         CoroutineScope(Dispatchers.IO).launch {
             val response = MovieRepository().getDiscoveredMovies(
-                    page,
-                    formattedList[0],
-                    formattedList[1],
-                    formattedList[2],
-                    languageKey)
+                page,
+                formattedList[0],
+                formattedList[1],
+                formattedList[2],
+                languageKey
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     if (page == response.body()!!.totalPages)
@@ -100,9 +98,9 @@ class DiscoverGridViewModel: ViewModel(), BaseGridViewModel {
             startDate = "$startYear-01-01"
         val endDate = "$endYear-12-31"
         val genreIdString: String? =
-                if (genreId == 0)
-                    null
-                else genreId.toString()
+            if (genreId == 0)
+                null
+            else genreId.toString()
         return listOf(startDate, endDate, genreIdString)
     }
 
@@ -125,6 +123,16 @@ class DiscoverGridViewModel: ViewModel(), BaseGridViewModel {
 
     private fun clearMovies() {
         _movies.value = ArrayList()
+    }
+
+    fun getToolbarTitle(args: Bundle?): String? {
+        var title: String? = null
+        if (args != null){
+            title = stringListToString(args.getStringArray(KEY_DISCOVER_NAME_ARRAY)!!.toList())
+            if (title.isNullOrBlank() || title == "null")
+                title = args.getString(KEY_START_YEAR) + " - " + args.getString(KEY_END_YEAR)
+        }
+        return title
     }
 
     override fun onMovieClicked(view: View, movieId: Int) {
