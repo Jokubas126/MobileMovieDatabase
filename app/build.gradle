@@ -55,10 +55,10 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0"
 
     implementation "androidx.navigation:navigation-fragment:$navVersion"
     implementation "androidx.navigation:navigation-ui:$navVersion"
@@ -73,9 +73,6 @@ dependencies {
     implementation "androidx.cardview:cardview:$cardViewVersion"
     implementation "com.etsy.android.grid:library:$gridLayoutVersion"
     implementation "io.apptik.widget:multislider:$multiSliderVersion"
-    implementation 'com.opalox.rangebarvertical:rangebarvertical:1.1'
-    implementation 'com.appyvet:materialrangebar:1.4.7'
-
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
