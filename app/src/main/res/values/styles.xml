@@ -5,106 +5,122 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorBackground</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowTranslucentStatus">true</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- General -->
+
+    <style name="BaseTextStyle">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
 
     <!-- Welcome Activity -->
 
-    <style name="WelcomeActivityTitle">
+    <style name="WelcomeActivityTitle" parent="BaseTextStyle">
         <item name="android:textSize">40sp</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textStyle">bold</item>
     </style>
 
+    <!-- Toolbars -->
+
+    <style name="ToolbarStyle" parent="BaseTextStyle">
+        <item name="android:textSize">22sp</item>
+    </style>
+
     <!-- Navigation Menu Layout -->
 
-    <style name="TitleHeaderText">
-        <item name="android:textSize">24sp</item>
+    <style name="TitleHeaderText" parent="BaseTextStyle">
+        <item name="android:textSize">25sp</item>
         <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="ItemCategoryTextAppearance">
+    <style name="ItemCategoryTextAppearance" parent="BaseTextStyle">
         <item name="android:textColor">@color/colorPrimary</item>
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">19sp</item>
     </style>
 
-    <style name="ItemTextAppearance">
-        <item name="android:textSize">15sp</item>
+    <style name="ItemTextAppearance" parent="BaseTextStyle">
+        <item name="android:textSize">17sp</item>
         <item name="android:textColor">@color/navigationViewItem</item>
     </style>
 
     <!-- Categories Fragment -->
 
-    <style name="MainCategoryTextAppearance">
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item>
+    <style name="ReleaseYearTextAppearance" parent="BaseTextStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="SubcategoryTextAppearance">
-        <item name="android:textSize">16sp</item>
+    <style name="ReleaseYearItemsTextAppearance" parent="BaseTextStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="MainCategoryTextAppearance" parent="BaseTextStyle">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="SubcategoryTextAppearance" parent="BaseTextStyle">
+        <item name="android:textSize">17sp</item>
         <item name="android:textColor">@color/colorSubcategoryText</item>
     </style>
 
     <!-- Movie Grid Fragment -->
 
-    <style name="TitleCard">
-        <item name="android:textSize">25sp</item>
+    <style name="TitleCard" parent="BaseTextStyle">
+        <item name="android:textSize">27sp</item>
         <item name="android:textColor">@color/cardTitle</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="ContentCard">
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
+    <style name="ContentCard" parent="BaseTextStyle">
+        <item name="android:textSize">17sp</item>
         <item name="android:textColor">@color/cardContent</item>
     </style>
 
     <!-- Movie Details general style options -->
 
-    <style name="SectionTitleDetails">
-        <item name="android:textSize">17sp</item>
-        <item name="android:textStyle">bold</item>
+    <style name="SectionTitleDetails" parent="BaseTextStyle">
+        <item name="android:textSize">19sp</item>
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
     <!-- Movie Overview Fragment -->
 
-    <style name="TitleOverview">
+    <style name="TitleOverview" parent="BaseTextStyle">
         <item name="android:textSize">33sp</item>
         <item name="android:textColor">@color/detailsTitle</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="ContentOverview">
+    <style name="ContentOverview" parent="BaseTextStyle">
         <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/detailsContent</item>
     </style>
 
-    <style name="DescriptionDetails">
+    <style name="DescriptionDetails" parent="BaseTextStyle">
         <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/detailsDescription</item>
     </style>
 
     <!-- Movie Cast Fragment -->
 
-    <style name="PersonName">
+    <style name="PersonName" parent="BaseTextStyle">
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/personDetails</item>
     </style>
 
-    <style name="PersonPosition">
+    <style name="PersonPosition" parent="BaseTextStyle">
         <item name="android:textSize">13sp</item>
-        <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/personDetails</item>
     </style>
 

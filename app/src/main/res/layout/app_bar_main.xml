@@ -18,6 +18,8 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="Movies"
+            app:titleTextColor="@color/white"
+            app:titleTextAppearance="@style/ToolbarStyle"
             app:menu="@menu/toolbar_menu"/>
 
     </com.google.android.material.appbar.AppBarLayout>

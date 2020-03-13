@@ -15,9 +15,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.ui.grids.GridAdapter
-import com.example.moviesearcher.util.KEY_DISCOVER_NAME
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
-import java.util.*
 
 class DiscoverGridFragment : Fragment(), GridAdapter.MovieClickListener {
 
@@ -29,8 +27,10 @@ class DiscoverGridFragment : Fragment(), GridAdapter.MovieClickListener {
     private var layoutManager: StaggeredGridLayoutManager? = null
     private var state: Parcelable? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_movies_grid, container, false)
     }
 
@@ -73,28 +73,26 @@ class DiscoverGridFragment : Fragment(), GridAdapter.MovieClickListener {
         viewModel.error.observe(viewLifecycleOwner, Observer { isError: Boolean? ->
             if (isError != null)
                 loading_error_text_view!!.visibility =
-                        if (isError)
-                            View.VISIBLE
-                        else View.GONE
+                    if (isError)
+                        View.VISIBLE
+                    else View.GONE
         })
         viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
             if (isLoading != null) {
                 progress_bar_loading_movie_list!!.visibility =
-                        if (isLoading)
-                            View.VISIBLE
-                        else View.GONE
+                    if (isLoading)
+                        View.VISIBLE
+                    else View.GONE
                 if (isLoading)
                     loading_error_text_view!!.visibility = View.GONE
             }
         })
     }
 
-    @ExperimentalStdlibApi
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar?.title =
-                resources.getString(R.string.discover_fragment) +
-                        arguments?.getString(KEY_DISCOVER_NAME)?.capitalize(Locale.getDefault())
+            resources.getString(R.string.discover_fragment) + viewModel.getToolbarTitle(arguments)
     }
 
     override fun onPause() {

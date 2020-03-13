@@ -5,10 +5,13 @@ import android.text.SpannableString
 import android.text.style.TextAppearanceSpan
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isEmpty
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
@@ -24,6 +27,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var navController: NavController
     private lateinit var navigationView: NavigationView
 
+    private var searchItem: MenuItem? = null
+    private var confirmItem: MenuItem? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -38,6 +44,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
 
+        navController.addOnDestinationChangedListener { controller: NavController, destination: NavDestination, _: Bundle? ->
+            run {
+                if (destination != controller.graph.findNode(R.id.categoriesFragment)){
+                    setSupportActionBar(toolbar)
+                    searchItem?.isVisible = true
+                    confirmItem?.isVisible = false
+                    toolbar.visibility = View.VISIBLE
+                }
+            }
+        }
         prepareDrawerMenuItemCategoryStyle()
     }
 
@@ -54,11 +70,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             tools.title = s
         }
     }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
-        val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
+        searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem!!.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 val bundle = Bundle()
@@ -72,6 +87,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 return false
             }
         })
+        confirmItem = menu.findItem(R.id.action_confirm)
+        confirmItem!!.isVisible = false
         return true
     }
 

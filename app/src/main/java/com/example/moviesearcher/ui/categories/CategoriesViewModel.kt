@@ -26,7 +26,7 @@ class CategoriesViewModel : ViewModel() {
     val loading: LiveData<Boolean> = _loading
 
     fun fetch() {
-        if (_categories.value.isNullOrEmpty()){
+        if (categories.value.isNullOrEmpty()) {
             _loading.value = true
             getLanguages()
             getGenres()
@@ -37,9 +37,9 @@ class CategoriesViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = CategoryRepository().getLanguages()
             withContext(Dispatchers.Main) {
-                val subcategories = sortSubcategories(response.body()!!)
+                val subcategories = prepareSubcategories(response.body()!!)
                 var list = mutableListOf<Category>()
-                if (!_categories.value.isNullOrEmpty())
+                if (!categories.value.isNullOrEmpty())
                     list = categories.value!!
                 list.add(Category(LANGUAGE_CATEGORY, subcategories))
                 _categories.value = list
@@ -52,9 +52,9 @@ class CategoriesViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = CategoryRepository().getGenres()
             withContext(Dispatchers.Main) {
-                val subcategories = sortSubcategories(genresToSubcategoryList(response.body()!!))
+                val subcategories = prepareSubcategories(genresToSubcategoryList(response.body()!!))
                 var list = mutableListOf<Category>()
-                if (!_categories.value.isNullOrEmpty())
+                if (!categories.value.isNullOrEmpty())
                     list = categories.value!!
                 list.add(Category(GENRE_CATEGORY, subcategories))
                 _categories.value = list
@@ -71,17 +71,71 @@ class CategoriesViewModel : ViewModel() {
         return subcategoryList
     }
 
-    private fun sortSubcategories(list: List<Subcategory>): List<Subcategory> {
+    private fun prepareSubcategories(list: List<Subcategory>): List<Subcategory> {
         sort(list) { o1: Subcategory, o2: Subcategory -> o1.name.compareTo(o2.name) }
+        (list as MutableList<Subcategory>).add(0, Subcategory("", "")) // to have an empty item at the beginning for deselection
         return list
     }
 
-    fun onSubcategoryClicked(view: View?, subcategory: Subcategory, categoryName: String, startYear: String, endYear: String) {
-        val action = when (categoryName) {
-            GENRE_CATEGORY -> CategoriesFragmentDirections.actionDiscoverGridFragment(startYear, endYear, subcategory.name, Integer.parseInt(subcategory.code), null)
-            LANGUAGE_CATEGORY -> CategoriesFragmentDirections.actionDiscoverGridFragment(startYear, endYear, subcategory.name, 0, subcategory.code)
-            else -> CategoriesFragmentDirections.actionDiscoverGridFragment(startYear, endYear, subcategory.name, 0, null)
+    // ------------ Navigation related -------------//
+
+    private var languageSubcategory: Subcategory? = null
+    private var genreSubcategory: Subcategory? = null
+
+    fun onSubcategoryClicked(checked: Boolean, category: Category, subcategoryIndex: Int) {
+        if (checked) {
+            if ((category.items[subcategoryIndex] as Subcategory).name.isBlank()) {
+                when (category.name) {
+                    LANGUAGE_CATEGORY -> languageSubcategory = null
+                    GENRE_CATEGORY -> genreSubcategory = null
+                }
+            } else {
+                when (category.name) {
+                    LANGUAGE_CATEGORY -> languageSubcategory =
+                        category.items[subcategoryIndex] as Subcategory
+                    GENRE_CATEGORY -> genreSubcategory =
+                        category.items[subcategoryIndex] as Subcategory
+                }
+            }
+        } else {
+            when (category.name) {
+                LANGUAGE_CATEGORY -> languageSubcategory = null
+                GENRE_CATEGORY -> genreSubcategory = null
+            }
         }
-        Navigation.findNavController(view!!).navigate(action)
+    }
+
+    fun onConfirmSelectionClicked(view: View, startYear: String, endYear: String) {
+        val action = when {
+            genreSubcategory == null -> {
+                CategoriesFragmentDirections.actionDiscoverGridFragment(
+                    startYear,
+                    endYear,
+                    arrayOf(languageSubcategory?.name),
+                    0,
+                    languageSubcategory?.code
+                )
+
+            }
+            languageSubcategory == null -> {
+                CategoriesFragmentDirections.actionDiscoverGridFragment(
+                    startYear,
+                    endYear,
+                    arrayOf(genreSubcategory?.name),
+                    Integer.parseInt(genreSubcategory!!.code),
+                    null
+                )
+            }
+            else -> {
+                CategoriesFragmentDirections.actionDiscoverGridFragment(
+                    startYear,
+                    endYear,
+                    arrayOf(languageSubcategory?.name, genreSubcategory?.name),
+                    Integer.parseInt(genreSubcategory!!.code),
+                    languageSubcategory?.code
+                )
+            }
+        }
+        Navigation.findNavController(view).navigate(action)
     }
 }
