@@ -8,4 +8,9 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
+    <item android:id="@+id/action_confirm"
+        android:title="Confirm"
+        android:icon="@drawable/ic_check"
+        app:showAsAction="ifRoom|collapseActionView" />
+
 </menu>

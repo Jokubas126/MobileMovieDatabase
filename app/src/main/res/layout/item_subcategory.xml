@@ -2,24 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="55dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="3dp"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardBackgroundColor="@color/colorCategoryBackground">
+        app:cardBackgroundColor="@color/colorCategoryBackground"
+        app:cardCornerRadius="@dimen/default_card_corner_radius"
+        app:cardElevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/title_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <CheckedTextView
+                android:id="@+id/subcategory_title_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="40dp"
+                android:checkMark="?android:attr/listChoiceIndicatorSingle"
+                android:checkMarkTint="@color/colorSubcategoryText"
+                android:gravity="center"
+                android:paddingStart="40dp"
+                android:paddingEnd="10dp"
                 android:textAppearance="@style/SubcategoryTextAppearance" />
 
         </LinearLayout>

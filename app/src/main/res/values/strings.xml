@@ -11,6 +11,7 @@
     <string name="type_fragment">Movies</string>
     <string name="search_fragment">Search:&#160;</string>
     <string name="discover_fragment">Discover:&#160;</string>
+    <string name="categories_fragment">Categories</string>
 
 
     <!-- Image descriptions -->
