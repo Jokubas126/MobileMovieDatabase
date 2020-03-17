@@ -36,7 +36,7 @@ class OverviewViewModel : ViewModel() {
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     response.body()!!.genresString = stringListToString(getAnyNameList(response.body()!!.genres))
-                    response.body()!!.productionCountryString = stringListToListedString(getAnyNameList(response.body()!!.countryList))
+                    response.body()!!.productionCountryString = stringListToListedString(getAnyNameList(response.body()!!.productionCountryList))
                     _currentMovie.value = response.body()
                     _loading.value = false
                 } else {

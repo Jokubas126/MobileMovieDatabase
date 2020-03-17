@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.isEmpty
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -95,9 +94,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         val bundle = Bundle()
         when (menuItem.itemId) {
-            R.id.menu_categories -> {
-                navController.navigate(R.id.categoriesFragment)
-            }
+            R.id.menu_categories -> navController.navigate(R.id.discoverMovies)
+            R.id.menu_personal_lists -> navController.navigate(R.id.personal)
+
             R.id.menu_popular -> {
                 bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_POPULAR)
                 navController.navigate(R.id.typeGridFragment, bundle)
@@ -114,9 +113,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_UPCOMING)
                 navController.navigate(R.id.typeGridFragment, bundle)
             }
-            R.id.menu_about -> {
-                navController.navigate(R.id.aboutFragment)
-            }
+
+            R.id.menu_about -> navController.navigate(R.id.aboutFragment)
         }
         drawerLayout.closeDrawers()
         return true

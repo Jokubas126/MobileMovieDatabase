@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/typeGridFragment">
+    app:startDestination="@id/personal">
 
     <!-- MOVIE GRID FRAGMENTS -->
 
@@ -22,32 +22,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/discoverGridFragment"
-        android:name="com.example.moviesearcher.ui.grids.discovergrid.DiscoverGridFragment"
-        android:label="Discover"
-        tools:layout="@layout/fragment_movies_grid">
-        <action
-            android:id="@+id/actionMovieDetails"
-            app:destination="@id/movieDetails" />
-        <argument
-            android:name="start_year"
-            app:argType="string" />
-        <argument
-            android:name="end_year"
-            app:argType="string" />
-        <argument
-            android:name="discover_name_array"
-            app:argType="string[]" />
-        <argument
-            android:name="genre_id"
-            app:argType="integer" />
-        <argument
-            android:name="language_key"
-            app:argType="string"
-            app:nullable="true" />
-    </fragment>
-
-    <fragment
         android:id="@+id/searchGridFragment"
         android:name="com.example.moviesearcher.ui.grids.searchgrid.SearchGridFragment"
         android:label="@string/action_search"
@@ -59,6 +33,31 @@
             android:name="search_query"
             app:argType="string" />
     </fragment>
+
+    <!-- PERSONAL LISTS -->
+
+    <navigation
+        android:id="@+id/personal"
+        app:startDestination="@id/personalListsFragment" >
+        <fragment
+            android:id="@+id/personalListsFragment"
+            android:name="com.example.moviesearcher.ui.personal.PersonalListsFragment"
+            android:label="Personal lists"
+            tools:layout="@layout/fragment_personal_lists">
+            <action
+                android:id="@+id/personalMovieGridFragment"
+                app:destination="@id/personalMovieGridFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/personalMovieGridFragment"
+            android:name="com.example.moviesearcher.ui.personal.moviegrid.PersonalMovieGridFragment"
+            android:label="List:"
+            tools:layout="@layout/fragment_movies_grid">
+            <action
+                android:id="@+id/action_personalMovieGridFragment_to_movieDetails"
+                app:destination="@id/movieDetails" />
+        </fragment>
+    </navigation>
 
     <!-- MOVIE DETAILS -->
 
@@ -112,15 +111,44 @@
 
     <!-- MOVIE CATEGORIES -->
 
-    <fragment
-        android:id="@+id/categoriesFragment"
-        android:name="com.example.moviesearcher.ui.categories.CategoriesFragment"
-        android:label="Categories"
-        tools:layout="@layout/fragment_categories">
-        <action
-            android:id="@+id/actionDiscoverGridFragment"
-            app:destination="@id/discoverGridFragment" />
-    </fragment>
+    <navigation
+        android:id="@+id/discoverMovies"
+        app:startDestination="@id/categoriesFragment" >
+        <fragment
+            android:id="@+id/categoriesFragment"
+            android:name="com.example.moviesearcher.ui.categories.CategoriesFragment"
+            android:label="Categories"
+            tools:layout="@layout/fragment_categories">
+            <action
+                android:id="@+id/actionDiscoverGridFragment"
+                app:destination="@id/discoverGridFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/discoverGridFragment"
+            android:name="com.example.moviesearcher.ui.grids.discovergrid.DiscoverGridFragment"
+            android:label="Discover"
+            tools:layout="@layout/fragment_movies_grid">
+            <action
+                android:id="@+id/actionMovieDetails"
+                app:destination="@id/movieDetails" />
+            <argument
+                android:name="start_year"
+                app:argType="string" />
+            <argument
+                android:name="end_year"
+                app:argType="string" />
+            <argument
+                android:name="discover_name_array"
+                app:argType="string[]" />
+            <argument
+                android:name="genre_id"
+                app:argType="integer" />
+            <argument
+                android:name="language_key"
+                app:argType="string"
+                app:nullable="true" />
+        </fragment>
+    </navigation>
 
     <!-- ABOUT -->
 

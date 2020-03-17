@@ -104,13 +104,13 @@ class DiscoverGridViewModel : ViewModel(), BaseGridViewModel {
         return listOf(startDate, endDate, genreIdString)
     }
 
-    private fun getGenres(movieResults: MovieResults) {
+    private fun getGenres(movieList: MovieResults) {
         CoroutineScope(Dispatchers.IO).launch {
             val response = MovieRepository().getGenreMap()
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-                    movieResults.formatGenres(response.body()!!)
-                    _movies.value = movieResults.results
+                    movieList.formatGenres(response.body()!!)
+                    _movies.value = movieList.results
                     _loading.value = false
                     _error.value = false
                 } else {

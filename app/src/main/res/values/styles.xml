@@ -23,9 +23,9 @@
     <!-- Welcome Activity -->
 
     <style name="WelcomeActivityTitle" parent="BaseTextStyle">
-        <item name="android:textSize">40sp</item>
+        <item name="android:textSize">45sp</item>
         <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <!-- Toolbars -->
@@ -49,6 +49,19 @@
     <style name="ItemTextAppearance" parent="BaseTextStyle">
         <item name="android:textSize">17sp</item>
         <item name="android:textColor">@color/navigationViewItem</item>
+    </style>
+
+    <!-- Personal lists -->
+
+    <style name="PersonalListTitleAppearance" parent="BaseTextStyle">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="PersonalListCreateTitleAppearance" parent="BaseTextStyle">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <!-- Categories Fragment -->
@@ -86,7 +99,7 @@
         <item name="android:textColor">@color/cardContent</item>
     </style>
 
-    <!-- Movie Details general style options -->
+    <!-- Movie Details -->
 
     <style name="SectionTitleDetails" parent="BaseTextStyle">
         <item name="android:textSize">19sp</item>
