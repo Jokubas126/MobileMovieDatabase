@@ -38,6 +38,10 @@
     <string name="infinity">∞</string>
     <string name="max_release_date_value">2020</string>
 
+    <!-- Personal lists -->
+
+    <string name="add_to_lists_title">Add to the lists</string>
+
     <!-- Parts for movie details -->
 
     <string name="score_ending">/10</string>

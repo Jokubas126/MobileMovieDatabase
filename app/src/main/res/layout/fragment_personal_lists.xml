@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/personal_lists_layout"
-    tools:context=".ui.personal.PersonalListsFragment">
+    tools:context=".ui.personal.lists.PersonalListsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"

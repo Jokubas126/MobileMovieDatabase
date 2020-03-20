@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -23,24 +24,67 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/movie_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(movie.id)}"
+                    android:text="@{String.valueOf(movie.remoteId)}"
                     android:visibility="gone" />
 
-                <ImageView
-                    android:id="@+id/movie_poster_view"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/movie_image"
-                    android:gravity="center_horizontal"
-                    android:imageUrl="@{movie.posterImageUrl}" />
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/movie_poster_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/movie_image"
+                        android:gravity="center_horizontal"
+                        android:imageByteArray="@{movie.posterImageByteArray}"
+                        android:imageUrl="@{movie.posterImageUrl}" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|top"
+                        android:background="@color/colorCardBackground">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="5dp">
+
+                            <!--<ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:layout_marginEnd="7dp"
+                                android:src="@drawable/ic_star_empty"
+                                tools:ignore="ContentDescription" />-->
+
+                            <ImageButton
+                                android:id="@+id/playlist_add_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:src="@drawable/ic_playlist_add"
+                                tools:ignore="ContentDescription" />
+
+                        </LinearLayout>
+
+                    </FrameLayout>
+
+                </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

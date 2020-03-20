@@ -8,17 +8,18 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
-import androidx.navigation.Navigation
+import androidx.navigation.*
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
 import com.example.moviesearcher.R
+import com.example.moviesearcher.ui.grids.searchgrid.SearchGridFragmentArgs
 import com.example.moviesearcher.util.*
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlin.collections.get
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -75,10 +76,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val searchView = searchItem!!.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                val bundle = Bundle()
-                bundle.putString(KEY_SEARCH_QUERY, query)
+                val bundle = bundleOf(KEY_SEARCH_QUERY to query)
                 navController.popBackStack(navController.currentDestination!!.id, true)
-                navController.navigate(R.id.searchGridFragment, bundle)
+                navController.navigate(R.id.actionGlobalSearchGridFragment, bundle)
                 return false
             }
 

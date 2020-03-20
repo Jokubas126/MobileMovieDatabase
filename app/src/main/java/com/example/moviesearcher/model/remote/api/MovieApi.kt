@@ -1,4 +1,4 @@
-package com.example.moviesearcher.model.api
+package com.example.moviesearcher.model.remote.api
 
 import com.example.moviesearcher.model.data.*
 import com.example.moviesearcher.util.*

@@ -53,9 +53,14 @@
 
     <!-- Personal lists -->
 
-    <style name="PersonalListTitleAppearance" parent="BaseTextStyle">
+    <style name="PersonalListBigTitleAppearance" parent="BaseTextStyle">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="PersonalListSmallTitleAppearance" parent="BaseTextStyle">
+        <item name="android:textColor">@color/personalListTitleBlack</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="PersonalListCreateTitleAppearance" parent="BaseTextStyle">
@@ -63,6 +68,13 @@
         <item name="android:textSize">30sp</item>
         <item name="android:textStyle">normal</item>
     </style>
+
+    <style name="PersonalListAddToListTitleAppearance" parent="BaseTextStyle">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 
     <!-- Categories Fragment -->
 

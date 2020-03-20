@@ -1,9 +1,7 @@
 package com.example.moviesearcher.model.data
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
+import android.graphics.Bitmap
+import androidx.room.*
 import com.example.moviesearcher.util.*
 import com.google.gson.annotations.SerializedName
 
@@ -32,31 +30,31 @@ class MovieResults {
 }
 
 @Entity(tableName = "movie_list")
-data class MovieList(
-    @PrimaryKey(autoGenerate = true) var uid: Int,
+data class LocalMovieList(
+    @PrimaryKey(autoGenerate = true) var roomId: Int,
     @ColumnInfo(name = "list_title") var listTitle: String?,
-    /*@ColumnInfo(name = "movie_list")*/ @Ignore var movieList: List<Movie>?
+    @ColumnInfo(name = "movie_list_ids") var movieList: List<Int>?
 ) {
-    constructor(): this(0, "default", null)
+    constructor() : this(0, "", null)
 }
 
+@Entity(tableName = "movie")
 data class Movie(
 
-    @PrimaryKey(autoGenerate = true) val dbId: Int,
+    @PrimaryKey(autoGenerate = true) var roomId: Int,
 
-    @ColumnInfo(name = "list_id")
-    val movieListId: Int,
+    @SerializedName(KEY_ID)
+    @ColumnInfo(name = "movie_id") var remoteId: Int,
 
-    @ColumnInfo(name = "movie_id") val id: Int,
-    val title: String,
+    var title: String,
 
     @ColumnInfo(name = "release_date")
     @SerializedName(KEY_MOVIE_RELEASE_DATE)
-    val releaseDate: String,
+    var releaseDate: String,
 
-    @ColumnInfo(name = "movie_score")
+    @ColumnInfo(name = "score")
     @SerializedName(KEY_MOVIE_SCORE)
-    val score: String,
+    var score: String,
 
     @Ignore
     @SerializedName(KEY_MOVIE_GENRE_ID_LIST)
@@ -75,14 +73,38 @@ data class Movie(
     @ColumnInfo(name = "production_country_string")
     var productionCountryString: String,
 
-    val runtime: Int,
-    val overview: String,
+    var runtime: Int,
+    var overview: String,
 
-    @Ignore
+    @TypeConverters(ImageTypeConverter::class)
     @SerializedName(KEY_MOVIE_POSTER_PATH)
-    val posterImageUrl: String,
+    var posterImageUrl: String,
 
-    @Ignore
+    @TypeConverters(ImageTypeConverter::class)
     @SerializedName(KEY_MOVIE_BACKDROP_PATH)
-    val backdropImageUrl: String
-)
+    var backdropImageUrl: String,
+
+    @ColumnInfo(name = "poster_image")
+    var posterImageByteArray: ByteArray?,
+
+    @ColumnInfo(name = "backdrop_image")
+    var backdropImageByteArray: ByteArray?
+) {
+    constructor() : this(
+        0,
+        0,
+        "",
+        "",
+        "",
+        emptyList(),
+        emptyList(),
+        "",
+        emptyList(),
+        "",
+        0, "",
+        "",
+        "",
+        null,
+        null
+    )
+}

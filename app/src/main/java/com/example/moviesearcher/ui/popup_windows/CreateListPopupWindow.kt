@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.personal
+package com.example.moviesearcher.ui.popup_windows
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable

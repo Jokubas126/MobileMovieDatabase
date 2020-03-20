@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
-import com.example.moviesearcher.ui.grids.GridAdapter
+import com.example.moviesearcher.ui.GridAdapter
 import com.example.moviesearcher.util.KEY_SEARCH_QUERY
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
-class SearchGridFragment : Fragment(), GridAdapter.MovieClickListener {
+class SearchGridFragment : Fragment(), GridAdapter.AdapterItemClickListener {
 
     private lateinit var viewModel: SearchGridViewModel
     private val gridAdapter = GridAdapter(this)
@@ -100,7 +100,11 @@ class SearchGridFragment : Fragment(), GridAdapter.MovieClickListener {
         state = layoutManager!!.onSaveInstanceState()
     }
 
-    override fun onMovieClicked(view: View, movieId: Int) {
-        viewModel.onMovieClicked(view, movieId)
+    override fun onMovieClicked(view: View, movie: Movie) {
+        viewModel.onMovieClicked(view, movie)
+    }
+
+    override fun onPlaylistAddListener(movie: Movie) {
+        viewModel.onPlaylistAddCLicked(context!!, movie)
     }
 }

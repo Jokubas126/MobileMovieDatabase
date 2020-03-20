@@ -5,7 +5,6 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -15,14 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
-import com.example.moviesearcher.ui.grids.GridAdapter
-import com.example.moviesearcher.ui.grids.GridAdapter.MovieClickListener
+import com.example.moviesearcher.ui.GridAdapter
+import com.example.moviesearcher.ui.GridAdapter.AdapterItemClickListener
 import com.example.moviesearcher.util.KEY_MOVIE_LIST_TYPE
 import com.example.moviesearcher.util.KEY_POPULAR
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 import java.util.*
 
-class TypeGridFragment : Fragment(), MovieClickListener {
+class TypeGridFragment : Fragment(), AdapterItemClickListener {
 
     private lateinit var viewModel: TypeGridViewModel
     private val gridAdapter = GridAdapter(this)
@@ -112,7 +111,11 @@ class TypeGridFragment : Fragment(), MovieClickListener {
         state = layoutManager!!.onSaveInstanceState()
     }
 
-    override fun onMovieClicked(view: View, movieId: Int) {
-        viewModel.onMovieClicked(view, movieId)
+    override fun onMovieClicked(view: View, movie: Movie) {
+        viewModel.onMovieClicked(view, movie)
+    }
+
+    override fun onPlaylistAddListener(movie: Movie) {
+        viewModel.onPlaylistAddCLicked(context!!, movie)
     }
 }

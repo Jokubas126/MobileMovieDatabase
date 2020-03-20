@@ -4,12 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.moviesearcher.model.data.MovieList
+import androidx.room.TypeConverters
+import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.room.dao.MovieListDao
+import com.example.moviesearcher.util.IntListTypeConverter
+
 
 private const val DATABASE = "movie_list"
 
-@Database(entities = [MovieList::class], version = 1, exportSchema = false)
+@Database(entities = [LocalMovieList::class], version = 3, exportSchema = false)
+@TypeConverters(IntListTypeConverter::class)
 abstract class MovieListDatabase : RoomDatabase() {
 
     abstract fun movieListDao(): MovieListDao
@@ -30,7 +34,9 @@ abstract class MovieListDatabase : RoomDatabase() {
                 context.applicationContext,
                 MovieListDatabase::class.java,
                 DATABASE
-            ).build()
+            )
+                .fallbackToDestructiveMigration()
+                .build()
         }
     }
 }

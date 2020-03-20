@@ -9,14 +9,11 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavDirections
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Person
-import com.example.moviesearcher.util.KEY_MOVIE_ID
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_movie_cast.*
 
@@ -88,17 +85,7 @@ class CreditsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        when (menuItem.itemId) {
-            R.id.media_menu_item -> if (arguments != null) {
-                val action: NavDirections = CreditsFragmentDirections.actionMovieMedia(arguments!!.getInt(KEY_MOVIE_ID))
-                Navigation.findNavController(bottomNavigationView).navigate(action)
-            }
-            R.id.overview_menu_item -> if (arguments != null) {
-                val action: NavDirections = CreditsFragmentDirections.actionMovieOverview(arguments!!.getInt(KEY_MOVIE_ID))
-                Navigation.findNavController(bottomNavigationView).navigate(action)
-            }
-        }
-        return false
+        return viewModel.onNavigationItemSelected(bottomNavigationView, menuItem)
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.personal
+package com.example.moviesearcher.ui.personal.lists
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,9 +9,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesearcher.R
+import com.example.moviesearcher.model.data.LocalMovieList
 import kotlinx.android.synthetic.main.fragment_personal_lists.*
 
-class PersonalListsFragment : Fragment() {
+class PersonalListsFragment : Fragment(), PersonalListsAdapter.ListOnClickListener {
 
     private lateinit var viewModel: PersonalListsViewModel
 
@@ -43,7 +44,11 @@ class PersonalListsFragment : Fragment() {
         viewModel.movieLists.observe(viewLifecycleOwner, Observer {
             if (it != null){
                 if (recycler_view.adapter == null){
-                    listAdapter = PersonalListsAdapter(it)
+                    listAdapter =
+                        PersonalListsAdapter(
+                            it,
+                            this
+                        )
                     recycler_view.adapter = listAdapter
                 } else
                     listAdapter.updateMovieLists(it)
@@ -67,5 +72,13 @@ class PersonalListsFragment : Fragment() {
                     loading_error_text_view!!.visibility = View.GONE
             }
         })
+    }
+
+    override fun onListClicked(view: View, list: LocalMovieList) {
+        viewModel.onListClicked(view, list)
+    }
+
+    override fun onDeleteClicked(list: LocalMovieList) {
+        viewModel.onDeleteListClicked(list)
     }
 }

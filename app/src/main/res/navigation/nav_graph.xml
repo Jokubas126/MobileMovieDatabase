@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/personal">
+    app:startDestination="@id/typeGridFragment">
 
     <!-- MOVIE GRID FRAGMENTS -->
 
@@ -14,7 +14,8 @@
         tools:layout="@layout/fragment_movies_grid">
         <action
             android:id="@+id/actionMovieDetails"
-            app:destination="@id/movieDetails" />
+            app:destination="@id/movieDetails" >
+        </action>
         <argument
             android:name="key_category"
             android:defaultValue="popular"
@@ -28,7 +29,8 @@
         tools:layout="@layout/fragment_movies_grid">
         <action
             android:id="@+id/actionMovieDetails"
-            app:destination="@id/movieDetails" />
+            app:destination="@id/movieDetails" >
+        </action>
         <argument
             android:name="search_query"
             app:argType="string" />
@@ -41,7 +43,7 @@
         app:startDestination="@id/personalListsFragment" >
         <fragment
             android:id="@+id/personalListsFragment"
-            android:name="com.example.moviesearcher.ui.personal.PersonalListsFragment"
+            android:name="com.example.moviesearcher.ui.personal.lists.PersonalListsFragment"
             android:label="Personal lists"
             tools:layout="@layout/fragment_personal_lists">
             <action
@@ -54,8 +56,11 @@
             android:label="List:"
             tools:layout="@layout/fragment_movies_grid">
             <action
-                android:id="@+id/action_personalMovieGridFragment_to_movieDetails"
+                android:id="@+id/actionMovieDetails"
                 app:destination="@id/movieDetails" />
+            <argument
+                android:name="movieIdArray"
+                app:argType="integer[]" />
         </fragment>
     </navigation>
 
@@ -66,16 +71,26 @@
         android:label="movieDetails"
         app:startDestination="@id/movieOverview">
         <argument
-            android:name="movieId"
-            app:argType="integer" />
+            android:name="movieRemoteId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="movieLocalId"
+            app:argType="integer"
+            android:defaultValue="0" />
         <fragment
             android:id="@+id/movieOverview"
             android:name="com.example.moviesearcher.ui.details.overview.OverviewFragment"
             android:label="Overview"
             tools:layout="@layout/fragment_movie_overview">
             <argument
-                android:name="movieId"
-                app:argType="integer" />
+                android:name="movieRemoteId"
+                app:argType="integer"
+                android:defaultValue="0" />
+            <argument
+                android:name="movieLocalId"
+                app:argType="integer"
+                android:defaultValue="0" />
         </fragment>
         <fragment
             android:id="@+id/movieMedia"
@@ -83,8 +98,13 @@
             android:label="Media"
             tools:layout="@layout/fragment_movie_media">
             <argument
-                android:name="movieId"
-                app:argType="integer" />
+                android:name="movieRemoteId"
+                app:argType="integer"
+                android:defaultValue="0" />
+            <argument
+                android:name="movieLocalId"
+                app:argType="integer"
+                android:defaultValue="0" />
         </fragment>
         <fragment
             android:id="@+id/movieCast"
@@ -92,20 +112,29 @@
             android:label="Cast and Crew"
             tools:layout="@layout/fragment_movie_cast">
             <argument
-                android:name="movieId"
-                app:argType="integer" />
+                android:name="movieRemoteId"
+                app:argType="integer"
+                android:defaultValue="0" />
+            <argument
+                android:name="movieLocalId"
+                app:argType="integer"
+                android:defaultValue="0" />
         </fragment>
         <action
             android:id="@+id/action_movie_cast"
             app:destination="@id/movieCast"
-            app:popUpTo="@id/movieOverview"/>
+            app:popUpTo="@id/movieOverview"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_movie_media"
             app:destination="@id/movieMedia"
-            app:popUpTo="@id/movieOverview"/>
+            app:popUpTo="@id/movieOverview"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/actionMovieOverview"
-            app:destination="@id/movieOverview" />
+            app:destination="@id/movieOverview"
+            app:popUpTo="@id/movieOverview"
+            app:popUpToInclusive="true"/>
 
     </navigation>
 
@@ -130,7 +159,8 @@
             tools:layout="@layout/fragment_movies_grid">
             <action
                 android:id="@+id/actionMovieDetails"
-                app:destination="@id/movieDetails" />
+                app:destination="@id/movieDetails" >
+            </action>
             <argument
                 android:name="start_year"
                 app:argType="string" />
@@ -157,5 +187,8 @@
         android:name="com.example.moviesearcher.ui.about.AboutFragment"
         android:label="About"
         tools:layout="@layout/fragment_about" />
+    <action
+        android:id="@+id/actionGlobalSearchGridFragment"
+        app:destination="@id/searchGridFragment" />
 
 </navigation>

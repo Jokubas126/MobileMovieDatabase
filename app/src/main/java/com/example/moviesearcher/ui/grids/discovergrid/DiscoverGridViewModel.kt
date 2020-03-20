@@ -1,16 +1,24 @@
 package com.example.moviesearcher.ui.grids.discovergrid
 
+import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.FrameLayout
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
+import com.example.moviesearcher.R
+import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.data.MovieResults
 import com.example.moviesearcher.model.repositories.MovieRepository
+import com.example.moviesearcher.model.repositories.PersonalMovieListRepository
+import com.example.moviesearcher.model.repositories.PersonalMovieRepository
+import com.example.moviesearcher.model.room.database.MovieListDatabase
 import com.example.moviesearcher.ui.grids.BaseGridViewModel
+import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
 import com.example.moviesearcher.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +26,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList
 
-class DiscoverGridViewModel : ViewModel(), BaseGridViewModel {
+class DiscoverGridViewModel(application: Application) : AndroidViewModel(application), BaseGridViewModel,
+    PersonalListsPopupWindow.ListsConfirmedClickListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
     private val _error = MutableLiveData<Boolean>()
@@ -36,18 +45,17 @@ class DiscoverGridViewModel : ViewModel(), BaseGridViewModel {
     private var languageKey: String? = null
     private var genreId: Int = 0
 
-    override fun fetch(args: Bundle?) {
-        if (args != null) {
-            _error.value = false
-            _loading.value = true
-            startYear = args.getString(KEY_START_YEAR)
-            endYear = args.getString(KEY_END_YEAR)
-            languageKey = args.getString(KEY_LANGUAGE)
-            genreId = args.getInt(KEY_GENRE_ID)
+    override fun fetch(arguments: Bundle?) {
+        _error.value = false
+        _loading.value = true
+
+        arguments?.let{
+            val args = DiscoverGridFragmentArgs.fromBundle(it)
+            startYear = args.startYear
+            endYear = args.endYear
+            languageKey = args.languageKey
+            genreId = args.genreId
             getMovieList()
-        } else {
-            _error.value = true
-            _loading.value = false
         }
     }
 
@@ -135,8 +143,42 @@ class DiscoverGridViewModel : ViewModel(), BaseGridViewModel {
         return title
     }
 
-    override fun onMovieClicked(view: View, movieId: Int) {
-        val action: NavDirections = DiscoverGridFragmentDirections.actionMovieDetails(movieId)
+    override fun onMovieClicked(view: View, movie: Movie) {
+        val action = DiscoverGridFragmentDirections.actionMovieDetails()
+        action.movieRemoteId = movie.remoteId
         Navigation.findNavController(view).navigate(action)
+    }
+
+    override fun onPlaylistAddCLicked(context: Context, movie: Movie) {
+        val popupWindow = PersonalListsPopupWindow(
+            context,
+            View.inflate(context, R.layout.popup_window_personal_lists_to_add, null),
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            movie,
+            this
+        )
+        val movieLists = MovieListDatabase.getInstance(context).movieListDao().getAllMovieLists()
+        movieLists.observeForever {
+            if (!it.isNullOrEmpty())
+                popupWindow.setupLists(it)
+        }
+    }
+
+    override fun onConfirmClicked(checkedLists: List<LocalMovieList>, movie: Movie): Boolean {
+        if (checkedLists.isEmpty())
+            return false
+        CoroutineScope(Dispatchers.IO).launch {
+            val movieId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(movie)
+            for (list in checkedLists){
+                val movieListRepository = PersonalMovieListRepository(getApplication())
+                val movieList = movieListRepository.getMovieListById(list.roomId)
+                if (movieList!!.movieList != null)
+                    (movieList.movieList as MutableList).add(movieId.toInt())
+                else movieList.movieList = listOf(movieId.toInt())
+                movieListRepository.insertOrUpdateMovieList(movieList)
+            }
+        }
+        return true
     }
 }

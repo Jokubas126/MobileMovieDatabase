@@ -5,7 +5,7 @@
     <color name="colorBackground">#E0E7FF</color>
     <color name="tintBackgroundImage">#CBE4E7FC</color>
     <color name="colorCardBackground">#B2EAEDFD</color>
-    <color name="colorPopupWindow">#E6EAEDFD</color>
+    <color name="colorPopupWindow">#EAEDFD</color>
     <color name="colorPopupWindowBackground">#65EAEDFD</color>
 
     <color name="colorCancelButtonBackground">#838383</color>
@@ -29,4 +29,11 @@
     <color name="detailsDescription">#242424</color>
 
     <color name="personDetails">#202020</color>
+
+    <!-- PERSONAL -->
+
+    <color name="iconBlack">#535353</color>
+    <color name="iconYellow">#F9A825</color>
+    <color name="personalListTitleBlack">#242424</color>
+
 </resources>

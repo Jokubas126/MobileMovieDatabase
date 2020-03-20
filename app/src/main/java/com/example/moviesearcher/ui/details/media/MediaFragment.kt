@@ -9,8 +9,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavDirections
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +17,6 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Image
 import com.example.moviesearcher.model.data.Video
 import com.example.moviesearcher.util.YOUTUBE_API_KEY
-import com.example.moviesearcher.util.KEY_MOVIE_ID
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -117,16 +114,6 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        when (menuItem.itemId) {
-            R.id.overview_menu_item -> if (arguments != null) {
-                val action: NavDirections = MediaFragmentDirections.actionMovieOverview(arguments!!.getInt(KEY_MOVIE_ID))
-                Navigation.findNavController(bottomNavigationView).navigate(action)
-            }
-            R.id.cast_menu_item -> if (arguments != null) {
-                val action: NavDirections = MediaFragmentDirections.actionMovieCast(arguments!!.getInt(KEY_MOVIE_ID))
-                Navigation.findNavController(bottomNavigationView).navigate(action)
-            }
-        }
-        return false
+        return viewModel.onNavigationItemSelected(bottomNavigationView, menuItem)
     }
 }

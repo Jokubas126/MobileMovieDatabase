@@ -63,7 +63,6 @@ dependencies {
 
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
-    //kapt "androidx.room:room-compiler:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
 
     implementation "androidx.navigation:navigation-fragment:$navVersion"

@@ -1,7 +1,7 @@
 package com.example.moviesearcher.model.repositories
 
 import android.app.Application
-import com.example.moviesearcher.model.data.MovieList
+import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.room.dao.MovieListDao
 import com.example.moviesearcher.model.room.database.MovieListDatabase
 import kotlinx.coroutines.*
@@ -11,21 +11,14 @@ class PersonalMovieListRepository(application: Application) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 
-    private var movieListDao: MovieListDao?
+    private val movieListDao: MovieListDao? = MovieListDatabase.getInstance(application).movieListDao()
 
-    init {
-        val db = MovieListDatabase.getInstance(application)
-        movieListDao = db.movieListDao()
-    }
-
-    fun insertOrUpdateMovieList(movieList: MovieList) {
+    fun insertOrUpdateMovieList(movieList: LocalMovieList) {
         launch { insertOrUpdateMovieListBG(movieList) }
     }
 
-    private suspend fun insertOrUpdateMovieListBG(movieList: MovieList) {
-        withContext(Dispatchers.IO) {
-            movieListDao?.insertOrUpdateMovieList(movieList)
-        }
+    private suspend fun insertOrUpdateMovieListBG(movieList: LocalMovieList) {
+        withContext(Dispatchers.IO) { movieListDao?.insertOrUpdateMovieList(movieList) }
     }
 
     fun getMovieListById(id: Int) = movieListDao?.getMovieListById(id)
@@ -33,14 +26,12 @@ class PersonalMovieListRepository(application: Application) : CoroutineScope {
     fun getAllMovieLists() = movieListDao?.getAllMovieLists()
 
 
-    fun deleteList(list: MovieList) {
+    fun deleteList(list: LocalMovieList) {
         launch { deleteListBG(list) }
     }
 
-    private suspend fun deleteListBG(list: MovieList) {
-        withContext(Dispatchers.IO) {
-            movieListDao?.deleteList(list)
-        }
+    private suspend fun deleteListBG(list: LocalMovieList) {
+        withContext(Dispatchers.IO) { movieListDao?.deleteList(list) }
     }
 
     fun deleteAllList() {

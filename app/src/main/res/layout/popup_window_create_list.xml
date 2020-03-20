@@ -40,7 +40,7 @@
                 android:backgroundTint="@color/colorPrimary"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textAppearance="@style/PersonalListTitleAppearance"
+                android:textAppearance="@style/PersonalListBigTitleAppearance"
                 android:textColor="@color/colorPrimary"
                 tools:ignore="LabelFor" />
 

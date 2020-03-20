@@ -1,6 +1,6 @@
 package com.example.moviesearcher.model.repositories
 
-import com.example.moviesearcher.model.services.MovieApiService
+import com.example.moviesearcher.model.remote.services.MovieApiService
 import com.example.moviesearcher.util.MOVIE_DB_API_KEY
 import com.example.moviesearcher.util.MOVIE_DB_IMAGE_LANGUAGE_EN
 import com.example.moviesearcher.util.MOVIE_DB_LANGUAGE_EN
