@@ -11,8 +11,11 @@ import com.example.moviesearcher.model.data.Images
 interface ImagesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrUpdateMovie(images: Images): Long
+    fun insertOrUpdateImages(images: Images): Long
 
     @Query("SELECT * FROM images WHERE movieRoomId = :movieId")
     fun getImagesById(movieId: Int): LiveData<Images>
+
+    @Query("DELETE FROM images WHERE movieRoomId = :movieId")
+    fun deleteImagesByMovieId(movieId: Int)
 }

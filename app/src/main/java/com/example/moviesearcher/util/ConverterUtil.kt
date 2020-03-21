@@ -7,6 +7,7 @@ import androidx.room.TypeConverter
 import com.example.moviesearcher.model.data.Country
 import com.example.moviesearcher.model.data.Genre
 import com.example.moviesearcher.model.data.Image
+import com.example.moviesearcher.model.data.Person
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.BufferedInputStream
@@ -75,6 +76,22 @@ class IntListTypeConverter {
         if (string == null)
             return Collections.emptyList()
         val listType: Type = object : TypeToken<List<Int?>?>() {}.type
+        return Gson().fromJson(string, listType)
+    }
+}
+
+class PersonListTypeConverter {
+
+    @TypeConverter
+    fun personListToString(personList: List<Person>?): String? {
+        return Gson().toJson(personList)
+    }
+
+    @TypeConverter
+    fun stringToIntList(string: String?): List<Person>? {
+        if (string == null)
+            return Collections.emptyList()
+        val listType: Type = object : TypeToken<List<Person?>?>() {}.type
         return Gson().fromJson(string, listType)
     }
 }

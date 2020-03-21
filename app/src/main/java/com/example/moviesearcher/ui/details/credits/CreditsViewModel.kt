@@ -1,8 +1,10 @@
 package com.example.moviesearcher.ui.details.credits
 
+import android.app.Application
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,12 +13,13 @@ import com.example.moviesearcher.MovieDetailsArgs
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Person
 import com.example.moviesearcher.model.repositories.MovieRepository
+import com.example.moviesearcher.model.repositories.PersonalMovieRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CreditsViewModel : ViewModel() {
+class CreditsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _cast = MutableLiveData<List<Person>>()
     private val _crew = MutableLiveData<List<Person>>()
@@ -50,7 +53,12 @@ class CreditsViewModel : ViewModel() {
     }
 
     private fun getCreditsLocal(movieId: Int) {
-        TODO()
+        val credits = PersonalMovieRepository(getApplication()).getCreditsById(movieId)
+        credits.observeForever {
+            _cast.value = it.castList
+            _crew.value = it.crewList
+            _loading.value = false
+        }
     }
 
     fun onNavigationItemSelected(view: View, menuItem: MenuItem): Boolean {
