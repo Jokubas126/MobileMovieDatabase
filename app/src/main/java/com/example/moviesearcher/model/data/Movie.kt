@@ -76,20 +76,29 @@ data class Movie(
     var runtime: Int,
     var overview: String,
 
-    @TypeConverters(ImageTypeConverter::class)
     @SerializedName(KEY_MOVIE_POSTER_PATH)
     var posterImageUrl: String,
 
-    @TypeConverters(ImageTypeConverter::class)
     @SerializedName(KEY_MOVIE_BACKDROP_PATH)
     var backdropImageUrl: String,
 
+    @TypeConverters(BitmapTypeConverter::class)
     @ColumnInfo(name = "poster_image")
-    var posterImageByteArray: ByteArray?,
+    var posterImageBitmap: Bitmap?,
 
+    @TypeConverters(BitmapTypeConverter::class)
     @ColumnInfo(name = "backdrop_image")
-    var backdropImageByteArray: ByteArray?
+    var backdropImageBitmap: Bitmap?
 ) {
+
+    fun finalizeInitialization(): Movie {
+        genresString = stringListToString(getAnyNameList(genres))
+        productionCountryString = stringListToString(getAnyNameList(productionCountryList))
+        posterImageBitmap = imageUrlToBitmap(posterImageUrl)
+        backdropImageBitmap = imageUrlToBitmap(backdropImageUrl)
+        return this
+    }
+
     constructor() : this(
         0,
         0,

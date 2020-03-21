@@ -5,6 +5,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import androidx.navigation.Navigation
 import com.example.moviesearcher.R
@@ -135,19 +137,26 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
     }
 
     override fun onConfirmClicked(checkedLists: List<LocalMovieList>, movie: Movie): Boolean {
-        if (checkedLists.isEmpty())
+        if (checkedLists.isEmpty()) {
+            Toast.makeText(getApplication(), getApplication<Application>().getString(R.string.select_a_list), Toast.LENGTH_SHORT).show()
             return false
+        }
         CoroutineScope(Dispatchers.IO).launch {
-            val movieId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(movie)
-            for (list in checkedLists){
-                val movieListRepository = PersonalMovieListRepository(getApplication())
-                val movieList = movieListRepository.getMovieListById(list.roomId)
-                if (movieList!!.movieList != null)
-                    (movieList.movieList as MutableList).add(movieId.toInt())
-                else movieList.movieList = listOf(movieId.toInt())
-                movieListRepository.insertOrUpdateMovieList(movieList)
+            val fullMovie = MovieRepository().getMovieDetails(movie.remoteId).body()
+            fullMovie?.let {
+                it.finalizeInitialization()
+                val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(it)
+                for (list in checkedLists){
+                    val movieListRepository = PersonalMovieListRepository(getApplication())
+                    val movieList = movieListRepository.getMovieListById(list.roomId)
+                    if (movieList!!.movieList != null)
+                        (movieList.movieList as MutableList).add(movieRoomId.toInt())
+                    else movieList.movieList = listOf(movieRoomId.toInt())
+                    movieListRepository.insertOrUpdateMovieList(movieList)
+                }
             }
         }
+        Toast.makeText(getApplication(), getApplication<Application>().getString(R.string.successfully_added_to_list), Toast.LENGTH_SHORT).show()
         return true
     }
 }

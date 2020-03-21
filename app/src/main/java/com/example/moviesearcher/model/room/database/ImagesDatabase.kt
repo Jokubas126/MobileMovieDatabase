@@ -5,33 +5,34 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.moviesearcher.model.data.Movie
-import com.example.moviesearcher.model.room.dao.MovieDao
+import com.example.moviesearcher.model.data.Images
+import com.example.moviesearcher.model.room.dao.ImagesDao
+import com.example.moviesearcher.util.ImageListTypeConverter
 import com.example.moviesearcher.util.BitmapTypeConverter
 
-private const val DATABASE = "movie"
+private const val DATABASE = "images"
 
-@Database(entities = [Movie::class], version = 3, exportSchema = false)
-@TypeConverters(BitmapTypeConverter::class)
-abstract class MovieDatabase: RoomDatabase(){
+@Database(entities = [Images::class], version = 2, exportSchema = false)
+@TypeConverters(ImageListTypeConverter::class, BitmapTypeConverter::class)
+abstract class ImagesDatabase: RoomDatabase(){
 
-    abstract fun movieDao(): MovieDao
+    abstract fun imagesDao(): ImagesDao
 
     companion object {
 
         @Volatile
-        private var instance: MovieDatabase? = null
+        private var instance: ImagesDatabase? = null
 
-        fun getInstance(context: Context): MovieDatabase {
+        fun getInstance(context: Context): ImagesDatabase {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(context).also { instance = it }
             }
         }
 
-        private fun buildDatabase(context: Context): MovieDatabase {
+        private fun buildDatabase(context: Context): ImagesDatabase {
             return Room.databaseBuilder(
                     context.applicationContext,
-                    MovieDatabase::class.java,
+                    ImagesDatabase::class.java,
                     DATABASE
                 )
                 .fallbackToDestructiveMigration()

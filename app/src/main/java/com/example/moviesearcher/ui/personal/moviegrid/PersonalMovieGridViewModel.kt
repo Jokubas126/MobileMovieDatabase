@@ -26,14 +26,17 @@ class PersonalMovieGridViewModel(application: Application) : AndroidViewModel(ap
     private lateinit var args: PersonalMovieGridFragmentArgs
 
     fun fetch(arguments: Bundle?){
-        arguments?.let {
-            args = PersonalMovieGridFragmentArgs.fromBundle(it)
-            movieIdList = args.movieIdArray.toList()
-            getMovieList()
+        if (movies == null){
+            arguments?.let {
+                args = PersonalMovieGridFragmentArgs.fromBundle(it)
+                movieIdList = args.movieIdArray.toList()
+                getMovieList()
+            }
         }
     }
 
     fun refresh(){
+        movies = null
         getMovieList()
     }
 
@@ -47,7 +50,7 @@ class PersonalMovieGridViewModel(application: Application) : AndroidViewModel(ap
     }
 
     fun onMovieClicked(view: View, movie: Movie){
-        val action = PersonalMovieGridFragmentDirections.actionMovieDetails().setMovieLocalId(movie.remoteId)
+        val action = PersonalMovieGridFragmentDirections.actionMovieDetails().setMovieLocalId(movie.roomId)
         Navigation.findNavController(view).navigate(action)
     }
 }

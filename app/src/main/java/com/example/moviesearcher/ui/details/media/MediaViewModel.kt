@@ -1,8 +1,10 @@
 package com.example.moviesearcher.ui.details.media
 
+import android.app.Application
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +14,7 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Image
 import com.example.moviesearcher.model.data.Video
 import com.example.moviesearcher.model.repositories.MovieRepository
+import com.example.moviesearcher.model.repositories.PersonalMovieRepository
 import com.example.moviesearcher.util.KEY_TRAILER_TYPE
 import com.example.moviesearcher.util.KEY_YOUTUBE_SITE
 import kotlinx.coroutines.CoroutineScope
@@ -19,7 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MediaViewModel : ViewModel() {
+class MediaViewModel(application: Application) : AndroidViewModel(application) {
     private val _trailer = MutableLiveData<Video>()
     private val _posterList = MutableLiveData<List<Image>>()
     private val _backdropList = MutableLiveData<List<Image>>()
@@ -76,7 +79,12 @@ class MediaViewModel : ViewModel() {
     }
 
     private fun getImagesLocal(movieId: Int) {
-        TODO()
+        val images = PersonalMovieRepository(getApplication()).getImagesById(movieId)
+        images.observeForever {
+            _posterList.value = it.posterList
+            _backdropList.value = it.backdropList
+            _loading.value = false
+        }
     }
 
     fun onNavigationItemSelected(view: View, menuItem: MenuItem): Boolean{

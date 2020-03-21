@@ -43,7 +43,6 @@ class PersonalListsPopupWindow(
         view.confirm_btn.setOnClickListener {
             if (listener.onConfirmClicked(checkedLists, selectedMovie))
                 dismiss()
-            else Toast.makeText(context, "Please select the personal list", Toast.LENGTH_SHORT).show()
         }
     }
 

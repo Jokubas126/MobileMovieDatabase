@@ -67,6 +67,7 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
         viewModel.trailer.observe(viewLifecycleOwner, Observer { trailer: Video? ->
             if (trailer != null) {
                 video_name.text = trailer.name
+                trailer_layout.visibility = View.VISIBLE
                 @Suppress("DEPRECATION")
                 activity!!.fragmentManager.beginTransaction().replace(youtube_fragment.id, youTubePlayerFragment).commit()
                 initializeYoutubePlayer(trailer.key)
@@ -104,7 +105,7 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
                 youTubePlayer.setFullscreen(false)
                 youTubePlayer.setShowFullscreenButton(false)
                 youTubePlayer.cueVideo(key)
-                Log.d("YoutubePlayer", "onInitializationFailure: successfully to initialized")
+                Log.d("YoutubePlayer", "onInitializationFailure: successfully initialized")
             }
 
             override fun onInitializationFailure(provider: YouTubePlayer.Provider, youTubeInitializationResult: YouTubeInitializationResult) {

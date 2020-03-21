@@ -19,7 +19,8 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="centerInside"
-            android:imageUrl="@{image.filePath}" />
+            android:imageUrl="@{image.filePath}"
+            android:imageBitmap="@{image.imageBitmap}"/>
 
     </LinearLayout>
 </layout>

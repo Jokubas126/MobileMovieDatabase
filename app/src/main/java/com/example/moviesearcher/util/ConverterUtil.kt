@@ -1,15 +1,18 @@
 package com.example.moviesearcher.util
 
-import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64.*
 import androidx.room.TypeConverter
 import com.example.moviesearcher.model.data.Country
 import com.example.moviesearcher.model.data.Genre
+import com.example.moviesearcher.model.data.Image
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.BufferedInputStream
+import java.io.ByteArrayOutputStream
 import java.lang.reflect.Type
 import java.net.URL
-import java.nio.ByteBuffer
 import java.util.*
 
 
@@ -47,7 +50,18 @@ fun getAnyNameList(list: List<*>?): List<String> {
     return nameList
 }
 
-// ---------------- Type converters -------------//
+// --------------- Image Related ---------------- //
+
+fun imageUrlToBitmap(url: String): Bitmap {
+    val inputStream =
+        BufferedInputStream(URL(BASE_IMAGE_URL + url).openConnection().getInputStream())
+    val byteArray = inputStream.readBytes()
+    return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+}
+
+// ---------------------------------------------------------//
+    // ---------------- Type converters ---------------//
+// ---------------------------------------------------------//
 
 class IntListTypeConverter {
     /** based on https://medium.com/@toddcookevt/android-room-storing-lists-of-objects-766cca57e3f9 **/
@@ -60,30 +74,42 @@ class IntListTypeConverter {
     fun stringToIntList(string: String?): List<Int>? {
         if (string == null)
             return Collections.emptyList()
-
         val listType: Type = object : TypeToken<List<Int?>?>() {}.type
-
         return Gson().fromJson(string, listType)
     }
 }
 
 // --------------- Image Related ---------------- //
 
-class ImageTypeConverter {
+class BitmapTypeConverter {
 
     @TypeConverter
-    fun imageUrlToByteArray(url: String): ByteArray {
+    fun bitmapToString(bitmap: Bitmap): String? {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        return encodeToString(stream.toByteArray(), DEFAULT)
+    }
 
-        val inputStream = BufferedInputStream(URL(url).openConnection().getInputStream())
+    @TypeConverter
+    fun stringToBitmap(string: String?): Bitmap? {
+        val imageBytes = decode(string, 0)
+        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+    }
+}
 
-        val byteBuffer = ByteBuffer.allocateDirect(1000)
+class ImageListTypeConverter {
 
-        var current = 0
-        while (inputStream.read().also { current = it } != -1) {
-            byteBuffer.put(current.toByte())
-        }
+    @TypeConverter
+    fun imageListToString(imageList: List<Image>?): String? {
+        return Gson().toJson(imageList)
+    }
 
-        return byteBuffer.array()
+    @TypeConverter
+    fun stringToImageList(string: String?): List<Image>? {
+        if (string == null)
+            return Collections.emptyList()
+        val listType: Type = object : TypeToken<List<Image?>?>() {}.type
+        return Gson().fromJson(string, listType)
     }
 }
 

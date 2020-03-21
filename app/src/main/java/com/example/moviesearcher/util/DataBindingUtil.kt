@@ -1,11 +1,13 @@
 package com.example.moviesearcher.util
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
 
 // ---------------- Image related -------------//
 
@@ -24,25 +26,29 @@ private fun loadImageFromUrl(imageView: ImageView, imagePath: String?, progressD
     Glide.with(imageView.context)
         .setDefaultRequestOptions(options)
         .load(BASE_IMAGE_URL + imagePath)
+        .override(SIZE_ORIGINAL)
         .into(imageView)
 }
 
 @BindingAdapter("android:imageUrl")
 fun loadUrlImage(imageView: ImageView, imagePath: String?) {
-    loadImageFromUrl(imageView, imagePath, getProgressDrawable(imageView.context))
+    if (!imagePath.isNullOrBlank())
+        loadImageFromUrl(imageView, imagePath, getProgressDrawable(imageView.context))
 }
 
-private fun loadImageFromByteArray(imageView: ImageView, byteArray: ByteArray?, progressDrawable: CircularProgressDrawable) {
+private fun loadImageFromBitmap(imageView: ImageView, bitmap: Bitmap?, progressDrawable: CircularProgressDrawable) {
     val options = RequestOptions()
         .placeholder(progressDrawable)
         .error(android.R.drawable.screen_background_light_transparent)
     Glide.with(imageView.context)
         .setDefaultRequestOptions(options)
-        .load(byteArray)
+        .load(bitmap)
+        .override(SIZE_ORIGINAL)
         .into(imageView)
 }
 
-@BindingAdapter("android:imageByteArray")
-fun loadByteArrayImage(imageView: ImageView, byteArray: ByteArray?){
-    loadImageFromByteArray(imageView, byteArray, getProgressDrawable(imageView.context))
+@BindingAdapter("android:imageBitmap")
+fun loadBitmapImage(imageView: ImageView, bitmap: Bitmap?){
+    if (imageView.drawable == null)
+        loadImageFromBitmap(imageView, bitmap, getProgressDrawable(imageView.context))
 }

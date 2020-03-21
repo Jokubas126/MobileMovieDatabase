@@ -18,12 +18,14 @@ class GridAdapter(private val listener: AdapterItemClickListener): RecyclerView.
         fun onPlaylistAddListener(movie: Movie)
     }
 
-    fun updateMovieList(movieList: List<Movie>) {
+    fun updateMovieList(movieList: List<Movie>?) {
         if (movieList.isNullOrEmpty())
             this.movieList.clear()
-        if (this.movieList.containsAll(movieList))
-            return
-        this.movieList.addAll(movieList)
+        else {
+            if (this.movieList.containsAll(movieList))
+                return
+            this.movieList.addAll(movieList)
+        }
         notifyDataSetChanged()
     }
 

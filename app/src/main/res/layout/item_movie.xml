@@ -46,7 +46,7 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/movie_image"
                         android:gravity="center_horizontal"
-                        android:imageByteArray="@{movie.posterImageByteArray}"
+                        android:imageBitmap="@{movie.posterImageBitmap}"
                         android:imageUrl="@{movie.posterImageUrl}" />
 
                     <FrameLayout

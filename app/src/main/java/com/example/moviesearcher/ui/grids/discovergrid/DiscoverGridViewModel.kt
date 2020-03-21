@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -166,8 +167,10 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
     }
 
     override fun onConfirmClicked(checkedLists: List<LocalMovieList>, movie: Movie): Boolean {
-        if (checkedLists.isEmpty())
+        if (checkedLists.isEmpty()) {
+            Toast.makeText(getApplication(), getApplication<Application>().getString(R.string.select_a_list), Toast.LENGTH_SHORT).show()
             return false
+        }
         CoroutineScope(Dispatchers.IO).launch {
             val movieId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(movie)
             for (list in checkedLists){
@@ -179,6 +182,7 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
                 movieListRepository.insertOrUpdateMovieList(movieList)
             }
         }
+        Toast.makeText(getApplication(), getApplication<Application>().getString(R.string.successfully_added_to_list), Toast.LENGTH_SHORT).show()
         return true
     }
 }

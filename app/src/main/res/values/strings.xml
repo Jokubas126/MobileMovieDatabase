@@ -41,6 +41,9 @@
     <!-- Personal lists -->
 
     <string name="add_to_lists_title">Add to the lists</string>
+    <string name="successfully_added_to_list">Movie is successfully added</string>
+    <string name="select_a_list">Please select a list</string>
+
 
     <!-- Parts for movie details -->
 

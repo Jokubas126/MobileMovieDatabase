@@ -7,7 +7,6 @@ import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.navigation.Navigation
 import com.example.moviesearcher.MovieDetailsArgs
 import com.example.moviesearcher.R
@@ -62,6 +61,7 @@ class OverviewViewModel(application: Application) : AndroidViewModel(application
 
     private fun getMovieDetailsLocal(movieId: Int) {
         currentMovie = PersonalMovieRepository(getApplication()).getMovieById(movieId)
+        _loading.value = false
     }
 
     fun onNavigationItemSelected(view: View, menuItem: MenuItem): Boolean {
