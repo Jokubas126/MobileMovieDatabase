@@ -6,6 +6,7 @@
     <string name="action_search">Search</string>
     <string name="loading_list_empty">There are no movies to display</string>
     <string name="personal_list_empty">There are no lists made yet</string>
+    <string name="undo">Undo</string>
 
     <!-- Toolbar titles -->
 
@@ -41,8 +42,10 @@
     <!-- Personal lists -->
 
     <string name="add_to_lists_title">Add to the lists</string>
-    <string name="successfully_added_to_list">Movie is successfully added</string>
     <string name="select_a_list">Please select a list</string>
+    <string name="successfully_added_to_list">Movie is successfully added</string>
+    <string name="being_added_to_list">Movie is being added to the list</string>
+    <string name="movie_deleted">Movie was deleted</string>
 
 
     <!-- Parts for movie details -->

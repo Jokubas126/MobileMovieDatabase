@@ -13,13 +13,14 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.*
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
+import com.example.moviesearcher.NavGraphDirections
 import com.example.moviesearcher.R
-import com.example.moviesearcher.ui.grids.searchgrid.SearchGridFragmentArgs
+import com.example.moviesearcher.model.repositories.PersonalMovieListRepository
+import com.example.moviesearcher.model.repositories.PersonalMovieRepository
 import com.example.moviesearcher.util.*
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlin.collections.get
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -95,7 +96,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val bundle = Bundle()
         when (menuItem.itemId) {
             R.id.menu_categories -> navController.navigate(R.id.discoverMovies)
-            R.id.menu_personal_lists -> navController.navigate(R.id.personal)
+            R.id.menu_custom_lists -> navController.navigate(R.id.customListsFragment)
 
             R.id.menu_popular -> {
                 bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_POPULAR)

@@ -20,9 +20,12 @@
             android:id="@+id/menu_personal"
             android:title="Personal">
             <menu>
+                <!--<item
+                    android:id="@+id/menu_watchlist"
+                    android:title="Watchlist" />-->
                 <item
-                    android:id="@+id/menu_personal_lists"
-                    android:title="Personal lists" />
+                    android:id="@+id/menu_custom_lists"
+                    android:title="Custom lists" />
             </menu>
         </item>
 

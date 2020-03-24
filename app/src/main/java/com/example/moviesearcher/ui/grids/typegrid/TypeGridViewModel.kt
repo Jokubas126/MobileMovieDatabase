@@ -144,19 +144,14 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
         CoroutineScope(Dispatchers.IO).launch {
             val fullMovie = MovieRepository().getMovieDetails(movie.remoteId).body()
             fullMovie?.let {
+                showToast(getApplication(), getApplication<Application>().getString(R.string.being_added_to_list), Toast.LENGTH_LONG)
                 it.finalizeInitialization()
                 val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(it)
-                for (list in checkedLists){
-                    val movieListRepository = PersonalMovieListRepository(getApplication())
-                    val movieList = movieListRepository.getMovieListById(list.roomId)
-                    if (movieList!!.movieList != null)
-                        (movieList.movieList as MutableList).add(movieRoomId.toInt())
-                    else movieList.movieList = listOf(movieRoomId.toInt())
-                    movieListRepository.insertOrUpdateMovieList(movieList)
-                }
+                for (list in checkedLists)
+                    PersonalMovieListRepository(getApplication()).addMovieToMovieList(list, movieRoomId.toInt())
+                showToast(getApplication(), getApplication<Application>().getString(R.string.successfully_added_to_list), Toast.LENGTH_SHORT)
             }
         }
-        Toast.makeText(getApplication(), getApplication<Application>().getString(R.string.successfully_added_to_list), Toast.LENGTH_SHORT).show()
         return true
     }
 }

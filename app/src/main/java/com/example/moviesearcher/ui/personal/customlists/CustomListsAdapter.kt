@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.personal.lists
+package com.example.moviesearcher.ui.personal.customlists
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,17 +8,21 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.LocalMovieList
 import kotlinx.android.synthetic.main.item_personal_list.view.*
 
-class PersonalListsAdapter(private val movieLists: List<LocalMovieList>, private val listener: ListOnClickListener): RecyclerView.Adapter<PersonalListsAdapter.ViewHolder>() {
+class CustomListsAdapter: RecyclerView.Adapter<CustomListsAdapter.ViewHolder>() {
 
-    fun updateMovieLists(newLists: List<LocalMovieList>){
-        (movieLists as MutableList).clear()
-        movieLists.addAll(newLists)
+    val movieLists =  mutableListOf<LocalMovieList>()
+
+    private var listOnClickListener: ListOnClickListener? = null
+
+    fun updateMovieLists(lists: List<LocalMovieList>){
+        movieLists.clear()
+        movieLists.addAll(lists)
         notifyDataSetChanged()
     }
 
     interface ListOnClickListener{
         fun onListClicked(view: View, list: LocalMovieList)
-        fun onDeleteClicked(list: LocalMovieList)
+        fun onDeleteClicked(view: View, list: LocalMovieList)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,19 +30,23 @@ class PersonalListsAdapter(private val movieLists: List<LocalMovieList>, private
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.onBind(movieLists[position], listener)
+        holder.onBind(movieLists[position])
     }
 
     override fun getItemCount(): Int {
         return movieLists.size
     }
 
+    fun setListOnClickListener(listener: ListOnClickListener) {
+        listOnClickListener = listener
+    }
+
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
-        fun onBind(movieList: LocalMovieList, listener: ListOnClickListener){
+        fun onBind(movieList: LocalMovieList){
             itemView.list_title.text = movieList.listTitle
-            itemView.setOnClickListener { listener.onListClicked(it, movieList) }
-            itemView.delete_button.setOnClickListener{ listener.onDeleteClicked(movieList) }
+            itemView.setOnClickListener { listOnClickListener?.onListClicked(it, movieList) }
+            itemView.delete_button.setOnClickListener{ listOnClickListener?.onDeleteClicked(it, movieList) }
         }
     }
 }

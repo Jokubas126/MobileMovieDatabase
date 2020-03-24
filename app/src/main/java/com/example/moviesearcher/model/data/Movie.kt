@@ -33,7 +33,7 @@ class MovieResults {
 data class LocalMovieList(
     @PrimaryKey(autoGenerate = true) var roomId: Int,
     @ColumnInfo(name = "list_title") var listTitle: String?,
-    @ColumnInfo(name = "movie_list_ids") var movieList: List<Int>?
+    @ColumnInfo(name = "movie_list_ids") var movieIdList: List<Int>?
 ) {
     constructor() : this(0, "", null)
 }
@@ -88,7 +88,10 @@ data class Movie(
 
     @TypeConverters(BitmapTypeConverter::class)
     @ColumnInfo(name = "backdrop_image")
-    var backdropImageBitmap: Bitmap?
+    var backdropImageBitmap: Bitmap?,
+
+    @Ignore
+    var isInWatchlist: Boolean
 ) {
 
     fun finalizeInitialization(): Movie {
@@ -114,6 +117,7 @@ data class Movie(
         "",
         "",
         null,
-        null
+        null,
+         false
     )
 }

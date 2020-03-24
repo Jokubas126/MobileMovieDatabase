@@ -11,7 +11,7 @@ interface MovieListDao {
     fun insertOrUpdateMovieList(movieList: LocalMovieList): Long
 
     @Query("SELECT * FROM movie_list WHERE roomId = :movieListId")
-    fun getMovieListById(movieListId: Int): LocalMovieList
+    fun getMovieListById(movieListId: Int): LiveData<LocalMovieList>
 
     @Query("SELECT * FROM movie_list")
     fun getAllMovieLists(): LiveData<List<LocalMovieList>>

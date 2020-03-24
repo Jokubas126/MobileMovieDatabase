@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.personal.lists
+package com.example.moviesearcher.ui.personal.customlists
 
 import android.app.Application
 import android.content.Context
@@ -14,7 +14,7 @@ import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.repositories.PersonalMovieListRepository
 import com.example.moviesearcher.ui.popup_windows.CreateListPopupWindow
 
-class PersonalListsViewModel(application: Application) : AndroidViewModel(application),
+class CustomListsViewModel(application: Application) : AndroidViewModel(application),
     CreateListPopupWindow.ListAddedListener {
 
     private val _error = MutableLiveData<Boolean>()
@@ -52,13 +52,13 @@ class PersonalListsViewModel(application: Application) : AndroidViewModel(applic
     }
 
     fun onListClicked(view: View, list: LocalMovieList){
-        val action = if (list.movieList.isNullOrEmpty())
-            PersonalListsFragmentDirections.personalMovieGridFragment(emptyArray<Int>().toIntArray())
-        else PersonalListsFragmentDirections.personalMovieGridFragment(list.movieList!!.toIntArray())
+        val action = if (list.movieIdList.isNullOrEmpty())
+            CustomListsFragmentDirections.personalGridFragment(list.roomId.toLong(), emptyArray<Int>().toIntArray())
+        else CustomListsFragmentDirections.personalGridFragment(list.roomId.toLong(), list.movieIdList!!.toIntArray())
         Navigation.findNavController(view).navigate(action)
     }
 
-    fun onDeleteListClicked(list: LocalMovieList){
+    fun deleteList(list: LocalMovieList){
         movieListRepository.deleteList(list)
     }
 }

@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.personal.moviegrid
+package com.example.moviesearcher.ui.personal.personalgrid
 
 import android.app.Application
 import android.os.Bundle
@@ -8,9 +8,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import com.example.moviesearcher.model.data.Movie
+import com.example.moviesearcher.model.repositories.PersonalMovieListRepository
 import com.example.moviesearcher.model.repositories.PersonalMovieRepository
 
-class PersonalMovieGridViewModel(application: Application) : AndroidViewModel(application) {
+class PersonalGridViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _error = MutableLiveData<Boolean>()
     private val _loading = MutableLiveData<Boolean>()
@@ -23,34 +24,42 @@ class PersonalMovieGridViewModel(application: Application) : AndroidViewModel(ap
 
     private lateinit var movieIdList: List<Int>
 
-    private lateinit var args: PersonalMovieGridFragmentArgs
+    private lateinit var args: PersonalGridFragmentArgs
 
-    fun fetch(arguments: Bundle?){
-        if (movies == null){
+    fun fetch(arguments: Bundle?) {
+        if (movies == null) {
             arguments?.let {
-                args = PersonalMovieGridFragmentArgs.fromBundle(it)
+                args = PersonalGridFragmentArgs.fromBundle(it)
                 movieIdList = args.movieIdArray.toList()
                 getMovieList()
             }
         }
     }
 
-    fun refresh(){
+    fun refresh() {
         movies = null
         getMovieList()
     }
 
-    private fun getMovieList(){
-        if (!movieIdList.isNullOrEmpty()){
+    private fun getMovieList() {
+        if (!movieIdList.isNullOrEmpty()) {
             movies = repository.getMoviesFromIdList(movieIdList)
             _error.value = false
         } else _error.value = true
         _loading.value = false
-
     }
 
-    fun onMovieClicked(view: View, movie: Movie){
-        val action = PersonalMovieGridFragmentDirections.actionMovieDetails().setMovieLocalId(movie.roomId)
+    fun onMovieClicked(view: View, movie: Movie) {
+        val action =
+            PersonalGridFragmentDirections.actionMovieDetails().setMovieLocalId(movie.roomId)
         Navigation.findNavController(view).navigate(action)
+    }
+
+    fun deleteMovie(movie: Movie) {
+        PersonalMovieListRepository(getApplication()).getMovieListById(args.movieListId.toInt())
+            ?.observeForever {
+                PersonalMovieRepository(getApplication()).deleteMovie(movie)
+                PersonalMovieListRepository(getApplication()).deleteMovieFromList(it, movie.roomId)
+            }
     }
 }

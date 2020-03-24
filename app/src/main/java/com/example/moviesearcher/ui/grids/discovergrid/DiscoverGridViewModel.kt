@@ -27,7 +27,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList
 
-class DiscoverGridViewModel(application: Application) : AndroidViewModel(application), BaseGridViewModel,
+class DiscoverGridViewModel(application: Application) : AndroidViewModel(application),
+    BaseGridViewModel,
     PersonalListsPopupWindow.ListsConfirmedClickListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
@@ -50,7 +51,7 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
         _error.value = false
         _loading.value = true
 
-        arguments?.let{
+        arguments?.let {
             val args = DiscoverGridFragmentArgs.fromBundle(it)
             startYear = args.startYear
             endYear = args.endYear
@@ -136,7 +137,7 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
 
     fun getToolbarTitle(args: Bundle?): String? {
         var title: String? = null
-        if (args != null){
+        if (args != null) {
             title = stringListToString(args.getStringArray(KEY_DISCOVER_NAME_ARRAY)!!.toList())
             if (title.isNullOrBlank() || title == "null")
                 title = args.getString(KEY_START_YEAR) + " - " + args.getString(KEY_END_YEAR)
@@ -168,21 +169,24 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
 
     override fun onConfirmClicked(checkedLists: List<LocalMovieList>, movie: Movie): Boolean {
         if (checkedLists.isEmpty()) {
-            Toast.makeText(getApplication(), getApplication<Application>().getString(R.string.select_a_list), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                getApplication(),
+                getApplication<Application>().getString(R.string.select_a_list),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         }
+        showToast(getApplication(), getApplication<Application>().getString(R.string.being_added_to_list), Toast.LENGTH_LONG)
         CoroutineScope(Dispatchers.IO).launch {
-            val movieId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(movie)
-            for (list in checkedLists){
-                val movieListRepository = PersonalMovieListRepository(getApplication())
-                val movieList = movieListRepository.getMovieListById(list.roomId)
-                if (movieList!!.movieList != null)
-                    (movieList.movieList as MutableList).add(movieId.toInt())
-                else movieList.movieList = listOf(movieId.toInt())
-                movieListRepository.insertOrUpdateMovieList(movieList)
+            val fullMovie = MovieRepository().getMovieDetails(movie.remoteId).body()
+            fullMovie?.let {
+                it.finalizeInitialization()
+                val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(it)
+                for (list in checkedLists)
+                    PersonalMovieListRepository(getApplication()).addMovieToMovieList(list, movieRoomId.toInt())
+                showToast(getApplication(), getApplication<Application>().getString(R.string.successfully_added_to_list), Toast.LENGTH_SHORT)
             }
         }
-        Toast.makeText(getApplication(), getApplication<Application>().getString(R.string.successfully_added_to_list), Toast.LENGTH_SHORT).show()
         return true
     }
 }

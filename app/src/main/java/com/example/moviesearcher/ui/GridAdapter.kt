@@ -9,23 +9,30 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.databinding.ItemMovieBinding
 import com.example.moviesearcher.model.data.Movie
 
-class GridAdapter(private val listener: AdapterItemClickListener): RecyclerView.Adapter<GridAdapter.ViewHolder>() {
+class GridAdapter(
+    private var customListBtnVisibility: Int,
+    private var watchlistBtnVisibility: Int,
+    private var deleteBtnVisibility: Int
+): RecyclerView.Adapter<GridAdapter.ViewHolder>() {
 
-    private val movieList: MutableList<Movie> = mutableListOf()
+    val movieList = mutableListOf<Movie>()
 
-    interface AdapterItemClickListener {
-        fun onMovieClicked(view: View, movie: Movie)
-        fun onPlaylistAddListener(movie: Movie)
+    private var itemClickListener: ItemClickListener? = null
+    private var personalListActionListener: PersonalListActionListener? = null
+
+    interface ItemClickListener {
+        fun onMovieClick(view: View, movie: Movie)
+    }
+
+    interface PersonalListActionListener {
+        fun onPlaylistAdd(movie: Movie)
+        fun onDeleteClicked(view: View, movie: Movie)
     }
 
     fun updateMovieList(movieList: List<Movie>?) {
-        if (movieList.isNullOrEmpty())
-            this.movieList.clear()
-        else {
-            if (this.movieList.containsAll(movieList))
-                return
+        this.movieList.clear()
+        if (movieList != null)
             this.movieList.addAll(movieList)
-        }
         notifyDataSetChanged()
     }
 
@@ -43,14 +50,41 @@ class GridAdapter(private val listener: AdapterItemClickListener): RecyclerView.
         return movieList.size
     }
 
+    fun setItemClickListener(listener: ItemClickListener){
+        itemClickListener = listener
+    }
+
+    fun setPersonalListActionListener(listener: PersonalListActionListener){
+        personalListActionListener = listener
+    }
+
     inner class ViewHolder(itemView: ItemMovieBinding): RecyclerView.ViewHolder(itemView.root) {
         private val view = itemView
 
         fun onBind(movie: Movie){
             view.movie = movie
-            view.root.setOnClickListener { listener.onMovieClicked(it, movie) }
+            view.root.setOnClickListener { itemClickListener?.onMovieClick(it, movie) }
 
-            view.playlistAddBtn.setOnClickListener { listener.onPlaylistAddListener(movie) }
+            view.playlistAddBtn.visibility = customListBtnVisibility
+            if (customListBtnVisibility != View.GONE)
+                view.playlistAddBtn.setOnClickListener { personalListActionListener?.onPlaylistAdd(movie) }
+
+
+            /*if(movie.isInWatchlist)
+                view.watchlistBtn.setBackgroundResource(R.drawable.ic_star_full)
+            else view.watchlistBtn.setBackgroundResource(R.drawable.ic_star_empty)
+
+            view.watchlistBtn.visibility = View.GONE
+            view.watchlistBtn.setOnClickListener {
+                if(movie.isInWatchlist)
+                    it.setBackgroundResource(R.drawable.ic_star_empty)
+                else it.setBackgroundResource(R.drawable.ic_star_full)
+
+            }*/
+
+            view.deleteBtn.visibility = deleteBtnVisibility
+            if (deleteBtnVisibility != View.GONE)
+                view.deleteBtn.setOnClickListener { personalListActionListener?.onDeleteClicked(view.root, movie) }
         }
     }
 }

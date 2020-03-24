@@ -17,10 +17,11 @@ import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.ui.GridAdapter
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
-class DiscoverGridFragment : Fragment(), GridAdapter.AdapterItemClickListener {
+class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
+    GridAdapter.PersonalListActionListener {
 
     private lateinit var viewModel: DiscoverGridViewModel
-    private val gridAdapter = GridAdapter(this)
+    private val gridAdapter = GridAdapter(View.VISIBLE, View.VISIBLE, View.GONE)
 
     private var isDown = true
 
@@ -38,10 +39,7 @@ class DiscoverGridFragment : Fragment(), GridAdapter.AdapterItemClickListener {
         viewModel = ViewModelProvider(this).get(DiscoverGridViewModel::class.java)
         viewModel.fetch(arguments)
 
-        layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        movie_recycler_view!!.layoutManager = layoutManager
-        movie_recycler_view!!.itemAnimator = DefaultItemAnimator()
-        movie_recycler_view!!.adapter = gridAdapter
+        setupRecyclerView()
 
         if (state != null) layoutManager!!.onRestoreInstanceState(state)
 
@@ -89,6 +87,16 @@ class DiscoverGridFragment : Fragment(), GridAdapter.AdapterItemClickListener {
         })
     }
 
+    private fun setupRecyclerView(){
+        layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        movie_recycler_view!!.layoutManager = layoutManager
+        movie_recycler_view!!.itemAnimator = DefaultItemAnimator()
+        movie_recycler_view!!.adapter = gridAdapter
+
+        gridAdapter.setItemClickListener(this)
+        gridAdapter.setPersonalListActionListener(this)
+    }
+
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar?.title =
@@ -100,11 +108,14 @@ class DiscoverGridFragment : Fragment(), GridAdapter.AdapterItemClickListener {
         state = layoutManager!!.onSaveInstanceState()
     }
 
-    override fun onMovieClicked(view: View, movie: Movie) {
+    override fun onMovieClick(view: View, movie: Movie) {
         viewModel.onMovieClicked(view, movie)
     }
 
-    override fun onPlaylistAddListener(movie: Movie) {
+    override fun onPlaylistAdd(movie: Movie) {
         viewModel.onPlaylistAddCLicked(context!!, movie)
+    }
+
+    override fun onDeleteClicked(view: View, movie: Movie) {
     }
 }

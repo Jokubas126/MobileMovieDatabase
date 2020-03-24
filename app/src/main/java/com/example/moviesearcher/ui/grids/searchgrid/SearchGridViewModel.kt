@@ -22,6 +22,7 @@ import com.example.moviesearcher.model.room.database.MovieListDatabase
 import com.example.moviesearcher.ui.grids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
 import com.example.moviesearcher.util.KEY_SEARCH_QUERY
+import com.example.moviesearcher.util.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -134,17 +135,16 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
             return false
         }
         CoroutineScope(Dispatchers.IO).launch {
-            val movieId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(movie)
-            for (list in checkedLists){
-                val movieListRepository = PersonalMovieListRepository(getApplication())
-                val movieList = movieListRepository.getMovieListById(list.roomId)
-                if (movieList!!.movieList != null)
-                    (movieList.movieList as MutableList).add(movieId.toInt())
-                else movieList.movieList = listOf(movieId.toInt())
-                movieListRepository.insertOrUpdateMovieList(movieList)
+            val fullMovie = MovieRepository().getMovieDetails(movie.remoteId).body()
+            fullMovie?.let {
+                showToast(getApplication(), getApplication<Application>().getString(R.string.being_added_to_list), Toast.LENGTH_LONG)
+                it.finalizeInitialization()
+                val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(it)
+                for (list in checkedLists)
+                    PersonalMovieListRepository(getApplication()).addMovieToMovieList(list, movieRoomId.toInt())
+                showToast(getApplication(), getApplication<Application>().getString(R.string.successfully_added_to_list), Toast.LENGTH_SHORT)
             }
         }
-        Toast.makeText(getApplication(), getApplication<Application>().getString(R.string.successfully_added_to_list), Toast.LENGTH_SHORT).show()
         return true
     }
 }

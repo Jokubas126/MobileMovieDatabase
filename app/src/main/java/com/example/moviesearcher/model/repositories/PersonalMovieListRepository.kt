@@ -18,13 +18,34 @@ class PersonalMovieListRepository(application: Application) : CoroutineScope {
     }
 
     private suspend fun insertOrUpdateMovieListBG(movieList: LocalMovieList) {
-        withContext(Dispatchers.IO) { movieListDao?.insertOrUpdateMovieList(movieList) }
+        withContext(Dispatchers.IO) {
+            movieListDao?.insertOrUpdateMovieList(movieList)
+        }
+    }
+
+    fun addMovieToMovieList(movieList: LocalMovieList, movieRoomId: Int){
+        launch { addMovieToMovieListBG(movieList, movieRoomId) }
+    }
+
+    private suspend fun addMovieToMovieListBG(movieList: LocalMovieList, movieRoomId: Int){
+        withContext(Dispatchers.IO){
+            if (movieList.movieIdList != null)
+                (movieList.movieIdList as MutableList).add(movieRoomId)
+            else movieList.movieIdList = listOf(movieRoomId)
+            insertOrUpdateMovieListBG(movieList)
+        }
     }
 
     fun getMovieListById(id: Int) = movieListDao?.getMovieListById(id)
 
     fun getAllMovieLists() = movieListDao?.getAllMovieLists()
 
+    fun deleteMovieFromList(movieList: LocalMovieList, movieRoomId: Int) {
+        launch {
+            (movieList.movieIdList as MutableList).remove(movieRoomId)
+            insertOrUpdateMovieListBG(movieList)
+        }
+    }
 
     fun deleteList(list: LocalMovieList) {
         launch { deleteListBG(list) }
@@ -34,7 +55,7 @@ class PersonalMovieListRepository(application: Application) : CoroutineScope {
         withContext(Dispatchers.IO) { movieListDao?.deleteList(list) }
     }
 
-    fun deleteAllList() {
+    fun deleteAllLists() {
         launch { deleteAllListsBG() }
     }
 
