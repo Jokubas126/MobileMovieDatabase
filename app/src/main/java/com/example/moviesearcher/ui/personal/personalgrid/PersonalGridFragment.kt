@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -54,10 +55,11 @@ class PersonalGridFragment : Fragment(), GridAdapter.ItemClickListener,
 
     private fun observeViewModel() {
         viewModel.movieList?.observe(viewLifecycleOwner, Observer {
-            viewModel.movies(it.movieIdList)?.observe(viewLifecycleOwner, Observer { movies: List<Movie>? ->
-                gridAdapter.updateMovieList(movies)
-                movie_recycler_view!!.visibility = View.VISIBLE
-            })
+            viewModel.movies(it.movieIdList)
+                ?.observe(viewLifecycleOwner, Observer { movies: List<Movie>? ->
+                    gridAdapter.updateMovieList(movies)
+                    movie_recycler_view!!.visibility = View.VISIBLE
+                })
         })
         viewModel.error.observe(viewLifecycleOwner, Observer { isError: Boolean? ->
             if (isError != null)
@@ -86,6 +88,13 @@ class PersonalGridFragment : Fragment(), GridAdapter.ItemClickListener,
 
         gridAdapter.setItemClickListener(this)
         gridAdapter.setPersonalListActionListener(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val args: PersonalGridFragmentArgs? = PersonalGridFragmentArgs.fromBundle(arguments!!)
+        if (args != null)
+        (activity as AppCompatActivity).supportActionBar?.title = args.movieListTitle
     }
 
     override fun onPause() {

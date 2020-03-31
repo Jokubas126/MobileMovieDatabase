@@ -24,15 +24,13 @@ class PersonalGridViewModel(application: Application) : AndroidViewModel(applica
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
 
-    private lateinit var movieIdList: List<Int>
-
     private lateinit var args: PersonalGridFragmentArgs
 
     fun fetch(arguments: Bundle?) {
         if (movieList == null) {
             arguments?.let {
                 args = PersonalGridFragmentArgs.fromBundle(it)
-                movieIdList = args.movieIdArray.toList()
+
                 getMovieList()
             }
         }

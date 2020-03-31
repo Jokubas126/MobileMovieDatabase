@@ -21,7 +21,7 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     private val _error = MutableLiveData<Boolean>()
     private val _loading = MutableLiveData<Boolean>()
 
-    lateinit var movieLists:  LiveData<List<LocalMovieList>>
+    lateinit var movieLists: LiveData<List<LocalMovieList>>
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
 
@@ -32,7 +32,7 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
 
     fun fetch() {
         _loading.value = true
-        if (movieListRepository.getAllMovieLists() != null){
+        if (movieListRepository.getAllMovieLists() != null) {
             movieLists = movieListRepository.getAllMovieLists()!!
             _error.value = false
         } else _error.value = true
@@ -53,14 +53,13 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
         movieListRepository.insertOrUpdateMovieList(LocalMovieList(0, listName, null))
     }
 
-    fun onListClicked(view: View, list: LocalMovieList){
-        val action = if (list.movieIdList.isNullOrEmpty())
-            CustomListsFragmentDirections.personalGridFragment(list.roomId.toLong(), emptyArray<Int>().toIntArray())
-        else CustomListsFragmentDirections.personalGridFragment(list.roomId.toLong(), list.movieIdList!!.toIntArray())
+    fun onListClicked(view: View, list: LocalMovieList) {
+        val action =
+            CustomListsFragmentDirections.personalGridFragment(list.roomId.toLong(), list.listTitle)
         Navigation.findNavController(view).navigate(action)
     }
 
-    fun deleteList(list: LocalMovieList){
+    fun deleteList(list: LocalMovieList) {
         val movieIdList = list.movieIdList
         if (!movieIdList.isNullOrEmpty())
             for (id in movieIdList)
