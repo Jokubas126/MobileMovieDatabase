@@ -88,7 +88,7 @@ class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener {
         newList.remove(list)
         listAdapter.updateMovieLists(newList)
         var restored = false
-        Snackbar.make(view, R.string.movie_deleted, Snackbar.LENGTH_LONG)
+        Snackbar.make(view, R.string.movie_list_deleted, Snackbar.LENGTH_LONG)
             .setAction(R.string.undo) {
                 restored = true
                 listAdapter.updateMovieLists(oldList)

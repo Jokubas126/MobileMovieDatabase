@@ -1,7 +1,6 @@
 package com.example.moviesearcher.ui.grids.discovergrid
 
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -21,6 +20,7 @@ import com.example.moviesearcher.model.room.database.MovieListDatabase
 import com.example.moviesearcher.ui.grids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
 import com.example.moviesearcher.util.*
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -151,42 +151,52 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
         Navigation.findNavController(view).navigate(action)
     }
 
-    override fun onPlaylistAddCLicked(context: Context, movie: Movie) {
+    override fun onPlaylistAddCLicked(
+        root: View,
+        movie: Movie
+    ) {
         val popupWindow = PersonalListsPopupWindow(
-            context,
-            View.inflate(context, R.layout.popup_window_personal_lists_to_add, null),
+            root,
+            View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT,
             movie,
             this
         )
-        val movieLists = MovieListDatabase.getInstance(context).movieListDao().getAllMovieLists()
+        val movieLists = MovieListDatabase.getInstance(root.context).movieListDao().getAllMovieLists()
         movieLists.observeForever {
             if (!it.isNullOrEmpty())
                 popupWindow.setupLists(it)
         }
     }
 
-    override fun onConfirmClicked(checkedLists: List<LocalMovieList>, movie: Movie): Boolean {
+    override fun onConfirmClicked(root: View, movie: Movie, checkedLists: List<LocalMovieList>): Boolean {
         if (checkedLists.isEmpty()) {
-            Toast.makeText(
-                getApplication(),
-                getApplication<Application>().getString(R.string.select_a_list),
-                Toast.LENGTH_SHORT
-            ).show()
+            showToast(getApplication(), getApplication<Application>().getString(R.string.select_a_list), Toast.LENGTH_SHORT)
             return false
         }
-        showToast(getApplication(), getApplication<Application>().getString(R.string.being_added_to_list), Toast.LENGTH_LONG)
         CoroutineScope(Dispatchers.IO).launch {
             val fullMovie = MovieRepository().getMovieDetails(movie.remoteId).body()
             fullMovie?.let {
+                showProgressSnackBar(root, getApplication<Application>().getString(R.string.being_uploaded_to_list))
                 it.finalizeInitialization()
                 val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(it)
                 for (list in checkedLists)
                     PersonalMovieListRepository(getApplication()).addMovieToMovieList(list, movieRoomId.toInt())
-                showToast(getApplication(), getApplication<Application>().getString(R.string.successfully_added_to_list), Toast.LENGTH_SHORT)
+
+                showSnackbarActionCheckLists(root)
             }
         }
         return true
+    }
+
+    private fun showSnackbarActionCheckLists(root: View){
+        CoroutineScope(Dispatchers.Main).launch {
+            Snackbar.make(root, getApplication<Application>().getString(R.string.successfully_uploaded_to_list), Snackbar.LENGTH_LONG)
+                .setAction(getApplication<Application>().getString(R.string.action_check_lists)){
+                    val action = DiscoverGridFragmentDirections.actionGlobalCustomListsFragment()
+                    Navigation.findNavController(root).navigate(action)
+                }.show()
+        }
     }
 }

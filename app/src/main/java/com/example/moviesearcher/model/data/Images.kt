@@ -13,27 +13,24 @@ class Images(
     @TypeConverters(ImageListTypeConverter::class)
     @ColumnInfo(name = "poster_list")
     @SerializedName(KEY_POSTER_LIST)
-    val posterList: List<Image>,
+    val posterList: List<Image>?,
 
     @TypeConverters(ImageListTypeConverter::class)
     @ColumnInfo(name = "backdrop_list")
     @SerializedName(KEY_BACKDROP_LIST)
-    val backdropList: List<Image>
+    val backdropList: List<Image>?
 ) {
     fun generateBitmaps() {
-        for (poster in posterList)
-            poster.imageBitmap = imageUrlToBitmap(poster.filePath)
+        if (!posterList.isNullOrEmpty())
+            for (poster in posterList)
+                poster.imageBitmap = imageUrlToBitmap(poster.filePath)
 
-        for (backdrop in backdropList)
-            backdrop.imageBitmap = imageUrlToBitmap(backdrop.filePath)
+        if (!backdropList.isNullOrEmpty())
+            for (backdrop in backdropList)
+                backdrop.imageBitmap = imageUrlToBitmap(backdrop.filePath)
 
     }
-
-    constructor() : this(
-        0,
-        emptyList(),
-        emptyList()
-    )
+    constructor() : this(0, emptyList(), emptyList())
 }
 
 data class Image(

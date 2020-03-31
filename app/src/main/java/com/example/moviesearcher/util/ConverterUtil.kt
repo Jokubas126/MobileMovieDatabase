@@ -53,11 +53,14 @@ fun getAnyNameList(list: List<*>?): List<String> {
 
 // --------------- Image Related ---------------- //
 
-fun imageUrlToBitmap(url: String): Bitmap {
-    val inputStream =
-        BufferedInputStream(URL(BASE_IMAGE_URL + url).openConnection().getInputStream())
-    val byteArray = inputStream.readBytes()
-    return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+fun imageUrlToBitmap(url: String?): Bitmap? {
+    if (!url.isNullOrBlank()){
+        val inputStream =
+            BufferedInputStream(URL(BASE_IMAGE_URL + url).openConnection().getInputStream())
+        val byteArray = inputStream.readBytes()
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+    }
+    return null
 }
 
 // ---------------------------------------------------------//
@@ -101,14 +104,19 @@ class PersonListTypeConverter {
 class BitmapTypeConverter {
 
     @TypeConverter
-    fun bitmapToString(bitmap: Bitmap): String? {
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-        return encodeToString(stream.toByteArray(), DEFAULT)
+    fun bitmapToString(bitmap: Bitmap?): String? {
+        if (bitmap != null){
+            val stream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            return encodeToString(stream.toByteArray(), DEFAULT)
+        }
+        return null
     }
 
     @TypeConverter
     fun stringToBitmap(string: String?): Bitmap? {
+        if (string.isNullOrBlank())
+            return null
         val imageBytes = decode(string, 0)
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
     }

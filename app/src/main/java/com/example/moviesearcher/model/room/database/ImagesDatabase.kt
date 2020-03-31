@@ -12,7 +12,7 @@ import com.example.moviesearcher.util.BitmapTypeConverter
 
 private const val DATABASE = "images"
 
-@Database(entities = [Images::class], version = 2, exportSchema = false)
+@Database(entities = [Images::class], version = 3, exportSchema = false)
 @TypeConverters(ImageListTypeConverter::class, BitmapTypeConverter::class)
 abstract class ImagesDatabase: RoomDatabase(){
 

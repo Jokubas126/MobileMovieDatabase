@@ -12,6 +12,7 @@ import androidx.navigation.Navigation
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.repositories.PersonalMovieListRepository
+import com.example.moviesearcher.model.repositories.PersonalMovieRepository
 import com.example.moviesearcher.ui.popup_windows.CreateListPopupWindow
 
 class CustomListsViewModel(application: Application) : AndroidViewModel(application),
@@ -25,6 +26,7 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     val loading: LiveData<Boolean> = _loading
 
     private val movieListRepository = PersonalMovieListRepository(application)
+    private val movieRepository = PersonalMovieRepository(application)
 
     private lateinit var popupWindow: PopupWindow
 
@@ -59,6 +61,11 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun deleteList(list: LocalMovieList){
+        val movieIdList = list.movieIdList
+        if (!movieIdList.isNullOrEmpty())
+            for (id in movieIdList)
+                movieRepository.deleteMovieById(id)
+
         movieListRepository.deleteList(list)
     }
 }

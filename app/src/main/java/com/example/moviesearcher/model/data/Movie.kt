@@ -46,15 +46,15 @@ data class Movie(
     @SerializedName(KEY_ID)
     @ColumnInfo(name = "movie_id") var remoteId: Int,
 
-    var title: String,
+    var title: String?,
 
     @ColumnInfo(name = "release_date")
     @SerializedName(KEY_MOVIE_RELEASE_DATE)
-    var releaseDate: String,
+    var releaseDate: String?,
 
     @ColumnInfo(name = "score")
     @SerializedName(KEY_MOVIE_SCORE)
-    var score: String,
+    var score: String?,
 
     @Ignore
     @SerializedName(KEY_MOVIE_GENRE_ID_LIST)
@@ -64,23 +64,23 @@ data class Movie(
     val genres: List<Genre>,
 
     @ColumnInfo(name = "genres_string")
-    var genresString: String,
+    var genresString: String?,
 
     @Ignore
     @SerializedName(KEY_MOVIE_PRODUCTION_COUNTRY_LIST)
     val productionCountryList: List<Country>,
 
     @ColumnInfo(name = "production_country_string")
-    var productionCountryString: String,
+    var productionCountryString: String?,
 
     var runtime: Int,
-    var overview: String,
+    var overview: String?,
 
     @SerializedName(KEY_MOVIE_POSTER_PATH)
-    var posterImageUrl: String,
+    var posterImageUrl: String?,
 
     @SerializedName(KEY_MOVIE_BACKDROP_PATH)
-    var backdropImageUrl: String,
+    var backdropImageUrl: String?,
 
     @TypeConverters(BitmapTypeConverter::class)
     @ColumnInfo(name = "poster_image")

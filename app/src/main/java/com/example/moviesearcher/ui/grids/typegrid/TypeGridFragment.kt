@@ -123,7 +123,7 @@ class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalList
     }
 
     override fun onPlaylistAdd(movie: Movie) {
-        viewModel.onPlaylistAddCLicked(context!!, movie)
+        viewModel.onPlaylistAddCLicked(this.view!!, movie)
     }
 
     override fun onDeleteClicked(view: View, movie: Movie) {

@@ -47,8 +47,7 @@
                         android:contentDescription="@string/movie_image"
                         android:gravity="center_horizontal"
                         android:imageBitmap="@{movie.posterImageBitmap}"
-                        android:imageUrl="@{movie.posterImageUrl}"
-                        android:src="@drawable/background" />
+                        android:imageUrl="@{movie.posterImageUrl}" />
 
                     <FrameLayout
                         android:layout_width="match_parent"

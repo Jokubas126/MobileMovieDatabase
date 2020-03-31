@@ -67,7 +67,9 @@ class GridAdapter(
 
             view.playlistAddBtn.visibility = customListBtnVisibility
             if (customListBtnVisibility != View.GONE)
-                view.playlistAddBtn.setOnClickListener { personalListActionListener?.onPlaylistAdd(movie) }
+                view.playlistAddBtn.setOnClickListener {
+                    personalListActionListener?.onPlaylistAdd(movie)
+                }
 
 
             /*if(movie.isInWatchlist)
@@ -84,7 +86,7 @@ class GridAdapter(
 
             view.deleteBtn.visibility = deleteBtnVisibility
             if (deleteBtnVisibility != View.GONE)
-                view.deleteBtn.setOnClickListener { personalListActionListener?.onDeleteClicked(view.root, movie) }
+                view.deleteBtn.setOnClickListener { personalListActionListener?.onDeleteClicked(it, movie) }
         }
     }
 }

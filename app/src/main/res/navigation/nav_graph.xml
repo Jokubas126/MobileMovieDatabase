@@ -60,9 +60,6 @@
             android:name="movieIdArray"
             app:argType="integer[]" />
     </fragment>
-    <action
-        android:id="@+id/actionGlobalPersonalGridFragment"
-        app:destination="@id/personalGridFragment" />
 
     <!-- MOVIE DETAILS -->
 
@@ -186,6 +183,11 @@
         android:name="com.example.moviesearcher.ui.about.AboutFragment"
         android:label="About"
         tools:layout="@layout/fragment_about" />
+
+    <action
+        android:id="@+id/actionGlobalCustomListsFragment"
+        app:destination="@id/customListsFragment" />
+
     <action
         android:id="@+id/actionGlobalSearchGridFragment"
         app:destination="@id/searchGridFragment" />

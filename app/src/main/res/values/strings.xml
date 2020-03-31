@@ -43,8 +43,10 @@
 
     <string name="add_to_lists_title">Add to the lists</string>
     <string name="select_a_list">Please select a list</string>
-    <string name="successfully_added_to_list">Movie is successfully added</string>
-    <string name="being_added_to_list">Movie is being added to the list</string>
+    <string name="successfully_uploaded_to_list">Movie successfully uploaded</string>
+    <string name="being_uploaded_to_list">Movie is being uploaded</string>
+    <string name="action_check_lists">"CHECK LISTS"</string>
+    <string name="movie_list_deleted">Movie list was deleted</string>
     <string name="movie_deleted">Movie was deleted</string>
 
 

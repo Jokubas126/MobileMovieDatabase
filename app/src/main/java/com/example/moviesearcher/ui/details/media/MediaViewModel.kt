@@ -7,11 +7,10 @@ import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.navigation.Navigation
 import com.example.moviesearcher.MovieDetailsArgs
 import com.example.moviesearcher.R
-import com.example.moviesearcher.model.data.Image
+import com.example.moviesearcher.model.data.Images
 import com.example.moviesearcher.model.data.Video
 import com.example.moviesearcher.model.repositories.MovieRepository
 import com.example.moviesearcher.model.repositories.PersonalMovieRepository
@@ -24,13 +23,11 @@ import kotlinx.coroutines.withContext
 
 class MediaViewModel(application: Application) : AndroidViewModel(application) {
     private val _trailer = MutableLiveData<Video>()
-    private val _posterList = MutableLiveData<List<Image>>()
-    private val _backdropList = MutableLiveData<List<Image>>()
+    private var _images = MutableLiveData<Images>()
     private val _loading = MutableLiveData<Boolean>()
 
     val trailer: LiveData<Video> = _trailer
-    val posterList: LiveData<List<Image>> = _posterList
-    val backdropList: LiveData<List<Image>> = _backdropList
+    var images: LiveData<Images>? = _images
     val loading: LiveData<Boolean> = _loading
 
     private lateinit var safeArgs: MovieDetailsArgs
@@ -45,7 +42,6 @@ class MediaViewModel(application: Application) : AndroidViewModel(application) {
             } else {
                 getImagesLocal(safeArgs.movieLocalId)
             }
-
         }
     }
 
@@ -71,20 +67,15 @@ class MediaViewModel(application: Application) : AndroidViewModel(application) {
         CoroutineScope(Dispatchers.IO).launch {
             val response = MovieRepository().getImages(movieId)
             withContext(Dispatchers.Main) {
-                _posterList.value = response.body()!!.posterList
-                _backdropList.value = response.body()!!.backdropList
+                _images.value = Images(0, response.body()!!.posterList, response.body()!!.backdropList)
                 _loading.value = false
             }
         }
     }
 
     private fun getImagesLocal(movieId: Int) {
-        val images = PersonalMovieRepository(getApplication()).getImagesById(movieId)
-        images.observeForever {
-            _posterList.value = it.posterList
-            _backdropList.value = it.backdropList
-            _loading.value = false
-        }
+        images = PersonalMovieRepository(getApplication()).getImagesById(movieId)
+        _loading.value = false
     }
 
     fun onNavigationItemSelected(view: View, menuItem: MenuItem): Boolean{

@@ -56,18 +56,10 @@ class CreditsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelecte
     }
 
     private fun observeViewModel() {
-        viewModel.cast.observe(viewLifecycleOwner, Observer { cast: List<Person>? ->
-            if (cast != null) {
-                castAdapter.updatePeopleList(cast)
-                progress_bar.visibility = View.GONE
-                castLayout.visibility = View.VISIBLE
-            }
-        })
-        viewModel.crew.observe(viewLifecycleOwner, Observer { crew: List<Person>? ->
-            if (crew != null) {
-                crewAdapter.updatePeopleList(crew)
-                progress_bar.visibility = View.GONE
-                crewLayout.visibility = View.VISIBLE
+        viewModel.credits?.observe(viewLifecycleOwner, Observer {
+            if (it != null){
+                updateCast(it.castList)
+                updateCrew(it.crewList)
             }
         })
         viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
@@ -88,4 +80,18 @@ class CreditsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelecte
         return viewModel.onNavigationItemSelected(bottomNavigationView, menuItem)
     }
 
+    private fun updateCast(castList: List<Person>?){
+        if (castList != null) {
+            castAdapter.updatePeopleList(castList)
+            progress_bar.visibility = View.GONE
+            castLayout.visibility = View.VISIBLE
+        }
+    }
+    private fun updateCrew(crewList: List<Person>?){
+        if (crewList != null) {
+            crewAdapter.updatePeopleList(crewList)
+            progress_bar.visibility = View.GONE
+            crewLayout.visibility = View.VISIBLE
+        }
+    }
 }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
-class PersonalMovieRepository(private var application: Application) : CoroutineScope {
+class PersonalMovieRepository(application: Application) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 
@@ -51,6 +51,18 @@ class PersonalMovieRepository(private var application: Application) : CoroutineS
     fun getMovieById(movieId: Int) = movieDao.getMovieById(movieId)
 
     fun getMoviesFromIdList(movieIdList: List<Int>) = movieDao.getMoviesFromIdList(movieIdList)
+
+    fun deleteMovieById(movieId: Int){
+        launch { deleteMovieByIdBG(movieId) }
+    }
+
+    private suspend fun deleteMovieByIdBG(movieId: Int){
+        withContext(Dispatchers.IO){
+            movieDao.deleteMovieById(movieId)
+            imagesDao.deleteImagesByMovieId(movieId)
+            creditsDao.deleteCreditsByMovieId(movieId)
+        }
+    }
 
     fun deleteMovie(movie: Movie) {
         launch { deleteMovieBG(movie) }

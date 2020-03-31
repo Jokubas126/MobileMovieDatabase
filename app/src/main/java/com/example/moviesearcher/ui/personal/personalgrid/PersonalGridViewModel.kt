@@ -7,27 +7,29 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
+import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.repositories.PersonalMovieListRepository
 import com.example.moviesearcher.model.repositories.PersonalMovieRepository
 
 class PersonalGridViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val movieRepository = PersonalMovieRepository(application)
+    private val movieListRepository = PersonalMovieListRepository(getApplication())
+
+    var movieList: LiveData<LocalMovieList>? = null
+
     private val _error = MutableLiveData<Boolean>()
     private val _loading = MutableLiveData<Boolean>()
-
-    var movies: LiveData<List<Movie>>? = null
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
-
-    private val repository = PersonalMovieRepository(application)
 
     private lateinit var movieIdList: List<Int>
 
     private lateinit var args: PersonalGridFragmentArgs
 
     fun fetch(arguments: Bundle?) {
-        if (movies == null) {
+        if (movieList == null) {
             arguments?.let {
                 args = PersonalGridFragmentArgs.fromBundle(it)
                 movieIdList = args.movieIdArray.toList()
@@ -37,29 +39,36 @@ class PersonalGridViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun refresh() {
-        movies = null
+        movieList = null
         getMovieList()
     }
 
     private fun getMovieList() {
-        if (!movieIdList.isNullOrEmpty()) {
-            movies = repository.getMoviesFromIdList(movieIdList)
-            _error.value = false
-        } else _error.value = true
+        movieList = movieListRepository.getMovieListById(args.movieListId.toInt())
+    }
+
+    fun movies(movieIdList: List<Int>?): LiveData<List<Movie>>? {
         _loading.value = false
+        return if (movieIdList.isNullOrEmpty()) {
+            _error.value = true
+            null
+        } else {
+            _error.value = false
+            movieRepository.getMoviesFromIdList(movieIdList)
+        }
+    }
+
+    fun deleteMovie(movie: Movie) {
+        val localMovieList = movieList?.value
+        if (localMovieList != null) {
+            movieRepository.deleteMovie(movie)
+            movieListRepository.deleteMovieFromList(localMovieList, movie.roomId)
+        }
     }
 
     fun onMovieClicked(view: View, movie: Movie) {
         val action =
             PersonalGridFragmentDirections.actionMovieDetails().setMovieLocalId(movie.roomId)
         Navigation.findNavController(view).navigate(action)
-    }
-
-    fun deleteMovie(movie: Movie) {
-        PersonalMovieListRepository(getApplication()).getMovieListById(args.movieListId.toInt())
-            ?.observeForever {
-                PersonalMovieRepository(getApplication()).deleteMovie(movie)
-                PersonalMovieListRepository(getApplication()).deleteMovieFromList(it, movie.roomId)
-            }
     }
 }

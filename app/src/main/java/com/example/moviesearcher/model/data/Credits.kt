@@ -14,20 +14,23 @@ class Credits(
     @TypeConverters(PersonListTypeConverter::class)
     @ColumnInfo(name = "cast")
     @SerializedName(KEY_CAST_LIST)
-    val castList: List<Person>,
+    val castList: List<Person>?,
 
     @TypeConverters(PersonListTypeConverter::class)
     @ColumnInfo(name = "crew")
     @SerializedName(KEY_CREW_LIST)
-    val crewList: List<Person>
+    val crewList: List<Person>?
 ) {
     fun generateBitmaps(): Credits {
-        for (cast in castList)
-            if (!cast.profileImagePath.isNullOrBlank())
-                cast.profileImageBitmap = imageUrlToBitmap(cast.profileImagePath)
-        for (crew in crewList)
-            if (!crew.profileImagePath.isNullOrBlank())
-                crew.profileImageBitmap = imageUrlToBitmap(crew.profileImagePath)
+        if (!castList.isNullOrEmpty())
+            for (cast in castList)
+                if (!cast.profileImagePath.isNullOrBlank())
+                    cast.profileImageBitmap = imageUrlToBitmap(cast.profileImagePath)
+
+        if (!crewList.isNullOrEmpty())
+            for (crew in crewList)
+                if (!crew.profileImagePath.isNullOrBlank())
+                    crew.profileImageBitmap = imageUrlToBitmap(crew.profileImagePath)
         return this
     }
 }

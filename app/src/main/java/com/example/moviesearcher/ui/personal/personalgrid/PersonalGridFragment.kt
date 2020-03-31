@@ -53,9 +53,11 @@ class PersonalGridFragment : Fragment(), GridAdapter.ItemClickListener,
     }
 
     private fun observeViewModel() {
-        viewModel.movies?.observe(viewLifecycleOwner, Observer { movies: List<Movie>? ->
-            gridAdapter.updateMovieList(movies)
-            movie_recycler_view!!.visibility = View.VISIBLE
+        viewModel.movieList?.observe(viewLifecycleOwner, Observer {
+            viewModel.movies(it.movieIdList)?.observe(viewLifecycleOwner, Observer { movies: List<Movie>? ->
+                gridAdapter.updateMovieList(movies)
+                movie_recycler_view!!.visibility = View.VISIBLE
+            })
         })
         viewModel.error.observe(viewLifecycleOwner, Observer { isError: Boolean? ->
             if (isError != null)

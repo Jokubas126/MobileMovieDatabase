@@ -52,7 +52,9 @@ class PersonalMovieListRepository(application: Application) : CoroutineScope {
     }
 
     private suspend fun deleteListBG(list: LocalMovieList) {
-        withContext(Dispatchers.IO) { movieListDao?.deleteList(list) }
+        withContext(Dispatchers.IO) {
+            movieListDao?.deleteList(list)
+        }
     }
 
     fun deleteAllLists() {

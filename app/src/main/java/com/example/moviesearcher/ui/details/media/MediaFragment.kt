@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Image
-import com.example.moviesearcher.model.data.Video
 import com.example.moviesearcher.util.YOUTUBE_API_KEY
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.youtube.player.YouTubeInitializationResult
@@ -64,25 +63,19 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
     }
 
     private fun observeViewModel() {
-        viewModel.trailer.observe(viewLifecycleOwner, Observer { trailer: Video? ->
-            if (trailer != null) {
-                video_name.text = trailer.name
+        viewModel.trailer.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                video_name.text = it.name
                 trailer_layout.visibility = View.VISIBLE
                 @Suppress("DEPRECATION")
                 activity!!.fragmentManager.beginTransaction().replace(youtube_fragment.id, youTubePlayerFragment).commit()
-                initializeYoutubePlayer(trailer.key)
+                initializeYoutubePlayer(it.key)
             }
         })
-        viewModel.posterList.observe(viewLifecycleOwner, Observer { posterList: List<Image>? ->
-            if (!posterList.isNullOrEmpty()) {
-                posterAdapter.updateImagePathList(posterList)
-                poster_layout.visibility = View.VISIBLE
-            }
-        })
-        viewModel.backdropList.observe(viewLifecycleOwner, Observer { backdropList: List<Image>? ->
-            if (!backdropList.isNullOrEmpty()) {
-                backdropAdapter.updateImagePathList(backdropList)
-                backdrop_layout.visibility = View.VISIBLE
+        viewModel.images?.observe(viewLifecycleOwner, Observer {
+            if (it != null){
+                updatePosters(it.posterList)
+                updateBackdrops(it.backdropList)
             }
         })
         viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
@@ -116,5 +109,19 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         return viewModel.onNavigationItemSelected(bottomNavigationView, menuItem)
+    }
+
+    private fun updatePosters(posterList: List<Image>?){
+        if (!posterList.isNullOrEmpty()){
+            posterAdapter.updateImageList(posterList)
+            poster_layout.visibility = View.VISIBLE
+        }
+    }
+
+    private fun updateBackdrops(backdropList: List<Image>?){
+        if (!backdropList.isNullOrEmpty()) {
+            backdropAdapter.updateImageList(backdropList)
+            backdrop_layout.visibility = View.VISIBLE
+        }
     }
 }

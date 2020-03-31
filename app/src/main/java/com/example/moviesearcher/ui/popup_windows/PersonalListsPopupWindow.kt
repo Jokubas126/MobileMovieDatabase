@@ -1,6 +1,5 @@
 package com.example.moviesearcher.ui.popup_windows
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
@@ -8,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +19,7 @@ import kotlinx.android.synthetic.main.item_personal_list_to_add.view.*
 import kotlinx.android.synthetic.main.popup_window_personal_lists_to_add.view.*
 
 class PersonalListsPopupWindow(
-    private val context: Context,
+    private val root: View,
     private val view: View,
     width: Int, height: Int,
     private val selectedMovie: Movie,
@@ -31,7 +29,7 @@ class PersonalListsPopupWindow(
     private val checkedLists = mutableListOf<LocalMovieList>()
 
     interface ListsConfirmedClickListener{
-        fun onConfirmClicked(checkedLists: List<LocalMovieList>, movie: Movie): Boolean
+        fun onConfirmClicked(root: View, movie: Movie, checkedLists: List<LocalMovieList>): Boolean
     }
 
     init {
@@ -41,15 +39,15 @@ class PersonalListsPopupWindow(
         view.popup_window_outside.setOnClickListener { dismiss() }
 
         view.confirm_btn.setOnClickListener {
-            if (listener.onConfirmClicked(checkedLists, selectedMovie))
+            if (listener.onConfirmClicked(root, selectedMovie, checkedLists))
                 dismiss()
         }
     }
 
     fun setupLists(movieLists: List<LocalMovieList>){
         val recyclerView = view.personal_lists_recycler_view
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        recyclerView.layoutManager = LinearLayoutManager(root.context)
+        recyclerView.addItemDecoration(DividerItemDecoration(root.context, DividerItemDecoration.VERTICAL))
         recyclerView.adapter = PersonalListsAdapter(this, movieLists)
     }
 

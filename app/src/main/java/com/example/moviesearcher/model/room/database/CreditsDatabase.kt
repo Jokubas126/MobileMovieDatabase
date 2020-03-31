@@ -13,7 +13,7 @@ import com.example.moviesearcher.util.PersonListTypeConverter
 private const val DATABASE = "credits"
 
 
-@Database(entities = [Credits::class], version = 1, exportSchema = false)
+@Database(entities = [Credits::class], version = 2, exportSchema = false)
 @TypeConverters(PersonListTypeConverter::class, BitmapTypeConverter::class)
 abstract class CreditsDatabase: RoomDatabase(){
 
