@@ -4,15 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.room.dao.MovieDao
-import com.example.moviesearcher.util.BitmapTypeConverter
 
 private const val DATABASE = "movie"
 
-@Database(entities = [Movie::class], version = 4, exportSchema = false)
-@TypeConverters(BitmapTypeConverter::class)
+@Database(entities = [Movie::class], version = 7, exportSchema = false)
 abstract class MovieDatabase: RoomDatabase(){
 
     abstract fun movieDao(): MovieDao

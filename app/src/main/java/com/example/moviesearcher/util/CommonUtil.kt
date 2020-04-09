@@ -1,5 +1,8 @@
 package com.example.moviesearcher.util
 
+import android.util.Log
+import java.io.File
+
 /** Snackbar lengths have been taken from the source code of SnackBarManager
  * https://github.com/material-components/material-components-android/blob/master/lib/java/com/google/android/material/snackbar/SnackbarManager.java
  **/
@@ -8,3 +11,9 @@ const val SNACKBAR_LENGTH_LONG_MS = 2750
 
 const val LANGUAGE_CATEGORY = "Languages"
 const val GENRE_CATEGORY = "Genres"
+
+fun deleteFile(file: File) {
+    file.delete()
+    if (file.exists())
+        file.canonicalFile.delete()
+}

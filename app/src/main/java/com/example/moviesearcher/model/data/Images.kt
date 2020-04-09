@@ -1,6 +1,7 @@
 package com.example.moviesearcher.model.data
 
-import android.graphics.Bitmap
+import android.content.Context
+import android.net.Uri
 import androidx.room.*
 import com.example.moviesearcher.util.*
 import com.google.gson.annotations.SerializedName
@@ -11,34 +12,34 @@ class Images(
     var movieRoomId: Int,
 
     @TypeConverters(ImageListTypeConverter::class)
-    @ColumnInfo(name = "poster_list")
+    @ColumnInfo(name = KEY_LOCAL_POSTER_LIST)
     @SerializedName(KEY_POSTER_LIST)
     val posterList: List<Image>?,
 
     @TypeConverters(ImageListTypeConverter::class)
-    @ColumnInfo(name = "backdrop_list")
+    @ColumnInfo(name = KEY_LOCAL_BACKDROP_LIST)
     @SerializedName(KEY_BACKDROP_LIST)
     val backdropList: List<Image>?
 ) {
-    fun generateBitmaps() {
+    fun generateFileUris(context: Context): Images {
         if (!posterList.isNullOrEmpty())
             for (poster in posterList)
-                poster.imageBitmap = imageUrlToBitmap(poster.filePath)
+                poster.imageUriString = imageUrlToFileUriString(context, poster.imageUrl)
 
         if (!backdropList.isNullOrEmpty())
             for (backdrop in backdropList)
-                backdrop.imageBitmap = imageUrlToBitmap(backdrop.filePath)
+                backdrop.imageUriString = imageUrlToFileUriString(context, backdrop.imageUrl)
 
+        return this
     }
     constructor() : this(0, emptyList(), emptyList())
 }
 
 data class Image(
     @Ignore
-    @SerializedName(KEY_IMAGE_FILE_PATH)
-    val filePath: String,
+    @SerializedName(KEY_IMAGE_URL)
+    val imageUrl: String?,
 
-    @TypeConverters(BitmapTypeConverter::class)
-    @ColumnInfo(name = "image_bitmap")
-    var imageBitmap: Bitmap?
+    @ColumnInfo(name = KEY_IMAGE_URI_STRING)
+    var imageUriString: String?
 )

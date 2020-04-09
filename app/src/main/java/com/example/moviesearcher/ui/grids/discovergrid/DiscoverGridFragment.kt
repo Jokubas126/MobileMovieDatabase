@@ -113,7 +113,7 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
     }
 
     override fun onPlaylistAdd(movie: Movie) {
-        viewModel.onPlaylistAddCLicked(view!!, movie)
+        viewModel.onPlaylistAddCLicked(this.view!!, movie)
     }
 
     override fun onDeleteClicked(view: View, movie: Movie) {

@@ -7,14 +7,13 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.moviesearcher.model.data.Credits
 import com.example.moviesearcher.model.room.dao.CreditsDao
-import com.example.moviesearcher.util.BitmapTypeConverter
 import com.example.moviesearcher.util.PersonListTypeConverter
 
 private const val DATABASE = "credits"
 
 
-@Database(entities = [Credits::class], version = 2, exportSchema = false)
-@TypeConverters(PersonListTypeConverter::class, BitmapTypeConverter::class)
+@Database(entities = [Credits::class], version = 5, exportSchema = false)
+@TypeConverters(PersonListTypeConverter::class)
 abstract class CreditsDatabase: RoomDatabase(){
 
     abstract fun creditsDao(): CreditsDao

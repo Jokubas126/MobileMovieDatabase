@@ -25,7 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.ArrayList
 
 class DiscoverGridViewModel(application: Application) : AndroidViewModel(application),
     BaseGridViewModel,
@@ -39,7 +38,8 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
 
-    private var page = 1
+    private var currentPage = 1
+    private var fetchedPage = 1
     private var isListFull = false
 
     private var startYear: String? = null
@@ -63,37 +63,61 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
 
     override fun refresh() {
         isListFull = false
-        _error.value = false
         _loading.value = true
-        page = 1
-        clearMovies()
+        currentPage = 1
         getMovieList()
     }
 
     override fun addData() {
         if (!isListFull) {
-            _error.value = false
             _loading.value = true
-            page++
+            currentPage++
             getMovieList()
         }
     }
 
     private fun getMovieList() {
         val formattedList = formatQueries()
+        if (isNetworkAvailable(getApplication())) {
+            configurePages()
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = MovieRepository().getDiscoveredMovies(
+                    currentPage,
+                    formattedList[0],
+                    formattedList[1],
+                    formattedList[2],
+                    languageKey
+                )
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        if (currentPage == response.body()!!.totalPages)
+                            isListFull = true
+                        getGenres(response.body()!!)
+                    } else {
+                        _loading.value = false
+                        _error.value = true
+                    }
+                }
+            }
+        } else {
+            _loading.value = false
+            networkUnavailableNotification(getApplication())
+        }
+
+    }
+
+    private fun getGenres(movieList: MovieResults) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository().getDiscoveredMovies(
-                page,
-                formattedList[0],
-                formattedList[1],
-                formattedList[2],
-                languageKey
-            )
+            val response = MovieRepository().getGenreMap()
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-                    if (page == response.body()!!.totalPages)
-                        isListFull = true
-                    getGenres(response.body()!!)
+                    movieList.formatGenres(response.body()!!)
+                    val tmpMovieList: MutableList<Movie> = _movies.value as MutableList
+                    tmpMovieList.addAll(movieList.results)
+                    _movies.value = tmpMovieList
+                    fetchedPage = currentPage
+                    _loading.value = false
+                    _error.value = false
                 } else {
                     _loading.value = false
                     _error.value = true
@@ -114,25 +138,11 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
         return listOf(startDate, endDate, genreIdString)
     }
 
-    private fun getGenres(movieList: MovieResults) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository().getGenreMap()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    movieList.formatGenres(response.body()!!)
-                    _movies.value = movieList.results
-                    _loading.value = false
-                    _error.value = false
-                } else {
-                    _loading.value = false
-                    _error.value = true
-                }
-            }
+    private fun configurePages() {
+        if (currentPage == 1) {
+            fetchedPage = 1
+            _movies.value = mutableListOf()
         }
-    }
-
-    private fun clearMovies() {
-        _movies.value = ArrayList()
     }
 
     fun getToolbarTitle(args: Bundle?): String? {
@@ -151,10 +161,7 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
         Navigation.findNavController(view).navigate(action)
     }
 
-    override fun onPlaylistAddCLicked(
-        root: View,
-        movie: Movie
-    ) {
+    override fun onPlaylistAddCLicked(root: View, movie: Movie) {
         val popupWindow = PersonalListsPopupWindow(
             root,
             View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
@@ -163,7 +170,8 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
             movie,
             this
         )
-        val movieLists = MovieListDatabase.getInstance(root.context).movieListDao().getAllMovieLists()
+        val movieLists =
+            MovieListDatabase.getInstance(root.context).movieListDao().getAllMovieLists()
         movieLists.observeForever {
             if (!it.isNullOrEmpty())
                 popupWindow.setupLists(it)
@@ -172,17 +180,27 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
 
     override fun onConfirmClicked(root: View, movie: Movie, checkedLists: List<LocalMovieList>): Boolean {
         if (checkedLists.isEmpty()) {
-            showToast(getApplication(), getApplication<Application>().getString(R.string.select_a_list), Toast.LENGTH_SHORT)
+            showToast(
+                getApplication(),
+                getApplication<Application>().getString(R.string.select_a_list),
+                Toast.LENGTH_SHORT
+            )
             return false
         }
         CoroutineScope(Dispatchers.IO).launch {
             val fullMovie = MovieRepository().getMovieDetails(movie.remoteId).body()
             fullMovie?.let {
-                showProgressSnackBar(root, getApplication<Application>().getString(R.string.being_uploaded_to_list))
-                it.finalizeInitialization()
-                val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(it)
+                showProgressSnackBar(
+                    root,
+                    getApplication<Application>().getString(R.string.being_uploaded_to_list)
+                )
+                it.finalizeInitialization(getApplication())
+                val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(getApplication(), it)
                 for (list in checkedLists)
-                    PersonalMovieListRepository(getApplication()).addMovieToMovieList(list, movieRoomId.toInt())
+                    PersonalMovieListRepository(getApplication()).addMovieToMovieList(
+                        list,
+                        movieRoomId.toInt()
+                    )
 
                 showSnackbarActionCheckLists(root)
             }
@@ -190,10 +208,14 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
         return true
     }
 
-    private fun showSnackbarActionCheckLists(root: View){
+    private fun showSnackbarActionCheckLists(root: View) {
         CoroutineScope(Dispatchers.Main).launch {
-            Snackbar.make(root, getApplication<Application>().getString(R.string.successfully_uploaded_to_list), Snackbar.LENGTH_LONG)
-                .setAction(getApplication<Application>().getString(R.string.action_check_lists)){
+            Snackbar.make(
+                    root,
+                    getApplication<Application>().getString(R.string.successfully_uploaded_to_list),
+                    Snackbar.LENGTH_LONG
+                )
+                .setAction(getApplication<Application>().getString(R.string.action_check_lists)) {
                     val action = DiscoverGridFragmentDirections.actionGlobalCustomListsFragment()
                     Navigation.findNavController(root).navigate(action)
                 }.show()

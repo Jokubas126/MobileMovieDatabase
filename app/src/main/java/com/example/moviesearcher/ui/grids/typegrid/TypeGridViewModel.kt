@@ -25,7 +25,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class TypeGridViewModel(application: Application) : AndroidViewModel(application), BaseGridViewModel,
+class TypeGridViewModel(application: Application) : AndroidViewModel(application),
+    BaseGridViewModel,
     PersonalListsPopupWindow.ListsConfirmedClickListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
@@ -36,9 +37,10 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
 
-    private var page = 1
+    private var currentPage = 1
+    private var fetchedPage = 1
     private var isListFull = false
-    private var movieListType: String? = null
+    private lateinit var movieListType: String
 
     override fun fetch(arguments: Bundle?) {
         _error.value = false
@@ -51,43 +53,44 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
                 if (!args.keyCategory.isBlank())
                     args.keyCategory
                 else KEY_POPULAR
-            clearMovies()
             getMovieList()
         }
     }
 
     override fun refresh() {
         isListFull = false
-        _error.value = false
         _loading.value = true
-        page = 1
-        clearMovies()
+        currentPage = 1
         getMovieList()
     }
 
     override fun addData() {
         if (!isListFull) {
-            _error.value = false
             _loading.value = true
-            page++
+            currentPage++
             getMovieList()
         }
     }
 
     private fun getMovieList() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository().getMovies(movieListType!!, page)
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful){
-                    if (page == response.body()!!.totalPages)
-                        isListFull = true
-                    getGenres(response.body()!!)
-                }
-                else {
-                    _loading.value = false
-                    _error.value = true
+        if (isNetworkAvailable(getApplication())) {
+            configurePages()
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = MovieRepository().getMovies(movieListType, currentPage)
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        if (currentPage == response.body()!!.totalPages)
+                            isListFull = true
+                        getGenres(response.body()!!)
+                    } else {
+                        _loading.value = false
+                        _error.value = true
+                    }
                 }
             }
+        } else {
+            _loading.value = false
+            networkUnavailableNotification(getApplication())
         }
     }
 
@@ -97,7 +100,10 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     movieList.formatGenres(response.body()!!)
-                    _movies.value = movieList.results
+                    val tmpMovieList: MutableList<Movie> = _movies.value as MutableList
+                    tmpMovieList.addAll(movieList.results)
+                    _movies.value = tmpMovieList
+                    fetchedPage = currentPage
                     _loading.value = false
                     _error.value = false
                 } else {
@@ -108,8 +114,11 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    private fun clearMovies() {
-        _movies.value = ArrayList()
+    private fun configurePages() {
+        if (currentPage == 1) {
+            fetchedPage = 1
+            _movies.value = mutableListOf()
+        }
     }
 
     override fun onMovieClicked(view: View, movie: Movie) {
@@ -127,7 +136,8 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
             movie,
             this
         )
-        val movieLists = MovieListDatabase.getInstance(root.context).movieListDao().getAllMovieLists()
+        val movieLists =
+            MovieListDatabase.getInstance(root.context).movieListDao().getAllMovieLists()
         movieLists.observeForever {
             if (!it.isNullOrEmpty())
                 popupWindow.setupLists(it)
@@ -135,29 +145,50 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
     }
 
     override fun onConfirmClicked(root: View, movie: Movie, checkedLists: List<LocalMovieList>): Boolean {
-        if (checkedLists.isEmpty()) {
-            showToast(getApplication(), getApplication<Application>().getString(R.string.select_a_list), Toast.LENGTH_SHORT)
-            return false
-        }
-        CoroutineScope(Dispatchers.IO).launch {
-            val fullMovie = MovieRepository().getMovieDetails(movie.remoteId).body()
-            fullMovie?.let {
-                showProgressSnackBar(root, getApplication<Application>().getString(R.string.being_uploaded_to_list))
-                it.finalizeInitialization()
-                val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(it)
-                for (list in checkedLists)
-                    PersonalMovieListRepository(getApplication()).addMovieToMovieList(list, movieRoomId.toInt())
-
-                showSnackbarActionCheckLists(root)
+        return when {
+            checkedLists.isEmpty() -> {
+                showToast(
+                    getApplication(),
+                    getApplication<Application>().getString(R.string.select_a_list),
+                    Toast.LENGTH_SHORT
+                )
+                false
+            }
+            isNetworkAvailable(getApplication()) -> {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val fullMovie = MovieRepository().getMovieDetails(movie.remoteId).body()
+                    fullMovie?.let {
+                        showProgressSnackBar(
+                            root,
+                            getApplication<Application>().getString(R.string.being_uploaded_to_list)
+                        )
+                        it.finalizeInitialization(getApplication())
+                        val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(getApplication(), it)
+                        for (list in checkedLists)
+                            PersonalMovieListRepository(getApplication()).addMovieToMovieList(
+                                list,
+                                movieRoomId.toInt()
+                            )
+                        showSnackbarActionCheckLists(root)
+                    }
+                }
+                true
+            }
+            else -> {
+                networkUnavailableNotification(getApplication())
+                false
             }
         }
-        return true
     }
 
-    private fun showSnackbarActionCheckLists(root: View){
+    private fun showSnackbarActionCheckLists(root: View) {
         CoroutineScope(Dispatchers.Main).launch {
-            Snackbar.make(root, getApplication<Application>().getString(R.string.successfully_uploaded_to_list), Snackbar.LENGTH_LONG)
-                .setAction(getApplication<Application>().getString(R.string.action_check_lists)){
+            Snackbar.make(
+                    root,
+                    getApplication<Application>().getString(R.string.successfully_uploaded_to_list),
+                    Snackbar.LENGTH_LONG
+                )
+                .setAction(getApplication<Application>().getString(R.string.action_check_lists)) {
                     val action = TypeGridFragmentDirections.actionGlobalCustomListsFragment()
                     Navigation.findNavController(root).navigate(action)
                 }.show()

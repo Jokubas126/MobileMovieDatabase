@@ -46,8 +46,8 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/movie_image"
                         android:gravity="center_horizontal"
-                        android:imageBitmap="@{movie.posterImageBitmap}"
-                        android:imageUrl="@{movie.posterImageUrl}" />
+                        app:imageUrl="@{movie.posterImageUrl}"
+                        app:imageUriString="@{movie.posterImageUriString}" />
 
                     <FrameLayout
                         android:layout_width="match_parent"

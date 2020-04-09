@@ -14,7 +14,10 @@ interface CreditsDao {
     fun insertOrUpdateCredits(credits: Credits): Long
 
     @Query("SELECT * FROM credits WHERE movieRoomId = :movieId")
-    fun getCreditsById(movieId: Int): LiveData<Credits>
+    fun getCreditsLiveDataById(movieId: Int): LiveData<Credits>
+
+    @Query("SELECT * FROM credits WHERE movieRoomId = :movieId")
+    fun getCreditsById(movieId: Int): Credits
 
     @Query("DELETE FROM credits WHERE movieRoomId = :movieId")
     fun deleteCreditsByMovieId(movieId: Int)

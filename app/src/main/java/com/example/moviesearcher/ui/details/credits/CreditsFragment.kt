@@ -56,7 +56,7 @@ class CreditsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelecte
     }
 
     private fun observeViewModel() {
-        viewModel.credits?.observe(viewLifecycleOwner, Observer {
+        viewModel.credits.observe(viewLifecycleOwner, Observer {
             if (it != null){
                 updateCast(it.castList)
                 updateCrew(it.crewList)

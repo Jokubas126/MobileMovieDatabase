@@ -1,7 +1,10 @@
 package com.example.moviesearcher.util
 
+import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Base64.*
 import androidx.room.TypeConverter
 import com.example.moviesearcher.model.data.Country
@@ -10,9 +13,9 @@ import com.example.moviesearcher.model.data.Image
 import com.example.moviesearcher.model.data.Person
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.io.BufferedInputStream
-import java.io.ByteArrayOutputStream
+import java.io.*
 import java.lang.reflect.Type
+import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 
@@ -53,12 +56,28 @@ fun getAnyNameList(list: List<*>?): List<String> {
 
 // --------------- Image Related ---------------- //
 
-fun imageUrlToBitmap(url: String?): Bitmap? {
+fun imageUrlToFileUriString(context: Context, url: String?): String? {
     if (!url.isNullOrBlank()){
-        val inputStream =
-            BufferedInputStream(URL(BASE_IMAGE_URL + url).openConnection().getInputStream())
-        val byteArray = inputStream.readBytes()
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+        val connection: HttpURLConnection = URL(BASE_IMAGE_URL + url).openConnection() as HttpURLConnection
+        connection.connect()
+        val inputStream = connection.inputStream
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+        val file = saveBitmapToFile(context, bitmap)
+        return Uri.parse(file?.absolutePath).toString()
+    }
+    return null
+}
+
+private fun saveBitmapToFile(context: Context, bitmap: Bitmap?): File? {
+    if (bitmap != null){
+        val wrapper = ContextWrapper(context)
+        var file = wrapper.getDir("images", Context.MODE_PRIVATE)
+        file = File(file, "${UUID.randomUUID()}.jpg")
+        val stream: OutputStream = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        stream.flush()
+        stream.close()
+        return file
     }
     return null
 }
@@ -100,27 +119,6 @@ class PersonListTypeConverter {
 }
 
 // --------------- Image Related ---------------- //
-
-class BitmapTypeConverter {
-
-    @TypeConverter
-    fun bitmapToString(bitmap: Bitmap?): String? {
-        if (bitmap != null){
-            val stream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-            return encodeToString(stream.toByteArray(), DEFAULT)
-        }
-        return null
-    }
-
-    @TypeConverter
-    fun stringToBitmap(string: String?): Bitmap? {
-        if (string.isNullOrBlank())
-            return null
-        val imageBytes = decode(string, 0)
-        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-    }
-}
 
 class ImageListTypeConverter {
 

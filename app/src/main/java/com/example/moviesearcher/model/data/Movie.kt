@@ -1,6 +1,6 @@
 package com.example.moviesearcher.model.data
 
-import android.graphics.Bitmap
+import android.content.Context
 import androidx.room.*
 import com.example.moviesearcher.util.*
 import com.google.gson.annotations.SerializedName
@@ -32,8 +32,8 @@ class MovieResults {
 @Entity(tableName = "movie_list")
 data class LocalMovieList(
     @PrimaryKey(autoGenerate = true) var roomId: Int,
-    @ColumnInfo(name = "list_title") var listTitle: String?,
-    @ColumnInfo(name = "movie_list_ids") var movieIdList: List<Int>?
+    @ColumnInfo(name = KEY_LIST_TITLE) var listTitle: String?,
+    @ColumnInfo(name = KEY_MOVIE_LIST_IDS) var movieIdList: List<Int>?
 ) {
     constructor() : this(0, "", null)
 }
@@ -44,15 +44,15 @@ data class Movie(
     @PrimaryKey(autoGenerate = true) var roomId: Int,
 
     @SerializedName(KEY_ID)
-    @ColumnInfo(name = "movie_id") var remoteId: Int,
+    @ColumnInfo(name = KEY_MOVIE_ID) var remoteId: Int,
 
     var title: String?,
 
-    @ColumnInfo(name = "release_date")
+    @ColumnInfo(name = KEY_MOVIE_RELEASE_DATE)
     @SerializedName(KEY_MOVIE_RELEASE_DATE)
     var releaseDate: String?,
 
-    @ColumnInfo(name = "score")
+    @ColumnInfo(name = KEY_LOCAL_MOVIE_SCORE)
     @SerializedName(KEY_MOVIE_SCORE)
     var score: String?,
 
@@ -63,42 +63,42 @@ data class Movie(
     @Ignore
     val genres: List<Genre>,
 
-    @ColumnInfo(name = "genres_string")
+    @ColumnInfo(name = KEY_MOVIE_GENRES_STRING)
     var genresString: String?,
 
     @Ignore
     @SerializedName(KEY_MOVIE_PRODUCTION_COUNTRY_LIST)
     val productionCountryList: List<Country>,
 
-    @ColumnInfo(name = "production_country_string")
+    @ColumnInfo(name = KEY_MOVIE_PRODUCTION_COUNTRY_STRING)
     var productionCountryString: String?,
 
     var runtime: Int,
-    var overview: String?,
 
-    @SerializedName(KEY_MOVIE_POSTER_PATH)
+    @SerializedName(KEY_MOVIE_DESCRIPTION)
+    var description: String?,
+
+    @SerializedName(KEY_MOVIE_POSTER_URL)
     var posterImageUrl: String?,
 
-    @SerializedName(KEY_MOVIE_BACKDROP_PATH)
+    @SerializedName(KEY_MOVIE_BACKDROP_URL)
     var backdropImageUrl: String?,
 
-    @TypeConverters(BitmapTypeConverter::class)
-    @ColumnInfo(name = "poster_image")
-    var posterImageBitmap: Bitmap?,
+    @ColumnInfo(name = KEY_MOVIE_POSTER_URI_STRING)
+    var posterImageUriString: String?,
 
-    @TypeConverters(BitmapTypeConverter::class)
-    @ColumnInfo(name = "backdrop_image")
-    var backdropImageBitmap: Bitmap?,
+    @ColumnInfo(name = KEY_MOVIE_BACKDROP_URI_STRING )
+    var backdropImageUriString: String?,
 
     @Ignore
     var isInWatchlist: Boolean
 ) {
 
-    fun finalizeInitialization(): Movie {
+    fun finalizeInitialization(context: Context): Movie {
         genresString = stringListToString(getAnyNameList(genres))
         productionCountryString = stringListToString(getAnyNameList(productionCountryList))
-        posterImageBitmap = imageUrlToBitmap(posterImageUrl)
-        backdropImageBitmap = imageUrlToBitmap(backdropImageUrl)
+        posterImageUriString = imageUrlToFileUriString(context, posterImageUrl)
+        backdropImageUriString = imageUrlToFileUriString(context, backdropImageUrl)
         return this
     }
 

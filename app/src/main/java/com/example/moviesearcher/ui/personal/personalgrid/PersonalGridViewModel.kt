@@ -57,11 +57,10 @@ class PersonalGridViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun deleteMovie(movie: Movie) {
+        movieRepository.deleteMovie(movie)
         val localMovieList = movieList?.value
-        if (localMovieList != null) {
-            movieRepository.deleteMovie(movie)
+        if (localMovieList != null)
             movieListRepository.deleteMovieFromList(localMovieList, movie.roomId)
-        }
     }
 
     fun onMovieClicked(view: View, movie: Movie) {

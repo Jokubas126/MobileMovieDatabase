@@ -1,6 +1,7 @@
 package com.example.moviesearcher.model.data
 
-import android.graphics.Bitmap
+import android.content.Context
+import android.net.Uri
 import androidx.room.*
 import com.example.moviesearcher.util.*
 import com.google.gson.annotations.SerializedName
@@ -12,40 +13,39 @@ class Credits(
     var movieRoomId: Int,
 
     @TypeConverters(PersonListTypeConverter::class)
-    @ColumnInfo(name = "cast")
+    @ColumnInfo(name = KEY_CAST_LIST)
     @SerializedName(KEY_CAST_LIST)
     val castList: List<Person>?,
 
     @TypeConverters(PersonListTypeConverter::class)
-    @ColumnInfo(name = "crew")
+    @ColumnInfo(name = KEY_CREW_LIST)
     @SerializedName(KEY_CREW_LIST)
     val crewList: List<Person>?
 ) {
-    fun generateBitmaps(): Credits {
+    fun generateFileUris(context: Context): Credits {
         if (!castList.isNullOrEmpty())
             for (cast in castList)
-                if (!cast.profileImagePath.isNullOrBlank())
-                    cast.profileImageBitmap = imageUrlToBitmap(cast.profileImagePath)
+                if (!cast.profileImageUrl.isNullOrBlank())
+                    cast.profileImageUriString = imageUrlToFileUriString(context, cast.profileImageUrl)
 
         if (!crewList.isNullOrEmpty())
             for (crew in crewList)
-                if (!crew.profileImagePath.isNullOrBlank())
-                    crew.profileImageBitmap = imageUrlToBitmap(crew.profileImagePath)
+                if (!crew.profileImageUrl.isNullOrBlank())
+                    crew.profileImageUriString = imageUrlToFileUriString(context, crew.profileImageUrl)
         return this
     }
 }
 
 data class Person(
-    val name: String,
+    val name: String?,
 
     @SerializedName(KEY_CAST_POSITION, alternate = [KEY_CREW_POSITION])
-    val position: String,
+    val position: String?,
 
     @Ignore
-    @SerializedName(KEY_PROFILE_IMAGE_PATH)
-    val profileImagePath: String?,
+    @SerializedName(KEY_PROFILE_IMAGE_URL)
+    val profileImageUrl: String?,
 
-    @TypeConverters(BitmapTypeConverter::class)
-    @ColumnInfo(name = "profile_image_bitmap")
-    var profileImageBitmap: Bitmap?
+    @ColumnInfo(name = KEY_PROFILE_IMAGE_URI_STRING)
+    var profileImageUriString: String?
 )

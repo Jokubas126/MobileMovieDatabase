@@ -8,12 +8,11 @@ import androidx.room.TypeConverters
 import com.example.moviesearcher.model.data.Images
 import com.example.moviesearcher.model.room.dao.ImagesDao
 import com.example.moviesearcher.util.ImageListTypeConverter
-import com.example.moviesearcher.util.BitmapTypeConverter
 
 private const val DATABASE = "images"
 
-@Database(entities = [Images::class], version = 3, exportSchema = false)
-@TypeConverters(ImageListTypeConverter::class, BitmapTypeConverter::class)
+@Database(entities = [Images::class], version = 7, exportSchema = false)
+@TypeConverters(ImageListTypeConverter::class)
 abstract class ImagesDatabase: RoomDatabase(){
 
     abstract fun imagesDao(): ImagesDao

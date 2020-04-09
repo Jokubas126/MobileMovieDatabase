@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesearcher.R
 import com.example.moviesearcher.databinding.ItemPersonBinding
 import com.example.moviesearcher.model.data.Person
+import com.example.moviesearcher.util.isNetworkAvailable
 import java.util.*
 
-class PeopleAdapter: RecyclerView.Adapter<PeopleAdapter.ViewHolder>() {
+class PeopleAdapter : RecyclerView.Adapter<PeopleAdapter.ViewHolder>() {
 
     private val people: MutableList<Person> = ArrayList()
 
@@ -21,7 +22,8 @@ class PeopleAdapter: RecyclerView.Adapter<PeopleAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view: ItemPersonBinding = DataBindingUtil.inflate(inflater, R.layout.item_person, parent, false)
+        val view: ItemPersonBinding =
+            DataBindingUtil.inflate(inflater, R.layout.item_person, parent, false)
         return ViewHolder(view)
     }
 
@@ -33,10 +35,10 @@ class PeopleAdapter: RecyclerView.Adapter<PeopleAdapter.ViewHolder>() {
         return people.size
     }
 
-    inner class ViewHolder(itemView: ItemPersonBinding): RecyclerView.ViewHolder(itemView.root){
+    inner class ViewHolder(itemView: ItemPersonBinding) : RecyclerView.ViewHolder(itemView.root) {
         private val view = itemView
 
-        fun onBind(person: Person){
+        fun onBind(person: Person) {
             view.person = person
         }
     }

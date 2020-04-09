@@ -64,7 +64,6 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
         if (!movieIdList.isNullOrEmpty())
             for (id in movieIdList)
                 movieRepository.deleteMovieById(id)
-
         movieListRepository.deleteList(list)
     }
 }

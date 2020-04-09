@@ -19,9 +19,7 @@ import com.example.moviesearcher.model.repositories.PersonalMovieRepository
 import com.example.moviesearcher.model.room.database.MovieListDatabase
 import com.example.moviesearcher.ui.grids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
-import com.example.moviesearcher.util.KEY_SEARCH_QUERY
-import com.example.moviesearcher.util.showProgressSnackBar
-import com.example.moviesearcher.util.showToast
+import com.example.moviesearcher.util.*
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +27,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList
 
-class SearchGridViewModel(application: Application) : AndroidViewModel(application), BaseGridViewModel,
+class SearchGridViewModel(application: Application) : AndroidViewModel(application),
+    BaseGridViewModel,
     PersonalListsPopupWindow.ListsConfirmedClickListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
@@ -40,7 +39,8 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
 
-    private var page = 1
+    private var currentPage = 1
+    private var fetchedPage = 1
     private var isListFull = false
     private var searchQuery: String? = null
 
@@ -54,9 +54,8 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
 
     override fun addData() {
         if (!isListFull) {
-            _error.value = false
             _loading.value = true
-            page++
+            currentPage++
             getMovieList()
         }
     }
@@ -64,26 +63,32 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
     override fun refresh() {
         _error.value = false
         _loading.value = true
-        page = 1
+        currentPage = 1
         isListFull = false
-        clearMovies()
         getMovieList()
     }
 
-    private fun getMovieList(){
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository().getSearchedMovies(searchQuery!!)
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    if (page == response.body()!!.totalPages)
-                        isListFull = true
-                    getGenres(response.body()!!)
-                } else {
-                    _loading.value = false
-                    _error.value = true
+    private fun getMovieList() {
+        if (isNetworkAvailable(getApplication())) {
+            configurePages()
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = MovieRepository().getSearchedMovies(searchQuery!!, currentPage)
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        if (currentPage == response.body()!!.totalPages)
+                            isListFull = true
+                        getGenres(response.body()!!)
+                    } else {
+                        _loading.value = false
+                        _error.value = true
+                    }
                 }
             }
+        } else {
+            _loading.value = false
+            networkUnavailableNotification(getApplication())
         }
+
     }
 
     private fun getGenres(movieList: MovieResults) {
@@ -92,7 +97,10 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     movieList.formatGenres(response.body()!!)
-                    _movies.value = movieList.results
+                    val tmpMovieList: MutableList<Movie> = _movies.value as MutableList
+                    tmpMovieList.addAll(movieList.results)
+                    _movies.value = tmpMovieList
+                    fetchedPage = currentPage
                     _loading.value = false
                     _error.value = false
                 } else {
@@ -103,8 +111,11 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    private fun clearMovies() {
-        _movies.value = ArrayList()
+    private fun configurePages() {
+        if (currentPage == 1) {
+            fetchedPage = 1
+            _movies.value = mutableListOf()
+        }
     }
 
     override fun onMovieClicked(view: View, movie: Movie) {
@@ -125,26 +136,41 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
             movie,
             this
         )
-        val movieLists = MovieListDatabase.getInstance(root.context).movieListDao().getAllMovieLists()
+        val movieLists =
+            MovieListDatabase.getInstance(root.context).movieListDao().getAllMovieLists()
         movieLists.observeForever {
             if (!it.isNullOrEmpty())
                 popupWindow.setupLists(it)
         }
     }
 
-    override fun onConfirmClicked(root: View, movie: Movie, checkedLists: List<LocalMovieList>): Boolean {
+    override fun onConfirmClicked(
+        root: View,
+        movie: Movie,
+        checkedLists: List<LocalMovieList>
+    ): Boolean {
         if (checkedLists.isEmpty()) {
-            showToast(getApplication(), getApplication<Application>().getString(R.string.select_a_list), Toast.LENGTH_SHORT)
+            showToast(
+                getApplication(),
+                getApplication<Application>().getString(R.string.select_a_list),
+                Toast.LENGTH_SHORT
+            )
             return false
         }
         CoroutineScope(Dispatchers.IO).launch {
             val fullMovie = MovieRepository().getMovieDetails(movie.remoteId).body()
             fullMovie?.let {
-                showProgressSnackBar(root, getApplication<Application>().getString(R.string.being_uploaded_to_list))
-                it.finalizeInitialization()
-                val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(it)
+                showProgressSnackBar(
+                    root,
+                    getApplication<Application>().getString(R.string.being_uploaded_to_list)
+                )
+                it.finalizeInitialization(getApplication())
+                val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(getApplication(), it)
                 for (list in checkedLists)
-                    PersonalMovieListRepository(getApplication()).addMovieToMovieList(list, movieRoomId.toInt())
+                    PersonalMovieListRepository(getApplication()).addMovieToMovieList(
+                        list,
+                        movieRoomId.toInt()
+                    )
 
                 showSnackbarActionCheckLists(root)
             }
@@ -152,10 +178,14 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
         return true
     }
 
-    private fun showSnackbarActionCheckLists(root: View){
+    private fun showSnackbarActionCheckLists(root: View) {
         CoroutineScope(Dispatchers.Main).launch {
-            Snackbar.make(root, getApplication<Application>().getString(R.string.successfully_uploaded_to_list), Snackbar.LENGTH_LONG)
-                .setAction(getApplication<Application>().getString(R.string.action_check_lists)){
+            Snackbar.make(
+                    root,
+                    getApplication<Application>().getString(R.string.successfully_uploaded_to_list),
+                    Snackbar.LENGTH_LONG
+                )
+                .setAction(getApplication<Application>().getString(R.string.action_check_lists)) {
                     val action = SearchGridFragmentDirections.actionGlobalCustomListsFragment()
                     Navigation.findNavController(root).navigate(action)
                 }.show()
