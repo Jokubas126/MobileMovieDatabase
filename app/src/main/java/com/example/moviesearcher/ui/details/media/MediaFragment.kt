@@ -9,17 +9,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavDirections
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Image
-import com.example.moviesearcher.model.data.Video
 import com.example.moviesearcher.util.YOUTUBE_API_KEY
-import com.example.moviesearcher.util.KEY_MOVIE_ID
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -67,24 +63,19 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
     }
 
     private fun observeViewModel() {
-        viewModel.trailer.observe(viewLifecycleOwner, Observer { trailer: Video? ->
-            if (trailer != null) {
-                video_name.text = trailer.name
+        viewModel.trailer.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                video_name.text = it.name
+                trailer_layout.visibility = View.VISIBLE
                 @Suppress("DEPRECATION")
                 activity!!.fragmentManager.beginTransaction().replace(youtube_fragment.id, youTubePlayerFragment).commit()
-                initializeYoutubePlayer(trailer.key)
+                initializeYoutubePlayer(it.key)
             }
         })
-        viewModel.posterList.observe(viewLifecycleOwner, Observer { posterList: List<Image>? ->
-            if (!posterList.isNullOrEmpty()) {
-                posterAdapter.updateImagePathList(posterList)
-                poster_layout.visibility = View.VISIBLE
-            }
-        })
-        viewModel.backdropList.observe(viewLifecycleOwner, Observer { backdropList: List<Image>? ->
-            if (!backdropList.isNullOrEmpty()) {
-                backdropAdapter.updateImagePathList(backdropList)
-                backdrop_layout.visibility = View.VISIBLE
+        viewModel.images?.observe(viewLifecycleOwner, Observer {
+            if (it != null){
+                updatePosters(it.posterList)
+                updateBackdrops(it.backdropList)
             }
         })
         viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
@@ -107,7 +98,7 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
                 youTubePlayer.setFullscreen(false)
                 youTubePlayer.setShowFullscreenButton(false)
                 youTubePlayer.cueVideo(key)
-                Log.d("YoutubePlayer", "onInitializationFailure: successfully to initialized")
+                Log.d("YoutubePlayer", "onInitializationFailure: successfully initialized")
             }
 
             override fun onInitializationFailure(provider: YouTubePlayer.Provider, youTubeInitializationResult: YouTubeInitializationResult) {
@@ -117,16 +108,20 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        when (menuItem.itemId) {
-            R.id.overview_menu_item -> if (arguments != null) {
-                val action: NavDirections = MediaFragmentDirections.actionMovieOverview(arguments!!.getInt(KEY_MOVIE_ID))
-                Navigation.findNavController(bottomNavigationView).navigate(action)
-            }
-            R.id.cast_menu_item -> if (arguments != null) {
-                val action: NavDirections = MediaFragmentDirections.actionMovieCast(arguments!!.getInt(KEY_MOVIE_ID))
-                Navigation.findNavController(bottomNavigationView).navigate(action)
-            }
+        return viewModel.onNavigationItemSelected(bottomNavigationView, menuItem)
+    }
+
+    private fun updatePosters(posterList: List<Image>?){
+        if (!posterList.isNullOrEmpty()){
+            posterAdapter.updateImageList(posterList)
+            poster_layout.visibility = View.VISIBLE
         }
-        return false
+    }
+
+    private fun updateBackdrops(backdropList: List<Image>?){
+        if (!backdropList.isNullOrEmpty()) {
+            backdropAdapter.updateImageList(backdropList)
+            backdrop_layout.visibility = View.VISIBLE
+        }
     }
 }

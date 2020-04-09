@@ -1,22 +1,20 @@
 package com.example.moviesearcher.util
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.GlideBuilder
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
+import java.io.File
 
 // ---------------- Image related -------------//
-private fun loadImageFromUrl(imageView: ImageView, imagePath: String?, progressDrawable: CircularProgressDrawable) {
-    val options = RequestOptions()
-            .placeholder(progressDrawable)
-            .error(android.R.drawable.screen_background_light_transparent)
-    Glide.with(imageView.context)
-            .setDefaultRequestOptions(options)
-            .load(BASE_IMAGE_URL + imagePath)
-            .into(imageView)
-}
 
 private fun getProgressDrawable(context: Context): CircularProgressDrawable {
     val cpd = CircularProgressDrawable(context)
@@ -26,7 +24,35 @@ private fun getProgressDrawable(context: Context): CircularProgressDrawable {
     return cpd
 }
 
-@BindingAdapter("android:imageUrl")
-fun loadUrlImage(imageView: ImageView, imagePath: String?) {
-    loadImageFromUrl(imageView, imagePath, getProgressDrawable(imageView.context))
+private fun loadImageFromUrl(imageView: ImageView, url: String?, progressDrawable: CircularProgressDrawable) {
+    val options = RequestOptions()
+        .placeholder(progressDrawable)
+        .error(android.R.drawable.screen_background_light_transparent)
+    Glide.with(imageView.context)
+        .setDefaultRequestOptions(options)
+        .load(BASE_IMAGE_URL + url)
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .override(SIZE_ORIGINAL)
+        .into(imageView)
+}
+
+
+private fun loadImageFromUri(imageView: ImageView, uriString: String, progressDrawable: CircularProgressDrawable) {
+    val options = RequestOptions()
+        .placeholder(progressDrawable)
+        .error(android.R.drawable.screen_background_light_transparent)
+    Glide.with(imageView.context)
+        .setDefaultRequestOptions(options)
+        .load(File(Uri.parse(uriString).path!!))
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .override(SIZE_ORIGINAL)
+        .into(imageView)
+}
+
+@BindingAdapter(value = ["imageUrl", "imageUriString"], requireAll = false)
+fun loadUrlImage(imageView: ImageView, imageUrl: String?, imageUriString: String?) {
+    if (!imageUrl.isNullOrBlank() && imageUriString == null)
+        loadImageFromUrl(imageView, imageUrl, getProgressDrawable(imageView.context))
+    else if (imageUriString != null)
+        loadImageFromUri(imageView, imageUriString, getProgressDrawable(imageView.context))
 }

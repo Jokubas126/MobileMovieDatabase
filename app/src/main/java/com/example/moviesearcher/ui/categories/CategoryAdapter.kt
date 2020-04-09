@@ -47,7 +47,7 @@ class CategoryAdapter(groups: List<Category>?) :
         group: CheckedExpandableGroup?,
         childIndex: Int
     ) {
-        holder!!.onBind(group!!.items[childIndex] as Subcategory, group as Category)
+        holder!!.onBind(group!!.items[childIndex] as Subcategory)
     }
 
     inner class CategoryViewHolder(itemView: View) : GroupViewHolder(itemView) {
@@ -60,9 +60,8 @@ class CategoryAdapter(groups: List<Category>?) :
         private val view = itemView
         private val subcategoryTextView: CheckedTextView = view.subcategory_title_view
 
-        fun onBind(subcategory: Subcategory, category: Category) {
+        fun onBind(subcategory: Subcategory) {
             subcategoryTextView.text = subcategory.name
-            //view.setOnClickListener { itemClickListener.onSubcategoryClicked(it, subcategory, category.name) }
         }
 
         override fun getCheckable(): Checkable {

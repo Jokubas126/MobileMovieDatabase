@@ -5,7 +5,6 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -15,17 +14,17 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
-import com.example.moviesearcher.ui.grids.GridAdapter
-import com.example.moviesearcher.ui.grids.GridAdapter.MovieClickListener
+import com.example.moviesearcher.ui.GridAdapter
+import com.example.moviesearcher.ui.GridAdapter.ItemClickListener
 import com.example.moviesearcher.util.KEY_MOVIE_LIST_TYPE
 import com.example.moviesearcher.util.KEY_POPULAR
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 import java.util.*
 
-class TypeGridFragment : Fragment(), MovieClickListener {
+class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalListActionListener {
 
     private lateinit var viewModel: TypeGridViewModel
-    private val gridAdapter = GridAdapter(this)
+    private val gridAdapter = GridAdapter(View.VISIBLE, View.VISIBLE, View.GONE)
 
     private var isDown = true
 
@@ -40,10 +39,7 @@ class TypeGridFragment : Fragment(), MovieClickListener {
         viewModel = ViewModelProvider(this).get(TypeGridViewModel::class.java)
         viewModel.fetch(arguments)
 
-        layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        movie_recycler_view!!.layoutManager = layoutManager
-        movie_recycler_view!!.itemAnimator = DefaultItemAnimator()
-        movie_recycler_view!!.adapter = gridAdapter
+        setupRecyclerView()
 
         if (state != null)
             layoutManager!!.onRestoreInstanceState(state)
@@ -107,12 +103,30 @@ class TypeGridFragment : Fragment(), MovieClickListener {
                 } else KEY_POPULAR.capitalize(Locale.ROOT) + " " + resources.getString(R.string.type_fragment)
     }
 
+    private fun setupRecyclerView(){
+        layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        movie_recycler_view!!.layoutManager = layoutManager
+        movie_recycler_view!!.itemAnimator = DefaultItemAnimator()
+        movie_recycler_view!!.adapter = gridAdapter
+
+        gridAdapter.setItemClickListener(this)
+        gridAdapter.setPersonalListActionListener(this)
+    }
+
     override fun onPause() {
         super.onPause()
         state = layoutManager!!.onSaveInstanceState()
     }
 
-    override fun onMovieClicked(view: View, movieId: Int) {
-        viewModel.onMovieClicked(view, movieId)
+    override fun onMovieClick(view: View, movie: Movie) {
+        viewModel.onMovieClicked(view, movie)
     }
+
+    override fun onPlaylistAdd(movie: Movie) {
+        viewModel.onPlaylistAddCLicked(this.view!!, movie)
+    }
+
+    override fun onDeleteClicked(view: View, movie: Movie) {
+    }
+
 }

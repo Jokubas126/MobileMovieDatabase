@@ -25,31 +25,45 @@ const val QUERY_SEARCH_QUERY = "query"
 const val PATH_MOVIE_ID = "movie_id"
 const val PATH_MOVIE_LIST_TYPE = "list_type"
 
+// MOVIE LIST
+const val KEY_LIST_TITLE = "list_title"
+const val KEY_MOVIE_LIST_IDS = "movie_list_ids"
+
 // MOVIE
+const val KEY_MOVIE_ID = "movie_id"
 const val KEY_MOVIE_TITLE = "title"
 const val KEY_MOVIE_RELEASE_DATE = "release_date"
 const val KEY_MOVIE_SCORE = "vote_average"
+const val KEY_LOCAL_MOVIE_SCORE = "score"
 const val KEY_MOVIE_RUNTIME = "runtime"
 const val KEY_MOVIE_DESCRIPTION = "overview"
-const val KEY_MOVIE_POSTER_PATH = "poster_path"
-const val KEY_MOVIE_BACKDROP_PATH = "backdrop_path"
+const val KEY_MOVIE_POSTER_URL = "poster_path"
+const val KEY_MOVIE_POSTER_URI_STRING = "poster_image_uri_string"
+const val KEY_MOVIE_BACKDROP_URL = "backdrop_path"
+const val KEY_MOVIE_BACKDROP_URI_STRING = "backdrop_image_uri_string"
 const val KEY_MOVIE_PRODUCTION_COUNTRY_LIST = "production_countries"
+const val KEY_MOVIE_PRODUCTION_COUNTRY_STRING = "production_country_string"
 
 // GENRES
 const val KEY_MOVIE_GENRE_ID_LIST = "genre_ids"
 const val KEY_MOVIE_GENRES_LIST = "genres"
+const val KEY_MOVIE_GENRES_STRING = "genres_string"
 
 // CAST AND CREW
 const val KEY_CAST_LIST = "cast"
 const val KEY_CAST_POSITION = "character"
 const val KEY_CREW_LIST = "crew"
 const val KEY_CREW_POSITION = "job"
-const val KEY_PROFILE_IMAGE_PATH = "profile_path"
+const val KEY_PROFILE_IMAGE_URL = "profile_path"
+const val KEY_PROFILE_IMAGE_URI_STRING = "profile_image_uri_string"
 
 // IMAGES
 const val KEY_POSTER_LIST = "posters"
+const val KEY_LOCAL_POSTER_LIST = "poster_list"
 const val KEY_BACKDROP_LIST = "backdrops"
-const val KEY_IMAGE_FILE_PATH = "file_path"
+const val KEY_LOCAL_BACKDROP_LIST = "backdrop_list"
+const val KEY_IMAGE_URL = "file_path"
+const val KEY_IMAGE_URI_STRING = "image_uri_string"
 
 // TRAILER
 const val KEY_VIDEO_SITE = "site"

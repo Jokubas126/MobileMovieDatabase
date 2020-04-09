@@ -1,4 +1,4 @@
-package com.example.moviesearcher.model.api
+package com.example.moviesearcher.model.remote.api
 
 import com.example.moviesearcher.model.data.*
 import com.example.moviesearcher.util.*
@@ -30,7 +30,7 @@ interface MovieApi {
     suspend fun getLanguages(@Query(QUERY_API_KEY) apiKey: String): Response<List<Subcategory>>
 
     @GET("/3/search/movie")
-    suspend fun getSearchedMovies(@Query(QUERY_API_KEY) apiKey: String, @Query(QUERY_SEARCH_QUERY) query: String): Response<MovieResults>
+    suspend fun getSearchedMovies(@Query(QUERY_API_KEY) apiKey: String, @Query(QUERY_SEARCH_QUERY) query: String, @Query(QUERY_PAGE) page: String): Response<MovieResults>
 
     @GET("/3/discover/movie")
     suspend fun getDiscoveredMovies(

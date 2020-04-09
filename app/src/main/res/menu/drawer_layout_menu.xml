@@ -4,15 +4,28 @@
     android:id="@+id/drawer_layout_menu"
     tools:ignore="HardcodedText">
 
-    <group android:checkableBehavior="single" >
+    <group android:checkableBehavior="single">
 
         <item
             android:id="@+id/menu_general_category"
-            android:title="General"
-            >
+            android:title="General">
             <menu>
-                <item android:id="@+id/menu_categories"
-                    android:title="Browse Categories" />
+                <item
+                    android:id="@+id/menu_categories"
+                    android:title="Discover movies" />
+            </menu>
+        </item>
+
+        <item
+            android:id="@+id/menu_personal"
+            android:title="Personal">
+            <menu>
+                <!--<item
+                    android:id="@+id/menu_watchlist"
+                    android:title="Watchlist" />-->
+                <item
+                    android:id="@+id/menu_custom_lists"
+                    android:title="Custom lists" />
             </menu>
         </item>
 
@@ -22,14 +35,14 @@
             <menu>
                 <item
                     android:id="@+id/menu_popular"
-                    android:title="Popular"
-                    android:checked="true" />
+                    android:checked="true"
+                    android:title="Popular" />
                 <item
                     android:id="@+id/menu_top_rated"
-                    android:title="Top Rated"/>
+                    android:title="Top Rated" />
                 <item
                     android:id="@+id/menu_now_playing"
-                    android:title="Now Playing"/>
+                    android:title="Now Playing" />
                 <item
                     android:id="@+id/menu_upcoming"
                     android:title="Upcoming" />

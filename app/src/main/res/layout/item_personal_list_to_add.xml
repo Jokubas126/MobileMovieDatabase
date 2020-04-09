@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="movieList"
+            type="com.example.moviesearcher.model.data.LocalMovieList" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:cardBackgroundColor="@color/colorPopupWindow"
+            app:cardElevation="0dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"
+                    android:includeFontPadding="false"
+                    android:text="@{movieList.listTitle}"
+                    android:textAppearance="@style/PersonalListSmallTitleAppearance" />
+
+                <CheckBox
+                    android:id="@+id/list_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:buttonTint="@color/iconBlack" />
+
+            </FrameLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </FrameLayout>
+
+</layout>

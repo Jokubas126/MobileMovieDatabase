@@ -14,37 +14,11 @@
         tools:layout="@layout/fragment_movies_grid">
         <action
             android:id="@+id/actionMovieDetails"
-            app:destination="@id/movieDetails" />
+            app:destination="@id/movieDetails"/>
         <argument
             android:name="key_category"
             android:defaultValue="popular"
             app:argType="string" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/discoverGridFragment"
-        android:name="com.example.moviesearcher.ui.grids.discovergrid.DiscoverGridFragment"
-        android:label="Discover"
-        tools:layout="@layout/fragment_movies_grid">
-        <action
-            android:id="@+id/actionMovieDetails"
-            app:destination="@id/movieDetails" />
-        <argument
-            android:name="start_year"
-            app:argType="string" />
-        <argument
-            android:name="end_year"
-            app:argType="string" />
-        <argument
-            android:name="discover_name_array"
-            app:argType="string[]" />
-        <argument
-            android:name="genre_id"
-            app:argType="integer" />
-        <argument
-            android:name="language_key"
-            app:argType="string"
-            app:nullable="true" />
     </fragment>
 
     <fragment
@@ -54,10 +28,39 @@
         tools:layout="@layout/fragment_movies_grid">
         <action
             android:id="@+id/actionMovieDetails"
-            app:destination="@id/movieDetails" />
+            app:destination="@id/movieDetails"/>
         <argument
             android:name="search_query"
             app:argType="string" />
+    </fragment>
+
+    <!-- PERSONAL LISTS -->
+
+    <fragment
+        android:id="@+id/customListsFragment"
+        android:name="com.example.moviesearcher.ui.personal.customlists.CustomListsFragment"
+        android:label="Custom lists"
+        tools:layout="@layout/fragment_custom_lists">
+        <action
+            android:id="@+id/personalGridFragment"
+            app:destination="@id/personalGridFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/personalGridFragment"
+        android:name="com.example.moviesearcher.ui.personal.personalgrid.PersonalGridFragment"
+        android:label="Personal Movie List"
+        tools:layout="@layout/fragment_movies_grid">
+        <action
+            android:id="@+id/actionMovieDetails"
+            app:destination="@id/movieDetails" />
+        <argument
+            android:name="movieListId"
+            app:argType="long" />
+        <argument
+            android:name="movieListTitle"
+            app:argType="string"
+            app:nullable="true" />
+
     </fragment>
 
     <!-- MOVIE DETAILS -->
@@ -67,7 +70,12 @@
         android:label="movieDetails"
         app:startDestination="@id/movieOverview">
         <argument
-            android:name="movieId"
+            android:name="movieRemoteId"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="movieLocalId"
+            android:defaultValue="0"
             app:argType="integer" />
         <fragment
             android:id="@+id/movieOverview"
@@ -75,7 +83,12 @@
             android:label="Overview"
             tools:layout="@layout/fragment_movie_overview">
             <argument
-                android:name="movieId"
+                android:name="movieRemoteId"
+                android:defaultValue="0"
+                app:argType="integer" />
+            <argument
+                android:name="movieLocalId"
+                android:defaultValue="0"
                 app:argType="integer" />
         </fragment>
         <fragment
@@ -84,7 +97,12 @@
             android:label="Media"
             tools:layout="@layout/fragment_movie_media">
             <argument
-                android:name="movieId"
+                android:name="movieRemoteId"
+                android:defaultValue="0"
+                app:argType="integer" />
+            <argument
+                android:name="movieLocalId"
+                android:defaultValue="0"
                 app:argType="integer" />
         </fragment>
         <fragment
@@ -93,34 +111,72 @@
             android:label="Cast and Crew"
             tools:layout="@layout/fragment_movie_cast">
             <argument
-                android:name="movieId"
+                android:name="movieRemoteId"
+                android:defaultValue="0"
+                app:argType="integer" />
+            <argument
+                android:name="movieLocalId"
+                android:defaultValue="0"
                 app:argType="integer" />
         </fragment>
         <action
             android:id="@+id/action_movie_cast"
             app:destination="@id/movieCast"
-            app:popUpTo="@id/movieOverview"/>
+            app:popUpTo="@id/movieOverview"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_movie_media"
             app:destination="@id/movieMedia"
-            app:popUpTo="@id/movieOverview"/>
+            app:popUpTo="@id/movieOverview"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/actionMovieOverview"
-            app:destination="@id/movieOverview" />
+            app:destination="@id/movieOverview"
+            app:popUpTo="@id/movieOverview"
+            app:popUpToInclusive="true" />
 
     </navigation>
 
     <!-- MOVIE CATEGORIES -->
 
-    <fragment
-        android:id="@+id/categoriesFragment"
-        android:name="com.example.moviesearcher.ui.categories.CategoriesFragment"
-        android:label="Categories"
-        tools:layout="@layout/fragment_categories">
-        <action
-            android:id="@+id/actionDiscoverGridFragment"
-            app:destination="@id/discoverGridFragment" />
-    </fragment>
+    <navigation
+        android:id="@+id/discoverMovies"
+        app:startDestination="@id/categoriesFragment">
+        <fragment
+            android:id="@+id/categoriesFragment"
+            android:name="com.example.moviesearcher.ui.categories.CategoriesFragment"
+            android:label="Categories"
+            tools:layout="@layout/fragment_categories">
+            <action
+                android:id="@+id/actionDiscoverGridFragment"
+                app:destination="@id/discoverGridFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/discoverGridFragment"
+            android:name="com.example.moviesearcher.ui.grids.discovergrid.DiscoverGridFragment"
+            android:label="Discover"
+            tools:layout="@layout/fragment_movies_grid">
+            <action
+                android:id="@+id/actionMovieDetails"
+                app:destination="@id/movieDetails"/>
+            <argument
+                android:name="start_year"
+                app:argType="string" />
+            <argument
+                android:name="end_year"
+                app:argType="string" />
+            <argument
+                android:name="discover_name_array"
+                app:argType="string[]" />
+            <argument
+                android:name="genre_id"
+                app:argType="integer" />
+            <argument
+                android:name="language_key"
+                app:argType="string"
+                app:nullable="true" />
+        </fragment>
+    </navigation>
 
     <!-- ABOUT -->
 
@@ -129,5 +185,13 @@
         android:name="com.example.moviesearcher.ui.about.AboutFragment"
         android:label="About"
         tools:layout="@layout/fragment_about" />
+
+    <action
+        android:id="@+id/actionGlobalCustomListsFragment"
+        app:destination="@id/customListsFragment" />
+
+    <action
+        android:id="@+id/actionGlobalSearchGridFragment"
+        app:destination="@id/searchGridFragment" />
 
 </navigation>

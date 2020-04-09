@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    tools:context=".ui.MainActivity"
+    android:background="@color/colorPopupWindowBackground"
+    android:id="@+id/popup_window_outside">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="250dp"
+        android:layout_gravity="center"
+        android:layout_margin="30dp"
+        app:cardBackgroundColor="@color/colorPopupWindow"
+        app:cardCornerRadius="@dimen/default_card_corner_radius"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/add_to_lists_title"
+                    android:textAppearance="@style/PersonalListAddToListTitleAppearance" />
+
+                <ImageButton
+                    android:id="@+id/confirm_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_big_check"
+                    android:layout_gravity="end"
+                    android:background="@null"
+                    android:tint="@color/iconBlack"
+                    tools:ignore="ContentDescription" />
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/horizontal_stroke"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/personal_lists_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

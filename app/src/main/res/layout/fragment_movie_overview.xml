@@ -49,7 +49,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:adjustViewBounds="true"
-                    android:imageUrl="@{movie.backdropImageUrl}"
+                    app:imageUrl="@{movie.backdropImageUrl}"
+                    app:imageUriString="@{movie.backdropImageUriString}"
                     android:scaleType="centerCrop"
                     android:tint="@color/detailsTop"
                     android:tintMode="src_over"
@@ -63,7 +64,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
-                    android:imageUrl="@{movie.posterImageUrl}"
+                    app:imageUrl="@{movie.posterImageUrl}"
+                    app:imageUriString="@{movie.posterImageUriString}"
                     android:padding="@dimen/general_margin"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/guideline"
@@ -184,7 +186,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp"
-                                android:text="@{movie.overview}"
+                                android:text="@{movie.description}"
                                 android:textAppearance="@style/DescriptionDetails" />
 
                         </LinearLayout>

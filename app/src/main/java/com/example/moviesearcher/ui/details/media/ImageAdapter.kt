@@ -11,11 +11,11 @@ import java.util.*
 
 class ImageAdapter: RecyclerView.Adapter<ImageAdapter.ViewHolder>(){
 
-    private val imagePathList: MutableList<Image> = ArrayList()
+    private val imageList: MutableList<Image> = ArrayList()
 
-    fun updateImagePathList(list: List<Image>) {
-        imagePathList.clear()
-        imagePathList.addAll(list)
+    fun updateImageList(list: List<Image>) {
+        imageList.clear()
+        imageList.addAll(list)
         notifyDataSetChanged()
     }
 
@@ -26,11 +26,11 @@ class ImageAdapter: RecyclerView.Adapter<ImageAdapter.ViewHolder>(){
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.onBind(imagePathList[position])
+        holder.onBind(imageList[position])
     }
 
     override fun getItemCount(): Int {
-        return imagePathList.size
+        return imageList.size
     }
 
     inner class ViewHolder(itemView: ItemImageBinding): RecyclerView.ViewHolder(itemView.root){

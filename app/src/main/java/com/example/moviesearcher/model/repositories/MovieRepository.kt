@@ -1,6 +1,6 @@
 package com.example.moviesearcher.model.repositories
 
-import com.example.moviesearcher.model.services.MovieApiService
+import com.example.moviesearcher.model.remote.services.MovieApiService
 import com.example.moviesearcher.util.MOVIE_DB_API_KEY
 import com.example.moviesearcher.util.MOVIE_DB_IMAGE_LANGUAGE_EN
 import com.example.moviesearcher.util.MOVIE_DB_LANGUAGE_EN
@@ -19,7 +19,7 @@ class MovieRepository {
 
     suspend fun getCredits(movieId: Int) = service.getCredits(movieId.toString(), MOVIE_DB_API_KEY)
 
-    suspend fun getSearchedMovies(query: String) = service.getSearchedMovies(MOVIE_DB_API_KEY, query)
+    suspend fun getSearchedMovies(query: String, page: Int) = service.getSearchedMovies(MOVIE_DB_API_KEY, query, page.toString())
 
     suspend fun getDiscoveredMovies(
             page: Int,

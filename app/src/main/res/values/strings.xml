@@ -3,8 +3,11 @@
     <!-- General -->
 
     <string name="app_name">Mobile Movie Database</string>
+    <string name="no_internet_connection">No internet connection</string>
     <string name="action_search">Search</string>
     <string name="loading_list_empty">There are no movies to display</string>
+    <string name="personal_list_empty">There are no lists made yet</string>
+    <string name="undo">Undo</string>
 
     <!-- Toolbar titles -->
 
@@ -37,6 +40,17 @@
     <string name="infinity">∞</string>
     <string name="max_release_date_value">2020</string>
 
+    <!-- Personal lists -->
+
+    <string name="add_to_lists_title">Add to the lists</string>
+    <string name="select_a_list">Please select a list</string>
+    <string name="successfully_uploaded_to_list">Movie successfully uploaded</string>
+    <string name="being_uploaded_to_list">Movie is being uploaded</string>
+    <string name="action_check_lists">"CHECK LISTS"</string>
+    <string name="movie_list_deleted">Movie list was deleted</string>
+    <string name="movie_deleted">Movie was deleted</string>
+
+
     <!-- Parts for movie details -->
 
     <string name="score_ending">/10</string>
@@ -47,4 +61,5 @@
     <!-- About app fragment -->
 
     <string name="about_app">This application was made as a hobby. It is used for searching for movies by their genre, release date and original language or a title keyword, also being able to search the 4 different categories: popularity, vote average, upcoming and now playing. The information is retrieved from The Movie Database (TMDb).</string>
+
 </resources>

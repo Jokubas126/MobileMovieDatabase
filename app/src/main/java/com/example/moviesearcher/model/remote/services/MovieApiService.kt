@@ -1,7 +1,6 @@
-package com.example.moviesearcher.model.services
+package com.example.moviesearcher.model.remote.services
 
-import com.example.moviesearcher.model.api.MovieApi
-import com.example.moviesearcher.model.data.Movie
+import com.example.moviesearcher.model.remote.api.MovieApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
