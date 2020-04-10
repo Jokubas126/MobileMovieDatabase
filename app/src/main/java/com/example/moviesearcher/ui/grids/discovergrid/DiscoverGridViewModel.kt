@@ -15,7 +15,7 @@ import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.data.MovieResults
 import com.example.moviesearcher.model.remote.repositories.MovieRepository
 import com.example.moviesearcher.model.room.repositories.MovieListRepository
-import com.example.moviesearcher.model.room.database.MovieListDatabase
+import com.example.moviesearcher.model.room.databases.MovieListDatabase
 import com.example.moviesearcher.ui.grids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
 import com.example.moviesearcher.util.*

@@ -13,7 +13,7 @@ class GridAdapter(
     private var customListBtnVisibility: Int,
     private var watchlistBtnVisibility: Int,
     private var deleteBtnVisibility: Int
-): RecyclerView.Adapter<GridAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<GridAdapter.ViewHolder>() {
 
     val movieList = mutableListOf<Movie>()
 
@@ -38,7 +38,8 @@ class GridAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view: ItemMovieBinding = DataBindingUtil.inflate(inflater, R.layout.item_movie, parent, false)
+        val view: ItemMovieBinding =
+            DataBindingUtil.inflate(inflater, R.layout.item_movie, parent, false)
         return ViewHolder(view)
     }
 
@@ -50,30 +51,60 @@ class GridAdapter(
         return movieList.size
     }
 
-    fun setItemClickListener(listener: ItemClickListener){
+    fun setItemClickListener(listener: ItemClickListener) {
         itemClickListener = listener
     }
 
-    fun setPersonalListActionListener(listener: PersonalListActionListener){
+    fun setPersonalListActionListener(listener: PersonalListActionListener) {
         personalListActionListener = listener
     }
 
-    inner class ViewHolder(itemView: ItemMovieBinding): RecyclerView.ViewHolder(itemView.root) {
+    inner class ViewHolder(itemView: ItemMovieBinding) : RecyclerView.ViewHolder(itemView.root) {
         private val view = itemView
+        private lateinit var movie: Movie
 
-        fun onBind(movie: Movie){
+        fun onBind(movie: Movie) {
             view.movie = movie
+            this.movie = movie
             view.root.setOnClickListener { itemClickListener?.onMovieClick(it, movie) }
 
+            configurePlaylistAdd()
+            configureWatchlist()
+            configureDeleteMovie()
+        }
+
+        private fun configureWatchlist(){
+            if (movie.isInWatchlist)
+                view.watchlistBtn.setBackgroundResource(R.drawable.ic_star_full)
+            else
+                view.watchlistBtn.setBackgroundResource(R.drawable.ic_star_empty)
+            view.watchlistBtn.visibility = View.GONE
+
+            view.watchlistBtn.setOnClickListener {
+                if (movie.isInWatchlist){
+                    it.setBackgroundResource(R.drawable.ic_star_empty)
+                }
+                else{
+                    it.setBackgroundResource(R.drawable.ic_star_full)
+                }
+
+            }
+        }
+
+        private fun configurePlaylistAdd(){
             view.playlistAddBtn.visibility = customListBtnVisibility
             if (customListBtnVisibility != View.GONE)
                 view.playlistAddBtn.setOnClickListener {
                     personalListActionListener?.onPlaylistAdd(movie)
                 }
+        }
 
+        private fun configureDeleteMovie(){
             view.deleteBtn.visibility = deleteBtnVisibility
             if (deleteBtnVisibility != View.GONE)
-                view.deleteBtn.setOnClickListener { personalListActionListener?.onDeleteClicked(it, movie) }
+                view.deleteBtn.setOnClickListener {
+                    personalListActionListener?.onDeleteClicked(it, movie)
+                }
         }
     }
 }

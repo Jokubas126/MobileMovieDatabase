@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.personal.personalgrid
+package com.example.moviesearcher.ui.personal.customlists.moviegrid
 
 import android.app.Application
 import android.os.Bundle
@@ -12,7 +12,7 @@ import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.room.repositories.MovieListRepository
 import com.example.moviesearcher.model.room.repositories.MovieRepository
 
-class PersonalGridViewModel(application: Application) : AndroidViewModel(application) {
+class MovieGridViewModel(application: Application) : AndroidViewModel(application) {
 
     private val movieRepository =
         MovieRepository(
@@ -30,13 +30,12 @@ class PersonalGridViewModel(application: Application) : AndroidViewModel(applica
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
 
-    private lateinit var args: PersonalGridFragmentArgs
+    private lateinit var args: MovieGridFragmentArgs
 
     fun fetch(arguments: Bundle?) {
         if (movieList == null) {
             arguments?.let {
-                args = PersonalGridFragmentArgs.fromBundle(it)
-
+                args = MovieGridFragmentArgs.fromBundle(it)
                 getMovieList()
             }
         }
@@ -71,7 +70,7 @@ class PersonalGridViewModel(application: Application) : AndroidViewModel(applica
 
     fun onMovieClicked(view: View, movie: Movie) {
         val action =
-            PersonalGridFragmentDirections.actionMovieDetails().setMovieLocalId(movie.roomId)
+            MovieGridFragmentDirections.actionMovieDetails().setMovieLocalId(movie.roomId)
         Navigation.findNavController(view).navigate(action)
     }
 }

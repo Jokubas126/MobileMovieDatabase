@@ -7,9 +7,9 @@ import com.example.moviesearcher.model.data.Credits
 import com.example.moviesearcher.model.data.Images
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.remote.repositories.MovieRepository
-import com.example.moviesearcher.model.room.database.CreditsDatabase
-import com.example.moviesearcher.model.room.database.ImagesDatabase
-import com.example.moviesearcher.model.room.database.MovieDatabase
+import com.example.moviesearcher.model.room.databases.CreditsDatabase
+import com.example.moviesearcher.model.room.databases.ImagesDatabase
+import com.example.moviesearcher.model.room.databases.MovieDatabase
 import com.example.moviesearcher.util.deleteFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

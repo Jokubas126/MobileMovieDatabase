@@ -38,6 +38,11 @@ data class LocalMovieList(
     constructor() : this(0, "", null)
 }
 
+@Entity(tableName = "watchlist_movie")
+data class WatchlistMovie(
+    @PrimaryKey(autoGenerate = false) var movieId: Int
+)
+
 @Entity(tableName = "movie")
 data class Movie(
 
@@ -87,7 +92,7 @@ data class Movie(
     @ColumnInfo(name = KEY_MOVIE_POSTER_URI_STRING)
     var posterImageUriString: String?,
 
-    @ColumnInfo(name = KEY_MOVIE_BACKDROP_URI_STRING )
+    @ColumnInfo(name = KEY_MOVIE_BACKDROP_URI_STRING)
     var backdropImageUriString: String?,
 
     @Ignore
@@ -118,6 +123,6 @@ data class Movie(
         "",
         null,
         null,
-         false
+        false
     )
 }

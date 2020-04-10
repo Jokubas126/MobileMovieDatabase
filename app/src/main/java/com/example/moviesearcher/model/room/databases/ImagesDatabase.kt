@@ -1,4 +1,4 @@
-package com.example.moviesearcher.model.room.database
+package com.example.moviesearcher.model.room.databases
 
 import android.content.Context
 import androidx.room.Database

@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.personal.personalgrid
+package com.example.moviesearcher.ui.personal.customlists.moviegrid
 
 import android.os.Bundle
 import android.os.Handler
@@ -19,10 +19,10 @@ import com.example.moviesearcher.util.SNACKBAR_LENGTH_LONG_MS
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
-class PersonalGridFragment : Fragment(), GridAdapter.ItemClickListener,
+class MovieGridFragment : Fragment(), GridAdapter.ItemClickListener,
     GridAdapter.PersonalListActionListener {
 
-    private lateinit var viewModel: PersonalGridViewModel
+    private lateinit var viewModel: MovieGridViewModel
     private val gridAdapter = GridAdapter(View.GONE, View.VISIBLE, View.VISIBLE)
 
     private var layoutManager: StaggeredGridLayoutManager? = null
@@ -37,7 +37,7 @@ class PersonalGridFragment : Fragment(), GridAdapter.ItemClickListener,
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(PersonalGridViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MovieGridViewModel::class.java)
         viewModel.fetch(arguments)
 
         setupRecyclerView()
@@ -92,8 +92,7 @@ class PersonalGridFragment : Fragment(), GridAdapter.ItemClickListener,
 
     override fun onResume() {
         super.onResume()
-        val args: PersonalGridFragmentArgs? = PersonalGridFragmentArgs.fromBundle(arguments!!)
-        if (args != null)
+        val args = MovieGridFragmentArgs.fromBundle(arguments!!)
         (activity as AppCompatActivity).supportActionBar?.title = args.movieListTitle
     }
 

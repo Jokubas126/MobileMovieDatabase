@@ -36,33 +36,6 @@
 
     <!-- PERSONAL LISTS -->
 
-    <fragment
-        android:id="@+id/customListsFragment"
-        android:name="com.example.moviesearcher.ui.personal.customlists.CustomListsFragment"
-        android:label="Custom lists"
-        tools:layout="@layout/fragment_custom_lists">
-        <action
-            android:id="@+id/personalGridFragment"
-            app:destination="@id/personalGridFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/personalGridFragment"
-        android:name="com.example.moviesearcher.ui.personal.personalgrid.PersonalGridFragment"
-        android:label="Personal Movie List"
-        tools:layout="@layout/fragment_movies_grid">
-        <action
-            android:id="@+id/actionMovieDetails"
-            app:destination="@id/movieDetails" />
-        <argument
-            android:name="movieListId"
-            app:argType="long" />
-        <argument
-            android:name="movieListTitle"
-            app:argType="string"
-            app:nullable="true" />
-
-    </fragment>
-
     <!-- MOVIE DETAILS -->
 
     <navigation
@@ -188,7 +161,7 @@
 
     <action
         android:id="@+id/actionGlobalCustomListsFragment"
-        app:destination="@id/customListsFragment" />
+        app:destination="@id/customLists" />
 
     <action
         android:id="@+id/actionGlobalSearchGridFragment"
@@ -202,5 +175,47 @@
     <action
         android:id="@+id/action_global_typeGridFragment"
         app:destination="@id/typeGridFragment" />
+    <fragment
+        android:id="@+id/watchlistFragment"
+        android:name="com.example.moviesearcher.ui.personal.watchlist.WatchlistFragment"
+        android:label="Watchlist"
+        tools:layout="@layout/fragment_movies_grid">
+        <action
+            android:id="@+id/actionMovieDetails"
+            app:destination="@id/movieDetails" />
+    </fragment>
+    <navigation
+        android:id="@+id/customLists"
+        app:startDestination="@id/customListsFragment" >
+        <fragment
+            android:id="@+id/movieGridFragment"
+            android:name="com.example.moviesearcher.ui.personal.customlists.moviegrid.MovieGridFragment"
+            android:label="Personal Movie List"
+            tools:layout="@layout/fragment_movies_grid">
+            <action
+                android:id="@+id/actionMovieDetails"
+                app:destination="@id/movieDetails" />
+            <argument
+                android:name="movieListId"
+                app:argType="long" />
+            <argument
+                android:name="movieListTitle"
+                app:argType="string"
+                app:nullable="true" />
+
+        </fragment>
+        <fragment
+            android:id="@+id/customListsFragment"
+            android:name="com.example.moviesearcher.ui.personal.customlists.CustomListsFragment"
+            android:label="Custom lists"
+            tools:layout="@layout/fragment_custom_lists">
+            <action
+                android:id="@+id/movieGridFragment"
+                app:destination="@id/movieGridFragment" />
+        </fragment>
+    </navigation>
+    <action
+        android:id="@+id/action_global_watchlistFragment"
+        app:destination="@id/watchlistFragment" />
 
 </navigation>

@@ -61,7 +61,7 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
 
     fun onListClicked(view: View, list: LocalMovieList) {
         val action =
-            CustomListsFragmentDirections.personalGridFragment(list.roomId.toLong(), list.listTitle)
+            CustomListsFragmentDirections.movieGridFragment(list.roomId.toLong(), list.listTitle)
         Navigation.findNavController(view).navigate(action)
     }
 

@@ -3,7 +3,7 @@ package com.example.moviesearcher.model.room.repositories
 import android.app.Application
 import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.room.dao.MovieListDao
-import com.example.moviesearcher.model.room.database.MovieListDatabase
+import com.example.moviesearcher.model.room.databases.MovieListDatabase
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
