@@ -1,4 +1,4 @@
-package com.example.moviesearcher.model.repositories
+package com.example.moviesearcher.model.remote.repositories
 
 import com.example.moviesearcher.model.remote.services.MovieApiService
 import com.example.moviesearcher.util.MOVIE_DB_API_KEY

@@ -1,6 +1,5 @@
 package com.example.moviesearcher.util
 
-import android.util.Log
 import java.io.File
 
 /** Snackbar lengths have been taken from the source code of SnackBarManager

@@ -1,6 +1,5 @@
 package com.example.moviesearcher.ui.popup_windows
 
-import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity

@@ -9,13 +9,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.data.Movie
-import com.example.moviesearcher.model.repositories.PersonalMovieListRepository
-import com.example.moviesearcher.model.repositories.PersonalMovieRepository
+import com.example.moviesearcher.model.room.repositories.MovieListRepository
+import com.example.moviesearcher.model.room.repositories.MovieRepository
 
 class PersonalGridViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val movieRepository = PersonalMovieRepository(application)
-    private val movieListRepository = PersonalMovieListRepository(getApplication())
+    private val movieRepository =
+        MovieRepository(
+            application
+        )
+    private val movieListRepository =
+        MovieListRepository(
+            getApplication()
+        )
 
     var movieList: LiveData<LocalMovieList>? = null
 

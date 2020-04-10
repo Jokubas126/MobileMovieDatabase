@@ -1,4 +1,4 @@
-package com.example.moviesearcher.model.repositories
+package com.example.moviesearcher.model.room.repositories
 
 import android.app.Application
 import com.example.moviesearcher.model.data.LocalMovieList
@@ -7,7 +7,7 @@ import com.example.moviesearcher.model.room.database.MovieListDatabase
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class PersonalMovieListRepository(application: Application) : CoroutineScope {
+class MovieListRepository(application: Application) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 

@@ -5,7 +5,6 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Base64.*
 import androidx.room.TypeConverter
 import com.example.moviesearcher.model.data.Country
 import com.example.moviesearcher.model.data.Genre
@@ -18,7 +17,6 @@ import java.lang.reflect.Type
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
-
 
 // ---------------- Text related -------------//
 

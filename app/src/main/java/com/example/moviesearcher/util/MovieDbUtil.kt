@@ -70,7 +70,6 @@ const val KEY_VIDEO_SITE = "site"
 const val KEY_YOUTUBE_SITE = "YouTube"
 const val KEY_VIDEO_TYPE = "type"
 const val KEY_TRAILER_TYPE = "Trailer"
-const val KEY_VIDEO = "key"
 
 // ISO CODES
 const val KEY_COUNTRY_ISO_CODE = "iso_3166_1"

@@ -15,8 +15,6 @@ import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
 import com.example.moviesearcher.NavGraphDirections
 import com.example.moviesearcher.R
-import com.example.moviesearcher.model.repositories.PersonalMovieListRepository
-import com.example.moviesearcher.model.repositories.PersonalMovieRepository
 import com.example.moviesearcher.util.*
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*

@@ -13,9 +13,7 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.data.MovieResults
-import com.example.moviesearcher.model.repositories.MovieRepository
-import com.example.moviesearcher.model.repositories.PersonalMovieListRepository
-import com.example.moviesearcher.model.repositories.PersonalMovieRepository
+import com.example.moviesearcher.model.room.repositories.MovieListRepository
 import com.example.moviesearcher.model.room.database.MovieListDatabase
 import com.example.moviesearcher.ui.grids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
@@ -44,10 +42,12 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
     private var searchQuery: String? = null
 
     override fun fetch(arguments: Bundle?) {
-        _loading.value = true
-        arguments?.let {
-            searchQuery = arguments.getString(KEY_SEARCH_QUERY)
-            getMovieList()
+        if (movies.value.isNullOrEmpty()) {
+            _loading.value = true
+            arguments?.let {
+                searchQuery = arguments.getString(KEY_SEARCH_QUERY)
+                getMovieList()
+            }
         }
     }
 
@@ -71,7 +71,8 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
         if (isNetworkAvailable(getApplication())) {
             configurePages()
             CoroutineScope(Dispatchers.IO).launch {
-                val response = MovieRepository().getSearchedMovies(searchQuery!!, currentPage)
+                val response = MovieRepository()
+                    .getSearchedMovies(searchQuery!!, currentPage)
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         if (currentPage == response.body()!!.totalPages)
@@ -92,7 +93,8 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
 
     private fun getGenres(movieList: MovieResults) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository().getGenreMap()
+            val response = MovieRepository()
+                .getGenreMap()
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     movieList.formatGenres(response.body()!!)
@@ -157,16 +159,21 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
             return false
         }
         CoroutineScope(Dispatchers.IO).launch {
-            val fullMovie = MovieRepository().getMovieDetails(movie.remoteId).body()
+            val fullMovie = MovieRepository()
+                .getMovieDetails(movie.remoteId).body()
             fullMovie?.let {
                 showProgressSnackBar(
                     root,
                     getApplication<Application>().getString(R.string.being_uploaded_to_list)
                 )
                 it.finalizeInitialization(getApplication())
-                val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(getApplication(), it)
+                val movieRoomId = com.example.moviesearcher.model.room.repositories.MovieRepository(
+                    getApplication()
+                ).insertOrUpdateMovie(getApplication(), it)
                 for (list in checkedLists)
-                    PersonalMovieListRepository(getApplication()).addMovieToMovieList(
+                    MovieListRepository(
+                        getApplication()
+                    ).addMovieToMovieList(
                         list,
                         movieRoomId.toInt()
                     )

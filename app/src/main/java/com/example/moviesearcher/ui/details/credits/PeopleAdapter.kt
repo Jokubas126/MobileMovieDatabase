@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesearcher.R
 import com.example.moviesearcher.databinding.ItemPersonBinding
 import com.example.moviesearcher.model.data.Person
-import com.example.moviesearcher.util.isNetworkAvailable
 import java.util.*
 
 class PeopleAdapter : RecyclerView.Adapter<PeopleAdapter.ViewHolder>() {

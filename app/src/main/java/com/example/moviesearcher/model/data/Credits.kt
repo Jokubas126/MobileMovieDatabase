@@ -1,7 +1,6 @@
 package com.example.moviesearcher.model.data
 
 import android.content.Context
-import android.net.Uri
 import androidx.room.*
 import com.example.moviesearcher.util.*
 import com.google.gson.annotations.SerializedName

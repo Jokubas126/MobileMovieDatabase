@@ -9,7 +9,7 @@ import androidx.navigation.Navigation
 import com.example.moviesearcher.model.data.Category
 import com.example.moviesearcher.model.data.Genres
 import com.example.moviesearcher.model.data.Subcategory
-import com.example.moviesearcher.model.repositories.CategoryRepository
+import com.example.moviesearcher.model.remote.repositories.CategoryRepository
 import com.example.moviesearcher.util.GENRE_CATEGORY
 import com.example.moviesearcher.util.LANGUAGE_CATEGORY
 import com.example.moviesearcher.util.isNetworkAvailable
@@ -43,7 +43,8 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
 
     private fun getLanguages() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = CategoryRepository().getLanguages()
+            val response = CategoryRepository()
+                .getLanguages()
             withContext(Dispatchers.Main) {
                 val subcategories = prepareSubcategories(response.body()!!)
                 var list = mutableListOf<Category>()
@@ -58,7 +59,8 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
 
     private fun getGenres() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = CategoryRepository().getGenres()
+            val response = CategoryRepository()
+                .getGenres()
             withContext(Dispatchers.Main) {
                 val subcategories = prepareSubcategories(genresToSubcategoryList(response.body()!!))
                 var list = mutableListOf<Category>()

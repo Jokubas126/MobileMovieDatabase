@@ -12,8 +12,6 @@ import com.example.moviesearcher.MovieDetailsArgs
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Images
 import com.example.moviesearcher.model.data.Video
-import com.example.moviesearcher.model.repositories.MovieRepository
-import com.example.moviesearcher.model.repositories.PersonalMovieRepository
 import com.example.moviesearcher.util.KEY_TRAILER_TYPE
 import com.example.moviesearcher.util.KEY_YOUTUBE_SITE
 import kotlinx.coroutines.CoroutineScope
@@ -47,7 +45,8 @@ class MediaViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun getTrailer(movieId: Int){
         CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository().getVideo(movieId)
+            val response = MovieRepository()
+                .getVideo(movieId)
             withContext(Dispatchers.Main){
                 _trailer.value = filterVideos(response.body()!!.videoList)
                 _loading.value = false
@@ -65,7 +64,8 @@ class MediaViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun getImagesRemote(movieId: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository().getImages(movieId)
+            val response = MovieRepository()
+                .getImages(movieId)
             withContext(Dispatchers.Main) {
                 _images.value = Images(0, response.body()!!.posterList, response.body()!!.backdropList)
                 _loading.value = false
@@ -74,7 +74,9 @@ class MediaViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun getImagesLocal(movieId: Int) {
-        images = PersonalMovieRepository(getApplication()).getImagesById(movieId)
+        images = com.example.moviesearcher.model.room.repositories.MovieRepository(
+            getApplication()
+        ).getImagesById(movieId)
         _loading.value = false
     }
 

@@ -1,4 +1,4 @@
-package com.example.moviesearcher.model.repositories
+package com.example.moviesearcher.model.room.repositories
 
 import android.app.Application
 import android.content.Context
@@ -6,6 +6,7 @@ import android.net.Uri
 import com.example.moviesearcher.model.data.Credits
 import com.example.moviesearcher.model.data.Images
 import com.example.moviesearcher.model.data.Movie
+import com.example.moviesearcher.model.remote.repositories.MovieRepository
 import com.example.moviesearcher.model.room.database.CreditsDatabase
 import com.example.moviesearcher.model.room.database.ImagesDatabase
 import com.example.moviesearcher.model.room.database.MovieDatabase
@@ -17,7 +18,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import kotlin.coroutines.CoroutineContext
 
-class PersonalMovieRepository(application: Application) : CoroutineScope {
+class MovieRepository(application: Application) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 
@@ -33,7 +34,8 @@ class PersonalMovieRepository(application: Application) : CoroutineScope {
     }
 
     private suspend fun insertOrUpdateImages(context: Context, movie: Movie, movieRoomId: Int) {
-        val images = MovieRepository().getImages(movie.remoteId).body()
+        val images = MovieRepository()
+            .getImages(movie.remoteId).body()
         if (images != null) {
             images.generateFileUris(context)
             images.movieRoomId = movieRoomId
@@ -44,7 +46,8 @@ class PersonalMovieRepository(application: Application) : CoroutineScope {
     fun getImagesById(movieId: Int) = imagesDao.getImageLiveDataById(movieId)
 
     private suspend fun insertOrUpdateCredits(context: Context, movie: Movie, movieRoomId: Int) {
-        val credits = MovieRepository().getCredits(movie.remoteId).body()
+        val credits = MovieRepository()
+            .getCredits(movie.remoteId).body()
         if (credits != null) {
             credits.generateFileUris(context)
             credits.movieRoomId = movieRoomId

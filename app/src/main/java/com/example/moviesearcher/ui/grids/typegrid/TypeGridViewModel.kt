@@ -1,6 +1,5 @@
 package com.example.moviesearcher.ui.grids.typegrid
 
-import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import android.view.View
@@ -13,9 +12,7 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.data.MovieResults
-import com.example.moviesearcher.model.repositories.MovieRepository
-import com.example.moviesearcher.model.repositories.PersonalMovieListRepository
-import com.example.moviesearcher.model.repositories.PersonalMovieRepository
+import com.example.moviesearcher.model.room.repositories.MovieListRepository
 import com.example.moviesearcher.model.room.database.MovieListDatabase
 import com.example.moviesearcher.ui.grids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
@@ -44,17 +41,19 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
     private lateinit var movieListType: String
 
     override fun fetch(arguments: Bundle?) {
-        _error.value = false
-        _loading.value = true
-        isListFull = false
+        if (movies.value.isNullOrEmpty()){
+            _error.value = false
+            _loading.value = true
+            isListFull = false
 
-        arguments?.let {
-            val args = TypeGridFragmentArgs.fromBundle(it)
-            movieListType =
-                if (!args.keyCategory.isBlank())
-                    args.keyCategory
-                else KEY_POPULAR
-            getMovieList()
+            arguments?.let {
+                val args = TypeGridFragmentArgs.fromBundle(it)
+                movieListType =
+                    if (!args.keyCategory.isBlank())
+                        args.keyCategory
+                    else KEY_POPULAR
+                getMovieList()
+            }
         }
     }
 
@@ -77,7 +76,8 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
         if (isNetworkAvailable(getApplication())) {
             configurePages()
             CoroutineScope(Dispatchers.IO).launch {
-                val response = MovieRepository().getMovies(movieListType, currentPage)
+                val response = MovieRepository()
+                    .getMovies(movieListType, currentPage)
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         if (currentPage == response.body()!!.totalPages)
@@ -97,7 +97,8 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
 
     private fun getGenres(movieList: MovieResults) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository().getGenreMap()
+            val response = MovieRepository()
+                .getGenreMap()
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     movieList.formatGenres(response.body()!!)
@@ -160,16 +161,21 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
             }
             isNetworkAvailable(getApplication()) -> {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val fullMovie = MovieRepository().getMovieDetails(movie.remoteId).body()
+                    val fullMovie = MovieRepository()
+                        .getMovieDetails(movie.remoteId).body()
                     fullMovie?.let {
                         showProgressSnackBar(
                             root,
                             getApplication<Application>().getString(R.string.being_uploaded_to_list)
                         )
                         it.finalizeInitialization(getApplication())
-                        val movieRoomId = PersonalMovieRepository(getApplication()).insertOrUpdateMovie(getApplication(), it)
+                        val movieRoomId = com.example.moviesearcher.model.room.repositories.MovieRepository(
+                            getApplication()
+                        ).insertOrUpdateMovie(getApplication(), it)
                         for (list in checkedLists)
-                            PersonalMovieListRepository(getApplication()).addMovieToMovieList(
+                            MovieListRepository(
+                                getApplication()
+                            ).addMovieToMovieList(
                                 list,
                                 movieRoomId.toInt()
                             )

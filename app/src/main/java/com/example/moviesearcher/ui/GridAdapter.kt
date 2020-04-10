@@ -71,19 +71,6 @@ class GridAdapter(
                     personalListActionListener?.onPlaylistAdd(movie)
                 }
 
-
-            /*if(movie.isInWatchlist)
-                view.watchlistBtn.setBackgroundResource(R.drawable.ic_star_full)
-            else view.watchlistBtn.setBackgroundResource(R.drawable.ic_star_empty)
-
-            view.watchlistBtn.visibility = View.GONE
-            view.watchlistBtn.setOnClickListener {
-                if(movie.isInWatchlist)
-                    it.setBackgroundResource(R.drawable.ic_star_empty)
-                else it.setBackgroundResource(R.drawable.ic_star_full)
-
-            }*/
-
             view.deleteBtn.visibility = deleteBtnVisibility
             if (deleteBtnVisibility != View.GONE)
                 view.deleteBtn.setOnClickListener { personalListActionListener?.onDeleteClicked(it, movie) }
