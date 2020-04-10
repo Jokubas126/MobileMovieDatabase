@@ -82,6 +82,10 @@ class PersonalListsAdapter(private val listener: ListCheckedListener, private va
 
         fun onBind(listener: ListCheckedListener, movieList: LocalMovieList){
             view.movieList = movieList
+            view.root.information_layout.setOnClickListener {
+                view.root.list_checkbox.isChecked = !view.root.list_checkbox.isChecked
+                listener.onListChecked(movieList, view.root.list_checkbox.isChecked)
+            }
             view.root.list_checkbox.setOnCheckedChangeListener { _, isChecked -> listener.onListChecked(movieList, isChecked) }
         }
     }

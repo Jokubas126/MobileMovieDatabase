@@ -11,6 +11,7 @@ import androidx.navigation.Navigation
 import com.example.moviesearcher.MovieDetailsArgs
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
+import com.example.moviesearcher.model.remote.repositories.MovieRepository
 import com.example.moviesearcher.util.getAnyNameList
 import com.example.moviesearcher.util.stringListToListedString
 import com.example.moviesearcher.util.stringListToString

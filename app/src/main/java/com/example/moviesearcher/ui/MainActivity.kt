@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.*
 import androidx.navigation.ui.NavigationUI
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navController.addOnDestinationChangedListener { controller: NavController, destination: NavDestination, _: Bundle? ->
             run {
-                if (destination != controller.graph.findNode(R.id.categoriesFragment)){
+                if (destination != controller.graph.findNode(R.id.categoriesFragment)) {
                     setSupportActionBar(toolbar)
                     searchItem?.isVisible = true
                     confirmItem?.isVisible = false
@@ -69,15 +68,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             tools.title = s
         }
     }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
         searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem!!.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                val bundle = bundleOf(KEY_SEARCH_QUERY to query)
+                val action
+                        = NavGraphDirections.actionGlobalSearchGridFragment(query)
                 navController.popBackStack(navController.currentDestination!!.id, true)
-                navController.navigate(R.id.actionGlobalSearchGridFragment, bundle)
+                navController.navigate(action)
                 return false
             }
 
@@ -91,29 +92,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        val bundle = Bundle()
         when (menuItem.itemId) {
-            R.id.menu_categories -> navController.navigate(R.id.discoverMovies)
-            R.id.menu_custom_lists -> navController.navigate(R.id.customListsFragment)
+            R.id.menu_categories -> navController.navigate(NavGraphDirections.actionGlobalDiscoverMovies())
+            R.id.menu_custom_lists -> navController.navigate(NavGraphDirections.actionGlobalCustomListsFragment())
 
             R.id.menu_popular -> {
-                bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_POPULAR)
-                navController.navigate(R.id.typeGridFragment, bundle)
+                val action = NavGraphDirections.actionGlobalTypeGridFragment()
+                action.keyCategory = KEY_POPULAR
+                navController.navigate(action)
             }
             R.id.menu_top_rated -> {
-                bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_TOP_RATED)
-                navController.navigate(R.id.typeGridFragment, bundle)
+                val action = NavGraphDirections.actionGlobalTypeGridFragment()
+                action.keyCategory = KEY_TOP_RATED
+                navController.navigate(action)
             }
             R.id.menu_now_playing -> {
-                bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_NOW_PLAYING)
-                navController.navigate(R.id.typeGridFragment, bundle)
+                val action = NavGraphDirections.actionGlobalTypeGridFragment()
+                action.keyCategory = KEY_NOW_PLAYING
+                navController.navigate(action)
             }
             R.id.menu_upcoming -> {
-                bundle.putString(KEY_MOVIE_LIST_TYPE, KEY_UPCOMING)
-                navController.navigate(R.id.typeGridFragment, bundle)
+                val action = NavGraphDirections.actionGlobalTypeGridFragment()
+                action.keyCategory = KEY_UPCOMING
+                navController.navigate(action)
             }
-
-            R.id.menu_about -> navController.navigate(R.id.aboutFragment)
+            R.id.menu_about -> navController.navigate(NavGraphDirections.actionGlobalAboutFragment())
         }
         drawerLayout.closeDrawers()
         return true

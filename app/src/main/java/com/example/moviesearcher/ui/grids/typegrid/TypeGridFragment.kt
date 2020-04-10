@@ -16,7 +16,6 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.ui.GridAdapter
 import com.example.moviesearcher.ui.GridAdapter.ItemClickListener
-import com.example.moviesearcher.util.KEY_MOVIE_LIST_TYPE
 import com.example.moviesearcher.util.KEY_POPULAR
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
@@ -92,7 +91,7 @@ class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalList
     @ExperimentalStdlibApi
     override fun onResume() {
         super.onResume()
-        val listType = arguments?.getString(KEY_MOVIE_LIST_TYPE)
+        val listType: String? = TypeGridFragmentArgs.fromBundle(arguments!!).keyCategory
         (activity as AppCompatActivity).supportActionBar?.title =
                 if (listType != null) {
                     val title = StringBuilder()
@@ -127,7 +126,5 @@ class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalList
         viewModel.onPlaylistAddCLicked(movie, (activity as AppCompatActivity).nav_host_fragment.requireView()) // give nav_host_fragment because it's tide to activity's lifecycle and in this app structure is always active
     }
 
-    override fun onDeleteClicked(view: View, movie: Movie) {
-    }
-
+    override fun onDeleteClicked(view: View, movie: Movie) {}
 }

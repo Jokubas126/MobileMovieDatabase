@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.ui.GridAdapter
-import com.example.moviesearcher.util.KEY_SEARCH_QUERY
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
@@ -101,7 +100,8 @@ class SearchGridFragment : Fragment(), GridAdapter.ItemClickListener,
     override fun onResume() {
         super.onResume()
         (activity as AppCompatActivity).supportActionBar?.title =
-                resources.getString(R.string.search_fragment) + arguments?.getString(KEY_SEARCH_QUERY)
+                resources.getString(R.string.search_fragment) +
+                        SearchGridFragmentArgs.fromBundle(arguments!!).searchQuery
     }
 
     override fun onPause() {

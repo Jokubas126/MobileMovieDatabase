@@ -12,6 +12,7 @@ import com.example.moviesearcher.MovieDetailsArgs
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Images
 import com.example.moviesearcher.model.data.Video
+import com.example.moviesearcher.model.remote.repositories.MovieRepository
 import com.example.moviesearcher.util.KEY_TRAILER_TYPE
 import com.example.moviesearcher.util.KEY_YOUTUBE_SITE
 import kotlinx.coroutines.CoroutineScope

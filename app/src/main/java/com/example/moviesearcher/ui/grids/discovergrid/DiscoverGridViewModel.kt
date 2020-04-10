@@ -13,6 +13,7 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.data.MovieResults
+import com.example.moviesearcher.model.remote.repositories.MovieRepository
 import com.example.moviesearcher.model.room.repositories.MovieListRepository
 import com.example.moviesearcher.model.room.database.MovieListDatabase
 import com.example.moviesearcher.ui.grids.BaseGridViewModel
@@ -109,8 +110,7 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
 
     private fun getGenres(movieList: MovieResults) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository()
-                .getGenreMap()
+            val response = MovieRepository().getGenreMap()
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     movieList.formatGenres(response.body()!!)
@@ -147,12 +147,13 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    fun getToolbarTitle(args: Bundle?): String? {
+    fun getToolbarTitle(arguments: Bundle?): String? {
         var title: String? = null
-        if (args != null) {
-            title = stringListToString(args.getStringArray(KEY_DISCOVER_NAME_ARRAY)!!.toList())
+        if (arguments != null) {
+            val args = DiscoverGridFragmentArgs.fromBundle(arguments)
+            title = stringListToString(args.discoverNameArray.toList())
             if (title.isNullOrBlank() || title == "null")
-                title = args.getString(KEY_START_YEAR) + " - " + args.getString(KEY_END_YEAR)
+                title = args.startYear + " - " + args.endYear
         }
         return title
     }
@@ -163,10 +164,7 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
         Navigation.findNavController(view).navigate(action)
     }
 
-    override fun onPlaylistAddCLicked(
-        movie: Movie,
-        root: View
-    ) {
+    override fun onPlaylistAddCLicked(movie: Movie, root: View) {
         val popupWindow = PersonalListsPopupWindow(
             root,
             View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
@@ -183,11 +181,7 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    override fun onConfirmClicked(
-        movie: Movie,
-        checkedLists: List<LocalMovieList>,
-        root: View
-    ): Boolean {
+    override fun onConfirmClicked(movie: Movie, checkedLists: List<LocalMovieList>, root: View): Boolean {
         if (checkedLists.isEmpty()) {
             showToast(
                 getApplication(),
@@ -215,7 +209,6 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
                         list,
                         movieRoomId.toInt()
                     )
-
                 showSnackbarActionCheckLists(root)
             }
         }

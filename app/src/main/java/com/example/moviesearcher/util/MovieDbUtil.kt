@@ -11,6 +11,12 @@ const val KEY_NAME = "name"
 const val KEY_ENGLISH_NAME = "english_name"
 const val KEY_TOTAL_PAGES = "total_pages"
 
+// MOVIE LIST TYPES
+const val KEY_POPULAR = "popular"
+const val KEY_TOP_RATED = "top_rated"
+const val KEY_NOW_PLAYING = "now_playing"
+const val KEY_UPCOMING = "upcoming"
+
 // QUERIES
 const val QUERY_API_KEY = "api_key"
 const val QUERY_LANGUAGE = "language"

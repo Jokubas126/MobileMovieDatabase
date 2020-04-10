@@ -193,5 +193,14 @@
     <action
         android:id="@+id/actionGlobalSearchGridFragment"
         app:destination="@id/searchGridFragment" />
+    <action
+        android:id="@+id/action_global_aboutFragment"
+        app:destination="@id/aboutFragment" />
+    <action
+        android:id="@+id/action_global_discoverMovies"
+        app:destination="@id/discoverMovies" />
+    <action
+        android:id="@+id/action_global_typeGridFragment"
+        app:destination="@id/typeGridFragment" />
 
 </navigation>
