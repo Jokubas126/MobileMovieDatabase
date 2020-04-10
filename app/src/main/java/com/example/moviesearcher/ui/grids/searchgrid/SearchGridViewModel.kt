@@ -25,7 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.ArrayList
 
 class SearchGridViewModel(application: Application) : AndroidViewModel(application),
     BaseGridViewModel,
@@ -125,8 +124,8 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     override fun onPlaylistAddCLicked(
-        root: View,
-        movie: Movie
+        movie: Movie,
+        root: View
     ) {
         val popupWindow = PersonalListsPopupWindow(
             root,
@@ -145,9 +144,9 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     override fun onConfirmClicked(
-        root: View,
         movie: Movie,
-        checkedLists: List<LocalMovieList>
+        checkedLists: List<LocalMovieList>,
+        root: View
     ): Boolean {
         if (checkedLists.isEmpty()) {
             showToast(

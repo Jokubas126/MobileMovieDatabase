@@ -16,6 +16,7 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.ui.GridAdapter
 import com.example.moviesearcher.util.KEY_SEARCH_QUERY
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
 class SearchGridFragment : Fragment(), GridAdapter.ItemClickListener,
@@ -113,7 +114,7 @@ class SearchGridFragment : Fragment(), GridAdapter.ItemClickListener,
     }
 
     override fun onPlaylistAdd(movie: Movie) {
-        viewModel.onPlaylistAddCLicked(this.view!!, movie)
+        viewModel.onPlaylistAddCLicked(movie, (activity as AppCompatActivity).nav_host_fragment.requireView()) // give nav_host_fragment because it's tide to activity's lifecycle and in this app structure is always active
     }
 
     override fun onDeleteClicked(view: View, movie: Movie) {

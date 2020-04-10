@@ -1,5 +1,6 @@
 package com.example.moviesearcher.ui.grids.typegrid
 
+import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import android.view.View
@@ -7,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.navigation.Navigation
+import com.example.moviesearcher.NavGraphDirections
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.data.Movie
@@ -23,7 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 
 class TypeGridViewModel(application: Application) : AndroidViewModel(application),
     BaseGridViewModel,
@@ -127,7 +128,10 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
         Navigation.findNavController(view).navigate(action)
     }
 
-    override fun onPlaylistAddCLicked(root: View, movie: Movie) {
+    override fun onPlaylistAddCLicked(
+        movie: Movie,
+        root: View
+    ) {
         val popupWindow = PersonalListsPopupWindow(
             root,
             View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
@@ -144,7 +148,7 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    override fun onConfirmClicked(root: View, movie: Movie, checkedLists: List<LocalMovieList>): Boolean {
+    override fun onConfirmClicked(movie: Movie, checkedLists: List<LocalMovieList>, root: View): Boolean {
         return when {
             checkedLists.isEmpty() -> {
                 showToast(
@@ -189,7 +193,7 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
                     Snackbar.LENGTH_LONG
                 )
                 .setAction(getApplication<Application>().getString(R.string.action_check_lists)) {
-                    val action = TypeGridFragmentDirections.actionGlobalCustomListsFragment()
+                    val action = NavGraphDirections.actionGlobalCustomListsFragment()
                     Navigation.findNavController(root).navigate(action)
                 }.show()
         }
