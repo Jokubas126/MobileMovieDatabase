@@ -9,5 +9,5 @@ interface BaseGridViewModel{
     fun addData()
     fun refresh()
     fun onMovieClicked(view: View, movie: Movie)
-    fun onPlaylistAddCLicked(root: View, movie: Movie)
+    fun onPlaylistAddCLicked(movie: Movie, root: View)
 }

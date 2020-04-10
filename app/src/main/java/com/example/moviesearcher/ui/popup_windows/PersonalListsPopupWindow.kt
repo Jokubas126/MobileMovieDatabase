@@ -1,5 +1,6 @@
 package com.example.moviesearcher.ui.popup_windows
 
+import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
@@ -29,7 +30,7 @@ class PersonalListsPopupWindow(
     private val checkedLists = mutableListOf<LocalMovieList>()
 
     interface ListsConfirmedClickListener{
-        fun onConfirmClicked(root: View, movie: Movie, checkedLists: List<LocalMovieList>): Boolean
+        fun onConfirmClicked(movie: Movie, checkedLists: List<LocalMovieList>, root: View): Boolean
     }
 
     init {
@@ -39,7 +40,7 @@ class PersonalListsPopupWindow(
         view.popup_window_outside.setOnClickListener { dismiss() }
 
         view.confirm_btn.setOnClickListener {
-            if (listener.onConfirmClicked(root, selectedMovie, checkedLists))
+            if (listener.onConfirmClicked(selectedMovie, checkedLists, root))
                 dismiss()
         }
     }

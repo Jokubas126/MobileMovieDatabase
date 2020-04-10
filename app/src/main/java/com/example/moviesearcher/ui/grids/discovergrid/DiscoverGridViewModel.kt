@@ -161,7 +161,10 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
         Navigation.findNavController(view).navigate(action)
     }
 
-    override fun onPlaylistAddCLicked(root: View, movie: Movie) {
+    override fun onPlaylistAddCLicked(
+        movie: Movie,
+        root: View
+    ) {
         val popupWindow = PersonalListsPopupWindow(
             root,
             View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
@@ -178,7 +181,11 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    override fun onConfirmClicked(root: View, movie: Movie, checkedLists: List<LocalMovieList>): Boolean {
+    override fun onConfirmClicked(
+        movie: Movie,
+        checkedLists: List<LocalMovieList>,
+        root: View
+    ): Boolean {
         if (checkedLists.isEmpty()) {
             showToast(
                 getApplication(),

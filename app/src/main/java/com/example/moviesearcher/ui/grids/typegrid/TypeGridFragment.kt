@@ -18,6 +18,7 @@ import com.example.moviesearcher.ui.GridAdapter
 import com.example.moviesearcher.ui.GridAdapter.ItemClickListener
 import com.example.moviesearcher.util.KEY_MOVIE_LIST_TYPE
 import com.example.moviesearcher.util.KEY_POPULAR
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 import java.util.*
 
@@ -123,7 +124,7 @@ class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalList
     }
 
     override fun onPlaylistAdd(movie: Movie) {
-        viewModel.onPlaylistAddCLicked(this.view!!, movie)
+        viewModel.onPlaylistAddCLicked(movie, (activity as AppCompatActivity).nav_host_fragment.requireView()) // give nav_host_fragment because it's tide to activity's lifecycle and in this app structure is always active
     }
 
     override fun onDeleteClicked(view: View, movie: Movie) {
