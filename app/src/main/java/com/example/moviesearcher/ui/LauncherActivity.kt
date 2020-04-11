@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.example.moviesearcher.R
 import kotlinx.android.synthetic.main.activity_launcher.*
 
-class LauncherActivity : AppCompatActivity() {
+class  LauncherActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

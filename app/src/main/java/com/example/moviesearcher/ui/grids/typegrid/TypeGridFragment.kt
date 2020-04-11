@@ -122,9 +122,11 @@ class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalList
         viewModel.onMovieClicked(view, movie)
     }
 
+    override fun onWatchlistCheckChanged(movie: Movie) {
+        viewModel.updateWatchlist(movie)
+    }
+
     override fun onPlaylistAdd(movie: Movie) {
         viewModel.onPlaylistAddCLicked(movie, (activity as AppCompatActivity).nav_host_fragment.requireView()) // give nav_host_fragment because it's tide to activity's lifecycle and in this app structure is always active
     }
-
-    override fun onDeleteClicked(view: View, movie: Movie) {}
 }

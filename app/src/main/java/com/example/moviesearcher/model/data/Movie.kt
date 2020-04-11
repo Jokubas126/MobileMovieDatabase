@@ -12,21 +12,6 @@ class MovieResults {
 
     @SerializedName(KEY_TOTAL_PAGES)
     var totalPages: Int = 0
-
-    fun formatGenres(genres: Genres) {
-        for (movie in results) {
-            val genreList = mutableListOf<String>()
-            for (id in movie.genreIds) {
-                for (genre in genres.genreList) {
-                    if (genre.id == id) {
-                        genreList.add(genre.name)
-                        break
-                    }
-                }
-            }
-            movie.genresString = stringListToString(genreList)
-        }
-    }
 }
 
 @Entity(tableName = "movie_list")
@@ -98,6 +83,19 @@ data class Movie(
     @Ignore
     var isInWatchlist: Boolean
 ) {
+
+    fun formatGenresString(genres: Genres) {
+        val genreList = mutableListOf<String>()
+        for (id in genreIds) {
+            for (genre in genres.genreList) {
+                if (genre.id == id) {
+                    genreList.add(genre.name)
+                    break
+                }
+            }
+        }
+        genresString = stringListToString(genreList)
+    }
 
     fun finalizeInitialization(context: Context): Movie {
         genresString = stringListToString(getAnyNameList(genres))

@@ -6,7 +6,7 @@ import android.net.Uri
 import com.example.moviesearcher.model.data.Credits
 import com.example.moviesearcher.model.data.Images
 import com.example.moviesearcher.model.data.Movie
-import com.example.moviesearcher.model.remote.repositories.MovieRepository
+import com.example.moviesearcher.model.remote.repositories.RemoteMovieRepository
 import com.example.moviesearcher.model.room.databases.CreditsDatabase
 import com.example.moviesearcher.model.room.databases.ImagesDatabase
 import com.example.moviesearcher.model.room.databases.MovieDatabase
@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import kotlin.coroutines.CoroutineContext
 
-class MovieRepository(application: Application) : CoroutineScope {
+class RoomMovieRepository(application: Application) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 
@@ -34,7 +34,7 @@ class MovieRepository(application: Application) : CoroutineScope {
     }
 
     private suspend fun insertOrUpdateImages(context: Context, movie: Movie, movieRoomId: Int) {
-        val images = MovieRepository()
+        val images = RemoteMovieRepository()
             .getImages(movie.remoteId).body()
         if (images != null) {
             images.generateFileUris(context)
@@ -46,7 +46,7 @@ class MovieRepository(application: Application) : CoroutineScope {
     fun getImagesById(movieId: Int) = imagesDao.getImageLiveDataById(movieId)
 
     private suspend fun insertOrUpdateCredits(context: Context, movie: Movie, movieRoomId: Int) {
-        val credits = MovieRepository()
+        val credits = RemoteMovieRepository()
             .getCredits(movie.remoteId).body()
         if (credits != null) {
             credits.generateFileUris(context)

@@ -11,7 +11,7 @@ import androidx.navigation.Navigation
 import com.example.moviesearcher.MovieDetailsArgs
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Credits
-import com.example.moviesearcher.model.remote.repositories.MovieRepository
+import com.example.moviesearcher.model.remote.repositories.RemoteMovieRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,7 +39,7 @@ class CreditsViewModel(application: Application) : AndroidViewModel(application)
 
     private fun getCreditsRemote(movieId: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository()
+            val response = RemoteMovieRepository()
                 .getCredits(movieId)
             withContext(Dispatchers.Main) {
                 _credits.value = Credits(0, response.body()!!.castList, response.body()!!.crewList)
@@ -49,7 +49,7 @@ class CreditsViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun getCreditsLocal(movieId: Int) {
-        credits = com.example.moviesearcher.model.room.repositories.MovieRepository(
+        credits = com.example.moviesearcher.model.room.repositories.RoomMovieRepository(
             getApplication()
         ).getCreditsById(movieId)
         _loading.value = false

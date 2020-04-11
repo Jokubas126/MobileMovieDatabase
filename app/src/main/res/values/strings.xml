@@ -40,7 +40,7 @@
     <string name="infinity">∞</string>
     <string name="max_release_date_value">2020</string>
 
-    <!-- Personal lists -->
+    <!-- Custom lists -->
 
     <string name="add_to_lists_title">Add to the lists</string>
     <string name="select_a_list">Please select a list</string>
@@ -50,6 +50,10 @@
     <string name="movie_list_deleted">Movie list was deleted</string>
     <string name="movie_deleted">Movie was deleted</string>
 
+    <!-- Watchlist -->
+
+    <string name="added_to_watchlist">Added to the watchlist</string>
+    <string name="deleted_from_watchlist">Deleted from the watchlist</string>
 
     <!-- Parts for movie details -->
 

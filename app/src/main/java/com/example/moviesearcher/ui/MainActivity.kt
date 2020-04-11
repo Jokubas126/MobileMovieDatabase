@@ -94,6 +94,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.menu_categories -> navController.navigate(NavGraphDirections.actionGlobalDiscoverMovies())
+            R.id.menu_watchlist -> navController.navigate(NavGraphDirections.actionGlobalWatchlistFragment())
             R.id.menu_custom_lists -> navController.navigate(NavGraphDirections.actionGlobalCustomListsFragment())
 
             R.id.menu_popular -> {

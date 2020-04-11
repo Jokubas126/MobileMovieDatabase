@@ -13,9 +13,12 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.data.MovieResults
-import com.example.moviesearcher.model.remote.repositories.MovieRepository
+import com.example.moviesearcher.model.data.WatchlistMovie
+import com.example.moviesearcher.model.remote.repositories.RemoteMovieRepository
 import com.example.moviesearcher.model.room.repositories.MovieListRepository
 import com.example.moviesearcher.model.room.databases.MovieListDatabase
+import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
+import com.example.moviesearcher.model.room.repositories.WatchlistRepository
 import com.example.moviesearcher.ui.grids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
 import com.example.moviesearcher.util.*
@@ -41,6 +44,9 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
     private var fetchedPage = 1
     private var isListFull = false
     private var searchQuery: String? = null
+
+    private val watchlistRepository = WatchlistRepository(application)
+    private val watchlistMovieIdList = mutableListOf<Int>()
 
     override fun fetch(arguments: Bundle?) {
         if (movies.value.isNullOrEmpty()) {
@@ -73,7 +79,7 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
         if (isNetworkAvailable(getApplication())) {
             configurePages()
             CoroutineScope(Dispatchers.IO).launch {
-                val response = MovieRepository()
+                val response = RemoteMovieRepository()
                     .getSearchedMovies(searchQuery!!, currentPage)
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
@@ -90,28 +96,38 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
             _loading.value = false
             networkUnavailableNotification(getApplication())
         }
-
     }
 
     private fun getGenres(movieList: MovieResults) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository()
-                .getGenreMap()
+            val response = RemoteMovieRepository()
+                .getGenres()
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-                    movieList.formatGenres(response.body()!!)
-                    val tmpMovieList: MutableList<Movie> = _movies.value as MutableList
+                    val genres = response.body()!!
+                    for (movie in movieList.results)
+                        movie.formatGenresString(genres)
+
+                    var tmpMovieList: MutableList<Movie> = _movies.value as MutableList
                     tmpMovieList.addAll(movieList.results)
+                    tmpMovieList = configureWatchlistMovies(tmpMovieList)
+
                     _movies.value = tmpMovieList
                     fetchedPage = currentPage
-                    _loading.value = false
+
                     _error.value = false
-                } else {
-                    _loading.value = false
+                } else
                     _error.value = true
-                }
+                _loading.value = false
             }
         }
+    }
+
+    private fun configureWatchlistMovies(movieList: MutableList<Movie>): MutableList<Movie> {
+        for (movie in movieList)
+            if (watchlistMovieIdList.contains(movie.remoteId))
+                movie.isInWatchlist = true
+        return movieList
     }
 
     private fun configurePages() {
@@ -125,6 +141,16 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
         val action = SearchGridFragmentDirections.actionMovieDetails()
         action.movieRemoteId = movie.remoteId
         Navigation.findNavController(view).navigate(action)
+    }
+
+    fun updateWatchlist(movie: Movie) {
+        if (movie.isInWatchlist) {
+            watchlistRepository.insertOrUpdateMovie(WatchlistMovie(movie.remoteId))
+            showToast(getApplication(), getApplication<Application>().getString(R.string.added_to_watchlist), Toast.LENGTH_SHORT)
+        } else {
+            watchlistRepository.deleteWatchlistMovie(movie.remoteId)
+            showToast(getApplication(), getApplication<Application>().getString(R.string.deleted_from_watchlist), Toast.LENGTH_SHORT)
+        }
     }
 
     override fun onPlaylistAddCLicked(
@@ -147,43 +173,43 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    override fun onConfirmClicked(
-        movie: Movie,
-        checkedLists: List<LocalMovieList>,
-        root: View
-    ): Boolean {
-        if (checkedLists.isEmpty()) {
-            showToast(
-                getApplication(),
-                getApplication<Application>().getString(R.string.select_a_list),
-                Toast.LENGTH_SHORT
-            )
-            return false
-        }
-        CoroutineScope(Dispatchers.IO).launch {
-            val fullMovie = MovieRepository()
-                .getMovieDetails(movie.remoteId).body()
-            fullMovie?.let {
-                showProgressSnackBar(
-                    root,
-                    getApplication<Application>().getString(R.string.being_uploaded_to_list)
+    override fun onConfirmClicked(movie: Movie, checkedLists: List<LocalMovieList>, root: View): Boolean {
+        return when {
+            checkedLists.isNullOrEmpty() -> {
+                showToast(
+                    getApplication(),
+                    getApplication<Application>().getString(R.string.select_a_list),
+                    Toast.LENGTH_SHORT
                 )
-                it.finalizeInitialization(getApplication())
-                val movieRoomId = com.example.moviesearcher.model.room.repositories.MovieRepository(
-                    getApplication()
-                ).insertOrUpdateMovie(getApplication(), it)
-                for (list in checkedLists)
-                    MovieListRepository(
-                        getApplication()
-                    ).addMovieToMovieList(
-                        list,
-                        movieRoomId.toInt()
-                    )
-
-                showSnackbarActionCheckLists(root)
+                false
+            }
+            isNetworkAvailable(getApplication()) -> {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val fullMovie = RemoteMovieRepository()
+                        .getMovieDetails(movie.remoteId).body()
+                    fullMovie?.let {
+                        showProgressSnackBar(
+                            root,
+                            getApplication<Application>().getString(R.string.being_uploaded_to_list)
+                        )
+                        it.finalizeInitialization(getApplication())
+                        val movieRoomId = RoomMovieRepository(getApplication())
+                            .insertOrUpdateMovie(getApplication(), it)
+                        for (list in checkedLists)
+                            MovieListRepository(getApplication()).addMovieToMovieList(
+                                list,
+                                movieRoomId.toInt()
+                            )
+                        showSnackbarActionCheckLists(root)
+                    }
+                }
+                true
+            }
+            else -> {
+                networkUnavailableNotification(getApplication())
+                false
             }
         }
-        return true
     }
 
     private fun showSnackbarActionCheckLists(root: View) {

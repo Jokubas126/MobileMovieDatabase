@@ -5,11 +5,11 @@ import com.example.moviesearcher.util.MOVIE_DB_API_KEY
 import com.example.moviesearcher.util.MOVIE_DB_IMAGE_LANGUAGE_EN
 import com.example.moviesearcher.util.MOVIE_DB_LANGUAGE_EN
 
-class MovieRepository {
+class RemoteMovieRepository {
 
     private var service = MovieApiService.api
 
-    suspend fun getGenreMap() = service.getGenres(MOVIE_DB_API_KEY)
+    suspend fun getGenres() = service.getGenres(MOVIE_DB_API_KEY)
 
     suspend fun getMovies(listType: String, page: Int) = service.getMovies(listType, MOVIE_DB_API_KEY, page.toString())
     suspend fun getMovieDetails(movieId: Int) = service.getMovieDetails(movieId.toString(), MOVIE_DB_API_KEY, MOVIE_DB_LANGUAGE_EN)

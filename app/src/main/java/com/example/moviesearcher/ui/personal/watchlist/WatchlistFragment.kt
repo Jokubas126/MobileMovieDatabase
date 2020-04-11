@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -13,9 +14,11 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.ui.GridAdapter
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
-class WatchlistFragment : Fragment(), GridAdapter.ItemClickListener {
+class WatchlistFragment : Fragment(), GridAdapter.ItemClickListener,
+    GridAdapter.PersonalListActionListener {
 
     private lateinit var viewModel: WatchlistViewModel
 
@@ -40,6 +43,11 @@ class WatchlistFragment : Fragment(), GridAdapter.ItemClickListener {
             layoutManager!!.onRestoreInstanceState(state)
 
         observeViewModel()
+
+        refresh_layout!!.setOnRefreshListener {
+            viewModel.refresh()
+            refresh_layout!!.isRefreshing = false
+        }
     }
 
     private fun observeViewModel(){
@@ -74,6 +82,7 @@ class WatchlistFragment : Fragment(), GridAdapter.ItemClickListener {
         movie_recycler_view!!.itemAnimator = DefaultItemAnimator()
         movie_recycler_view!!.adapter = gridAdapter
 
+        gridAdapter.setPersonalListActionListener(this)
         gridAdapter.setItemClickListener(this)
     }
 
@@ -84,5 +93,13 @@ class WatchlistFragment : Fragment(), GridAdapter.ItemClickListener {
     override fun onPause() {
         super.onPause()
         state = layoutManager!!.onSaveInstanceState()
+    }
+
+    override fun onWatchlistCheckChanged(movie: Movie) {
+        viewModel.updateWatchlist(movie)
+    }
+
+    override fun onPlaylistAdd(movie: Movie) {
+        viewModel.onPlaylistAddCLicked(movie, (activity as AppCompatActivity).nav_host_fragment.requireView())
     }
 }

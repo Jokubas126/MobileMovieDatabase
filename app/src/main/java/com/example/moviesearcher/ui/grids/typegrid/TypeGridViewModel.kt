@@ -12,9 +12,12 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.data.MovieResults
-import com.example.moviesearcher.model.remote.repositories.MovieRepository
+import com.example.moviesearcher.model.data.WatchlistMovie
+import com.example.moviesearcher.model.remote.repositories.RemoteMovieRepository
 import com.example.moviesearcher.model.room.repositories.MovieListRepository
 import com.example.moviesearcher.model.room.databases.MovieListDatabase
+import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
+import com.example.moviesearcher.model.room.repositories.WatchlistRepository
 import com.example.moviesearcher.ui.grids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
 import com.example.moviesearcher.util.*
@@ -41,11 +44,18 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
     private var isListFull = false
     private lateinit var movieListType: String
 
+    private val watchlistRepository = WatchlistRepository(application)
+    private val watchlistMovieIdList = mutableListOf<Int>()
+
     override fun fetch(arguments: Bundle?) {
-        if (movies.value.isNullOrEmpty()){
+        if (movies.value.isNullOrEmpty()) {
             _error.value = false
             _loading.value = true
             isListFull = false
+            CoroutineScope(Dispatchers.IO).launch {
+                for (watchlistMovie in watchlistRepository.getAllMovies())
+                    watchlistMovieIdList.add(watchlistMovie.movieId)
+            }
 
             arguments?.let {
                 val args = TypeGridFragmentArgs.fromBundle(it)
@@ -77,7 +87,7 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
         if (isNetworkAvailable(getApplication())) {
             configurePages()
             CoroutineScope(Dispatchers.IO).launch {
-                val response = MovieRepository()
+                val response = RemoteMovieRepository()
                     .getMovies(movieListType, currentPage)
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
@@ -98,23 +108,33 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
 
     private fun getGenres(movieList: MovieResults) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository()
-                .getGenreMap()
+            val response = RemoteMovieRepository()
+                .getGenres()
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-                    movieList.formatGenres(response.body()!!)
-                    val tmpMovieList: MutableList<Movie> = _movies.value as MutableList
+                    val genres = response.body()!!
+                    for (movie in movieList.results)
+                        movie.formatGenresString(genres)
+
+                    var tmpMovieList: MutableList<Movie> = _movies.value as MutableList
                     tmpMovieList.addAll(movieList.results)
+                    tmpMovieList = configureWatchlistMovies(tmpMovieList)
+
                     _movies.value = tmpMovieList
                     fetchedPage = currentPage
-                    _loading.value = false
                     _error.value = false
-                } else {
-                    _loading.value = false
+                } else
                     _error.value = true
-                }
+                _loading.value = false
             }
         }
+    }
+
+    private fun configureWatchlistMovies(movieList: MutableList<Movie>): MutableList<Movie> {
+        for (movie in movieList)
+            if (watchlistMovieIdList.contains(movie.remoteId))
+                movie.isInWatchlist = true
+        return movieList
     }
 
     private fun configurePages() {
@@ -130,10 +150,25 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
         Navigation.findNavController(view).navigate(action)
     }
 
-    override fun onPlaylistAddCLicked(
-        movie: Movie,
-        root: View
-    ) {
+    fun updateWatchlist(movie: Movie) {
+        if (movie.isInWatchlist) {
+            watchlistRepository.insertOrUpdateMovie(WatchlistMovie(movie.remoteId))
+            showToast(
+                getApplication(),
+                getApplication<Application>().getString(R.string.added_to_watchlist),
+                Toast.LENGTH_SHORT
+            )
+        } else {
+            watchlistRepository.deleteWatchlistMovie(movie.remoteId)
+            showToast(
+                getApplication(),
+                getApplication<Application>().getString(R.string.deleted_from_watchlist),
+                Toast.LENGTH_SHORT
+            )
+        }
+    }
+
+    override fun onPlaylistAddCLicked(movie: Movie, root: View) {
         val popupWindow = PersonalListsPopupWindow(
             root,
             View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
@@ -150,9 +185,13 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    override fun onConfirmClicked(movie: Movie, checkedLists: List<LocalMovieList>, root: View): Boolean {
+    override fun onConfirmClicked(
+        movie: Movie,
+        checkedLists: List<LocalMovieList>,
+        root: View
+    ): Boolean {
         return when {
-            checkedLists.isEmpty() -> {
+            checkedLists.isNullOrEmpty() -> {
                 showToast(
                     getApplication(),
                     getApplication<Application>().getString(R.string.select_a_list),
@@ -162,7 +201,7 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
             }
             isNetworkAvailable(getApplication()) -> {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val fullMovie = MovieRepository()
+                    val fullMovie = RemoteMovieRepository()
                         .getMovieDetails(movie.remoteId).body()
                     fullMovie?.let {
                         showProgressSnackBar(
@@ -170,13 +209,11 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
                             getApplication<Application>().getString(R.string.being_uploaded_to_list)
                         )
                         it.finalizeInitialization(getApplication())
-                        val movieRoomId = com.example.moviesearcher.model.room.repositories.MovieRepository(
-                            getApplication()
-                        ).insertOrUpdateMovie(getApplication(), it)
+                        val movieRoomId = RoomMovieRepository(getApplication())
+                            .insertOrUpdateMovie(getApplication(), it)
+
                         for (list in checkedLists)
-                            MovieListRepository(
-                                getApplication()
-                            ).addMovieToMovieList(
+                            MovieListRepository(getApplication()).addMovieToMovieList(
                                 list,
                                 movieRoomId.toInt()
                             )

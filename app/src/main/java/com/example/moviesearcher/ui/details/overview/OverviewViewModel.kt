@@ -11,7 +11,7 @@ import androidx.navigation.Navigation
 import com.example.moviesearcher.MovieDetailsArgs
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
-import com.example.moviesearcher.model.remote.repositories.MovieRepository
+import com.example.moviesearcher.model.remote.repositories.RemoteMovieRepository
 import com.example.moviesearcher.util.getAnyNameList
 import com.example.moviesearcher.util.stringListToListedString
 import com.example.moviesearcher.util.stringListToString
@@ -42,7 +42,7 @@ class OverviewViewModel(application: Application) : AndroidViewModel(application
 
     private fun getMovieDetailsRemote(movieId: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = MovieRepository()
+            val response = RemoteMovieRepository()
                 .getMovieDetails(movieId)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
@@ -60,7 +60,7 @@ class OverviewViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun getMovieDetailsLocal(movieId: Int) {
-        currentMovie = com.example.moviesearcher.model.room.repositories.MovieRepository(
+        currentMovie = com.example.moviesearcher.model.room.repositories.RoomMovieRepository(
             getApplication()
         ).getMovieById(movieId)
         _loading.value = false

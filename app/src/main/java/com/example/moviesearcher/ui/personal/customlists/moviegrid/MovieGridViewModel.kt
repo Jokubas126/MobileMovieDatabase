@@ -10,12 +10,12 @@ import androidx.navigation.Navigation
 import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.room.repositories.MovieListRepository
-import com.example.moviesearcher.model.room.repositories.MovieRepository
+import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 
 class MovieGridViewModel(application: Application) : AndroidViewModel(application) {
 
     private val movieRepository =
-        MovieRepository(
+        RoomMovieRepository(
             application
         )
     private val movieListRepository =

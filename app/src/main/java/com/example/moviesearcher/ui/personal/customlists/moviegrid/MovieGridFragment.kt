@@ -20,7 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
 class MovieGridFragment : Fragment(), GridAdapter.ItemClickListener,
-    GridAdapter.PersonalListActionListener {
+    GridAdapter.PersonalListDeleteListener {
 
     private lateinit var viewModel: MovieGridViewModel
     private val gridAdapter = GridAdapter(View.GONE, View.VISIBLE, View.VISIBLE)
@@ -87,7 +87,7 @@ class MovieGridFragment : Fragment(), GridAdapter.ItemClickListener,
         movie_recycler_view!!.adapter = gridAdapter
 
         gridAdapter.setItemClickListener(this)
-        gridAdapter.setPersonalListActionListener(this)
+        gridAdapter.setPersonalListDeleteListener(this)
     }
 
     override fun onResume() {
@@ -103,9 +103,6 @@ class MovieGridFragment : Fragment(), GridAdapter.ItemClickListener,
 
     override fun onMovieClick(view: View, movie: Movie) {
         viewModel.onMovieClicked(view, movie)
-    }
-
-    override fun onPlaylistAdd(movie: Movie) {
     }
 
     override fun onDeleteClicked(view: View, movie: Movie) {

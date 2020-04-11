@@ -19,13 +19,18 @@ class GridAdapter(
 
     private var itemClickListener: ItemClickListener? = null
     private var personalListActionListener: PersonalListActionListener? = null
+    private var personalListDeleteListener: PersonalListDeleteListener? = null
 
     interface ItemClickListener {
         fun onMovieClick(view: View, movie: Movie)
     }
 
     interface PersonalListActionListener {
+        fun onWatchlistCheckChanged(movie: Movie)
         fun onPlaylistAdd(movie: Movie)
+    }
+
+    interface PersonalListDeleteListener {
         fun onDeleteClicked(view: View, movie: Movie)
     }
 
@@ -59,6 +64,10 @@ class GridAdapter(
         personalListActionListener = listener
     }
 
+    fun setPersonalListDeleteListener(listener: PersonalListDeleteListener) {
+        personalListDeleteListener = listener
+    }
+
     inner class ViewHolder(itemView: ItemMovieBinding) : RecyclerView.ViewHolder(itemView.root) {
         private val view = itemView
         private lateinit var movie: Movie
@@ -78,16 +87,14 @@ class GridAdapter(
                 view.watchlistBtn.setBackgroundResource(R.drawable.ic_star_full)
             else
                 view.watchlistBtn.setBackgroundResource(R.drawable.ic_star_empty)
-            view.watchlistBtn.visibility = View.GONE
+            view.watchlistBtn.visibility = watchlistBtnVisibility
 
             view.watchlistBtn.setOnClickListener {
-                if (movie.isInWatchlist){
-                    it.setBackgroundResource(R.drawable.ic_star_empty)
-                }
-                else{
+                movie.isInWatchlist = !movie.isInWatchlist
+                personalListActionListener?.onWatchlistCheckChanged(movie)
+                if (movie.isInWatchlist)
                     it.setBackgroundResource(R.drawable.ic_star_full)
-                }
-
+                else it.setBackgroundResource(R.drawable.ic_star_empty)
             }
         }
 
@@ -103,7 +110,7 @@ class GridAdapter(
             view.deleteBtn.visibility = deleteBtnVisibility
             if (deleteBtnVisibility != View.GONE)
                 view.deleteBtn.setOnClickListener {
-                    personalListActionListener?.onDeleteClicked(it, movie)
+                    personalListDeleteListener?.onDeleteClicked(it, movie)
                 }
         }
     }

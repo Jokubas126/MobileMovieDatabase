@@ -12,7 +12,7 @@ import androidx.navigation.Navigation
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.LocalMovieList
 import com.example.moviesearcher.model.room.repositories.MovieListRepository
-import com.example.moviesearcher.model.room.repositories.MovieRepository
+import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 import com.example.moviesearcher.ui.popup_windows.CreateListPopupWindow
 
 class CustomListsViewModel(application: Application) : AndroidViewModel(application),
@@ -30,7 +30,7 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
             application
         )
     private val movieRepository =
-        MovieRepository(
+        RoomMovieRepository(
             application
         )
 
