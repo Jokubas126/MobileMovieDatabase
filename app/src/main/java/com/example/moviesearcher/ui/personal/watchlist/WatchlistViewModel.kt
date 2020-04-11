@@ -10,12 +10,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import com.example.moviesearcher.NavGraphDirections
 import com.example.moviesearcher.R
-import com.example.moviesearcher.model.data.Genres
-import com.example.moviesearcher.model.data.LocalMovieList
-import com.example.moviesearcher.model.data.Movie
-import com.example.moviesearcher.model.data.WatchlistMovie
+import com.example.moviesearcher.model.data.*
 import com.example.moviesearcher.model.remote.repositories.RemoteMovieRepository
 import com.example.moviesearcher.model.room.databases.MovieListDatabase
+import com.example.moviesearcher.model.room.repositories.GenresRepository
 import com.example.moviesearcher.model.room.repositories.MovieListRepository
 import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 import com.example.moviesearcher.model.room.repositories.WatchlistRepository
@@ -43,17 +41,14 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val movieList = mutableListOf<WatchlistMovie>()
 
-    private var genres: Genres? = null
-
     private val remoteMovieRepository = RemoteMovieRepository()
     private val watchlistRepository = WatchlistRepository(application)
+    private val genresRepository = GenresRepository(application)
 
     fun fetch() {
         if (movies.value.isNullOrEmpty()) {
-            getGenres()
             getWatchlist()
         }
-
     }
 
     fun refresh() {
@@ -85,32 +80,36 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
             val result = remoteMovieRepository.getMovieDetails(movieId)
             withContext(Dispatchers.Main) {
                 if (result.isSuccessful) {
-                    val tmpList = _movies.value
                     val movie = result.body()
                     movie?.let {
-                        it.formatGenresString(genres!!)
                         it.isInWatchlist = true
-                        if (tmpList.isNullOrEmpty())
-                            _movies.value = mutableListOf(it)
-                        else {
-                            tmpList.add(it)
-                            _movies.value = tmpList
-                        }
+                        formatGenres(it)
                     }
                 }
             }
         }
     }
 
-    private fun getGenres() {
+    private fun formatGenres(movie: Movie) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = RemoteMovieRepository().getGenres()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful)
-                    genres = response.body()
+            val genreList = mutableListOf<Genre>()
+            for (genre in movie.genres)
+                genreList.add(genresRepository.getGenreById(genre.id))
+            movie.formatGenresString(genreList)
+            insertMovieToData(movie)
+        }
+    }
+
+    private fun insertMovieToData(movie: Movie) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val tmpList = _movies.value
+            if (tmpList.isNullOrEmpty())
+                _movies.value = mutableListOf(movie)
+            else {
+                tmpList.add(movie)
+                _movies.value = tmpList
             }
         }
-
     }
 
     fun updateWatchlist(movie: Movie) {

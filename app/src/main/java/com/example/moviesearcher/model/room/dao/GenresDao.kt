@@ -12,6 +12,9 @@ interface GenresDao {
     @Query("SELECT * FROM genre WHERE id = :genreId")
     fun getGenreById(genreId: Int): Genre
 
+    @Query("SELECT * FROM genre WHERE id IN (:genreIdList)")
+    fun getGenresByIdList(genreIdList: List<Int>): List<Genre>
+
     @Query("DELETE FROM genre")
     fun deleteAllGenres()
 }

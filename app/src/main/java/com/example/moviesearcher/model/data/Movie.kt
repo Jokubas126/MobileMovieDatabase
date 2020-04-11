@@ -84,17 +84,8 @@ data class Movie(
     var isInWatchlist: Boolean
 ) {
 
-    fun formatGenresString(genres: Genres) {
-        val genreList = mutableListOf<String>()
-        for (id in genreIds) {
-            for (genre in genres.genreList) {
-                if (genre.id == id) {
-                    genreList.add(genre.name)
-                    break
-                }
-            }
-        }
-        genresString = stringListToString(genreList)
+    fun formatGenresString(genreList: List<Genre>) {
+        genresString = stringListToString(getAnyNameList(genreList))
     }
 
     fun finalizeInitialization(context: Context): Movie {

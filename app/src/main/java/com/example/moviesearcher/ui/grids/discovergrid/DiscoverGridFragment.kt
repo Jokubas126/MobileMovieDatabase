@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.ui.GridAdapter
+import com.example.moviesearcher.util.stringListToString
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
@@ -88,7 +89,7 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
         })
     }
 
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
         layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         movie_recycler_view!!.layoutManager = layoutManager
         movie_recycler_view!!.itemAnimator = DefaultItemAnimator()
@@ -100,8 +101,16 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
 
     override fun onResume() {
         super.onResume()
+        setupTitle()
+    }
+
+    private fun setupTitle() {
+        val args = DiscoverGridFragmentArgs.fromBundle(arguments!!)
+        var title = stringListToString(args.discoverNameArray.toList())
+        if (title.isBlank() || title == "null")
+            title = args.startYear + " - " + args.endYear
         (activity as AppCompatActivity).supportActionBar?.title =
-            resources.getString(R.string.discover_fragment) + viewModel.getToolbarTitle(arguments)
+            resources.getString(R.string.discover_fragment) + title
     }
 
     override fun onPause() {
@@ -118,6 +127,9 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
     }
 
     override fun onPlaylistAdd(movie: Movie) {
-        viewModel.onPlaylistAddCLicked(movie, (activity as AppCompatActivity).nav_host_fragment.requireView()) // give nav_host_fragment because it's tide to activity's lifecycle and in this app structure is always active
+        viewModel.onPlaylistAddCLicked(
+            movie,
+            (activity as AppCompatActivity).nav_host_fragment.requireView()
+        ) // give nav_host_fragment because it's tide to activity's lifecycle and in this app structure is always active
     }
 }

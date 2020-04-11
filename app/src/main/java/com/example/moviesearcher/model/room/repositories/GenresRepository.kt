@@ -39,6 +39,8 @@ class GenresRepository(context: Context) : CoroutineScope {
 
     fun getGenreById(genreId: Int) = genreDao.getGenreById(genreId)
 
+    fun getGenresByIdList(genreIdList: List<Int>) = genreDao.getGenresByIdList(genreIdList)
+
     fun deleteAllGenres() {
         launch { deleteAllGenresBG() }
     }
