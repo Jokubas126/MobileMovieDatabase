@@ -5,23 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
-    android:background="@color/colorBackground"
+    android:background="@null"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    tools:openDrawer="start"
+    tools:context=".ui.MainActivity">
 
-    <ImageView
-        android:id="@+id/background_image_view"
-        android:contentDescription="@string/background_image"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:backgroundTintMode="src_over"
-        android:scaleType="centerCrop"
-        android:tint="@color/tintBackgroundImage" />
-
-    <include
-        layout="@layout/app_bar_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <include layout="@layout/app_bar_main"/>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"

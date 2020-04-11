@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.*
 import androidx.navigation.ui.NavigationUI
-import com.bumptech.glide.Glide
 import com.example.moviesearcher.NavGraphDirections
 import com.example.moviesearcher.R
 import com.example.moviesearcher.util.*
@@ -32,24 +31,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_launcher)
-        Glide.with(this).load(R.drawable.background).into(background_image_view)
+        setContentView(R.layout.activity_main)
 
-        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-
-        viewModel.isLoaded.observe(this, Observer {
-            it?.let {
-                if (it) loadAppNavigation()
-            }
-        })
+        setSupportActionBar(toolbar)
+        loadAppNavigation()
+        prepareDrawerMenuItemCategoryStyle()
     }
 
     private fun loadAppNavigation() {
-        setContentView(R.layout.activity_main)
-        Glide.with(this).load(R.drawable.background).into(background_image_view)
-
-        setSupportActionBar(toolbar)
-
         navigationView = navigation_view
         drawerLayout = drawer_layout
 
@@ -67,13 +56,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
-        prepareDrawerMenuItemCategoryStyle()
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, drawerLayout)
     }
 
+    // to make drawer menu group titles styled
     private fun prepareDrawerMenuItemCategoryStyle() {
         val menu = navigationView.menu
         for (i in 0 until menu.size()) {

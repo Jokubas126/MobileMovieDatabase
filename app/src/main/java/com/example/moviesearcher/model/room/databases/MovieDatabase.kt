@@ -10,7 +10,7 @@ import com.example.moviesearcher.model.room.dao.MovieDao
 private const val DATABASE = "movie"
 
 @Database(entities = [Movie::class], version = 7, exportSchema = false)
-abstract class MovieDatabase: RoomDatabase(){
+abstract class MovieDatabase : RoomDatabase() {
 
     abstract fun movieDao(): MovieDao
 

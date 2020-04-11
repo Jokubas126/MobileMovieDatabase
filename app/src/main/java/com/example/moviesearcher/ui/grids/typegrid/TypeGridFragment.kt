@@ -1,5 +1,6 @@
 package com.example.moviesearcher.ui.grids.typegrid
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 import java.util.*
 
+@ExperimentalStdlibApi
 class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalListActionListener {
 
     private lateinit var viewModel: TypeGridViewModel
@@ -88,19 +90,23 @@ class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalList
         })
     }
 
-    @ExperimentalStdlibApi
     override fun onResume() {
         super.onResume()
-        val listType: String? = TypeGridFragmentArgs.fromBundle(arguments!!).keyCategory
-        (activity as AppCompatActivity).supportActionBar?.title =
-                if (listType != null) {
-                    val title = StringBuilder()
-                    val array = listType.split("_").toTypedArray()
-                    for (stringPart in array)
-                        title.append(stringPart.capitalize(Locale.getDefault())).append(" ")
+        setupTitle()
+    }
 
-                    title.append(resources.getString(R.string.type_fragment)).toString()
-                } else KEY_POPULAR.capitalize(Locale.ROOT) + " " + resources.getString(R.string.type_fragment)
+    private fun setupTitle() {
+        val listType: String? = TypeGridFragmentArgs.fromBundle(arguments!!).keyCategory
+        val title = if (listType != null) {
+            val title = StringBuilder()
+            val array = listType.split("_").toTypedArray()
+            for (stringPart in array)
+                title.append(stringPart.capitalize(Locale.getDefault())).append(" ")
+
+            title.append(resources.getString(R.string.type_fragment)).toString()
+        } else KEY_POPULAR.capitalize(Locale.ROOT) + " " + resources.getString(R.string.type_fragment)
+
+        (activity as AppCompatActivity).supportActionBar?.title = title
     }
 
     private fun setupRecyclerView(){

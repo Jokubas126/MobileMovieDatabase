@@ -20,7 +20,11 @@ private fun getProgressDrawable(context: Context): CircularProgressDrawable {
     return cpd
 }
 
-private fun loadImageFromUrl(imageView: ImageView, url: String?, progressDrawable: CircularProgressDrawable) {
+private fun loadImageFromUrl(
+    imageView: ImageView,
+    url: String?,
+    progressDrawable: CircularProgressDrawable
+) {
     val options = RequestOptions()
         .placeholder(progressDrawable)
         .error(android.R.drawable.screen_background_light_transparent)
@@ -32,7 +36,11 @@ private fun loadImageFromUrl(imageView: ImageView, url: String?, progressDrawabl
 }
 
 
-private fun loadImageFromUri(imageView: ImageView, uriString: String, progressDrawable: CircularProgressDrawable) {
+private fun loadImageFromUri(
+    imageView: ImageView,
+    uriString: String,
+    progressDrawable: CircularProgressDrawable
+) {
     val options = RequestOptions()
         .placeholder(progressDrawable)
         .error(android.R.drawable.screen_background_light_transparent)

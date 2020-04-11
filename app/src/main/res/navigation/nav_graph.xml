@@ -10,7 +10,7 @@
     <fragment
         android:id="@+id/typeGridFragment"
         android:name="com.example.moviesearcher.ui.grids.typegrid.TypeGridFragment"
-        android:label="Type"
+        android:label="TypeGridFragment"
         tools:layout="@layout/fragment_movies_grid">
         <action
             android:id="@+id/actionMovieDetails"
@@ -35,6 +35,47 @@
     </fragment>
 
     <!-- PERSONAL LISTS -->
+
+    <navigation
+        android:id="@+id/customLists"
+        app:startDestination="@id/customListsFragment" >
+        <fragment
+            android:id="@+id/movieGridFragment"
+            android:name="com.example.moviesearcher.ui.personal.customlists.moviegrid.MovieGridFragment"
+            android:label="Personal Movie List"
+            tools:layout="@layout/fragment_movies_grid">
+            <action
+                android:id="@+id/actionMovieDetails"
+                app:destination="@id/movieDetails" />
+            <argument
+                android:name="movieListId"
+                app:argType="long" />
+            <argument
+                android:name="movieListTitle"
+                app:argType="string"
+                app:nullable="true" />
+
+        </fragment>
+        <fragment
+            android:id="@+id/customListsFragment"
+            android:name="com.example.moviesearcher.ui.personal.customlists.CustomListsFragment"
+            android:label="Custom lists"
+            tools:layout="@layout/fragment_custom_lists">
+            <action
+                android:id="@+id/movieGridFragment"
+                app:destination="@id/movieGridFragment" />
+        </fragment>
+    </navigation>
+
+    <fragment
+        android:id="@+id/watchlistFragment"
+        android:name="com.example.moviesearcher.ui.personal.watchlist.WatchlistFragment"
+        android:label="Watchlist"
+        tools:layout="@layout/fragment_movies_grid">
+        <action
+            android:id="@+id/actionMovieDetails"
+            app:destination="@id/movieDetails" />
+    </fragment>
 
     <!-- MOVIE DETAILS -->
 
@@ -159,63 +200,25 @@
         android:label="About"
         tools:layout="@layout/fragment_about" />
 
+    <!-- GLOBAL ACTIONS -->
+
     <action
         android:id="@+id/actionGlobalCustomListsFragment"
         app:destination="@id/customLists" />
-
     <action
         android:id="@+id/actionGlobalSearchGridFragment"
         app:destination="@id/searchGridFragment" />
-    <action
-        android:id="@+id/action_global_aboutFragment"
-        app:destination="@id/aboutFragment" />
     <action
         android:id="@+id/action_global_discoverMovies"
         app:destination="@id/discoverMovies" />
     <action
         android:id="@+id/action_global_typeGridFragment"
         app:destination="@id/typeGridFragment" />
-    <fragment
-        android:id="@+id/watchlistFragment"
-        android:name="com.example.moviesearcher.ui.personal.watchlist.WatchlistFragment"
-        android:label="Watchlist"
-        tools:layout="@layout/fragment_movies_grid">
-        <action
-            android:id="@+id/actionMovieDetails"
-            app:destination="@id/movieDetails" />
-    </fragment>
-    <navigation
-        android:id="@+id/customLists"
-        app:startDestination="@id/customListsFragment" >
-        <fragment
-            android:id="@+id/movieGridFragment"
-            android:name="com.example.moviesearcher.ui.personal.customlists.moviegrid.MovieGridFragment"
-            android:label="Personal Movie List"
-            tools:layout="@layout/fragment_movies_grid">
-            <action
-                android:id="@+id/actionMovieDetails"
-                app:destination="@id/movieDetails" />
-            <argument
-                android:name="movieListId"
-                app:argType="long" />
-            <argument
-                android:name="movieListTitle"
-                app:argType="string"
-                app:nullable="true" />
-
-        </fragment>
-        <fragment
-            android:id="@+id/customListsFragment"
-            android:name="com.example.moviesearcher.ui.personal.customlists.CustomListsFragment"
-            android:label="Custom lists"
-            tools:layout="@layout/fragment_custom_lists">
-            <action
-                android:id="@+id/movieGridFragment"
-                app:destination="@id/movieGridFragment" />
-        </fragment>
-    </navigation>
     <action
         android:id="@+id/action_global_watchlistFragment"
         app:destination="@id/watchlistFragment" />
+    <action
+        android:id="@+id/action_global_aboutFragment"
+        app:destination="@id/aboutFragment" />
 
 </navigation>

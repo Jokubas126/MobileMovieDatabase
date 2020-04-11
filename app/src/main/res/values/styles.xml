@@ -2,6 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:layout">@layout/activity_main</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorBackground</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -20,9 +21,9 @@
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
 
-    <!-- Welcome Activity -->
+        <!-- Welcome Screen -->
 
-    <style name="WelcomeActivityTitle" parent="BaseTextStyle">
+    <style name="WelcomeScreenTitle" parent="BaseTextStyle">
         <item name="android:textSize">45sp</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textStyle">normal</item>
