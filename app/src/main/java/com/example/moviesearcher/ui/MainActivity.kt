@@ -9,6 +9,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.*
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
@@ -30,9 +32,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        setContentView(R.layout.activity_launcher)
         Glide.with(this).load(R.drawable.background).into(background_image_view)
+
+        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+        viewModel.isLoaded.observe(this, Observer {
+            it?.let {
+                if (it) loadAppNavigation()
+            }
+        })
+    }
+
+    private fun loadAppNavigation() {
+        setContentView(R.layout.activity_main)
+        Glide.with(this).load(R.drawable.background).into(background_image_view)
+
         setSupportActionBar(toolbar)
 
         navigationView = navigation_view
