@@ -25,23 +25,19 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
 
-    private val movieListRepository =
-        MovieListRepository(
-            application
-        )
-    private val movieRepository =
-        RoomMovieRepository(
-            application
-        )
+    private val movieListRepository = MovieListRepository(application)
+    private val movieRepository = RoomMovieRepository(application)
 
     private lateinit var popupWindow: PopupWindow
 
     fun fetch() {
         _loading.value = true
-        if (movieListRepository.getAllMovieLists() != null) {
-            movieLists = movieListRepository.getAllMovieLists()!!
-            _error.value = false
-        } else _error.value = true
+        _error.value = false
+        movieListRepository.getAllMovieLists()?.let {
+            movieLists = it
+        } ?: run {
+            _error.value = true
+        }
         _loading.value = false
     }
 

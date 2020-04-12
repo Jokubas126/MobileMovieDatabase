@@ -49,8 +49,7 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
         if (movies.value.isNullOrEmpty()) {
             _loading.value = true
             CoroutineScope(Dispatchers.IO).launch {
-                for (watchlistMovie in watchlistRepository.getAllMovies())
-                    watchlistMovieIdList.add(watchlistMovie.movieId)
+                watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
                 arguments?.let {
                     val args = TypeGridFragmentArgs.fromBundle(it)
                     movieListType =
@@ -97,8 +96,10 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
                 }
             }
         } else {
-            _loading.value = false
-            networkUnavailableNotification(getApplication())
+            CoroutineScope(Dispatchers.Main).launch {
+                _loading.value = false
+                networkUnavailableNotification(getApplication())
+            }
         }
     }
 

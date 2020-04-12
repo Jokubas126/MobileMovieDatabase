@@ -54,8 +54,7 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
         if (movies.value.isNullOrEmpty()) {
             _loading.value = true
             CoroutineScope(Dispatchers.IO).launch {
-                for (watchlistMovie in watchlistRepository.getAllMovies())
-                    watchlistMovieIdList.add(watchlistMovie.movieId)
+                watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
                 arguments?.let {
                     val args = DiscoverGridFragmentArgs.fromBundle(it)
                     startYear = args.startYear
@@ -109,8 +108,10 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
                 }
             }
         } else {
-            _loading.value = false
-            networkUnavailableNotification(getApplication())
+            CoroutineScope(Dispatchers.Main).launch {
+                _loading.value = false
+                networkUnavailableNotification(getApplication())
+            }
         }
     }
 

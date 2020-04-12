@@ -27,6 +27,8 @@ class WatchlistRepository(application: Application) : CoroutineScope {
 
     fun getAllMovies() = watchlistMovieDao.getAllMovies()
 
+    fun getAllMovieIds() = watchlistMovieDao.getAllMovieIds()
+
     fun deleteWatchlistMovie(movieId: Int) {
         launch { deleteWatchlistMovieBG(movieId) }
     }

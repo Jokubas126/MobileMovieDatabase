@@ -14,15 +14,6 @@ import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 
 class MovieGridViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val movieRepository =
-        RoomMovieRepository(
-            application
-        )
-    private val movieListRepository =
-        MovieListRepository(
-            getApplication()
-        )
-
     var movieList: LiveData<LocalMovieList>? = null
 
     private val _error = MutableLiveData<Boolean>()
@@ -32,8 +23,11 @@ class MovieGridViewModel(application: Application) : AndroidViewModel(applicatio
 
     private lateinit var args: MovieGridFragmentArgs
 
+    private val movieRepository = RoomMovieRepository(application)
+    private val movieListRepository = MovieListRepository(getApplication())
+
     fun fetch(arguments: Bundle?) {
-        if (movieList == null) {
+        movieList?.let {
             arguments?.let {
                 args = MovieGridFragmentArgs.fromBundle(it)
                 getMovieList()

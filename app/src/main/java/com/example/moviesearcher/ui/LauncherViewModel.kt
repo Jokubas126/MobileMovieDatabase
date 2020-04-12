@@ -41,16 +41,16 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
     private fun updateGenres() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = movieRepository.getGenres()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    val genres = response.body()
-                    genres?.let {
-                        for (genre in it.genreList)
-                            genresRepository.insertOrUpdateGenre(genre)
-                        isGenresLoaded = true
-                        checkIfAllLoaded()
-                    }
+            if (response.isSuccessful) {
+                val genres = response.body()
+                genres?.let {
+                    genresRepository.updateGenresBG(genres.genreList)
+                    isGenresLoaded = true
+                    checkIfAllLoaded()
                 }
+            } else {
+                isGenresLoaded = true
+                checkIfAllLoaded()
             }
         }
     }

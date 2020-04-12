@@ -43,12 +43,10 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val remoteMovieRepository = RemoteMovieRepository()
     private val watchlistRepository = WatchlistRepository(application)
-    private val genresRepository = GenresRepository(application)
 
     fun fetch() {
-        if (movies.value.isNullOrEmpty()) {
+        if (movies.value.isNullOrEmpty())
             getWatchlist()
-        }
     }
 
     fun refresh() {
@@ -67,7 +65,6 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
                     getMovie(movie.movieId)
                 withContext(Dispatchers.Main) { _error.value = movieList.isNullOrEmpty() }
             }
-
         } else {
             _error.value = true
             networkUnavailableNotification(getApplication())
@@ -92,10 +89,7 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
 
     private fun formatGenres(movie: Movie) {
         CoroutineScope(Dispatchers.IO).launch {
-            val genreList = mutableListOf<Genre>()
-            for (genre in movie.genres)
-                genreList.add(genresRepository.getGenreById(genre.id))
-            movie.formatGenresString(genreList)
+            movie.formatGenresString(movie.genres)
             insertMovieToData(movie)
         }
     }

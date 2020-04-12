@@ -50,8 +50,7 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
         if (movies.value.isNullOrEmpty()) {
             _loading.value = true
             CoroutineScope(Dispatchers.IO).launch {
-                for (watchlistMovie in watchlistRepository.getAllMovies())
-                    watchlistMovieIdList.add(watchlistMovie.movieId)
+                watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
                 arguments?.let {
                     val args = SearchGridFragmentArgs.fromBundle(arguments)
                     searchQuery = args.searchQuery
@@ -95,8 +94,10 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
                 }
             }
         } else {
-            _loading.value = false
-            networkUnavailableNotification(getApplication())
+            CoroutineScope(Dispatchers.Main).launch {
+                _loading.value = false
+                networkUnavailableNotification(getApplication())
+            }
         }
     }
 
