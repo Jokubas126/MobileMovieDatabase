@@ -10,10 +10,7 @@ import com.example.moviesearcher.model.data.Category
 import com.example.moviesearcher.model.data.Genres
 import com.example.moviesearcher.model.data.Subcategory
 import com.example.moviesearcher.model.remote.repositories.CategoryRepository
-import com.example.moviesearcher.util.GENRE_CATEGORY
-import com.example.moviesearcher.util.LANGUAGE_CATEGORY
-import com.example.moviesearcher.util.isNetworkAvailable
-import com.example.moviesearcher.util.networkUnavailableNotification
+import com.example.moviesearcher.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +26,7 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
     val loading: LiveData<Boolean> = _loading
 
     init {
-        if (isNetworkAvailable(getApplication())){
+        if (isNetworkAvailable(getApplication())) {
             if (categories.value.isNullOrEmpty()) {
                 _loading.value = true
                 getLanguages()
@@ -83,7 +80,10 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
 
     private fun prepareSubcategories(list: List<Subcategory>): List<Subcategory> {
         sort(list) { o1: Subcategory, o2: Subcategory -> o1.name.compareTo(o2.name) }
-        (list as MutableList<Subcategory>).add(0, Subcategory("", "")) // to have an empty item at the beginning for deselection
+        (list as MutableList<Subcategory>).add(
+            0,
+            Subcategory("", "")
+        ) // to have an empty item at the beginning for deselection
         return list
     }
 
@@ -116,36 +116,21 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun onConfirmSelectionClicked(view: View, startYear: String, endYear: String) {
-        val action = when {
-            genreSubcategory == null -> {
-                CategoriesFragmentDirections.actionDiscoverGridFragment(
-                    startYear,
-                    endYear,
-                    arrayOf(languageSubcategory?.name),
-                    0,
-                    languageSubcategory?.code
-                )
-
-            }
-            languageSubcategory == null -> {
-                CategoriesFragmentDirections.actionDiscoverGridFragment(
-                    startYear,
-                    endYear,
-                    arrayOf(genreSubcategory?.name),
-                    Integer.parseInt(genreSubcategory!!.code),
-                    null
-                )
-            }
-            else -> {
-                CategoriesFragmentDirections.actionDiscoverGridFragment(
-                    startYear,
-                    endYear,
-                    arrayOf(languageSubcategory?.name, genreSubcategory?.name),
-                    Integer.parseInt(genreSubcategory!!.code),
-                    languageSubcategory?.code
-                )
-            }
+        val action = CategoriesFragmentDirections.actionRemoteMovieGridFragment()
+        action.movieGridType = DISCOVER_MOVIE_GRID
+        action.startYear = startYear
+        action.endYear = endYear
+        val discoveryArrayList = arrayListOf<String>()
+        genreSubcategory?.let {
+            action.genreId = Integer.parseInt(it.code)
+            discoveryArrayList.add(it.name)
         }
+        languageSubcategory?.let {
+            action.languageKey = it.code
+            discoveryArrayList.add(it.name)
+        }
+        if (discoveryArrayList.isNotEmpty())
+            action.discoverNameArray = discoveryArrayList.toTypedArray()
         Navigation.findNavController(view).navigate(action)
     }
 }

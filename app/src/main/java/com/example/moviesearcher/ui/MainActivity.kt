@@ -9,8 +9,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.*
 import androidx.navigation.ui.NavigationUI
 import com.example.moviesearcher.NavGraphDirections
@@ -79,8 +77,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val searchView = searchItem!!.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                val action
-                        = NavGraphDirections.actionGlobalSearchGridFragment(query)
+                val action = NavGraphDirections.actionGlobalSearchGridFragment(query)
                 navController.popBackStack(navController.currentDestination!!.id, true)
                 navController.navigate(action)
                 return false
@@ -97,27 +94,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
-            R.id.menu_categories -> navController.navigate(NavGraphDirections.actionGlobalDiscoverMovies())
+            R.id.menu_categories -> navController.navigate(NavGraphDirections.actionGlobalCategoriesFragment())
             R.id.menu_watchlist -> navController.navigate(NavGraphDirections.actionGlobalWatchlistFragment())
             R.id.menu_custom_lists -> navController.navigate(NavGraphDirections.actionGlobalCustomListsFragment())
 
             R.id.menu_popular -> {
-                val action = NavGraphDirections.actionGlobalTypeGridFragment()
+                val action
+                        = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
                 action.keyCategory = KEY_POPULAR
                 navController.navigate(action)
             }
             R.id.menu_top_rated -> {
-                val action = NavGraphDirections.actionGlobalTypeGridFragment()
+                val action
+                        = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
                 action.keyCategory = KEY_TOP_RATED
                 navController.navigate(action)
             }
             R.id.menu_now_playing -> {
-                val action = NavGraphDirections.actionGlobalTypeGridFragment()
+                val action
+                        = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
                 action.keyCategory = KEY_NOW_PLAYING
                 navController.navigate(action)
             }
             R.id.menu_upcoming -> {
-                val action = NavGraphDirections.actionGlobalTypeGridFragment()
+                val action
+                        = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
                 action.keyCategory = KEY_UPCOMING
                 navController.navigate(action)
             }

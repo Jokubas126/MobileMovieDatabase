@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.remotegrids.typegrid
+package com.example.moviesearcher.ui.remotegrids
 
 import android.app.Application
 import android.os.Bundle
@@ -16,7 +16,6 @@ import com.example.moviesearcher.model.room.databases.MovieListDatabase
 import com.example.moviesearcher.model.room.repositories.GenresRepository
 import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 import com.example.moviesearcher.model.room.repositories.WatchlistRepository
-import com.example.moviesearcher.ui.remotegrids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
 import com.example.moviesearcher.util.*
 import com.google.android.material.snackbar.Snackbar
@@ -24,10 +23,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Response
+import java.util.*
 
-class TypeGridViewModel(application: Application, arguments: Bundle?) :
+class RemoteMovieGridViewModel(application: Application, arguments: Bundle?) :
     AndroidViewModel(application),
-    BaseGridViewModel, PersonalListsPopupWindow.ListsConfirmedClickListener {
+    BaseGridViewModel, PersonalListsPopupWindow.ListsConfirmedClickListener, ResponseListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
     private val _error = MutableLiveData<Boolean>()
@@ -40,56 +41,90 @@ class TypeGridViewModel(application: Application, arguments: Bundle?) :
     private var currentPage = 1
     private var fetchedPage = 0
     private var isListFull = false
-    private lateinit var movieListType: String
 
+    private lateinit var args: RemoteMovieGridFragmentArgs
+
+    private lateinit var movieGridType: String
+
+    // type
+    private var movieListType: String? = null
+
+    // discover
+    private var startYear: String? = null
+    private var endYear: String? = null
+    private var languageKey: String? = null
+    private var genreId: Int = 0
+
+    // repositories
     private val watchlistRepository = WatchlistRepository(application)
     private val watchlistMovieIdList = mutableListOf<Int>()
     private val genresRepository = GenresRepository(application)
+
+    private val responseListener: ResponseListener = this
 
     init {
         _loading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
             arguments?.let {
-                movieListType = TypeGridFragmentArgs.fromBundle(it).keyCategory
-                getMovieList()
+                retrieveArguments(it)
+                getResponse()
             }
         }
+    }
+
+    private fun retrieveArguments(arguments: Bundle) {
+        args = RemoteMovieGridFragmentArgs.fromBundle(arguments)
+        movieGridType = args.movieGridType
+        movieListType = args.keyCategory
+        startYear = args.startYear
+        endYear = args.endYear
+        languageKey = args.languageKey
+        genreId = args.genreId
     }
 
     override fun refresh() {
         isListFull = false
         _loading.value = true
         currentPage = 1
-        getMovieList()
+        getResponse()
     }
 
     override fun addData() {
         if (!isListFull) {
             _loading.value = true
             currentPage++
-            getMovieList()
+            getResponse()
         }
     }
 
     //------------------------- Retrieving the data --------------------------//
 
-    private fun getMovieList() {
+
+    private fun getResponse() {
         synchronized(this) {
             if (isNetworkAvailable(getApplication())) {
+                configurePages()
                 CoroutineScope(Dispatchers.IO).launch {
-                    configurePages()
-                    val response = RemoteMovieRepository().getMovies(movieListType, currentPage)
-                    withContext(Dispatchers.Main) {
-                        if (response.isSuccessful) {
-                            if (currentPage == response.body()!!.totalPages)
-                                isListFull = true
-                            formatGenres(response.body()!!.results)
-                        } else {
-                            _loading.value = false
-                            _error.value = true
+                    val response =
+                        when (movieGridType) {
+                            TYPE_MOVIE_GRID -> RemoteMovieRepository().getMovies(
+                                movieListType!!,
+                                currentPage
+                            )
+                            DISCOVER_MOVIE_GRID -> {
+                                val formattedList = formatQueries()
+                                RemoteMovieRepository().getDiscoveredMovies(
+                                    currentPage,
+                                    formattedList[0],
+                                    formattedList[1],
+                                    formattedList[2],
+                                    languageKey
+                                )
+                            }
+                            else -> null
                         }
-                    }
+                    withContext(Dispatchers.Main) { responseListener.onResponseRetrieved(response) }
                 }
             } else {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -99,6 +134,22 @@ class TypeGridViewModel(application: Application, arguments: Bundle?) :
             }
         }
     }
+
+    override fun onResponseRetrieved(response: Response<MovieResults>?) {
+        response?.let { getMovieList(it) }
+    }
+
+    private fun getMovieList(response: Response<MovieResults>) {
+        if (response.isSuccessful) {
+            if (currentPage == response.body()!!.totalPages)
+                isListFull = true
+            formatGenres(response.body()!!.results)
+        } else {
+            _loading.value = false
+            _error.value = true
+        }
+    }
+
 
     private fun formatGenres(movieList: List<Movie>) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -138,7 +189,21 @@ class TypeGridViewModel(application: Application, arguments: Bundle?) :
             currentPage = fetchedPage + 1
     }
 
-    //------------------------ Watchlist ----------------------------//
+
+    // discover part
+    private fun formatQueries(): List<String?> {
+        var startDate: String? = null
+        if (!startYear.equals("∞"))
+            startDate = "$startYear-01-01"
+        val endDate = "$endYear-12-31"
+        val genreIdString: String? =
+            if (genreId == 0)
+                null
+            else genreId.toString()
+        return listOf(startDate, endDate, genreIdString)
+    }
+
+//------------------------ Watchlist ----------------------------//
 
     fun updateWatchlist(movie: Movie) {
         if (movie.isInWatchlist) {
@@ -160,7 +225,7 @@ class TypeGridViewModel(application: Application, arguments: Bundle?) :
         }
     }
 
-    //------------------ Custom lists --------------------------//
+//------------------ Custom lists --------------------------//
 
     override fun onPlaylistAddCLicked(movie: Movie, root: View) {
         val popupWindow = PersonalListsPopupWindow(
@@ -237,10 +302,11 @@ class TypeGridViewModel(application: Application, arguments: Bundle?) :
         }
     }
 
-    //------------------ Navigation -----------------------------//
+//------------------ Navigation -----------------------------//
 
     override fun onMovieClicked(view: View, movie: Movie) {
-        val action = TypeGridFragmentDirections.actionMovieDetails()
+        val action =
+            RemoteMovieGridFragmentDirections.actionMovieDetails()
         action.movieRemoteId = movie.remoteId
         Navigation.findNavController(view).navigate(action)
     }
