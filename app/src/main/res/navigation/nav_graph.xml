@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/typeGridFragment"
-        android:name="com.example.moviesearcher.ui.grids.typegrid.TypeGridFragment"
+        android:name="com.example.moviesearcher.ui.remotegrids.typegrid.TypeGridFragment"
         android:label="TypeGridFragment"
         tools:layout="@layout/fragment_movies_grid">
         <action
@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/searchGridFragment"
-        android:name="com.example.moviesearcher.ui.grids.searchgrid.SearchGridFragment"
+        android:name="com.example.moviesearcher.ui.remotegrids.searchgrid.SearchGridFragment"
         android:label="@string/action_search"
         tools:layout="@layout/fragment_movies_grid">
         <action
@@ -167,7 +167,7 @@
         </fragment>
         <fragment
             android:id="@+id/discoverGridFragment"
-            android:name="com.example.moviesearcher.ui.grids.discovergrid.DiscoverGridFragment"
+            android:name="com.example.moviesearcher.ui.remotegrids.discovergrid.DiscoverGridFragment"
             android:label="Discover"
             tools:layout="@layout/fragment_movies_grid">
             <action

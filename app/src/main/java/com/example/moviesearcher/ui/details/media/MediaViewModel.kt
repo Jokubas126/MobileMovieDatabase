@@ -20,7 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MediaViewModel(application: Application) : AndroidViewModel(application) {
+class MediaViewModel(application: Application, arguments: Bundle?) : AndroidViewModel(application) {
     private val _trailer = MutableLiveData<Video>()
     private var _images = MutableLiveData<Images>()
     private val _loading = MutableLiveData<Boolean>()
@@ -31,7 +31,7 @@ class MediaViewModel(application: Application) : AndroidViewModel(application) {
 
     private lateinit var safeArgs: MovieDetailsArgs
 
-    fun fetch(arguments: Bundle?) {
+    init {
         _loading.value = true
         arguments?.let {
             safeArgs = MovieDetailsArgs.fromBundle(it)

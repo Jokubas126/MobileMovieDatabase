@@ -19,79 +19,79 @@ import kotlinx.android.synthetic.main.fragment_movie_cast.*
 
 class CreditsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var crewLayout: LinearLayout
-    private lateinit var castLayout: LinearLayout
-    private lateinit var castView: RecyclerView
-    private lateinit var crewView: RecyclerView
-    private lateinit var bottomNavigationView: BottomNavigationView
-
     private val castAdapter = PeopleAdapter()
     private val crewAdapter = PeopleAdapter()
     private lateinit var viewModel: CreditsViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_movie_cast, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CreditsViewModel::class.java)
-        viewModel.fetch(arguments)
 
-        crewLayout = crew_layout
-        castLayout = cast_layout
-        castView = cast_recycler_view
-        crewView = crew_recycler_view
-        bottomNavigationView = bottom_navigation
+        viewModel = ViewModelProvider(
+            this,
+            CreditsViewModelFactory(activity!!.application, arguments)
+        ).get(CreditsViewModel::class.java)
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(this)
-        castView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        castView.itemAnimator = DefaultItemAnimator()
-        castView.adapter = castAdapter
-        crewView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        crewView.itemAnimator = DefaultItemAnimator()
-        crewView.adapter = crewAdapter
+        bottom_navigation.setOnNavigationItemSelectedListener(this)
+        setupRecyclerViews()
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        viewModel.credits.observe(viewLifecycleOwner, Observer {
-            if (it != null){
+        viewModel.credits.observe(viewLifecycleOwner, Observer { credits ->
+            credits?.let {
                 updateCast(it.castList)
                 updateCrew(it.crewList)
             }
         })
-        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
-            if (isLoading != null) {
+        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+            isLoading?.let {
                 progress_bar.visibility =
-                        if (isLoading)
-                            View.VISIBLE
-                        else View.GONE
-                if (isLoading) {
-                    castLayout.visibility = View.GONE
-                    crewLayout.visibility = View.GONE
+                    if (it) View.VISIBLE
+                    else View.GONE
+                if (it) {
+                    cast_layout.visibility = View.GONE
+                    crew_layout.visibility = View.GONE
                 }
             }
         })
     }
 
-    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        return viewModel.onNavigationItemSelected(bottomNavigationView, menuItem)
+    private fun updateCast(castList: List<Person>?) {
+        castList?.let {
+            castAdapter.updatePeopleList(it)
+            progress_bar.visibility = View.GONE
+            cast_layout.visibility = View.VISIBLE
+        }
     }
 
-    private fun updateCast(castList: List<Person>?){
-        if (castList != null) {
-            castAdapter.updatePeopleList(castList)
+    private fun updateCrew(crewList: List<Person>?) {
+        crewList?.let {
+            crewAdapter.updatePeopleList(it)
             progress_bar.visibility = View.GONE
-            castLayout.visibility = View.VISIBLE
+            crew_layout.visibility = View.VISIBLE
         }
     }
-    private fun updateCrew(crewList: List<Person>?){
-        if (crewList != null) {
-            crewAdapter.updatePeopleList(crewList)
-            progress_bar.visibility = View.GONE
-            crewLayout.visibility = View.VISIBLE
-        }
+
+    private fun setupRecyclerViews() {
+        cast_recycler_view.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        cast_recycler_view.itemAnimator = DefaultItemAnimator()
+        cast_recycler_view.adapter = castAdapter
+
+        crew_recycler_view.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        crew_recycler_view.itemAnimator = DefaultItemAnimator()
+        crew_recycler_view.adapter = crewAdapter
+    }
+
+    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+        return viewModel.onNavigationItemSelected(bottom_navigation, menuItem)
     }
 }

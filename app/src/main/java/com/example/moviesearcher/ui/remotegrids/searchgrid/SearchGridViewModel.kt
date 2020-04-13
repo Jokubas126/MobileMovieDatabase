@@ -1,13 +1,14 @@
-package com.example.moviesearcher.ui.grids.typegrid
+package com.example.moviesearcher.ui.remotegrids.searchgrid
 
 import android.app.Application
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
-import com.example.moviesearcher.NavGraphDirections
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.*
 import com.example.moviesearcher.model.remote.repositories.RemoteMovieRepository
@@ -16,7 +17,7 @@ import com.example.moviesearcher.model.room.databases.MovieListDatabase
 import com.example.moviesearcher.model.room.repositories.GenresRepository
 import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 import com.example.moviesearcher.model.room.repositories.WatchlistRepository
-import com.example.moviesearcher.ui.grids.BaseGridViewModel
+import com.example.moviesearcher.ui.remotegrids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
 import com.example.moviesearcher.util.*
 import com.google.android.material.snackbar.Snackbar
@@ -25,7 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TypeGridViewModel(application: Application) : AndroidViewModel(application),
+class SearchGridViewModel(application: Application, arguments: Bundle?) : AndroidViewModel(application),
     BaseGridViewModel, PersonalListsPopupWindow.ListsConfirmedClickListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
@@ -39,23 +40,24 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
     private var currentPage = 1
     private var fetchedPage = 1
     private var isListFull = false
-    private lateinit var movieListType: String
+    private var searchQuery: String? = null
 
     private val watchlistRepository = WatchlistRepository(application)
     private val watchlistMovieIdList = mutableListOf<Int>()
     private val genresRepository = GenresRepository(application)
 
-    override fun fetch(arguments: Bundle?) {
+    init {
+        fetch(arguments)
+    }
+
+    private fun fetch(arguments: Bundle?) {
         if (movies.value.isNullOrEmpty()) {
             _loading.value = true
             CoroutineScope(Dispatchers.IO).launch {
                 watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
                 arguments?.let {
-                    val args = TypeGridFragmentArgs.fromBundle(it)
-                    movieListType =
-                        if (args.keyCategory.isNotBlank())
-                            args.keyCategory
-                        else KEY_POPULAR
+                    val args = SearchGridFragmentArgs.fromBundle(arguments)
+                    searchQuery = args.searchQuery
                     getMovieList()
                 }
             }
@@ -83,7 +85,7 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
         if (isNetworkAvailable(getApplication())) {
             configurePages()
             CoroutineScope(Dispatchers.IO).launch {
-                val response = RemoteMovieRepository().getMovies(movieListType, currentPage)
+                val response = RemoteMovieRepository().getSearchedMovies(searchQuery!!, currentPage)
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         if (currentPage == response.body()!!.totalPages)
@@ -205,7 +207,6 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
                         it.finalizeInitialization(getApplication())
                         val movieRoomId = RoomMovieRepository(getApplication())
                             .insertOrUpdateMovie(getApplication(), it)
-
                         for (list in checkedLists)
                             MovieListRepository(getApplication()).addMovieToMovieList(
                                 list,
@@ -231,16 +232,15 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
                     Snackbar.LENGTH_LONG
                 )
                 .setAction(getApplication<Application>().getString(R.string.action_check_lists)) {
-                    val action = NavGraphDirections.actionGlobalCustomListsFragment()
+                    val action = SearchGridFragmentDirections.actionGlobalCustomListsFragment()
                     Navigation.findNavController(root).navigate(action)
                 }.show()
         }
     }
 
-    //------------------ Navigation -----------------------------//
 
     override fun onMovieClicked(view: View, movie: Movie) {
-        val action = TypeGridFragmentDirections.actionMovieDetails()
+        val action = SearchGridFragmentDirections.actionMovieDetails()
         action.movieRemoteId = movie.remoteId
         Navigation.findNavController(view).navigate(action)
     }

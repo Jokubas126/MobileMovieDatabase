@@ -27,7 +27,11 @@ class WatchlistFragment : Fragment(), GridAdapter.ItemClickListener,
     private var layoutManager: StaggeredGridLayoutManager? = null
     private var state: Parcelable? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_movies_grid, container, false)
     }
 
@@ -35,52 +39,46 @@ class WatchlistFragment : Fragment(), GridAdapter.ItemClickListener,
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(WatchlistViewModel::class.java)
-        viewModel.fetch()
 
         setupRecyclerView()
-
-        if (state != null)
-            layoutManager!!.onRestoreInstanceState(state)
-
         observeViewModel()
 
-        refresh_layout!!.setOnRefreshListener {
+        refresh_layout.setOnRefreshListener {
             viewModel.refresh()
-            refresh_layout!!.isRefreshing = false
+            refresh_layout.isRefreshing = false
         }
     }
 
-    private fun observeViewModel(){
-        viewModel.movies.observe(viewLifecycleOwner, Observer { movies: List<Movie>? ->
-            if (movies != null) {
-                gridAdapter.updateMovieList(movies)
-                movie_recycler_view!!.visibility = View.VISIBLE
+    private fun observeViewModel() {
+        viewModel.movies.observe(viewLifecycleOwner, Observer { movies ->
+            movies?.let {
+                gridAdapter.updateMovieList(it)
+                movie_recycler_view.visibility = View.VISIBLE
             }
         })
-        viewModel.error.observe(viewLifecycleOwner, Observer { isError: Boolean? ->
-            if (isError != null)
-                loading_error_text_view!!.visibility =
-                    if (isError)
-                        View.VISIBLE
+        viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
+            isError?.let {
+                loading_error_text_view.visibility =
+                    if (it) View.VISIBLE
                     else View.GONE
+            }
         })
-        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
-            if (isLoading != null) {
-                progress_bar_loading_movie_list!!.visibility =
-                    if (isLoading)
-                        View.VISIBLE
+        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+            isLoading?.let {
+                progress_bar_loading_movie_list.visibility =
+                    if (it) View.VISIBLE
                     else View.GONE
-                if (isLoading)
-                    loading_error_text_view!!.visibility = View.GONE
+                if (it) loading_error_text_view.visibility = View.GONE
             }
         })
     }
 
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
         layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        movie_recycler_view!!.layoutManager = layoutManager
-        movie_recycler_view!!.itemAnimator = DefaultItemAnimator()
-        movie_recycler_view!!.adapter = gridAdapter
+        movie_recycler_view.layoutManager = layoutManager
+        state?.let { layoutManager?.onRestoreInstanceState(it) }
+        movie_recycler_view.itemAnimator = DefaultItemAnimator()
+        movie_recycler_view.adapter = gridAdapter
 
         gridAdapter.setPersonalListActionListener(this)
         gridAdapter.setWatchlistActionListener(this)
@@ -93,7 +91,7 @@ class WatchlistFragment : Fragment(), GridAdapter.ItemClickListener,
 
     override fun onPause() {
         super.onPause()
-        state = layoutManager!!.onSaveInstanceState()
+        layoutManager?.let { state = it.onSaveInstanceState() }
     }
 
     override fun onWatchlistCheckChanged(movie: Movie) {
@@ -101,6 +99,9 @@ class WatchlistFragment : Fragment(), GridAdapter.ItemClickListener,
     }
 
     override fun onPlaylistAdd(movie: Movie) {
-        viewModel.onPlaylistAddCLicked(movie, (activity as AppCompatActivity).nav_host_fragment.requireView())
+        viewModel.onPlaylistAddCLicked(
+            movie,
+            (activity as AppCompatActivity).nav_host_fragment.requireView()
+        )
     }
 }

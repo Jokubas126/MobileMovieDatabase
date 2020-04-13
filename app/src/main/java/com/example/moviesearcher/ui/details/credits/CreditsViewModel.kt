@@ -17,7 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CreditsViewModel(application: Application) : AndroidViewModel(application) {
+class CreditsViewModel(application: Application, arguments: Bundle?) : AndroidViewModel(application) {
 
     private var _credits = MutableLiveData<Credits>()
     private val _loading = MutableLiveData<Boolean>()
@@ -25,15 +25,15 @@ class CreditsViewModel(application: Application) : AndroidViewModel(application)
     var credits: LiveData<Credits> = _credits
     val loading: LiveData<Boolean> = _loading
 
-    private lateinit var safeArgs: MovieDetailsArgs
+    private lateinit var args: MovieDetailsArgs
 
-    fun fetch(arguments: Bundle?) {
+    init {
         _loading.value = true
         arguments?.let {
-            safeArgs = MovieDetailsArgs.fromBundle(it)
-            if (safeArgs.movieLocalId == 0)
-                getCreditsRemote(safeArgs.movieRemoteId)
-            else getCreditsLocal(safeArgs.movieLocalId)
+            args = MovieDetailsArgs.fromBundle(it)
+            if (args.movieLocalId == 0)
+                getCreditsRemote(args.movieRemoteId)
+            else getCreditsLocal(args.movieLocalId)
         }
     }
 
@@ -59,14 +59,14 @@ class CreditsViewModel(application: Application) : AndroidViewModel(application)
         when (menuItem.itemId) {
             R.id.media_menu_item -> {
                 val action = CreditsFragmentDirections.actionMovieMedia()
-                action.movieRemoteId = safeArgs.movieRemoteId
-                action.movieLocalId = safeArgs.movieLocalId
+                action.movieRemoteId = args.movieRemoteId
+                action.movieLocalId = args.movieLocalId
                 Navigation.findNavController(view).navigate(action)
             }
             R.id.overview_menu_item -> {
                 val action = CreditsFragmentDirections.actionMovieOverview()
-                action.movieRemoteId = safeArgs.movieRemoteId
-                action.movieLocalId = safeArgs.movieLocalId
+                action.movieRemoteId = args.movieRemoteId
+                action.movieLocalId = args.movieLocalId
                 Navigation.findNavController(view).navigate(action)
             }
         }

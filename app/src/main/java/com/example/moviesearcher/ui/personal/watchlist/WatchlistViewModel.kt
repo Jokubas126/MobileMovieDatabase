@@ -43,9 +43,8 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     private val remoteMovieRepository = RemoteMovieRepository()
     private val watchlistRepository = WatchlistRepository(application)
 
-    fun fetch() {
-        if (movies.value.isNullOrEmpty())
-            getWatchlist()
+    init {
+        getWatchlist()
     }
 
     fun refresh() {
@@ -56,6 +55,7 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     private fun getWatchlist() {
         _loading.value = true
         _error.value = false
+        if (movies.value.isNullOrEmpty())
         if (isNetworkAvailable(getApplication())) {
             CoroutineScope(Dispatchers.IO).launch {
                 movieList.clear()

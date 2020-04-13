@@ -1,7 +1,6 @@
-package com.example.moviesearcher.ui.personal.customlists.moviegrid
+package com.example.moviesearcher.ui.remotegrids.searchgrid
 
 import android.os.Bundle
-import android.os.Handler
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,26 +10,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.ui.GridAdapter
-import com.example.moviesearcher.util.SNACKBAR_LENGTH_LONG_MS
-import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
-class MovieGridFragment : Fragment(), GridAdapter.ItemClickListener,
-    GridAdapter.PersonalListDeleteListener, GridAdapter.WatchlistActionListener {
+class SearchGridFragment : Fragment(), GridAdapter.ItemClickListener,
+    GridAdapter.PersonalListActionListener, GridAdapter.WatchlistActionListener {
 
-    private lateinit var viewModel: MovieGridViewModel
-    private val gridAdapter = GridAdapter(View.GONE, View.VISIBLE, View.VISIBLE)
+    private lateinit var viewModel: SearchGridViewModel
+    private val gridAdapter = GridAdapter(View.VISIBLE, View.VISIBLE, View.GONE)
+
+    private var isDown = true
 
     private var layoutManager: StaggeredGridLayoutManager? = null
     private var state: Parcelable? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_movies_grid, container, false)
@@ -38,10 +38,11 @@ class MovieGridFragment : Fragment(), GridAdapter.ItemClickListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel = ViewModelProvider(
             this,
-            MovieGridViewModelFactory(activity!!.application, arguments)
-        ).get(MovieGridViewModel::class.java)
+            SearchGridViewModelFactory(activity!!.application, arguments)
+        ).get(SearchGridViewModel::class.java)
 
         setupRecyclerView()
         observeViewModel()
@@ -53,8 +54,8 @@ class MovieGridFragment : Fragment(), GridAdapter.ItemClickListener,
     }
 
     private fun observeViewModel() {
-        viewModel.movieList.observe(viewLifecycleOwner, Observer { movieList ->
-            movieList?.let {
+        viewModel.movies.observe(viewLifecycleOwner, Observer { movies ->
+            movies?.let {
                 gridAdapter.updateMovieList(it)
                 movie_recycler_view.visibility = View.VISIBLE
             }
@@ -85,13 +86,25 @@ class MovieGridFragment : Fragment(), GridAdapter.ItemClickListener,
 
         gridAdapter.setItemClickListener(this)
         gridAdapter.setWatchlistActionListener(this)
-        gridAdapter.setPersonalListDeleteListener(this)
+        gridAdapter.setPersonalListActionListener(this)
+
+        movie_recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1) && isDown) {
+                    isDown = false
+                    viewModel.addData()
+                    isDown = true
+                }
+            }
+        })
     }
 
     override fun onResume() {
         super.onResume()
-        val args = MovieGridFragmentArgs.fromBundle(arguments!!)
-        (activity as AppCompatActivity).supportActionBar?.title = args.movieListTitle
+        (activity as AppCompatActivity).supportActionBar?.title =
+            resources.getString(R.string.search_fragment) +
+                    SearchGridFragmentArgs.fromBundle(arguments!!).searchQuery
     }
 
     override fun onPause() {
@@ -103,27 +116,14 @@ class MovieGridFragment : Fragment(), GridAdapter.ItemClickListener,
         viewModel.onMovieClicked(view, movie)
     }
 
-    override fun onDeleteClicked(view: View, movie: Movie) {
-        val oldList = mutableListOf<Movie>()
-        val newList = mutableListOf<Movie>()
-        oldList.addAll(gridAdapter.movieList)
-        newList.addAll(oldList)
-        newList.remove(movie)
-        gridAdapter.updateMovieList(newList)
-        var restored = false
-        Snackbar.make(view, R.string.movie_deleted, Snackbar.LENGTH_LONG)
-            .setAction(R.string.undo) {
-                restored = true
-                gridAdapter.updateMovieList(oldList)
-            }.show()
-
-        Handler().postDelayed({
-            if (!restored)
-                viewModel.deleteMovie(movie)
-        }, SNACKBAR_LENGTH_LONG_MS.toLong())
-    }
-
     override fun onWatchlistCheckChanged(movie: Movie) {
         viewModel.updateWatchlist(movie)
+    }
+
+    override fun onPlaylistAdd(movie: Movie) {
+        viewModel.onPlaylistAddCLicked(
+            movie,
+            (activity as AppCompatActivity).nav_host_fragment.requireView()
+        ) // give nav_host_fragment because it's tide to activity's lifecycle and in this app structure is always active
     }
 }

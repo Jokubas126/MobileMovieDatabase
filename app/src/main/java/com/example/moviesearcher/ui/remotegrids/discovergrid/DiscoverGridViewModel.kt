@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.grids.searchgrid
+package com.example.moviesearcher.ui.remotegrids.discovergrid
 
 import android.app.Application
 import android.os.Bundle
@@ -17,7 +17,7 @@ import com.example.moviesearcher.model.room.databases.MovieListDatabase
 import com.example.moviesearcher.model.room.repositories.GenresRepository
 import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 import com.example.moviesearcher.model.room.repositories.WatchlistRepository
-import com.example.moviesearcher.ui.grids.BaseGridViewModel
+import com.example.moviesearcher.ui.remotegrids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
 import com.example.moviesearcher.util.*
 import com.google.android.material.snackbar.Snackbar
@@ -26,7 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SearchGridViewModel(application: Application) : AndroidViewModel(application),
+class DiscoverGridViewModel(application: Application, arguments: Bundle?) : AndroidViewModel(application),
     BaseGridViewModel, PersonalListsPopupWindow.ListsConfirmedClickListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
@@ -40,20 +40,31 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
     private var currentPage = 1
     private var fetchedPage = 1
     private var isListFull = false
-    private var searchQuery: String? = null
+
+    private var startYear: String? = null
+    private var endYear: String? = null
+    private var languageKey: String? = null
+    private var genreId: Int = 0
 
     private val watchlistRepository = WatchlistRepository(application)
     private val watchlistMovieIdList = mutableListOf<Int>()
     private val genresRepository = GenresRepository(application)
 
-    override fun fetch(arguments: Bundle?) {
+    init {
+        fetch(arguments)
+    }
+
+    private fun fetch(arguments: Bundle?) {
         if (movies.value.isNullOrEmpty()) {
             _loading.value = true
             CoroutineScope(Dispatchers.IO).launch {
                 watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
                 arguments?.let {
-                    val args = SearchGridFragmentArgs.fromBundle(arguments)
-                    searchQuery = args.searchQuery
+                    val args = DiscoverGridFragmentArgs.fromBundle(it)
+                    startYear = args.startYear
+                    endYear = args.endYear
+                    languageKey = args.languageKey
+                    genreId = args.genreId
                     getMovieList()
                 }
             }
@@ -81,7 +92,14 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
         if (isNetworkAvailable(getApplication())) {
             configurePages()
             CoroutineScope(Dispatchers.IO).launch {
-                val response = RemoteMovieRepository().getSearchedMovies(searchQuery!!, currentPage)
+                val formattedList = formatQueries()
+                val response = RemoteMovieRepository().getDiscoveredMovies(
+                    currentPage,
+                    formattedList[0],
+                    formattedList[1],
+                    formattedList[2],
+                    languageKey
+                )
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         if (currentPage == response.body()!!.totalPages)
@@ -130,6 +148,18 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
             _loading.value = false
             _error.value = false
         }
+    }
+
+    private fun formatQueries(): List<String?> {
+        var startDate: String? = null
+        if (!startYear.equals("∞"))
+            startDate = "$startYear-01-01"
+        val endDate = "$endYear-12-31"
+        val genreIdString: String? =
+            if (genreId == 0)
+                null
+            else genreId.toString()
+        return listOf(startDate, endDate, genreIdString)
     }
 
     private fun configurePages() {
@@ -193,8 +223,7 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
             }
             isNetworkAvailable(getApplication()) -> {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val fullMovie = RemoteMovieRepository()
-                        .getMovieDetails(movie.remoteId).body()
+                    val fullMovie = RemoteMovieRepository().getMovieDetails(movie.remoteId).body()
                     fullMovie?.let {
                         showProgressSnackBar(
                             root,
@@ -203,6 +232,7 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
                         it.finalizeInitialization(getApplication())
                         val movieRoomId = RoomMovieRepository(getApplication())
                             .insertOrUpdateMovie(getApplication(), it)
+
                         for (list in checkedLists)
                             MovieListRepository(getApplication()).addMovieToMovieList(
                                 list,
@@ -228,15 +258,16 @@ class SearchGridViewModel(application: Application) : AndroidViewModel(applicati
                     Snackbar.LENGTH_LONG
                 )
                 .setAction(getApplication<Application>().getString(R.string.action_check_lists)) {
-                    val action = SearchGridFragmentDirections.actionGlobalCustomListsFragment()
+                    val action = DiscoverGridFragmentDirections.actionGlobalCustomListsFragment()
                     Navigation.findNavController(root).navigate(action)
                 }.show()
         }
     }
 
+    //--------------------- Navigation -----------------------------//
 
     override fun onMovieClicked(view: View, movie: Movie) {
-        val action = SearchGridFragmentDirections.actionMovieDetails()
+        val action = DiscoverGridFragmentDirections.actionMovieDetails()
         action.movieRemoteId = movie.remoteId
         Navigation.findNavController(view).navigate(action)
     }
