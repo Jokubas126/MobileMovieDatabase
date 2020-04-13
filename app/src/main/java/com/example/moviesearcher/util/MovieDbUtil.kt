@@ -34,6 +34,7 @@ const val PATH_MOVIE_LIST_TYPE = "list_type"
 // MOVIE LIST
 const val KEY_LIST_TITLE = "list_title"
 const val KEY_MOVIE_LIST_IDS = "movie_list_ids"
+const val KEY_UPDATE_DATE = "update_date"
 
 // MOVIE
 const val KEY_MOVIE_ID = "movie_id"

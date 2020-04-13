@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/add_to_lists_title"
-                    android:textAppearance="@style/PersonalListAddToListTitleAppearance" />
+                    android:textAppearance="@style/CustomListAddToListTitleAppearance" />
 
                 <ImageButton
                     android:id="@+id/confirm_btn"

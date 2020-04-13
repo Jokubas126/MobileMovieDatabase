@@ -13,6 +13,12 @@
     <color name="colorNavigationViewBackground">#E6E4E7FC</color>
     <color name="navigationViewItem">#686868</color>
 
+    <color name="iconBlack">#535353</color>
+    <color name="iconYellow">#F9A825</color>
+
+    <color name="itemTextDarkGrey">#595959</color>
+    <color name="itemTextLightGrey">#808080</color>
+
     <!-- DISCOVER -->
 
     <color name="colorCategoryBackground">#B2EAEDFD</color>
@@ -32,8 +38,6 @@
 
     <!-- PERSONAL -->
 
-    <color name="iconBlack">#535353</color>
-    <color name="iconYellow">#F9A825</color>
-    <color name="personalListTitleBlack">#242424</color>
+    <color name="customListTitleBlack">#242424</color>
 
 </resources>

@@ -7,59 +7,83 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
-import com.example.moviesearcher.model.data.LocalMovieList
+import com.example.moviesearcher.model.data.CustomMovieList
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.room.repositories.MovieListRepository
 import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MovieGridViewModel(application: Application) : AndroidViewModel(application) {
 
-    var movieList: LiveData<LocalMovieList>? = null
+    private var customMovieList: CustomMovieList? = null
+    private var _movieList = MutableLiveData<List<Movie>>()
+    val movieList: LiveData<List<Movie>> = _movieList
 
     private val _error = MutableLiveData<Boolean>()
     private val _loading = MutableLiveData<Boolean>()
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
 
-    private lateinit var args: MovieGridFragmentArgs
+    private var movieListId: Int? = null
 
     private val movieRepository = RoomMovieRepository(application)
     private val movieListRepository = MovieListRepository(getApplication())
 
     fun fetch(arguments: Bundle?) {
-        movieList?.let {
-            arguments?.let {
-                args = MovieGridFragmentArgs.fromBundle(it)
-                getMovieList()
-            }
+        _error.value = false
+        arguments?.let {
+            val args = MovieGridFragmentArgs.fromBundle(it)
+            movieListId = args.movieListId.toInt()
         }
+        getMovieList()
+
     }
 
     fun refresh() {
-        movieList = null
         getMovieList()
     }
 
     private fun getMovieList() {
-        movieList = movieListRepository.getMovieListById(args.movieListId.toInt())
+        _loading.value = true
+        CoroutineScope(Dispatchers.IO).launch {
+            movieListId?.let {
+                customMovieList = movieListRepository.getMovieListById(it)
+                getMovies(customMovieList?.movieIdList)
+            } ?: run {
+                withContext(Dispatchers.Main) {
+                    _loading.value = false
+                    _error.value = true
+                }
+            }
+        }
     }
 
-    fun movies(movieIdList: List<Int>?): LiveData<List<Movie>>? {
-        _loading.value = false
-        return if (movieIdList.isNullOrEmpty()) {
-            _error.value = true
-            null
-        } else {
-            _error.value = false
-            movieRepository.getMoviesFromIdList(movieIdList)
+    private fun getMovies(movieIdList: List<Int>?) {
+        CoroutineScope(Dispatchers.IO).launch {
+            if (movieIdList.isNullOrEmpty()) {
+                withContext(Dispatchers.Main){
+                    _error.value = true
+                    _loading.value = false
+                }
+            } else {
+                val list = movieRepository.getMoviesFromIdList(movieIdList)
+                withContext(Dispatchers.Main){
+                    _movieList.value = list
+                    _error.value = false
+                    _loading.value = false
+                }
+            }
         }
     }
 
     fun deleteMovie(movie: Movie) {
-        movieRepository.deleteMovie(movie)
-        val localMovieList = movieList?.value
-        if (localMovieList != null)
-            movieListRepository.deleteMovieFromList(localMovieList, movie.roomId)
+        customMovieList?.let {
+            movieRepository.deleteMovie(movie)
+            movieListRepository.deleteMovieFromList(it, movie.roomId)
+        }
     }
 
     fun onMovieClicked(view: View, movie: Movie) {

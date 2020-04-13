@@ -10,7 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import com.example.moviesearcher.R
-import com.example.moviesearcher.model.data.LocalMovieList
+import com.example.moviesearcher.model.data.CustomMovieList
 import com.example.moviesearcher.model.room.repositories.MovieListRepository
 import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 import com.example.moviesearcher.ui.popup_windows.CreateListPopupWindow
@@ -21,7 +21,7 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     private val _error = MutableLiveData<Boolean>()
     private val _loading = MutableLiveData<Boolean>()
 
-    lateinit var movieLists: LiveData<List<LocalMovieList>>
+    lateinit var movieLists: LiveData<List<CustomMovieList>>
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
 
@@ -33,11 +33,7 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     fun fetch() {
         _loading.value = true
         _error.value = false
-        movieListRepository.getAllMovieLists()?.let {
-            movieLists = it
-        } ?: run {
-            _error.value = true
-        }
+        movieLists = movieListRepository.getAllMovieLists()
         _loading.value = false
     }
 
@@ -52,16 +48,20 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     override fun onListAdded(listName: String) {
-        movieListRepository.insertOrUpdateMovieList(LocalMovieList(0, listName, null))
+        movieListRepository.insertOrUpdateMovieList(CustomMovieList(0, null, listName, null))
     }
 
-    fun onListClicked(view: View, list: LocalMovieList) {
+    fun onListClicked(view: View, list: CustomMovieList) {
         val action =
             CustomListsFragmentDirections.movieGridFragment(list.roomId.toLong(), list.listTitle)
         Navigation.findNavController(view).navigate(action)
     }
 
-    fun deleteList(list: LocalMovieList) {
+    fun updateMovieList(list: CustomMovieList) {
+        movieListRepository.insertOrUpdateMovieList(list)
+    }
+
+    fun deleteList(list: CustomMovieList) {
         val movieIdList = list.movieIdList
         if (!movieIdList.isNullOrEmpty())
             for (id in movieIdList)

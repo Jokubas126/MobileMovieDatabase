@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.*
 import com.example.moviesearcher.util.*
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 class MovieResults {
 
@@ -15,12 +16,20 @@ class MovieResults {
 }
 
 @Entity(tableName = "movie_list")
-data class LocalMovieList(
-    @PrimaryKey(autoGenerate = true) var roomId: Int,
-    @ColumnInfo(name = KEY_LIST_TITLE) var listTitle: String?,
-    @ColumnInfo(name = KEY_MOVIE_LIST_IDS) var movieIdList: List<Int>?
+data class CustomMovieList(
+    @PrimaryKey(autoGenerate = true)
+    var roomId: Int,
+
+    @ColumnInfo(name = KEY_UPDATE_DATE)
+    var updateDate: Date?,
+
+    @ColumnInfo(name = KEY_LIST_TITLE)
+    var listTitle: String?,
+
+    @ColumnInfo(name = KEY_MOVIE_LIST_IDS)
+    var movieIdList: List<Int>?
 ) {
-    constructor() : this(0, "", null)
+    constructor() : this(0, Date(), "", null)
 }
 
 @Entity(tableName = "watchlist_movie")

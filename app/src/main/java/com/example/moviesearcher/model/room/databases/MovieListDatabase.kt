@@ -5,15 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.moviesearcher.model.data.LocalMovieList
+import com.example.moviesearcher.model.data.CustomMovieList
 import com.example.moviesearcher.model.room.dao.MovieListDao
+import com.example.moviesearcher.util.DateConverter
 import com.example.moviesearcher.util.IntListTypeConverter
 
 
 private const val DATABASE = "movie_list"
 
-@Database(entities = [LocalMovieList::class], version = 3, exportSchema = false)
-@TypeConverters(IntListTypeConverter::class)
+@Database(entities = [CustomMovieList::class], version = 5, exportSchema = false)
+@TypeConverters(IntListTypeConverter::class, DateConverter::class)
 abstract class MovieListDatabase : RoomDatabase() {
 
     abstract fun movieListDao(): MovieListDao

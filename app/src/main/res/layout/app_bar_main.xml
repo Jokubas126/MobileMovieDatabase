@@ -17,7 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title=""
+            app:title="Movie"
             app:titleTextColor="@color/white"
             app:titleTextAppearance="@style/ToolbarStyle"
             app:menu="@menu/toolbar_menu" />

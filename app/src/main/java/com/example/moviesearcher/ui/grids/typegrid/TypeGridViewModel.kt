@@ -172,7 +172,7 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
             this
         )
         val movieLists =
-            MovieListDatabase.getInstance(root.context).movieListDao().getAllMovieLists()
+            MovieListDatabase.getInstance(root.context).movieListDao().getAllCustomMovieLists()
         movieLists.observeForever {
             if (!it.isNullOrEmpty())
                 popupWindow.setupLists(it)
@@ -181,7 +181,7 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
 
     override fun onConfirmClicked(
         movie: Movie,
-        checkedLists: List<LocalMovieList>,
+        checkedLists: List<CustomMovieList>,
         root: View
     ): Boolean {
         return when {

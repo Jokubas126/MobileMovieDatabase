@@ -1,9 +1,10 @@
 package com.example.moviesearcher.model.room.repositories
 
 import android.app.Application
-import com.example.moviesearcher.model.data.LocalMovieList
+import com.example.moviesearcher.model.data.CustomMovieList
 import com.example.moviesearcher.model.room.dao.MovieListDao
 import com.example.moviesearcher.model.room.databases.MovieListDatabase
+import com.example.moviesearcher.util.getCurrentDate
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -11,49 +12,53 @@ class MovieListRepository(application: Application) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 
-    private val movieListDao: MovieListDao? = MovieListDatabase.getInstance(application).movieListDao()
+    private val movieListDao = MovieListDatabase.getInstance(application).movieListDao()
 
-    fun insertOrUpdateMovieList(movieList: LocalMovieList) {
+    fun insertOrUpdateMovieList(movieList: CustomMovieList) {
         launch { insertOrUpdateMovieListBG(movieList) }
     }
 
-    private suspend fun insertOrUpdateMovieListBG(movieList: LocalMovieList) {
+    private suspend fun insertOrUpdateMovieListBG(movieList: CustomMovieList) {
         withContext(Dispatchers.IO) {
-            movieListDao?.insertOrUpdateMovieList(movieList)
+            movieList.updateDate = getCurrentDate()
+            movieListDao.insertOrUpdateCustomList(movieList)
         }
     }
 
-    fun addMovieToMovieList(movieList: LocalMovieList, movieRoomId: Int){
+    fun addMovieToMovieList(movieList: CustomMovieList, movieRoomId: Int){
         launch { addMovieToMovieListBG(movieList, movieRoomId) }
     }
 
-    private suspend fun addMovieToMovieListBG(movieList: LocalMovieList, movieRoomId: Int){
+    private suspend fun addMovieToMovieListBG(movieList: CustomMovieList, movieRoomId: Int){
         withContext(Dispatchers.IO){
-            if (movieList.movieIdList != null)
-                (movieList.movieIdList as MutableList).add(movieRoomId)
-            else movieList.movieIdList = listOf(movieRoomId)
+            if (!movieList.movieIdList.isNullOrEmpty()){
+                val list: MutableList<Int> = movieList.movieIdList!! as MutableList
+                list.add(movieRoomId)
+                movieList.movieIdList = list
+            } else
+                movieList.movieIdList = listOf(movieRoomId)
             insertOrUpdateMovieListBG(movieList)
         }
     }
 
-    fun getMovieListById(id: Int) = movieListDao?.getMovieListById(id)
+    fun getMovieListById(id: Int) = movieListDao.getCustomListById(id)
 
-    fun getAllMovieLists() = movieListDao?.getAllMovieLists()
+    fun getAllMovieLists() = movieListDao.getAllCustomMovieLists()
 
-    fun deleteMovieFromList(movieList: LocalMovieList, movieRoomId: Int) {
+    fun deleteMovieFromList(movieList: CustomMovieList, movieRoomId: Int) {
         launch {
             (movieList.movieIdList as MutableList).remove(movieRoomId)
             insertOrUpdateMovieListBG(movieList)
         }
     }
 
-    fun deleteList(list: LocalMovieList) {
+    fun deleteList(list: CustomMovieList) {
         launch { deleteListBG(list) }
     }
 
-    private suspend fun deleteListBG(list: LocalMovieList) {
+    private suspend fun deleteListBG(list: CustomMovieList) {
         withContext(Dispatchers.IO) {
-            movieListDao?.deleteList(list)
+            movieListDao.deleteCustomList(list)
         }
     }
 
@@ -63,7 +68,7 @@ class MovieListRepository(application: Application) : CoroutineScope {
 
     private suspend fun deleteAllListsBG(){
         withContext(Dispatchers.IO){
-            movieListDao?.deleteAllLists()
+            movieListDao.deleteAllCustomLists()
         }
     }
 }

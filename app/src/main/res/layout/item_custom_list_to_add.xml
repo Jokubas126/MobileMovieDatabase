@@ -6,7 +6,7 @@
 
         <variable
             name="movieList"
-            type="com.example.moviesearcher.model.data.LocalMovieList" />
+            type="com.example.moviesearcher.model.data.CustomMovieList" />
     </data>
 
     <FrameLayout
@@ -31,7 +31,7 @@
                     android:layout_gravity="center_vertical|start"
                     android:includeFontPadding="false"
                     android:text="@{movieList.listTitle}"
-                    android:textAppearance="@style/PersonalListSmallTitleAppearance" />
+                    android:textAppearance="@style/CustomListSmallTitleAppearance" />
 
                 <CheckBox
                     android:id="@+id/list_checkbox"

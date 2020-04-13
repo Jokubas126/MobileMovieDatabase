@@ -196,7 +196,7 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
             this
         )
         val movieLists =
-            MovieListDatabase.getInstance(root.context).movieListDao().getAllMovieLists()
+            MovieListDatabase.getInstance(root.context).movieListDao().getAllCustomMovieLists()
         movieLists.observeForever {
             if (!it.isNullOrEmpty())
                 popupWindow.setupLists(it)
@@ -205,7 +205,7 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
 
     override fun onConfirmClicked(
         movie: Movie,
-        checkedLists: List<LocalMovieList>,
+        checkedLists: List<CustomMovieList>,
         root: View
     ): Boolean {
         return when {
