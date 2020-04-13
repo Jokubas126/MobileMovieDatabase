@@ -28,7 +28,7 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
     val categories: LiveData<MutableList<Category>> = _categories
     val loading: LiveData<Boolean> = _loading
 
-    fun fetch() {
+    init {
         if (isNetworkAvailable(getApplication())){
             if (categories.value.isNullOrEmpty()) {
                 _loading.value = true

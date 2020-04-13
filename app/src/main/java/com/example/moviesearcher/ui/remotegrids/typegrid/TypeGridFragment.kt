@@ -1,6 +1,5 @@
-package com.example.moviesearcher.ui.grids.typegrid
+package com.example.moviesearcher.ui.remotegrids.typegrid
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -34,19 +33,23 @@ class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalList
     private var layoutManager: StaggeredGridLayoutManager? = null
     private var state: Parcelable? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_movies_grid, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(TypeGridViewModel::class.java)
-        viewModel.fetch(arguments)
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(
+            this,
+            TypeGridViewModelFactory(activity!!.application, arguments)
+        ).get(TypeGridViewModel::class.java)
 
         setupRecyclerView()
-
-        if (state != null)
-            layoutManager!!.onRestoreInstanceState(state)
-
         observeViewModel()
 
         movie_recycler_view!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -59,36 +62,47 @@ class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalList
                 }
             }
         })
-        refresh_layout!!.setOnRefreshListener {
+        refresh_layout.setOnRefreshListener {
             viewModel.refresh()
-            refresh_layout!!.isRefreshing = false
+            refresh_layout.isRefreshing = false
         }
     }
 
     private fun observeViewModel() {
-        viewModel.movies.observe(viewLifecycleOwner, Observer { movies: List<Movie>? ->
-            if (movies != null) {
-                gridAdapter.updateMovieList(movies)
+        viewModel.movies.observe(viewLifecycleOwner, Observer { movies ->
+            movies?.let {
+                gridAdapter.updateMovieList(it)
                 movie_recycler_view!!.visibility = View.VISIBLE
             }
         })
-        viewModel.error.observe(viewLifecycleOwner, Observer { isError: Boolean? ->
-            if (isError != null)
-                loading_error_text_view!!.visibility =
-                        if (isError)
-                            View.VISIBLE
-                        else View.GONE
-        })
-        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
-            if (isLoading != null) {
-                progress_bar_loading_movie_list!!.visibility =
-                        if (isLoading)
-                            View.VISIBLE
-                        else View.GONE
-                if (isLoading)
-                    loading_error_text_view!!.visibility = View.GONE
+        viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
+            isError?.let {
+                loading_error_text_view.visibility =
+                    if (it)
+                        View.VISIBLE
+                    else View.GONE
             }
         })
+        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+            isLoading?.let {
+                progress_bar_loading_movie_list.visibility =
+                    if (it) View.VISIBLE
+                    else View.GONE
+                if (it) loading_error_text_view.visibility = View.GONE
+            }
+        })
+    }
+
+    private fun setupRecyclerView() {
+        layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        movie_recycler_view.layoutManager = layoutManager
+        state?.let { layoutManager?.onRestoreInstanceState(it) }
+        movie_recycler_view.itemAnimator = DefaultItemAnimator()
+        movie_recycler_view.adapter = gridAdapter
+
+        gridAdapter.setItemClickListener(this)
+        gridAdapter.setWatchlistActionListener(this)
+        gridAdapter.setPersonalListActionListener(this)
     }
 
     override fun onResume() {
@@ -98,27 +112,17 @@ class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalList
 
     private fun setupTitle() {
         val listType: String? = TypeGridFragmentArgs.fromBundle(arguments!!).keyCategory
-        val title = if (listType != null) {
+        val title = listType?.let {
             val title = StringBuilder()
-            val array = listType.split("_").toTypedArray()
+            val array = it.split("_").toTypedArray()
             for (stringPart in array)
                 title.append(stringPart.capitalize(Locale.getDefault())).append(" ")
-
             title.append(resources.getString(R.string.type_fragment)).toString()
-        } else KEY_POPULAR.capitalize(Locale.ROOT) + " " + resources.getString(R.string.type_fragment)
+        } ?: run{
+            KEY_POPULAR.capitalize(Locale.ROOT) + " " + resources.getString(R.string.type_fragment)
+        }
 
         (activity as AppCompatActivity).supportActionBar?.title = title
-    }
-
-    private fun setupRecyclerView(){
-        layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        movie_recycler_view!!.layoutManager = layoutManager
-        movie_recycler_view!!.itemAnimator = DefaultItemAnimator()
-        movie_recycler_view!!.adapter = gridAdapter
-
-        gridAdapter.setItemClickListener(this)
-        gridAdapter.setWatchlistActionListener(this)
-        gridAdapter.setPersonalListActionListener(this)
     }
 
     override fun onPause() {
@@ -135,6 +139,9 @@ class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalList
     }
 
     override fun onPlaylistAdd(movie: Movie) {
-        viewModel.onPlaylistAddCLicked(movie, (activity as AppCompatActivity).nav_host_fragment.requireView()) // give nav_host_fragment because it's tide to activity's lifecycle and in this app structure is always active
+        viewModel.onPlaylistAddCLicked(
+            movie,
+            (activity as AppCompatActivity).nav_host_fragment.requireView()
+        ) // give nav_host_fragment because it's tide to activity's lifecycle and in this app structure is always active
     }
 }

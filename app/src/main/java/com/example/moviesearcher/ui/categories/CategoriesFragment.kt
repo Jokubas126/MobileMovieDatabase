@@ -12,23 +12,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Category
 import com.google.android.material.appbar.AppBarLayout
-import io.apptik.widget.MultiSlider
-import io.apptik.widget.MultiSlider.OnThumbValueChangeListener
-import io.apptik.widget.MultiSlider.Thumb
 import kotlinx.android.synthetic.main.fragment_categories.*
 
-class CategoriesFragment : Fragment(), OnThumbValueChangeListener,
-    CategoryRecyclerView.AppBarTracking,
+class CategoriesFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     MenuItem.OnMenuItemClickListener {
 
-    private lateinit var recyclerView: CategoryRecyclerView
     private lateinit var categoryAdapter: CategoryAdapter
 
     private lateinit var viewModel: CategoriesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(true) // needed because toolbar is changed
     }
 
     override fun onCreateView(
@@ -41,46 +36,37 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(CategoriesViewModel::class.java)
-        viewModel.fetch()
 
-        release_year_slider.setOnThumbValueChangeListener(this)
-
-        recyclerView = categories_recycler_view
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        categories_recycler_view.layoutManager = LinearLayoutManager(context)
+        setupSlider()
         setupToolbar()
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        viewModel.categories.observe(
-            viewLifecycleOwner,
-            Observer<List<Category>> { categories: List<Category>? ->
-                if (categories != null) {
-                    categoryAdapter = CategoryAdapter(categories)
-                    recyclerView.adapter = categoryAdapter
-                    categoryAdapter.setChildClickListener { _, checked, group, childIndex ->
-                        viewModel.onSubcategoryClicked(checked, group as Category, childIndex)
-                    }
+        viewModel.categories.observe(viewLifecycleOwner, Observer<List<Category>> { categories ->
+            categories?.let {
+                categoryAdapter = CategoryAdapter(it)
+                categories_recycler_view.adapter = categoryAdapter
+                categoryAdapter.setChildClickListener { _, checked, group, childIndex ->
+                    viewModel.onSubcategoryClicked(checked, group as Category, childIndex)
                 }
-
-                ViewCompat.setNestedScrollingEnabled(recyclerView, false)
-            })
+            }
+            ViewCompat.setNestedScrollingEnabled(categories_recycler_view, false)
+        })
     }
 
-    override fun onValueChanged(
-        multiSlider: MultiSlider,
-        thumb: Thumb?,
-        thumbIndex: Int,
-        value: Int
-    ) {
-        //thumbIndexes are slider sides (0 is left and 1 is right side)
-        if (thumbIndex == 0)
-            if (value != multiSlider.min)
-                release_year_slider_min_value.text = value.toString()
-            else release_year_slider_min_value.text = "∞"
-        if (thumbIndex == 1) {
-            release_year_slider_max_value.text = value.toString()
+    private fun setupSlider() {
+        release_year_slider.setOnThumbValueChangeListener { multiSlider, _, thumbIndex, value ->
+            if (thumbIndex == 0)
+                if (value != multiSlider.min)
+                    release_year_slider_min_value.text = value.toString()
+                else release_year_slider_min_value.text = "∞"
+            if (thumbIndex == 1) {
+                release_year_slider_max_value.text = value.toString()
+            }
         }
+
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
@@ -127,7 +113,7 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener,
             })
 
         app_bar.post { appBarMaxOffset = -app_bar.totalScrollRange }
-        recyclerView.setAppBarTracking(this)
+        categories_recycler_view.setAppBarTracking(this)
 
         expandCollapseButton.setOnClickListener {
             isExpanded = !isExpanded
@@ -136,7 +122,7 @@ class CategoriesFragment : Fragment(), OnThumbValueChangeListener,
     }
 
     private fun setExpandAndCollapseEnabled(enabled: Boolean) {
-        recyclerView.isNestedScrollingEnabled = enabled
+        categories_recycler_view.isNestedScrollingEnabled = enabled
     }
 
     override fun isAppBarExpanded(): Boolean = appBarOffset == 0

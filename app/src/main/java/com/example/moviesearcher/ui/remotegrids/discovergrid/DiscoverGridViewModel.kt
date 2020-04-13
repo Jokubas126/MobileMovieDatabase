@@ -1,13 +1,14 @@
-package com.example.moviesearcher.ui.grids.typegrid
+package com.example.moviesearcher.ui.remotegrids.discovergrid
 
 import android.app.Application
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
-import com.example.moviesearcher.NavGraphDirections
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.*
 import com.example.moviesearcher.model.remote.repositories.RemoteMovieRepository
@@ -16,7 +17,7 @@ import com.example.moviesearcher.model.room.databases.MovieListDatabase
 import com.example.moviesearcher.model.room.repositories.GenresRepository
 import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 import com.example.moviesearcher.model.room.repositories.WatchlistRepository
-import com.example.moviesearcher.ui.grids.BaseGridViewModel
+import com.example.moviesearcher.ui.remotegrids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
 import com.example.moviesearcher.util.*
 import com.google.android.material.snackbar.Snackbar
@@ -25,7 +26,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TypeGridViewModel(application: Application) : AndroidViewModel(application),
+class DiscoverGridViewModel(application: Application, arguments: Bundle?) :
+    AndroidViewModel(application),
     BaseGridViewModel, PersonalListsPopupWindow.ListsConfirmedClickListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
@@ -37,27 +39,29 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
     val loading: LiveData<Boolean> = _loading
 
     private var currentPage = 1
-    private var fetchedPage = 1
+    private var fetchedPage = 0
     private var isListFull = false
-    private lateinit var movieListType: String
+
+    private var startYear: String? = null
+    private var endYear: String? = null
+    private var languageKey: String? = null
+    private var genreId: Int = 0
 
     private val watchlistRepository = WatchlistRepository(application)
     private val watchlistMovieIdList = mutableListOf<Int>()
     private val genresRepository = GenresRepository(application)
 
-    override fun fetch(arguments: Bundle?) {
-        if (movies.value.isNullOrEmpty()) {
-            _loading.value = true
-            CoroutineScope(Dispatchers.IO).launch {
-                watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
-                arguments?.let {
-                    val args = TypeGridFragmentArgs.fromBundle(it)
-                    movieListType =
-                        if (args.keyCategory.isNotBlank())
-                            args.keyCategory
-                        else KEY_POPULAR
-                    getMovieList()
-                }
+    init {
+        _loading.value = true
+        CoroutineScope(Dispatchers.IO).launch {
+            watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
+            arguments?.let {
+                val args = DiscoverGridFragmentArgs.fromBundle(it)
+                startYear = args.startYear
+                endYear = args.endYear
+                languageKey = args.languageKey
+                genreId = args.genreId
+                getMovieList()
             }
         }
     }
@@ -80,25 +84,34 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
     //------------------------- Retrieving the data --------------------------//
 
     private fun getMovieList() {
-        if (isNetworkAvailable(getApplication())) {
-            configurePages()
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = RemoteMovieRepository().getMovies(movieListType, currentPage)
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        if (currentPage == response.body()!!.totalPages)
-                            isListFull = true
-                        formatGenres(response.body()!!.results)
-                    } else {
-                        _loading.value = false
-                        _error.value = true
+        synchronized(this) {
+            if (isNetworkAvailable(getApplication())) {
+                configurePages()
+                CoroutineScope(Dispatchers.IO).launch {
+                    val formattedList = formatQueries()
+                    val response = RemoteMovieRepository().getDiscoveredMovies(
+                        currentPage,
+                        formattedList[0],
+                        formattedList[1],
+                        formattedList[2],
+                        languageKey
+                    )
+                    withContext(Dispatchers.Main) {
+                        if (response.isSuccessful) {
+                            if (currentPage == response.body()!!.totalPages)
+                                isListFull = true
+                            formatGenres(response.body()!!.results)
+                        } else {
+                            _loading.value = false
+                            _error.value = true
+                        }
                     }
                 }
-            }
-        } else {
-            CoroutineScope(Dispatchers.Main).launch {
-                _loading.value = false
-                networkUnavailableNotification(getApplication())
+            } else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    _loading.value = false
+                    networkUnavailableNotification(getApplication())
+                }
             }
         }
     }
@@ -134,10 +147,23 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    private fun formatQueries(): List<String?> {
+        var startDate: String? = null
+        if (!startYear.equals("∞"))
+            startDate = "$startYear-01-01"
+        val endDate = "$endYear-12-31"
+        val genreIdString: String? =
+            if (genreId == 0)
+                null
+            else genreId.toString()
+        return listOf(startDate, endDate, genreIdString)
+    }
+
     private fun configurePages() {
-        if (currentPage == 1) {
-            fetchedPage = 1
-        }
+        if (currentPage == 1)
+            fetchedPage = 0
+        else if (currentPage - fetchedPage > 1)
+            currentPage = fetchedPage + 1
     }
 
     //------------------------ Watchlist ----------------------------//
@@ -145,6 +171,7 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
     fun updateWatchlist(movie: Movie) {
         if (movie.isInWatchlist) {
             watchlistRepository.insertOrUpdateMovie(WatchlistMovie(movie.remoteId))
+            watchlistMovieIdList.add(movie.remoteId)
             showToast(
                 getApplication(),
                 getApplication<Application>().getString(R.string.added_to_watchlist),
@@ -152,6 +179,7 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
             )
         } else {
             watchlistRepository.deleteWatchlistMovie(movie.remoteId)
+            watchlistMovieIdList.remove(movie.remoteId)
             showToast(
                 getApplication(),
                 getApplication<Application>().getString(R.string.deleted_from_watchlist),
@@ -195,8 +223,7 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
             }
             isNetworkAvailable(getApplication()) -> {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val fullMovie = RemoteMovieRepository()
-                        .getMovieDetails(movie.remoteId).body()
+                    val fullMovie = RemoteMovieRepository().getMovieDetails(movie.remoteId).body()
                     fullMovie?.let {
                         showProgressSnackBar(
                             root,
@@ -231,16 +258,16 @@ class TypeGridViewModel(application: Application) : AndroidViewModel(application
                     Snackbar.LENGTH_LONG
                 )
                 .setAction(getApplication<Application>().getString(R.string.action_check_lists)) {
-                    val action = NavGraphDirections.actionGlobalCustomListsFragment()
+                    val action = DiscoverGridFragmentDirections.actionGlobalCustomListsFragment()
                     Navigation.findNavController(root).navigate(action)
                 }.show()
         }
     }
 
-    //------------------ Navigation -----------------------------//
+    //--------------------- Navigation -----------------------------//
 
     override fun onMovieClicked(view: View, movie: Movie) {
-        val action = TypeGridFragmentDirections.actionMovieDetails()
+        val action = DiscoverGridFragmentDirections.actionMovieDetails()
         action.movieRemoteId = movie.remoteId
         Navigation.findNavController(view).navigate(action)
     }

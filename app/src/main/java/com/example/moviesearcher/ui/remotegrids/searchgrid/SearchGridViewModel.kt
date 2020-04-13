@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.grids.discovergrid
+package com.example.moviesearcher.ui.remotegrids.searchgrid
 
 import android.app.Application
 import android.os.Bundle
@@ -17,7 +17,7 @@ import com.example.moviesearcher.model.room.databases.MovieListDatabase
 import com.example.moviesearcher.model.room.repositories.GenresRepository
 import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 import com.example.moviesearcher.model.room.repositories.WatchlistRepository
-import com.example.moviesearcher.ui.grids.BaseGridViewModel
+import com.example.moviesearcher.ui.remotegrids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
 import com.example.moviesearcher.util.*
 import com.google.android.material.snackbar.Snackbar
@@ -26,7 +26,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class DiscoverGridViewModel(application: Application) : AndroidViewModel(application),
+class SearchGridViewModel(application: Application, arguments: Bundle?) :
+    AndroidViewModel(application),
     BaseGridViewModel, PersonalListsPopupWindow.ListsConfirmedClickListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
@@ -38,31 +39,21 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
     val loading: LiveData<Boolean> = _loading
 
     private var currentPage = 1
-    private var fetchedPage = 1
+    private var fetchedPage = 0
     private var isListFull = false
-
-    private var startYear: String? = null
-    private var endYear: String? = null
-    private var languageKey: String? = null
-    private var genreId: Int = 0
+    private var searchQuery: String? = null
 
     private val watchlistRepository = WatchlistRepository(application)
     private val watchlistMovieIdList = mutableListOf<Int>()
     private val genresRepository = GenresRepository(application)
 
-    override fun fetch(arguments: Bundle?) {
-        if (movies.value.isNullOrEmpty()) {
-            _loading.value = true
-            CoroutineScope(Dispatchers.IO).launch {
-                watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
-                arguments?.let {
-                    val args = DiscoverGridFragmentArgs.fromBundle(it)
-                    startYear = args.startYear
-                    endYear = args.endYear
-                    languageKey = args.languageKey
-                    genreId = args.genreId
-                    getMovieList()
-                }
+    init {
+        _loading.value = true
+        CoroutineScope(Dispatchers.IO).launch {
+            watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
+            arguments?.let {
+                searchQuery = SearchGridFragmentArgs.fromBundle(arguments).searchQuery
+                getMovieList()
             }
         }
     }
@@ -85,32 +76,27 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
     //------------------------- Retrieving the data --------------------------//
 
     private fun getMovieList() {
-        if (isNetworkAvailable(getApplication())) {
-            configurePages()
-            CoroutineScope(Dispatchers.IO).launch {
-                val formattedList = formatQueries()
-                val response = RemoteMovieRepository().getDiscoveredMovies(
-                    currentPage,
-                    formattedList[0],
-                    formattedList[1],
-                    formattedList[2],
-                    languageKey
-                )
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        if (currentPage == response.body()!!.totalPages)
-                            isListFull = true
-                        formatGenres(response.body()!!.results)
-                    } else {
-                        _loading.value = false
-                        _error.value = true
+        synchronized(this) {
+            if (isNetworkAvailable(getApplication())) {
+                configurePages()
+                CoroutineScope(Dispatchers.IO).launch {
+                    val response = RemoteMovieRepository().getSearchedMovies(searchQuery!!, currentPage)
+                    withContext(Dispatchers.Main) {
+                        if (response.isSuccessful) {
+                            if (currentPage == response.body()!!.totalPages)
+                                isListFull = true
+                            formatGenres(response.body()!!.results)
+                        } else {
+                            _loading.value = false
+                            _error.value = true
+                        }
                     }
                 }
-            }
-        } else {
-            CoroutineScope(Dispatchers.Main).launch {
-                _loading.value = false
-                networkUnavailableNotification(getApplication())
+            } else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    _loading.value = false
+                    networkUnavailableNotification(getApplication())
+                }
             }
         }
     }
@@ -146,22 +132,11 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    private fun formatQueries(): List<String?> {
-        var startDate: String? = null
-        if (!startYear.equals("∞"))
-            startDate = "$startYear-01-01"
-        val endDate = "$endYear-12-31"
-        val genreIdString: String? =
-            if (genreId == 0)
-                null
-            else genreId.toString()
-        return listOf(startDate, endDate, genreIdString)
-    }
-
     private fun configurePages() {
-        if (currentPage == 1) {
-            fetchedPage = 1
-        }
+        if (currentPage == 1)
+            fetchedPage = 0
+        else if (currentPage - fetchedPage > 1)
+            currentPage = fetchedPage + 1
     }
 
     //------------------------ Watchlist ----------------------------//
@@ -169,6 +144,7 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
     fun updateWatchlist(movie: Movie) {
         if (movie.isInWatchlist) {
             watchlistRepository.insertOrUpdateMovie(WatchlistMovie(movie.remoteId))
+            watchlistMovieIdList.add(movie.remoteId)
             showToast(
                 getApplication(),
                 getApplication<Application>().getString(R.string.added_to_watchlist),
@@ -176,6 +152,7 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
             )
         } else {
             watchlistRepository.deleteWatchlistMovie(movie.remoteId)
+            watchlistMovieIdList.remove(movie.remoteId)
             showToast(
                 getApplication(),
                 getApplication<Application>().getString(R.string.deleted_from_watchlist),
@@ -219,7 +196,8 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
             }
             isNetworkAvailable(getApplication()) -> {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val fullMovie = RemoteMovieRepository().getMovieDetails(movie.remoteId).body()
+                    val fullMovie = RemoteMovieRepository()
+                        .getMovieDetails(movie.remoteId).body()
                     fullMovie?.let {
                         showProgressSnackBar(
                             root,
@@ -228,7 +206,6 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
                         it.finalizeInitialization(getApplication())
                         val movieRoomId = RoomMovieRepository(getApplication())
                             .insertOrUpdateMovie(getApplication(), it)
-
                         for (list in checkedLists)
                             MovieListRepository(getApplication()).addMovieToMovieList(
                                 list,
@@ -254,16 +231,15 @@ class DiscoverGridViewModel(application: Application) : AndroidViewModel(applica
                     Snackbar.LENGTH_LONG
                 )
                 .setAction(getApplication<Application>().getString(R.string.action_check_lists)) {
-                    val action = DiscoverGridFragmentDirections.actionGlobalCustomListsFragment()
+                    val action = SearchGridFragmentDirections.actionGlobalCustomListsFragment()
                     Navigation.findNavController(root).navigate(action)
                 }.show()
         }
     }
 
-    //--------------------- Navigation -----------------------------//
 
     override fun onMovieClicked(view: View, movie: Movie) {
-        val action = DiscoverGridFragmentDirections.actionMovieDetails()
+        val action = SearchGridFragmentDirections.actionMovieDetails()
         action.movieRemoteId = movie.remoteId
         Navigation.findNavController(view).navigate(action)
     }

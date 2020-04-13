@@ -12,6 +12,7 @@ import com.example.moviesearcher.MovieDetailsArgs
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.model.remote.repositories.RemoteMovieRepository
+import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 import com.example.moviesearcher.util.getAnyNameList
 import com.example.moviesearcher.util.stringListToListedString
 import com.example.moviesearcher.util.stringListToString
@@ -20,7 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class OverviewViewModel(application: Application) : AndroidViewModel(application) {
+class OverviewViewModel(application: Application, arguments: Bundle?) : AndroidViewModel(application) {
 
     private val _currentMovie = MutableLiveData<Movie>()
     private val _loading = MutableLiveData<Boolean>()
@@ -28,41 +29,37 @@ class OverviewViewModel(application: Application) : AndroidViewModel(application
     var currentMovie: LiveData<Movie> = _currentMovie
     val loading: LiveData<Boolean> = _loading
 
-    private lateinit var safeArgs: MovieDetailsArgs
+    private lateinit var args: MovieDetailsArgs
 
-    fun fetch(arguments: Bundle?) {
+    init {
         arguments?.let {
             _loading.value = true
-            safeArgs = MovieDetailsArgs.fromBundle(it)
-            if (safeArgs.movieLocalId == 0)
-                getMovieDetailsRemote(safeArgs.movieRemoteId)
-            else getMovieDetailsLocal(safeArgs.movieLocalId)
+            args = MovieDetailsArgs.fromBundle(it)
+            if (args.movieLocalId == 0)
+                getMovieDetailsRemote(args.movieRemoteId)
+            else getMovieDetailsLocal(args.movieLocalId)
         }
     }
 
     private fun getMovieDetailsRemote(movieId: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = RemoteMovieRepository()
-                .getMovieDetails(movieId)
+            val response = RemoteMovieRepository().getMovieDetails(movieId)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-                    response.body()!!.genresString =
-                        stringListToString(getAnyNameList(response.body()!!.genres))
-                    response.body()!!.productionCountryString =
-                        stringListToListedString(getAnyNameList(response.body()!!.productionCountryList))
-                    _currentMovie.value = response.body()
-                    _loading.value = false
-                } else {
-                    _loading.value = false
+                    response.body()?.let {
+                        it.genresString = stringListToString(getAnyNameList(it.genres))
+                        it.productionCountryString =
+                            stringListToListedString(getAnyNameList(it.productionCountryList))
+                        _currentMovie.value = it
+                    }
                 }
+                _loading.value = false
             }
         }
     }
 
     private fun getMovieDetailsLocal(movieId: Int) {
-        currentMovie = com.example.moviesearcher.model.room.repositories.RoomMovieRepository(
-            getApplication()
-        ).getMovieById(movieId)
+        currentMovie = RoomMovieRepository(getApplication()).getMovieById(movieId)
         _loading.value = false
     }
 
@@ -70,15 +67,15 @@ class OverviewViewModel(application: Application) : AndroidViewModel(application
         when (menuItem.itemId) {
             R.id.media_menu_item -> {
                 val action = OverviewFragmentDirections.actionMovieMedia()
-                action.movieRemoteId = safeArgs.movieRemoteId
-                action.movieLocalId = safeArgs.movieLocalId
+                action.movieRemoteId = args.movieRemoteId
+                action.movieLocalId = args.movieLocalId
                 Navigation.findNavController(view).navigate(action)
             }
 
             R.id.cast_menu_item -> {
                 val action = OverviewFragmentDirections.actionMovieCast()
-                action.movieRemoteId = safeArgs.movieRemoteId
-                action.movieLocalId = safeArgs.movieLocalId
+                action.movieRemoteId = args.movieRemoteId
+                action.movieLocalId = args.movieLocalId
                 Navigation.findNavController(view).navigate(action)
             }
         }

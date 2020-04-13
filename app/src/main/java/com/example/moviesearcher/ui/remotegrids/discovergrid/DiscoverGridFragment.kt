@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.grids.discovergrid
+package com.example.moviesearcher.ui.remotegrids.discovergrid
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -38,16 +38,57 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(DiscoverGridViewModel::class.java)
-        viewModel.fetch(arguments)
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(
+            this,
+            DiscoverGridViewModelFactory(activity!!.application, arguments)
+        ).get(DiscoverGridViewModel::class.java)
 
         setupRecyclerView()
-
-        if (state != null) layoutManager!!.onRestoreInstanceState(state)
-
         observeViewModel()
 
-        movie_recycler_view!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        refresh_layout.setOnRefreshListener {
+            viewModel.refresh()
+            refresh_layout.isRefreshing = false
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.movies.observe(viewLifecycleOwner, Observer { movies ->
+            movies?.let {
+                gridAdapter.updateMovieList(it)
+                movie_recycler_view.visibility = View.VISIBLE
+            }
+        })
+        viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
+            isError?.let {
+                loading_error_text_view.visibility =
+                    if (it) View.VISIBLE
+                    else View.GONE
+            }
+        })
+        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+            isLoading?.let {
+                progress_bar_loading_movie_list.visibility =
+                    if (it) View.VISIBLE
+                    else View.GONE
+                if (it) loading_error_text_view.visibility = View.GONE
+            }
+        })
+    }
+
+    private fun setupRecyclerView() {
+        layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        movie_recycler_view.layoutManager = layoutManager
+        state?.let { layoutManager?.onRestoreInstanceState(it) }
+        movie_recycler_view.itemAnimator = DefaultItemAnimator()
+        movie_recycler_view.adapter = gridAdapter
+
+        gridAdapter.setItemClickListener(this)
+        gridAdapter.setWatchlistActionListener(this)
+        gridAdapter.setPersonalListActionListener(this)
+
+        movie_recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1) && isDown) {
@@ -57,47 +98,6 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
                 }
             }
         })
-        refresh_layout!!.setOnRefreshListener {
-            viewModel.refresh()
-            refresh_layout!!.isRefreshing = false
-        }
-    }
-
-    private fun observeViewModel() {
-        viewModel.movies.observe(viewLifecycleOwner, Observer { movies: List<Movie>? ->
-            if (movies != null) {
-                gridAdapter.updateMovieList(movies)
-                movie_recycler_view!!.visibility = View.VISIBLE
-            }
-        })
-        viewModel.error.observe(viewLifecycleOwner, Observer { isError: Boolean? ->
-            if (isError != null)
-                loading_error_text_view!!.visibility =
-                    if (isError)
-                        View.VISIBLE
-                    else View.GONE
-        })
-        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
-            if (isLoading != null) {
-                progress_bar_loading_movie_list!!.visibility =
-                    if (isLoading)
-                        View.VISIBLE
-                    else View.GONE
-                if (isLoading)
-                    loading_error_text_view!!.visibility = View.GONE
-            }
-        })
-    }
-
-    private fun setupRecyclerView() {
-        layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        movie_recycler_view!!.layoutManager = layoutManager
-        movie_recycler_view!!.itemAnimator = DefaultItemAnimator()
-        movie_recycler_view!!.adapter = gridAdapter
-
-        gridAdapter.setItemClickListener(this)
-        gridAdapter.setWatchlistActionListener(this)
-        gridAdapter.setPersonalListActionListener(this)
     }
 
     override fun onResume() {
@@ -116,7 +116,7 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
 
     override fun onPause() {
         super.onPause()
-        state = layoutManager!!.onSaveInstanceState()
+        layoutManager?.let{ state = it.onSaveInstanceState() }
     }
 
     override fun onMovieClick(view: View, movie: Movie) {

@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.fragment_movie_overview.*
 
 class OverviewFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var bottomNavigationView: BottomNavigationView
 
     private lateinit var fragmentView: FragmentMovieOverviewBinding
     private lateinit var viewModel: OverviewViewModel
@@ -33,32 +32,35 @@ class OverviewFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bottomNavigationView = bottom_navigation
-        bottomNavigationView.setOnNavigationItemSelectedListener(this)
-        viewModel = ViewModelProvider(this).get(OverviewViewModel::class.java)
-        viewModel.fetch(arguments)
+
+        viewModel = ViewModelProvider(
+            this,
+            OverviewViewModelFactory(activity!!.application, arguments)
+        ).get(OverviewViewModel::class.java)
+
+        bottom_navigation.setOnNavigationItemSelectedListener(this)
         observeViewModel()
     }
 
     private fun observeViewModel() {
         viewModel.currentMovie.observe(viewLifecycleOwner, Observer { movie: Movie? ->
-            if (movie != null) {
-                fragmentView.movie = movie
+            movie?.let {
+                fragmentView.movie = it
                 information_layout.visibility = View.VISIBLE
             }
         })
         viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
-            if (isLoading != null) {
+            isLoading?.let {
                 progress_bar.visibility =
-                    if (isLoading)
+                    if (it)
                         View.VISIBLE
                     else View.GONE
-                if (isLoading) information_layout.visibility = View.GONE
+                if (it) information_layout.visibility = View.GONE
             }
         })
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        return viewModel.onNavigationItemSelected(bottomNavigationView, menuItem)
+        return viewModel.onNavigationItemSelected(bottom_navigation, menuItem)
     }
 }

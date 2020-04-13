@@ -34,7 +34,6 @@ class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener,
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(CustomListsViewModel::class.java)
-        viewModel.fetch()
 
         setupRecyclerView()
 

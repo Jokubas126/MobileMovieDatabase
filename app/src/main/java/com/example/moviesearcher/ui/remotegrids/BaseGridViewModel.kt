@@ -1,11 +1,9 @@
-package com.example.moviesearcher.ui.grids
+package com.example.moviesearcher.ui.remotegrids
 
-import android.os.Bundle
 import android.view.View
 import com.example.moviesearcher.model.data.Movie
 
 interface BaseGridViewModel{
-    fun fetch(arguments: Bundle?)
     fun addData()
     fun refresh()
     fun onMovieClicked(view: View, movie: Movie)

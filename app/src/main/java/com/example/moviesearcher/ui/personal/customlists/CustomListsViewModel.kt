@@ -21,7 +21,7 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     private val _error = MutableLiveData<Boolean>()
     private val _loading = MutableLiveData<Boolean>()
 
-    lateinit var movieLists: LiveData<List<CustomMovieList>>
+    var movieLists: LiveData<List<CustomMovieList>>
     val error: LiveData<Boolean> = _error
     val loading: LiveData<Boolean> = _loading
 
@@ -30,7 +30,7 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
 
     private lateinit var popupWindow: PopupWindow
 
-    fun fetch() {
+    init {
         _loading.value = true
         _error.value = false
         movieLists = movieListRepository.getAllMovieLists()

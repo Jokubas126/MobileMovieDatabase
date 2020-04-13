@@ -21,7 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MovieGridViewModel(application: Application) : AndroidViewModel(application) {
+class MovieGridViewModel(application: Application, arguments: Bundle?) : AndroidViewModel(application) {
 
     private var customMovieList: CustomMovieList? = null
     private var _movieList = MutableLiveData<List<Movie>>()
@@ -38,14 +38,13 @@ class MovieGridViewModel(application: Application) : AndroidViewModel(applicatio
     private val movieListRepository = MovieListRepository(getApplication())
     private val watchlistRepository = WatchlistRepository(application)
 
-    fun fetch(arguments: Bundle?) {
+    init {
         _error.value = false
         arguments?.let {
             val args = MovieGridFragmentArgs.fromBundle(it)
             movieListId = args.movieListId.toInt()
         }
         getMovieList()
-
     }
 
     fun refresh() {

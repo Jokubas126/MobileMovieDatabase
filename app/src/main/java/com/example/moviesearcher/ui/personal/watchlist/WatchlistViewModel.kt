@@ -43,13 +43,12 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     private val remoteMovieRepository = RemoteMovieRepository()
     private val watchlistRepository = WatchlistRepository(application)
 
-    fun fetch() {
-        if (movies.value.isNullOrEmpty())
-            getWatchlist()
+    init {
+        getWatchlist()
     }
 
     fun refresh() {
-        _movies.value?.clear()
+        _movies.value = null
         getWatchlist()
     }
 
@@ -73,11 +72,10 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
 
     private fun getMovie(movieId: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            val result = remoteMovieRepository.getMovieDetails(movieId)
+            val response = remoteMovieRepository.getMovieDetails(movieId)
             withContext(Dispatchers.Main) {
-                if (result.isSuccessful) {
-                    val movie = result.body()
-                    movie?.let {
+                if (response.isSuccessful) {
+                    response.body()?.let {
                         it.isInWatchlist = true
                         formatGenres(it)
                     }
