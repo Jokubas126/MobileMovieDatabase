@@ -26,7 +26,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class DiscoverGridViewModel(application: Application, arguments: Bundle?) : AndroidViewModel(application),
+class DiscoverGridViewModel(application: Application, arguments: Bundle?) :
+    AndroidViewModel(application),
     BaseGridViewModel, PersonalListsPopupWindow.ListsConfirmedClickListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
@@ -38,7 +39,7 @@ class DiscoverGridViewModel(application: Application, arguments: Bundle?) : Andr
     val loading: LiveData<Boolean> = _loading
 
     private var currentPage = 1
-    private var fetchedPage = 1
+    private var fetchedPage = 0
     private var isListFull = false
 
     private var startYear: String? = null
@@ -51,22 +52,16 @@ class DiscoverGridViewModel(application: Application, arguments: Bundle?) : Andr
     private val genresRepository = GenresRepository(application)
 
     init {
-        fetch(arguments)
-    }
-
-    private fun fetch(arguments: Bundle?) {
-        if (movies.value.isNullOrEmpty()) {
-            _loading.value = true
-            CoroutineScope(Dispatchers.IO).launch {
-                watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
-                arguments?.let {
-                    val args = DiscoverGridFragmentArgs.fromBundle(it)
-                    startYear = args.startYear
-                    endYear = args.endYear
-                    languageKey = args.languageKey
-                    genreId = args.genreId
-                    getMovieList()
-                }
+        _loading.value = true
+        CoroutineScope(Dispatchers.IO).launch {
+            watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
+            arguments?.let {
+                val args = DiscoverGridFragmentArgs.fromBundle(it)
+                startYear = args.startYear
+                endYear = args.endYear
+                languageKey = args.languageKey
+                genreId = args.genreId
+                getMovieList()
             }
         }
     }
@@ -89,32 +84,34 @@ class DiscoverGridViewModel(application: Application, arguments: Bundle?) : Andr
     //------------------------- Retrieving the data --------------------------//
 
     private fun getMovieList() {
-        if (isNetworkAvailable(getApplication())) {
-            configurePages()
-            CoroutineScope(Dispatchers.IO).launch {
-                val formattedList = formatQueries()
-                val response = RemoteMovieRepository().getDiscoveredMovies(
-                    currentPage,
-                    formattedList[0],
-                    formattedList[1],
-                    formattedList[2],
-                    languageKey
-                )
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        if (currentPage == response.body()!!.totalPages)
-                            isListFull = true
-                        formatGenres(response.body()!!.results)
-                    } else {
-                        _loading.value = false
-                        _error.value = true
+        synchronized(this) {
+            if (isNetworkAvailable(getApplication())) {
+                configurePages()
+                CoroutineScope(Dispatchers.IO).launch {
+                    val formattedList = formatQueries()
+                    val response = RemoteMovieRepository().getDiscoveredMovies(
+                        currentPage,
+                        formattedList[0],
+                        formattedList[1],
+                        formattedList[2],
+                        languageKey
+                    )
+                    withContext(Dispatchers.Main) {
+                        if (response.isSuccessful) {
+                            if (currentPage == response.body()!!.totalPages)
+                                isListFull = true
+                            formatGenres(response.body()!!.results)
+                        } else {
+                            _loading.value = false
+                            _error.value = true
+                        }
                     }
                 }
-            }
-        } else {
-            CoroutineScope(Dispatchers.Main).launch {
-                _loading.value = false
-                networkUnavailableNotification(getApplication())
+            } else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    _loading.value = false
+                    networkUnavailableNotification(getApplication())
+                }
             }
         }
     }
@@ -163,9 +160,10 @@ class DiscoverGridViewModel(application: Application, arguments: Bundle?) : Andr
     }
 
     private fun configurePages() {
-        if (currentPage == 1) {
-            fetchedPage = 1
-        }
+        if (currentPage == 1)
+            fetchedPage = 0
+        else if (currentPage - fetchedPage > 1)
+            currentPage = fetchedPage + 1
     }
 
     //------------------------ Watchlist ----------------------------//
@@ -173,6 +171,7 @@ class DiscoverGridViewModel(application: Application, arguments: Bundle?) : Andr
     fun updateWatchlist(movie: Movie) {
         if (movie.isInWatchlist) {
             watchlistRepository.insertOrUpdateMovie(WatchlistMovie(movie.remoteId))
+            watchlistMovieIdList.add(movie.remoteId)
             showToast(
                 getApplication(),
                 getApplication<Application>().getString(R.string.added_to_watchlist),
@@ -180,6 +179,7 @@ class DiscoverGridViewModel(application: Application, arguments: Bundle?) : Andr
             )
         } else {
             watchlistRepository.deleteWatchlistMovie(movie.remoteId)
+            watchlistMovieIdList.remove(movie.remoteId)
             showToast(
                 getApplication(),
                 getApplication<Application>().getString(R.string.deleted_from_watchlist),

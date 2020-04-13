@@ -26,7 +26,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SearchGridViewModel(application: Application, arguments: Bundle?) : AndroidViewModel(application),
+class SearchGridViewModel(application: Application, arguments: Bundle?) :
+    AndroidViewModel(application),
     BaseGridViewModel, PersonalListsPopupWindow.ListsConfirmedClickListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
@@ -38,7 +39,7 @@ class SearchGridViewModel(application: Application, arguments: Bundle?) : Androi
     val loading: LiveData<Boolean> = _loading
 
     private var currentPage = 1
-    private var fetchedPage = 1
+    private var fetchedPage = 0
     private var isListFull = false
     private var searchQuery: String? = null
 
@@ -47,19 +48,12 @@ class SearchGridViewModel(application: Application, arguments: Bundle?) : Androi
     private val genresRepository = GenresRepository(application)
 
     init {
-        fetch(arguments)
-    }
-
-    private fun fetch(arguments: Bundle?) {
-        if (movies.value.isNullOrEmpty()) {
-            _loading.value = true
-            CoroutineScope(Dispatchers.IO).launch {
-                watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
-                arguments?.let {
-                    val args = SearchGridFragmentArgs.fromBundle(arguments)
-                    searchQuery = args.searchQuery
-                    getMovieList()
-                }
+        _loading.value = true
+        CoroutineScope(Dispatchers.IO).launch {
+            watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
+            arguments?.let {
+                searchQuery = SearchGridFragmentArgs.fromBundle(arguments).searchQuery
+                getMovieList()
             }
         }
     }
@@ -82,25 +76,27 @@ class SearchGridViewModel(application: Application, arguments: Bundle?) : Androi
     //------------------------- Retrieving the data --------------------------//
 
     private fun getMovieList() {
-        if (isNetworkAvailable(getApplication())) {
-            configurePages()
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = RemoteMovieRepository().getSearchedMovies(searchQuery!!, currentPage)
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        if (currentPage == response.body()!!.totalPages)
-                            isListFull = true
-                        formatGenres(response.body()!!.results)
-                    } else {
-                        _loading.value = false
-                        _error.value = true
+        synchronized(this) {
+            if (isNetworkAvailable(getApplication())) {
+                configurePages()
+                CoroutineScope(Dispatchers.IO).launch {
+                    val response = RemoteMovieRepository().getSearchedMovies(searchQuery!!, currentPage)
+                    withContext(Dispatchers.Main) {
+                        if (response.isSuccessful) {
+                            if (currentPage == response.body()!!.totalPages)
+                                isListFull = true
+                            formatGenres(response.body()!!.results)
+                        } else {
+                            _loading.value = false
+                            _error.value = true
+                        }
                     }
                 }
-            }
-        } else {
-            CoroutineScope(Dispatchers.Main).launch {
-                _loading.value = false
-                networkUnavailableNotification(getApplication())
+            } else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    _loading.value = false
+                    networkUnavailableNotification(getApplication())
+                }
             }
         }
     }
@@ -137,9 +133,10 @@ class SearchGridViewModel(application: Application, arguments: Bundle?) : Androi
     }
 
     private fun configurePages() {
-        if (currentPage == 1) {
-            fetchedPage = 1
-        }
+        if (currentPage == 1)
+            fetchedPage = 0
+        else if (currentPage - fetchedPage > 1)
+            currentPage = fetchedPage + 1
     }
 
     //------------------------ Watchlist ----------------------------//
@@ -147,6 +144,7 @@ class SearchGridViewModel(application: Application, arguments: Bundle?) : Androi
     fun updateWatchlist(movie: Movie) {
         if (movie.isInWatchlist) {
             watchlistRepository.insertOrUpdateMovie(WatchlistMovie(movie.remoteId))
+            watchlistMovieIdList.add(movie.remoteId)
             showToast(
                 getApplication(),
                 getApplication<Application>().getString(R.string.added_to_watchlist),
@@ -154,6 +152,7 @@ class SearchGridViewModel(application: Application, arguments: Bundle?) : Androi
             )
         } else {
             watchlistRepository.deleteWatchlistMovie(movie.remoteId)
+            watchlistMovieIdList.remove(movie.remoteId)
             showToast(
                 getApplication(),
                 getApplication<Application>().getString(R.string.deleted_from_watchlist),

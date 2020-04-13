@@ -25,7 +25,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TypeGridViewModel(application: Application, arguments: Bundle?) : AndroidViewModel(application),
+class TypeGridViewModel(application: Application, arguments: Bundle?) :
+    AndroidViewModel(application),
     BaseGridViewModel, PersonalListsPopupWindow.ListsConfirmedClickListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
@@ -37,7 +38,7 @@ class TypeGridViewModel(application: Application, arguments: Bundle?) : AndroidV
     val loading: LiveData<Boolean> = _loading
 
     private var currentPage = 1
-    private var fetchedPage = 1
+    private var fetchedPage = 0
     private var isListFull = false
     private lateinit var movieListType: String
 
@@ -46,22 +47,12 @@ class TypeGridViewModel(application: Application, arguments: Bundle?) : AndroidV
     private val genresRepository = GenresRepository(application)
 
     init {
-        fetch(arguments)
-    }
-
-    private fun fetch(arguments: Bundle?) {
-        if (movies.value.isNullOrEmpty()) {
-            _loading.value = true
-            CoroutineScope(Dispatchers.IO).launch {
-                watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
-                arguments?.let {
-                    val args = TypeGridFragmentArgs.fromBundle(it)
-                    movieListType =
-                        if (args.keyCategory.isNotBlank())
-                            args.keyCategory
-                        else KEY_POPULAR
-                    getMovieList()
-                }
+        _loading.value = true
+        CoroutineScope(Dispatchers.IO).launch {
+            watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
+            arguments?.let {
+                movieListType = TypeGridFragmentArgs.fromBundle(it).keyCategory
+                getMovieList()
             }
         }
     }
@@ -84,25 +75,27 @@ class TypeGridViewModel(application: Application, arguments: Bundle?) : AndroidV
     //------------------------- Retrieving the data --------------------------//
 
     private fun getMovieList() {
-        if (isNetworkAvailable(getApplication())) {
-            configurePages()
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = RemoteMovieRepository().getMovies(movieListType, currentPage)
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        if (currentPage == response.body()!!.totalPages)
-                            isListFull = true
-                        formatGenres(response.body()!!.results)
-                    } else {
-                        _loading.value = false
-                        _error.value = true
+        synchronized(this) {
+            if (isNetworkAvailable(getApplication())) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    configurePages()
+                    val response = RemoteMovieRepository().getMovies(movieListType, currentPage)
+                    withContext(Dispatchers.Main) {
+                        if (response.isSuccessful) {
+                            if (currentPage == response.body()!!.totalPages)
+                                isListFull = true
+                            formatGenres(response.body()!!.results)
+                        } else {
+                            _loading.value = false
+                            _error.value = true
+                        }
                     }
                 }
-            }
-        } else {
-            CoroutineScope(Dispatchers.Main).launch {
-                _loading.value = false
-                networkUnavailableNotification(getApplication())
+            } else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    _loading.value = false
+                    networkUnavailableNotification(getApplication())
+                }
             }
         }
     }
@@ -139,9 +132,10 @@ class TypeGridViewModel(application: Application, arguments: Bundle?) : AndroidV
     }
 
     private fun configurePages() {
-        if (currentPage == 1) {
-            fetchedPage = 1
-        }
+        if (currentPage == 1)
+            fetchedPage = 0
+        else if (currentPage - fetchedPage > 1)
+            currentPage = fetchedPage + 1
     }
 
     //------------------------ Watchlist ----------------------------//
@@ -149,6 +143,7 @@ class TypeGridViewModel(application: Application, arguments: Bundle?) : AndroidV
     fun updateWatchlist(movie: Movie) {
         if (movie.isInWatchlist) {
             watchlistRepository.insertOrUpdateMovie(WatchlistMovie(movie.remoteId))
+            watchlistMovieIdList.add(movie.remoteId)
             showToast(
                 getApplication(),
                 getApplication<Application>().getString(R.string.added_to_watchlist),
@@ -156,6 +151,7 @@ class TypeGridViewModel(application: Application, arguments: Bundle?) : AndroidV
             )
         } else {
             watchlistRepository.deleteWatchlistMovie(movie.remoteId)
+            watchlistMovieIdList.remove(movie.remoteId)
             showToast(
                 getApplication(),
                 getApplication<Application>().getString(R.string.deleted_from_watchlist),
@@ -230,10 +226,10 @@ class TypeGridViewModel(application: Application, arguments: Bundle?) : AndroidV
     private fun showSnackbarActionCheckLists(root: View) {
         CoroutineScope(Dispatchers.Main).launch {
             Snackbar.make(
-                    root,
-                    getApplication<Application>().getString(R.string.successfully_uploaded_to_list),
-                    Snackbar.LENGTH_LONG
-                )
+                root,
+                getApplication<Application>().getString(R.string.successfully_uploaded_to_list),
+                Snackbar.LENGTH_LONG
+            )
                 .setAction(getApplication<Application>().getString(R.string.action_check_lists)) {
                     val action = NavGraphDirections.actionGlobalCustomListsFragment()
                     Navigation.findNavController(root).navigate(action)
