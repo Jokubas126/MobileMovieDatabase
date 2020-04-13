@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
 class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
-    GridAdapter.PersonalListActionListener {
+    GridAdapter.PersonalListActionListener, GridAdapter.WatchlistActionListener {
 
     private lateinit var viewModel: DiscoverGridViewModel
     private val gridAdapter = GridAdapter(View.VISIBLE, View.VISIBLE, View.GONE)
@@ -96,6 +96,7 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
         movie_recycler_view!!.adapter = gridAdapter
 
         gridAdapter.setItemClickListener(this)
+        gridAdapter.setWatchlistActionListener(this)
         gridAdapter.setPersonalListActionListener(this)
     }
 

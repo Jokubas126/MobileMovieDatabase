@@ -23,7 +23,8 @@ import kotlinx.android.synthetic.main.fragment_movies_grid.*
 import java.util.*
 
 @ExperimentalStdlibApi
-class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalListActionListener {
+class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalListActionListener,
+    GridAdapter.WatchlistActionListener {
 
     private lateinit var viewModel: TypeGridViewModel
     private val gridAdapter = GridAdapter(View.VISIBLE, View.VISIBLE, View.GONE)
@@ -116,6 +117,7 @@ class TypeGridFragment : Fragment(), ItemClickListener, GridAdapter.PersonalList
         movie_recycler_view!!.adapter = gridAdapter
 
         gridAdapter.setItemClickListener(this)
+        gridAdapter.setWatchlistActionListener(this)
         gridAdapter.setPersonalListActionListener(this)
     }
 

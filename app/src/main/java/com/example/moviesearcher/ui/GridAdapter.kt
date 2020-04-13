@@ -18,6 +18,7 @@ class GridAdapter(
     val movieList = mutableListOf<Movie>()
 
     private var itemClickListener: ItemClickListener? = null
+    private var watchlistActionListener: WatchlistActionListener? = null
     private var personalListActionListener: PersonalListActionListener? = null
     private var personalListDeleteListener: PersonalListDeleteListener? = null
 
@@ -25,8 +26,12 @@ class GridAdapter(
         fun onMovieClick(view: View, movie: Movie)
     }
 
-    interface PersonalListActionListener {
+    interface WatchlistActionListener {
         fun onWatchlistCheckChanged(movie: Movie)
+    }
+
+    interface PersonalListActionListener {
+
         fun onPlaylistAdd(movie: Movie)
     }
 
@@ -60,6 +65,10 @@ class GridAdapter(
         itemClickListener = listener
     }
 
+    fun setWatchlistActionListener(listener: WatchlistActionListener) {
+        watchlistActionListener = listener
+    }
+
     fun setPersonalListActionListener(listener: PersonalListActionListener) {
         personalListActionListener = listener
     }
@@ -91,7 +100,7 @@ class GridAdapter(
 
             view.watchlistBtn.setOnClickListener {
                 movie.isInWatchlist = !movie.isInWatchlist
-                personalListActionListener?.onWatchlistCheckChanged(movie)
+                watchlistActionListener?.onWatchlistCheckChanged(movie)
                 if (movie.isInWatchlist)
                     it.setBackgroundResource(R.drawable.ic_star_full)
                 else it.setBackgroundResource(R.drawable.ic_star_empty)

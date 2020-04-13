@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
 class WatchlistFragment : Fragment(), GridAdapter.ItemClickListener,
-    GridAdapter.PersonalListActionListener {
+    GridAdapter.PersonalListActionListener, GridAdapter.WatchlistActionListener {
 
     private lateinit var viewModel: WatchlistViewModel
 
@@ -83,6 +83,7 @@ class WatchlistFragment : Fragment(), GridAdapter.ItemClickListener,
         movie_recycler_view!!.adapter = gridAdapter
 
         gridAdapter.setPersonalListActionListener(this)
+        gridAdapter.setWatchlistActionListener(this)
         gridAdapter.setItemClickListener(this)
     }
 
