@@ -28,8 +28,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="15dp"
-                android:text="Create a new list"
-                android:textAppearance="@style/PersonalListCreateTitleAppearance" />
+                android:text="@string/create_new_list"
+                android:textAppearance="@style/CustomListCreateTitleAppearance" />
 
             <EditText
                 android:id="@+id/list_title_edit_text"
@@ -38,9 +38,9 @@
                 android:layout_margin="10dp"
                 android:autofillHints="false"
                 android:backgroundTint="@color/colorPrimary"
-                android:inputType="text"
+                android:inputType="textCapSentences"
                 android:maxLines="1"
-                android:textAppearance="@style/PersonalListBigTitleAppearance"
+                android:textAppearance="@style/CustomListBigTitleAppearance"
                 android:textColor="@color/colorPrimary"
                 tools:ignore="LabelFor" />
 
@@ -68,7 +68,8 @@
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/guideline"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:ignore="HardcodedText" />
 
                 <Button
                     android:id="@+id/create_button"
@@ -81,7 +82,8 @@
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/guideline" />
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    tools:ignore="HardcodedText" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -54,27 +54,27 @@ class MovieGridFragment : Fragment(), GridAdapter.ItemClickListener,
     }
 
     private fun observeViewModel() {
-        viewModel.movieList?.observe(viewLifecycleOwner, Observer {
-            viewModel.movies(it.movieIdList)
-                ?.observe(viewLifecycleOwner, Observer { movies: List<Movie>? ->
-                    gridAdapter.updateMovieList(movies)
-                    movie_recycler_view!!.visibility = View.VISIBLE
-                })
+        viewModel.movieList.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                gridAdapter.updateMovieList(it)
+                movie_recycler_view!!.visibility = View.VISIBLE
+            }
         })
         viewModel.error.observe(viewLifecycleOwner, Observer { isError: Boolean? ->
-            if (isError != null)
+            isError?.let {
                 loading_error_text_view!!.visibility =
-                    if (isError)
+                    if (it)
                         View.VISIBLE
                     else View.GONE
+            }
         })
         viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
-            if (isLoading != null) {
+            isLoading?.let {
                 progress_bar_loading_movie_list!!.visibility =
-                    if (isLoading)
+                    if (it)
                         View.VISIBLE
                     else View.GONE
-                if (isLoading)
+                if (it)
                     loading_error_text_view!!.visibility = View.GONE
             }
         })

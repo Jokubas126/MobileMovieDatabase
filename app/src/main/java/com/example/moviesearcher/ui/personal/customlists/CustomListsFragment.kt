@@ -10,16 +10,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesearcher.R
-import com.example.moviesearcher.model.data.LocalMovieList
+import com.example.moviesearcher.model.data.CustomMovieList
 import com.example.moviesearcher.util.SNACKBAR_LENGTH_LONG_MS
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_custom_lists.*
 
-class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener {
+class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener,
+    CustomListsAdapter.ListOptionsListener {
 
     private lateinit var viewModel: CustomListsViewModel
 
-    private val listAdapter = CustomListsAdapter()
+    private lateinit var listAdapter: CustomListsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,18 +72,26 @@ class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener {
     }
 
     private fun setupRecyclerView() {
-        recycler_view.layoutManager = LinearLayoutManager(context)
-        recycler_view.adapter = listAdapter
-        listAdapter.setListOnClickListener(this)
+        context?.let {
+            listAdapter = CustomListsAdapter(it)
+            recycler_view.layoutManager = LinearLayoutManager(it)
+            recycler_view.adapter = listAdapter
+            listAdapter.setListOnClickListener(this)
+            listAdapter.setListOptionsListener(this)
+        }
     }
 
-    override fun onListClicked(view: View, list: LocalMovieList) {
+    override fun onListClicked(view: View, list: CustomMovieList) {
         viewModel.onListClicked(view, list)
     }
 
-    override fun onDeleteClicked(view: View, list: LocalMovieList) {
-        val oldList = mutableListOf<LocalMovieList>()
-        val newList = mutableListOf<LocalMovieList>()
+    override fun onEditListTitle(list: CustomMovieList) {
+        viewModel.updateMovieList(list)
+    }
+
+    override fun onDeleteClicked(view: View, list: CustomMovieList) {
+        val oldList = mutableListOf<CustomMovieList>()
+        val newList = mutableListOf<CustomMovieList>()
         oldList.addAll(listAdapter.movieLists)
         newList.addAll(oldList)
         newList.remove(list)

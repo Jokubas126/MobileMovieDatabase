@@ -42,6 +42,7 @@
 
     <!-- Custom lists -->
 
+    <string name="create_new_list">Create a new list</string>
     <string name="add_to_lists_title">Add to the lists</string>
     <string name="select_a_list">Please select a list</string>
     <string name="successfully_uploaded_to_list">Movie successfully uploaded</string>
@@ -49,6 +50,7 @@
     <string name="action_check_lists">"CHECK LISTS"</string>
     <string name="movie_list_deleted">Movie list was deleted</string>
     <string name="movie_deleted">Movie was deleted</string>
+    <string name="updated">Last update:&#160;</string>
 
     <!-- Watchlist -->
 
@@ -65,8 +67,5 @@
     <!-- About app fragment -->
 
     <string name="about_app">This application was made as a hobby. It is used for searching for movies by their genre, release date and original language or a title keyword, also being able to search the 4 different categories: popularity, vote average, upcoming and now playing. The information is retrieved from The Movie Database (TMDb).</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -13,7 +13,6 @@ import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.*
 import com.example.moviesearcher.model.remote.repositories.RemoteMovieRepository
 import com.example.moviesearcher.model.room.databases.MovieListDatabase
-import com.example.moviesearcher.model.room.repositories.GenresRepository
 import com.example.moviesearcher.model.room.repositories.MovieListRepository
 import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 import com.example.moviesearcher.model.room.repositories.WatchlistRepository
@@ -140,7 +139,7 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
             this
         )
         val movieLists =
-            MovieListDatabase.getInstance(root.context).movieListDao().getAllMovieLists()
+            MovieListDatabase.getInstance(root.context).movieListDao().getAllCustomMovieLists()
         movieLists.observeForever {
             if (!it.isNullOrEmpty())
                 popupWindow.setupLists(it)
@@ -149,7 +148,7 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
 
     override fun onConfirmClicked(
         movie: Movie,
-        checkedLists: List<LocalMovieList>,
+        checkedLists: List<CustomMovieList>,
         root: View
     ): Boolean {
         return when {

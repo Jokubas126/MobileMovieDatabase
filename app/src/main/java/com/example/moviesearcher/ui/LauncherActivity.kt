@@ -20,4 +20,9 @@ class LauncherActivity: AppCompatActivity() {
             }
         })
     }
+
+    override fun onPause() {
+        super.onPause()
+        finish()
+    }
 }

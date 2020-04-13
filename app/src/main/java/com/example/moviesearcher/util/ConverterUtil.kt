@@ -55,8 +55,9 @@ fun getAnyNameList(list: List<*>?): List<String> {
 // --------------- Image Related ---------------- //
 
 fun imageUrlToFileUriString(context: Context, url: String?): String? {
-    if (!url.isNullOrBlank()){
-        val connection: HttpURLConnection = URL(BASE_IMAGE_URL + url).openConnection() as HttpURLConnection
+    if (!url.isNullOrBlank()) {
+        val connection: HttpURLConnection =
+            URL(BASE_IMAGE_URL + url).openConnection() as HttpURLConnection
         connection.connect()
         val inputStream = connection.inputStream
         val bitmap = BitmapFactory.decodeStream(inputStream)
@@ -67,7 +68,7 @@ fun imageUrlToFileUriString(context: Context, url: String?): String? {
 }
 
 private fun saveBitmapToFile(context: Context, bitmap: Bitmap?): File? {
-    if (bitmap != null){
+    if (bitmap != null) {
         val wrapper = ContextWrapper(context)
         var file = wrapper.getDir("images", Context.MODE_PRIVATE)
         file = File(file, "${UUID.randomUUID()}.jpg")
@@ -81,8 +82,24 @@ private fun saveBitmapToFile(context: Context, bitmap: Bitmap?): File? {
 }
 
 // ---------------------------------------------------------//
-    // ---------------- Type converters ---------------//
+// ---------------- Type converters ---------------//
 // ---------------------------------------------------------//
+
+class DateConverter {
+
+    @TypeConverter
+    fun dateToString(date: Date?): String? {
+        return Gson().toJson(date)
+    }
+
+    @TypeConverter
+    fun stringToDate(string: String?): Date? {
+        val type: Type = object : TypeToken<Date>() {}.type
+        return Gson().fromJson(string, type)
+    }
+}
+
+// -------------------- Lists ---------------------------//
 
 class IntListTypeConverter {
     /** based on https://medium.com/@toddcookevt/android-room-storing-lists-of-objects-766cca57e3f9 **/

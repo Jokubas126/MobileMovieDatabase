@@ -17,7 +17,7 @@ interface MovieDao {
     fun getMovieById(movieId: Int): Movie
 
     @Query("SELECT * FROM movie WHERE roomId IN (:movieIdList)")
-    fun getMoviesFromIdList(movieIdList: List<Int>): LiveData<List<Movie>>
+    fun getMoviesFromIdList(movieIdList: List<Int>): List<Movie>
 
     @Query("SELECT * FROM movie")
     fun getAllMovies(): LiveData<List<Movie>>

@@ -8,12 +8,24 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="colorControlNormal">@android:color/white</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <item name="android:itemTextAppearance">@style/PopupMenuItemStyle</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="PopupMenu" parent="ThemeOverlay.AppCompat.Light" >
+        <item name="android:popupBackground">@color/colorCardBackground</item>
+        <item name="android:itemTextAppearance">@style/PopupMenuItemStyle</item>
+    </style>
+
+    <style name="PopupMenuItemStyle" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@color/itemTextDarkGrey</item>
+        <item name="android:textSize">16sp</item>
+    </style>
 
     <!-- General -->
 
@@ -54,28 +66,32 @@
 
     <!-- Personal lists -->
 
-    <style name="PersonalListBigTitleAppearance" parent="BaseTextStyle">
+    <style name="CustomListBigTitleAppearance" parent="BaseTextStyle">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">25sp</item>
     </style>
 
-    <style name="PersonalListSmallTitleAppearance" parent="BaseTextStyle">
-        <item name="android:textColor">@color/personalListTitleBlack</item>
+    <style name="CustomListSmallTitleAppearance" parent="BaseTextStyle">
+        <item name="android:textColor">@color/customListTitleBlack</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="PersonalListCreateTitleAppearance" parent="BaseTextStyle">
+    <style name="CustomListCreateTitleAppearance" parent="BaseTextStyle">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">30sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="PersonalListAddToListTitleAppearance" parent="BaseTextStyle">
+    <style name="CustomListAddToListTitleAppearance" parent="BaseTextStyle">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">25sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="CustomListUpdateDataAppearance" parent="BaseTextStyle" >
+        <item name="android:textColor">@color/itemTextLightGrey</item>
+        <item name="android:textSize">12sp</item>
+    </style>
 
     <!-- Categories Fragment -->
 
