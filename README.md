@@ -12,7 +12,9 @@ Also, browsing 4 different movie categories:
 * upcoming
 * now playing 
 
-Movies can be saved to local personal lists, which can be retrieved offline.
+Movies can be saved to: 
+* watchlist (online usage)
+* local personal lists (possible offline usage)
 
 The information is retrieved from [The Movie Database (TMDb)](https://www.themoviedb.org).
 
