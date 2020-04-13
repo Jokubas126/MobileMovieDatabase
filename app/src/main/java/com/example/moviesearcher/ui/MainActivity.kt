@@ -77,7 +77,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val searchView = searchItem!!.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                val action = NavGraphDirections.actionGlobalSearchGridFragment(query)
+                val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
+                action.movieGridType = SEARCH_MOVIE_GRID
+                action.searchQuery = query
                 navController.popBackStack(navController.currentDestination!!.id, true)
                 navController.navigate(action)
                 return false

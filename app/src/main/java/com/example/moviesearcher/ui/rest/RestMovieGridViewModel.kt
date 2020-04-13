@@ -1,14 +1,13 @@
-package com.example.moviesearcher.ui.remotegrids.searchgrid
+package com.example.moviesearcher.ui.rest
 
 import android.app.Application
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import androidx.navigation.Navigation
+import com.example.moviesearcher.NavGraphDirections
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.*
 import com.example.moviesearcher.model.remote.repositories.RemoteMovieRepository
@@ -17,7 +16,6 @@ import com.example.moviesearcher.model.room.databases.MovieListDatabase
 import com.example.moviesearcher.model.room.repositories.GenresRepository
 import com.example.moviesearcher.model.room.repositories.RoomMovieRepository
 import com.example.moviesearcher.model.room.repositories.WatchlistRepository
-import com.example.moviesearcher.ui.remotegrids.BaseGridViewModel
 import com.example.moviesearcher.ui.popup_windows.PersonalListsPopupWindow
 import com.example.moviesearcher.util.*
 import com.google.android.material.snackbar.Snackbar
@@ -25,10 +23,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Response
 
-class SearchGridViewModel(application: Application, arguments: Bundle?) :
-    AndroidViewModel(application),
-    BaseGridViewModel, PersonalListsPopupWindow.ListsConfirmedClickListener {
+class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
+    AndroidViewModel(application), PersonalListsPopupWindow.ListsConfirmedClickListener,
+    ResponseListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
     private val _error = MutableLiveData<Boolean>()
@@ -41,56 +40,74 @@ class SearchGridViewModel(application: Application, arguments: Bundle?) :
     private var currentPage = 1
     private var fetchedPage = 0
     private var isListFull = false
-    private var searchQuery: String? = null
 
+    private lateinit var args: RestMovieGridFragmentArgs
+
+    // repositories
     private val watchlistRepository = WatchlistRepository(application)
     private val watchlistMovieIdList = mutableListOf<Int>()
     private val genresRepository = GenresRepository(application)
+
+    private val responseListener: ResponseListener = this
 
     init {
         _loading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
             arguments?.let {
-                searchQuery = SearchGridFragmentArgs.fromBundle(arguments).searchQuery
-                getMovieList()
+                args = RestMovieGridFragmentArgs.fromBundle(it)
+                getResponse()
             }
         }
     }
 
-    override fun refresh() {
+    fun refresh() {
         isListFull = false
         _loading.value = true
         currentPage = 1
-        getMovieList()
+        getResponse()
     }
 
-    override fun addData() {
+    fun addData() {
         if (!isListFull) {
             _loading.value = true
             currentPage++
-            getMovieList()
+            getResponse()
         }
     }
 
+    // -----------------------------------------------------------------------//
     //------------------------- Retrieving the data --------------------------//
+    // -----------------------------------------------------------------------//
 
-    private fun getMovieList() {
+    // -------------------------- Remote response -----------------------------//
+
+    private fun getResponse() {
         synchronized(this) {
             if (isNetworkAvailable(getApplication())) {
                 configurePages()
                 CoroutineScope(Dispatchers.IO).launch {
-                    val response = RemoteMovieRepository().getSearchedMovies(searchQuery!!, currentPage)
-                    withContext(Dispatchers.Main) {
-                        if (response.isSuccessful) {
-                            if (currentPage == response.body()!!.totalPages)
-                                isListFull = true
-                            formatGenres(response.body()!!.results)
-                        } else {
-                            _loading.value = false
-                            _error.value = true
+                    val response =
+                        when (args.movieGridType) {
+                            TYPE_MOVIE_GRID -> RemoteMovieRepository().getMovies(
+                                args.keyCategory!!,
+                                currentPage
+                            )
+                            DISCOVER_MOVIE_GRID ->
+                                RemoteMovieRepository().getDiscoveredMovies(
+                                    currentPage,
+                                    args.startYear,
+                                    args.endYear,
+                                    args.genreId,
+                                    args.languageKey
+                                )
+                            SEARCH_MOVIE_GRID -> RemoteMovieRepository().getSearchedMovies(
+                                args.searchQuery!!,
+                                currentPage
+                            )
+                            else -> null
                         }
-                    }
+                    responseListener.onResponseRetrieved(response)
                 }
             } else {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -101,20 +118,36 @@ class SearchGridViewModel(application: Application, arguments: Bundle?) :
         }
     }
 
-    private fun formatGenres(movieList: List<Movie>) {
+    private fun configurePages() {
+        if (currentPage == 1)
+            fetchedPage = 0
+        else if (currentPage - fetchedPage > 1)
+            currentPage = fetchedPage + 1
+    }
+
+    override fun onResponseRetrieved(response: Response<MovieResults>?) {
+        response?.let { getMovieList(it) }
+    }
+
+    private fun getMovieList(response: Response<MovieResults>) {
         CoroutineScope(Dispatchers.IO).launch {
-            for (movie in movieList)
-                movie.formatGenresString(genresRepository.getGenresByIdList(movie.genreIds))
-            val finalList = configureWatchlistMovies(movieList)
-            insertMovieListToData(finalList)
+            if (response.isSuccessful) {
+                if (currentPage == response.body()!!.totalPages)
+                    isListFull = true
+                formatGenres(response.body()!!.results)
+            } else
+                withContext(Dispatchers.Main) {
+                    _loading.value = false
+                    _error.value = true
+                }
         }
     }
 
-    private fun configureWatchlistMovies(movieList: List<Movie>): List<Movie> {
+    private fun formatGenres(movieList: List<Movie>) {
         for (movie in movieList)
-            if (watchlistMovieIdList.contains(movie.remoteId))
-                movie.isInWatchlist = true
-        return movieList
+            movie.formatGenresString(genresRepository.getGenresByIdList(movie.genreIds))
+        val finalList = checkWatchlistMovies(movieList)
+        insertMovieListToData(finalList)
     }
 
     private fun insertMovieListToData(movieList: List<Movie>) {
@@ -132,14 +165,14 @@ class SearchGridViewModel(application: Application, arguments: Bundle?) :
         }
     }
 
-    private fun configurePages() {
-        if (currentPage == 1)
-            fetchedPage = 0
-        else if (currentPage - fetchedPage > 1)
-            currentPage = fetchedPage + 1
-    }
+//------------------------ Watchlist ----------------------------//
 
-    //------------------------ Watchlist ----------------------------//
+    private fun checkWatchlistMovies(movieList: List<Movie>): List<Movie> {
+        for (movie in movieList)
+            if (watchlistMovieIdList.contains(movie.remoteId))
+                movie.isInWatchlist = true
+        return movieList
+    }
 
     fun updateWatchlist(movie: Movie) {
         if (movie.isInWatchlist) {
@@ -161,9 +194,9 @@ class SearchGridViewModel(application: Application, arguments: Bundle?) :
         }
     }
 
-    //------------------ Custom lists --------------------------//
+//------------------ Custom lists --------------------------//
 
-    override fun onPlaylistAddCLicked(movie: Movie, root: View) {
+    fun onPlaylistAddCLicked(movie: Movie, root: View) {
         val popupWindow = PersonalListsPopupWindow(
             root,
             View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
@@ -206,6 +239,7 @@ class SearchGridViewModel(application: Application, arguments: Bundle?) :
                         it.finalizeInitialization(getApplication())
                         val movieRoomId = RoomMovieRepository(getApplication())
                             .insertOrUpdateMovie(getApplication(), it)
+
                         for (list in checkedLists)
                             MovieListRepository(getApplication()).addMovieToMovieList(
                                 list,
@@ -226,20 +260,22 @@ class SearchGridViewModel(application: Application, arguments: Bundle?) :
     private fun showSnackbarActionCheckLists(root: View) {
         CoroutineScope(Dispatchers.Main).launch {
             Snackbar.make(
-                    root,
-                    getApplication<Application>().getString(R.string.successfully_uploaded_to_list),
-                    Snackbar.LENGTH_LONG
-                )
+                root,
+                getApplication<Application>().getString(R.string.successfully_uploaded_to_list),
+                Snackbar.LENGTH_LONG
+            )
                 .setAction(getApplication<Application>().getString(R.string.action_check_lists)) {
-                    val action = SearchGridFragmentDirections.actionGlobalCustomListsFragment()
+                    val action = NavGraphDirections.actionGlobalCustomListsFragment()
                     Navigation.findNavController(root).navigate(action)
                 }.show()
         }
     }
 
+//------------------ Navigation -----------------------------//
 
-    override fun onMovieClicked(view: View, movie: Movie) {
-        val action = SearchGridFragmentDirections.actionMovieDetails()
+    fun onMovieClicked(view: View, movie: Movie) {
+        val action =
+            RestMovieGridFragmentDirections.actionMovieDetails()
         action.movieRemoteId = movie.remoteId
         Navigation.findNavController(view).navigate(action)
     }

@@ -1,4 +1,4 @@
-package com.example.moviesearcher.ui.remotegrids
+package com.example.moviesearcher.ui.rest
 
 import com.example.moviesearcher.model.data.MovieResults
 import retrofit2.Response

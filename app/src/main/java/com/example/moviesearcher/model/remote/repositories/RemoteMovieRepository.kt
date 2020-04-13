@@ -11,28 +11,36 @@ class RemoteMovieRepository {
 
     suspend fun getGenres() = service.getGenres(MOVIE_DB_API_KEY)
 
-    suspend fun getMovies(listType: String, page: Int) = service.getMovies(listType, MOVIE_DB_API_KEY, page.toString())
-    suspend fun getMovieDetails(movieId: Int) = service.getMovieDetails(movieId.toString(), MOVIE_DB_API_KEY, MOVIE_DB_LANGUAGE_EN)
+    suspend fun getMovies(listType: String, page: Int) =
+        service.getMovies(listType, MOVIE_DB_API_KEY, page.toString())
 
-    suspend fun getImages(movieId: Int) = service.getImages(movieId.toString(), MOVIE_DB_API_KEY, MOVIE_DB_IMAGE_LANGUAGE_EN)
-    suspend fun getVideo(movieId: Int) = service.getVideo(movieId.toString(), MOVIE_DB_API_KEY, MOVIE_DB_IMAGE_LANGUAGE_EN)
+    suspend fun getMovieDetails(movieId: Int) =
+        service.getMovieDetails(movieId.toString(), MOVIE_DB_API_KEY, MOVIE_DB_LANGUAGE_EN)
+
+    suspend fun getImages(movieId: Int) =
+        service.getImages(movieId.toString(), MOVIE_DB_API_KEY, MOVIE_DB_IMAGE_LANGUAGE_EN)
+
+    suspend fun getVideo(movieId: Int) =
+        service.getVideo(movieId.toString(), MOVIE_DB_API_KEY, MOVIE_DB_IMAGE_LANGUAGE_EN)
 
     suspend fun getCredits(movieId: Int) = service.getCredits(movieId.toString(), MOVIE_DB_API_KEY)
 
-    suspend fun getSearchedMovies(query: String, page: Int) = service.getSearchedMovies(MOVIE_DB_API_KEY, query, page.toString())
+    suspend fun getSearchedMovies(query: String, page: Int) =
+        service.getSearchedMovies(MOVIE_DB_API_KEY, query, page.toString())
 
     suspend fun getDiscoveredMovies(
-            page: Int,
-            startDate: String?,
-            endDate: String?,
-            genreId: String?,
-            languageKey: String?
+        page: Int,
+        startYear: String?,
+        endYear: String?,
+        genreId: Int,
+        languageKey: String?
     ) = service.getDiscoveredMovies(
-            MOVIE_DB_API_KEY,
-            page.toString(),
-            startDate,
-            endDate,
-            genreId,
-            languageKey
+        MOVIE_DB_API_KEY,
+        page.toString(),
+        startYear?.let { "$it-01-01" },
+        "$endYear-12-31",
+        if (genreId == 0) null
+        else genreId.toString(),
+        languageKey
     )
 }

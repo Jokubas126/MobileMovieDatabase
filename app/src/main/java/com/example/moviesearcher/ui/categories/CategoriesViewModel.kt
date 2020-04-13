@@ -118,7 +118,10 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
     fun onConfirmSelectionClicked(view: View, startYear: String, endYear: String) {
         val action = CategoriesFragmentDirections.actionRemoteMovieGridFragment()
         action.movieGridType = DISCOVER_MOVIE_GRID
-        action.startYear = startYear
+        action.startYear =
+            if (startYear == "∞")
+                null
+            else startYear
         action.endYear = endYear
         val discoveryArrayList = arrayListOf<String>()
         genreSubcategory?.let {

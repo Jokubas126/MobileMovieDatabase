@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/remoteMovieGridFragment">
+    app:startDestination="@id/restMovieGridFragment">
 
     <!-- MOVIE GRID FRAGMENTS -->
 
     <fragment
-        android:id="@+id/remoteMovieGridFragment"
-        android:name="com.example.moviesearcher.ui.remotegrids.RemoteMovieGridFragment"
-        android:label="RemoteMovieGridFragment"
+        android:id="@+id/restMovieGridFragment"
+        android:name="com.example.moviesearcher.ui.rest.RestMovieGridFragment"
+        android:label="RestMovieGridFragment"
         tools:layout="@layout/fragment_movies_grid">
         <action
             android:id="@+id/actionMovieDetails"
@@ -22,6 +22,11 @@
         <argument
             android:name="key_category"
             android:defaultValue="popular"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="search_query"
+            android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
         <argument
@@ -48,19 +53,6 @@
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/searchGridFragment"
-        android:name="com.example.moviesearcher.ui.remotegrids.searchgrid.SearchGridFragment"
-        android:label="@string/action_search"
-        tools:layout="@layout/fragment_movies_grid">
-        <action
-            android:id="@+id/actionMovieDetails"
-            app:destination="@id/movieDetails" />
-        <argument
-            android:name="search_query"
-            app:argType="string" />
     </fragment>
 
     <!-- PERSONAL LISTS -->
@@ -189,7 +181,7 @@
         tools:layout="@layout/fragment_categories">
         <action
             android:id="@+id/actionRemoteMovieGridFragment"
-            app:destination="@id/remoteMovieGridFragment" />
+            app:destination="@id/restMovieGridFragment" />
     </fragment>
 
     <!-- ABOUT -->
@@ -206,11 +198,8 @@
         android:id="@+id/actionGlobalCustomListsFragment"
         app:destination="@id/customLists" />
     <action
-        android:id="@+id/actionGlobalSearchGridFragment"
-        app:destination="@id/searchGridFragment" />
-    <action
         android:id="@+id/actionGlobalRemoteMovieGridFragment"
-        app:destination="@id/remoteMovieGridFragment" />
+        app:destination="@id/restMovieGridFragment" />
     <action
         android:id="@+id/action_global_watchlistFragment"
         app:destination="@id/watchlistFragment" />
