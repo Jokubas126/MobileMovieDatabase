@@ -83,10 +83,10 @@ class CategoriesFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     // --------- Toolbar functionality ------------//
 
     private var appBarOffset: Int = 0
-    private var appBarIdle = false
+    private var isAppBarIdle = false
     private var appBarMaxOffset: Int = 0
 
-    private var isExpanded: Boolean = false
+    private var isExpandedOrCollapsed: Boolean = true
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
@@ -100,25 +100,31 @@ class CategoriesFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
         (activity as AppCompatActivity).supportActionBar!!.hide()
         (activity as AppCompatActivity).setSupportActionBar(collapsing_toolbar)
         activity!!.invalidateOptionsMenu()
+
         app_bar.addOnOffsetChangedListener(
             AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 appBarOffset = verticalOffset
-                val totalScrollRange = appBarLayout.totalScrollRange
-                val progress = (-verticalOffset).toFloat() / totalScrollRange
-                arrowImageView.rotation = 180 + progress * 180
-                isExpanded = verticalOffset == 0;
-                appBarIdle = appBarOffset >= 0 || appBarOffset <= appBarMaxOffset
-                if (appBarIdle)
-                    setExpandAndCollapseEnabled(isExpanded)
+                setToolbarArrowRotation(verticalOffset, appBarLayout)
+                isExpandedOrCollapsed = verticalOffset == 0 || verticalOffset == appBarMaxOffset
+                // check beyond offset points to be safer
+                isAppBarIdle = appBarOffset >= 0 || appBarOffset <= appBarMaxOffset
+                if (isAppBarIdle)
+                    setExpandAndCollapseEnabled(isExpandedOrCollapsed)
             })
-
-        app_bar.post { appBarMaxOffset = -app_bar.totalScrollRange }
+        app_bar.post { appBarMaxOffset = -app_bar.totalScrollRange } // set max offset once
         categories_recycler_view.setAppBarTracking(this)
 
         expandCollapseButton.setOnClickListener {
-            isExpanded = !isExpanded
-            app_bar.setExpanded(isExpanded, true)
+            isExpandedOrCollapsed = !isExpandedOrCollapsed
+            app_bar.setExpanded(isExpandedOrCollapsed, true)
         }
+    }
+
+    private fun setToolbarArrowRotation(verticalOffset: Int, appBarLayout: AppBarLayout) {
+        // get percent of progress for scrolling done
+        // current offset / positive max offset
+        val progress = (-verticalOffset).toFloat() / appBarLayout.totalScrollRange
+        arrowImageView.rotation = 180 + progress * 180
     }
 
     private fun setExpandAndCollapseEnabled(enabled: Boolean) {
@@ -126,5 +132,5 @@ class CategoriesFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     }
 
     override fun isAppBarExpanded(): Boolean = appBarOffset == 0
-    override fun isAppBarIdle(): Boolean = appBarIdle
+    override fun isAppBarIdle(): Boolean = isAppBarIdle
 }

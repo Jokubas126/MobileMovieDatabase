@@ -25,30 +25,46 @@ class CategoryRecyclerView @JvmOverloads constructor(
     }
 
     override fun dispatchNestedPreScroll(
-        dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?,
+        distanceX: Int, distanceY: Int, consumed: IntArray?, offsetInWindow: IntArray?,
         type: Int
     ): Boolean {
+
+        // User is not touching a screen, appbar is idle (fully collapsed or fully expanded)
+        // and nested scrolling is enabled
         if (type == ViewCompat.TYPE_NON_TOUCH && appBarTracking!!.isAppBarIdle()
             && isNestedScrollingEnabled
         ) {
-            if (dy > 0) {
+            // SCROLLING DOWN
+            if (distanceY > 0) {
+                // if appbar expanded then the consumed vertical distance should be
+                // the same as moved distance and movement should be consumed (return true)
                 if (appBarTracking!!.isAppBarExpanded()) {
-                    consumed!![1] = dy
+                    consumed!![1] = distanceY
                     return true
                 }
             } else {
+                // SCROLLING UP
+                // first visible view position from adapter
                 topPos = layoutManager!!.findFirstVisibleItemPosition()
                 if (topPos == 0) {
+                    // if it's a very first item, take its' view
                     view = layoutManager!!.findViewByPosition(topPos)
-                    if (-view!!.top + dy <= 0) {
-                        consumed!![1] = dy - view!!.top
+                    // check if scrolled distance does not go beyond the view's top
+                    // (in case view's top is at negative position)
+                    if (distanceY <= view!!.top) {
+                        // consume the distance of scroll + as much as needed to the view's top
+                        // to prevent lag at the top
+                        consumed!![1] = distanceY - view!!.top
                         return true
                     }
                 }
             }
         }
 
-        val returnValue = super.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, type)
+        val returnValue =
+            super.dispatchNestedPreScroll(distanceX, distanceY, consumed, offsetInWindow, type)
+        // to keep view coordinate offset at 0 when nested scrolling disabled
+        // (preventing unwanted scrolling behavior)
         if (offsetInWindow != null && !isNestedScrollingEnabled && offsetInWindow[1] != 0)
             offsetInWindow[1] = 0
         return returnValue

@@ -119,11 +119,10 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
         val action = CategoriesFragmentDirections.actionRemoteMovieGridFragment()
         action.movieGridType = DISCOVER_MOVIE_GRID
         action.startYear =
-            if (startYear == "∞")
-                null
+            if (startYear == "∞") null
             else startYear
         action.endYear = endYear
-        val discoveryArrayList = arrayListOf<String>()
+        val discoveryArrayList = arrayListOf("$startYear - $endYear")
         genreSubcategory?.let {
             action.genreId = Integer.parseInt(it.code)
             discoveryArrayList.add(it.name)

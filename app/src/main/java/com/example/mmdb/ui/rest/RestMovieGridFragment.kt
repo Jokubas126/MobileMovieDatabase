@@ -132,9 +132,10 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
                     }
                 SEARCH_MOVIE_GRID -> args.searchQuery
                 DISCOVER_MOVIE_GRID -> {
-                    var title = args.startYear + "-" + args.endYear
-                    args.discoverNameArray?.let {
-                        title +=  ", " + stringListToString(args.discoverNameArray!!.toList())
+                   /* var title = args.startYear?: run { "∞" }
+                    title += "-" + args.endYear*/
+                    var title = args.discoverNameArray?.let {
+                        stringListToString(args.discoverNameArray!!.toList())
                     }
                     title
                 }
