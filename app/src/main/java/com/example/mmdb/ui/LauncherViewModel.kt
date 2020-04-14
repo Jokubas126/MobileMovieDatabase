@@ -18,22 +18,35 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
     private val _isLoaded = MutableLiveData<Boolean>()
     val isLoaded: LiveData<Boolean> = _isLoaded
 
+    private val _isUpdateRequired = MutableLiveData<Boolean>()
+    val isUpdateRequired: LiveData<Boolean> = _isUpdateRequired
+
     private val movieRepository = RemoteMovieRepository()
     private val genresRepository = GenresRepository(application)
 
     private var isGenresLoaded: Boolean = false
+    private var isGenresRequired: Boolean = false
 
     init {
         _isLoaded.value = false
         updateApplication()
     }
 
-    private fun updateApplication() {
+    fun updateApplication() {
         if (isNetworkAvailable(getApplication())) {
             updateGenres()
-        } else {
-            showToast(getApplication(), "Application data was not updated", Toast.LENGTH_SHORT)
-            _isLoaded.value = true
+        } else
+            checkForUpdates()
+    }
+
+    private fun checkForUpdates() {
+        checkForGenre()
+    }
+
+    private fun checkForGenre() {
+        CoroutineScope(Dispatchers.IO).launch {
+            isGenresRequired = genresRepository.getAnyGenre() == null
+            checkIfAnyUpdateRequired()
         }
     }
 
@@ -47,16 +60,23 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
                     isGenresLoaded = true
                     checkIfAllLoaded()
                 }
-            } else {
-                isGenresLoaded = true
-                checkIfAllLoaded()
-            }
+            } else
+                checkForUpdates()
+        }
+    }
+
+    // done in this way for potential scaling later and checking other types of data
+    private fun checkIfAnyUpdateRequired() {
+        CoroutineScope(Dispatchers.Main).launch {
+            if (isGenresRequired)
+                _isUpdateRequired.value = true
+            else
+                _isLoaded.value = true
         }
     }
 
     private fun checkIfAllLoaded() {
         CoroutineScope(Dispatchers.Main).launch {
-            // done in this way for potential scaling later and checking other types of data
             if (isGenresLoaded)
                 _isLoaded.value = true
         }

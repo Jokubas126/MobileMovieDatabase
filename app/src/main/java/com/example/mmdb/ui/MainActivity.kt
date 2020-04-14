@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.*
 import androidx.navigation.ui.NavigationUI
 import com.example.mmdb.NavGraphDirections
@@ -20,9 +19,7 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var drawerLayout: DrawerLayout
     private lateinit var navController: NavController
-    private lateinit var navigationView: NavigationView
 
     private var searchItem: MenuItem? = null
     private var confirmItem: MenuItem? = null
@@ -37,12 +34,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun loadAppNavigation() {
-        navigationView = navigation_view
-        drawerLayout = drawer_layout
-
-        navigationView.setNavigationItemSelectedListener(this)
+        navigation_view.setNavigationItemSelectedListener(this)
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+        NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
 
         navController.addOnDestinationChangedListener { controller: NavController, destination: NavDestination, _: Bundle? ->
             run {
@@ -57,12 +51,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController, drawerLayout)
+        return NavigationUI.navigateUp(navController, drawer_layout)
     }
 
     // to make drawer menu group titles styled
     private fun prepareDrawerMenuItemCategoryStyle() {
-        val menu = navigationView.menu
+        val menu = navigation_view.menu
         for (i in 0 until menu.size()) {
             val tools = menu.getItem(i)
             val s = SpannableString(tools.title)
@@ -101,32 +95,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.menu_custom_lists -> navController.navigate(NavGraphDirections.actionGlobalCustomListsFragment())
 
             R.id.menu_popular -> {
-                val action
-                        = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
+                val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
                 action.keyCategory = KEY_POPULAR
                 navController.navigate(action)
             }
             R.id.menu_top_rated -> {
-                val action
-                        = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
+                val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
                 action.keyCategory = KEY_TOP_RATED
                 navController.navigate(action)
             }
             R.id.menu_now_playing -> {
-                val action
-                        = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
+                val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
                 action.keyCategory = KEY_NOW_PLAYING
                 navController.navigate(action)
             }
             R.id.menu_upcoming -> {
-                val action
-                        = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
+                val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
                 action.keyCategory = KEY_UPCOMING
                 navController.navigate(action)
             }
             R.id.menu_about -> navController.navigate(NavGraphDirections.actionGlobalAboutFragment())
         }
-        drawerLayout.closeDrawers()
+        drawer_layout.closeDrawers()
         return true
     }
 }

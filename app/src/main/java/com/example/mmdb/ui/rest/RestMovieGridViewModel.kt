@@ -65,6 +65,7 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
         isListFull = false
         _loading.value = true
         currentPage = 1
+        fetchedPage = 0
         getResponse()
     }
 
@@ -76,17 +77,14 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
         }
     }
 
-    // -----------------------------------------------------------------------//
-    //------------------------- Retrieving the data --------------------------//
-    // -----------------------------------------------------------------------//
-
     // -------------------------- Remote response -----------------------------//
 
     private fun getResponse() {
         synchronized(this) {
-            if (isNetworkAvailable(getApplication())) {
-                configurePages()
-                CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                if (isNetworkAvailable(getApplication())) {
+                    if (currentPage - fetchedPage > 1)
+                        currentPage = fetchedPage + 1
                     val response =
                         when (args.movieGridType) {
                             TYPE_MOVIE_GRID -> RemoteMovieRepository().getMovies(
@@ -108,26 +106,20 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
                             else -> null
                         }
                     responseListener.onResponseRetrieved(response)
-                }
-            } else {
-                CoroutineScope(Dispatchers.Main).launch {
-                    _loading.value = false
-                    networkUnavailableNotification(getApplication())
+                } else
+                    withContext(Dispatchers.Main) {
+                        _loading.value = false
+                        networkUnavailableNotification(getApplication())
                 }
             }
         }
     }
 
-    private fun configurePages() {
-        if (currentPage == 1)
-            fetchedPage = 0
-        else if (currentPage - fetchedPage > 1)
-            currentPage = fetchedPage + 1
-    }
-
     override fun onResponseRetrieved(response: Response<MovieResults>?) {
         response?.let { getMovieList(it) }
     }
+
+    // -------- Data configuration -------//
 
     private fun getMovieList(response: Response<MovieResults>) {
         CoroutineScope(Dispatchers.IO).launch {

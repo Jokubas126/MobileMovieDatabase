@@ -10,6 +10,7 @@ class MovieGridViewModelFactory(
     private val arguments: Bundle?
 ): ViewModelProvider.AndroidViewModelFactory(application) {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
         return MovieGridViewModel(application, arguments) as T
     }
 }

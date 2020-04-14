@@ -41,6 +41,6 @@ fun networkUnavailableNotification(context: Context){
     showToast(
         context,
         context.getString(R.string.no_internet_connection),
-        Toast.LENGTH_SHORT
+        Toast.LENGTH_LONG
     )
 }

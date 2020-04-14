@@ -29,7 +29,7 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
     private lateinit var viewModel: RestMovieGridViewModel
     private val gridAdapter = GridAdapter(View.VISIBLE, View.VISIBLE, View.GONE)
 
-    private var isDown = true
+    private var isScrolledDown = true
 
     private var layoutManager: StaggeredGridLayoutManager? = null
     private var state: Parcelable? = null
@@ -57,16 +57,6 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
         setupRecyclerView()
         observeViewModel()
 
-        movie_recycler_view!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1) && isDown) {
-                    isDown = false
-                    viewModel.addData()
-                    isDown = true
-                }
-            }
-        })
         refresh_layout.setOnRefreshListener {
             viewModel.refresh()
             refresh_layout.isRefreshing = false
@@ -77,7 +67,8 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
         viewModel.movies.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
                 gridAdapter.updateMovieList(it)
-                movie_recycler_view!!.visibility = View.VISIBLE
+                movie_recycler_view.visibility = View.VISIBLE
+                if (isScrolledDown) isScrolledDown = false
             }
         })
         viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
@@ -108,6 +99,16 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
         gridAdapter.setItemClickListener(this)
         gridAdapter.setWatchlistActionListener(this)
         gridAdapter.setPersonalListActionListener(this)
+
+        movie_recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1) && !isScrolledDown) {
+                    isScrolledDown = true
+                    viewModel.addData()
+                }
+            }
+        })
     }
 
     override fun onResume() {
@@ -127,7 +128,7 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
                             title.append(stringPart.capitalize(Locale.getDefault())).append(" ")
                         title.append("Movies")
                     } ?: run {
-                        KEY_POPULAR.capitalize(Locale.ROOT) + " " + "Movies"
+                        KEY_POPULAR.capitalize(Locale.ROOT) + " Movies"
                     }
                 SEARCH_MOVIE_GRID -> args.searchQuery
                 DISCOVER_MOVIE_GRID -> {
