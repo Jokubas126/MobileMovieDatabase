@@ -125,7 +125,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.example.moviesearcher.ui.categories.CategoryRecyclerView
+    <com.example.mmdb.ui.categories.CategoryRecyclerView
         android:id="@+id/categories_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

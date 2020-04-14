@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/restMovieGridFragment"
-        android:name="com.example.moviesearcher.ui.rest.RestMovieGridFragment"
+        android:name="com.example.mmdb.ui.rest.RestMovieGridFragment"
         android:label="RestMovieGridFragment"
         tools:layout="@layout/fragment_movies_grid">
         <action
@@ -62,7 +62,7 @@
         app:startDestination="@id/customListsFragment">
         <fragment
             android:id="@+id/movieGridFragment"
-            android:name="com.example.moviesearcher.ui.personal.customlists.moviegrid.MovieGridFragment"
+            android:name="com.example.mmdb.ui.personal.customlists.moviegrid.MovieGridFragment"
             android:label="Personal Movie List"
             tools:layout="@layout/fragment_movies_grid">
             <action
@@ -79,7 +79,7 @@
         </fragment>
         <fragment
             android:id="@+id/customListsFragment"
-            android:name="com.example.moviesearcher.ui.personal.customlists.CustomListsFragment"
+            android:name="com.example.mmdb.ui.personal.customlists.CustomListsFragment"
             android:label="Custom lists"
             tools:layout="@layout/fragment_custom_lists">
             <action
@@ -90,7 +90,7 @@
 
     <fragment
         android:id="@+id/watchlistFragment"
-        android:name="com.example.moviesearcher.ui.personal.watchlist.WatchlistFragment"
+        android:name="com.example.mmdb.ui.personal.watchlist.WatchlistFragment"
         android:label="Watchlist"
         tools:layout="@layout/fragment_movies_grid">
         <action
@@ -114,7 +114,7 @@
             app:argType="integer" />
         <fragment
             android:id="@+id/movieOverview"
-            android:name="com.example.moviesearcher.ui.details.overview.OverviewFragment"
+            android:name="com.example.mmdb.ui.details.overview.OverviewFragment"
             android:label="Overview"
             tools:layout="@layout/fragment_movie_overview">
             <argument
@@ -128,7 +128,7 @@
         </fragment>
         <fragment
             android:id="@+id/movieMedia"
-            android:name="com.example.moviesearcher.ui.details.media.MediaFragment"
+            android:name="com.example.mmdb.ui.details.media.MediaFragment"
             android:label="Media"
             tools:layout="@layout/fragment_movie_media">
             <argument
@@ -142,7 +142,7 @@
         </fragment>
         <fragment
             android:id="@+id/movieCast"
-            android:name="com.example.moviesearcher.ui.details.credits.CreditsFragment"
+            android:name="com.example.mmdb.ui.details.credits.CreditsFragment"
             android:label="Cast and Crew"
             tools:layout="@layout/fragment_movie_cast">
             <argument
@@ -176,7 +176,7 @@
 
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="com.example.moviesearcher.ui.categories.CategoriesFragment"
+        android:name="com.example.mmdb.ui.categories.CategoriesFragment"
         android:label="Categories"
         tools:layout="@layout/fragment_categories">
         <action
@@ -188,7 +188,7 @@
 
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.example.moviesearcher.ui.about.AboutFragment"
+        android:name="com.example.mmdb.ui.about.AboutFragment"
         android:label="About"
         tools:layout="@layout/fragment_about" />
 

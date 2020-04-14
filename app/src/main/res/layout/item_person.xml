@@ -6,7 +6,7 @@
 
         <variable
             name="person"
-            type="com.example.moviesearcher.model.data.Person" />
+            type="com.example.mmdb.model.data.Person" />
     </data>
 
     <FrameLayout
