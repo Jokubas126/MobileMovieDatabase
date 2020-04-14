@@ -1,12 +1,12 @@
-package com.example.moviesearcher.ui.remotegrids.discovergrid
+package com.example.moviesearcher.ui.rest
 
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -15,14 +15,18 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesearcher.R
 import com.example.moviesearcher.model.data.Movie
 import com.example.moviesearcher.ui.GridAdapter
-import com.example.moviesearcher.util.stringListToString
+import com.example.moviesearcher.ui.GridAdapter.ItemClickListener
+import com.example.moviesearcher.util.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
+import java.util.*
 
-class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
-    GridAdapter.PersonalListActionListener, GridAdapter.WatchlistActionListener {
+@ExperimentalStdlibApi
+class RestMovieGridFragment : Fragment(), ItemClickListener,
+    GridAdapter.PersonalListActionListener,
+    GridAdapter.WatchlistActionListener {
 
-    private lateinit var viewModel: DiscoverGridViewModel
+    private lateinit var viewModel: RestMovieGridViewModel
     private val gridAdapter = GridAdapter(View.VISIBLE, View.VISIBLE, View.GONE)
 
     private var isDown = true
@@ -31,7 +35,8 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
     private var state: Parcelable? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_movies_grid, container, false)
@@ -39,14 +44,29 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel = ViewModelProvider(
             this,
-            DiscoverGridViewModelFactory(activity!!.application, arguments)
-        ).get(DiscoverGridViewModel::class.java)
+            RestMovieGridViewModelFactory(
+                activity!!.application,
+                arguments
+            )
+        ).get(RestMovieGridViewModel::class.java)
 
+        setupTitle()
         setupRecyclerView()
         observeViewModel()
 
+        movie_recycler_view!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1) && isDown) {
+                    isDown = false
+                    viewModel.addData()
+                    isDown = true
+                }
+            }
+        })
         refresh_layout.setOnRefreshListener {
             viewModel.refresh()
             refresh_layout.isRefreshing = false
@@ -57,13 +77,14 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
         viewModel.movies.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
                 gridAdapter.updateMovieList(it)
-                movie_recycler_view.visibility = View.VISIBLE
+                movie_recycler_view!!.visibility = View.VISIBLE
             }
         })
         viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
             isError?.let {
                 loading_error_text_view.visibility =
-                    if (it) View.VISIBLE
+                    if (it)
+                        View.VISIBLE
                     else View.GONE
             }
         })
@@ -87,17 +108,6 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
         gridAdapter.setItemClickListener(this)
         gridAdapter.setWatchlistActionListener(this)
         gridAdapter.setPersonalListActionListener(this)
-
-        movie_recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1) && isDown) {
-                    isDown = false
-                    viewModel.addData()
-                    isDown = true
-                }
-            }
-        })
     }
 
     override fun onResume() {
@@ -106,17 +116,35 @@ class DiscoverGridFragment : Fragment(), GridAdapter.ItemClickListener,
     }
 
     private fun setupTitle() {
-        val args = DiscoverGridFragmentArgs.fromBundle(arguments!!)
-        var title = stringListToString(args.discoverNameArray.toList())
-        if (title.isBlank() || title == "null")
-            title = args.startYear + " - " + args.endYear
-        (activity as AppCompatActivity).supportActionBar?.title =
-            resources.getString(R.string.discover_fragment) + title
+        val args = RestMovieGridFragmentArgs.fromBundle(arguments!!)
+        val title =
+            when (args.movieGridType) {
+                TYPE_MOVIE_GRID ->
+                    args.keyCategory?.let {
+                        val title = StringBuilder()
+                        val array = it.split("_").toTypedArray()
+                        for (stringPart in array)
+                            title.append(stringPart.capitalize(Locale.getDefault())).append(" ")
+                        title.append("Movies")
+                    } ?: run {
+                        KEY_POPULAR.capitalize(Locale.ROOT) + " " + "Movies"
+                    }
+                SEARCH_MOVIE_GRID -> args.searchQuery
+                DISCOVER_MOVIE_GRID -> {
+                    var title = args.startYear + "-" + args.endYear
+                    args.discoverNameArray?.let {
+                        title +=  ", " + stringListToString(args.discoverNameArray!!.toList())
+                    }
+                    title
+                }
+                else -> ""
+            }
+        (activity as AppCompatActivity).supportActionBar?.title = title.toString()
     }
 
     override fun onPause() {
         super.onPause()
-        layoutManager?.let{ state = it.onSaveInstanceState() }
+        state = layoutManager!!.onSaveInstanceState()
     }
 
     override fun onMovieClick(view: View, movie: Movie) {

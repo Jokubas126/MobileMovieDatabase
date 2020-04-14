@@ -1,15 +1,19 @@
-package com.example.moviesearcher.ui.remotegrids.searchgrid
+package com.example.moviesearcher.ui.rest
 
 import android.app.Application
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class SearchGridViewModelFactory(
+class RestMovieGridViewModelFactory(
     private val application: Application,
     private val arguments: Bundle?
 ) : ViewModelProvider.AndroidViewModelFactory(application) {
+
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return SearchGridViewModel(application, arguments) as T
+        return RestMovieGridViewModel(
+            application,
+            arguments
+        ) as T
     }
 }
