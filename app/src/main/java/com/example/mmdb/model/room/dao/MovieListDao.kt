@@ -14,7 +14,10 @@ interface MovieListDao {
     fun getCustomListById(customListId: Int): CustomMovieList
 
     @Query("SELECT * FROM movie_list")
-    fun getAllCustomMovieLists(): LiveData<List<CustomMovieList>>
+    fun getAllCustomMovieListLiveData(): LiveData<List<CustomMovieList>>
+
+    @Query("SELECT * FROM movie_list")
+    fun getAllCustomMovieLists(): List<CustomMovieList>
 
     @Delete
     fun deleteCustomList(list: CustomMovieList)

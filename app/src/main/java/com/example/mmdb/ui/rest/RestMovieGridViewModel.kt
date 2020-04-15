@@ -11,12 +11,10 @@ import com.example.mmdb.NavGraphDirections
 import com.example.mmdb.R
 import com.example.mmdb.model.data.*
 import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
-import com.example.mmdb.model.room.repositories.MovieListRepository
-import com.example.mmdb.model.room.databases.MovieListDatabase
 import com.example.mmdb.model.room.repositories.GenresRepository
-import com.example.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.model.room.repositories.WatchlistRepository
-import com.example.mmdb.ui.popup_windows.PersonalListsPopupWindow
+import com.example.mmdb.ui.personal.customlists.addtolists.AddToListsTaskManager
+import com.example.mmdb.ui.personal.customlists.addtolists.AddToListsPopupWindow
 import com.example.mmdb.util.*
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
@@ -26,8 +24,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
-    AndroidViewModel(application), PersonalListsPopupWindow.ListsConfirmedClickListener,
-    ResponseListener {
+    AndroidViewModel(application), ResponseListener {
 
     private val _movies = MutableLiveData<List<Movie>>()
     private val _error = MutableLiveData<Boolean>()
@@ -110,7 +107,7 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
                     withContext(Dispatchers.Main) {
                         _loading.value = false
                         networkUnavailableNotification(getApplication())
-                }
+                    }
             }
         }
     }
@@ -189,78 +186,15 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
 //------------------ Custom lists --------------------------//
 
     fun onPlaylistAddCLicked(movie: Movie, root: View) {
-        val popupWindow = PersonalListsPopupWindow(
-            root,
-            View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            movie,
-            this
-        )
-        val movieLists =
-            MovieListDatabase.getInstance(root.context).movieListDao().getAllCustomMovieLists()
-        movieLists.observeForever {
-            if (!it.isNullOrEmpty())
-                popupWindow.setupLists(it)
-        }
-    }
-
-    override fun onConfirmClicked(
-        movie: Movie,
-        checkedLists: List<CustomMovieList>,
-        root: View
-    ): Boolean {
-        return when {
-            checkedLists.isNullOrEmpty() -> {
-                showToast(
-                    getApplication(),
-                    getApplication<Application>().getString(R.string.select_a_list),
-                    Toast.LENGTH_SHORT
-                )
-                false
-            }
-            isNetworkAvailable(getApplication()) -> {
-                CoroutineScope(Dispatchers.IO).launch {
-                    val fullMovie = RemoteMovieRepository()
-                        .getMovieDetails(movie.remoteId).body()
-                    fullMovie?.let {
-                        showProgressSnackBar(
-                            root,
-                            getApplication<Application>().getString(R.string.being_uploaded_to_list)
-                        )
-                        it.finalizeInitialization(getApplication())
-                        val movieRoomId = RoomMovieRepository(getApplication())
-                            .insertOrUpdateMovie(getApplication(), it)
-
-                        for (list in checkedLists)
-                            MovieListRepository(getApplication()).addMovieToMovieList(
-                                list,
-                                movieRoomId.toInt()
-                            )
-                        showSnackbarActionCheckLists(root)
-                    }
-                }
-                true
-            }
-            else -> {
-                networkUnavailableNotification(getApplication())
-                false
-            }
-        }
-    }
-
-    private fun showSnackbarActionCheckLists(root: View) {
-        CoroutineScope(Dispatchers.Main).launch {
-            Snackbar.make(
+        AddToListsTaskManager(
+            getApplication(), AddToListsPopupWindow(
                 root,
-                getApplication<Application>().getString(R.string.successfully_uploaded_to_list),
-                Snackbar.LENGTH_LONG
+                View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                movie
             )
-                .setAction(getApplication<Application>().getString(R.string.action_check_lists)) {
-                    val action = NavGraphDirections.actionGlobalCustomListsFragment()
-                    Navigation.findNavController(root).navigate(action)
-                }.show()
-        }
+        )
     }
 
 //------------------ Navigation -----------------------------//

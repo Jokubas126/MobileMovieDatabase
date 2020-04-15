@@ -13,7 +13,7 @@ import com.example.mmdb.R
 import com.example.mmdb.model.data.CustomMovieList
 import com.example.mmdb.model.room.repositories.MovieListRepository
 import com.example.mmdb.model.room.repositories.RoomMovieRepository
-import com.example.mmdb.ui.popup_windows.CreateListPopupWindow
+import com.example.mmdb.ui.personal.customlists.createlist.CreateListPopupWindow
 
 class CustomListsViewModel(application: Application) : AndroidViewModel(application),
     CreateListPopupWindow.ListAddedListener {
@@ -33,7 +33,7 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     init {
         _loading.value = true
         _error.value = false
-        movieLists = movieListRepository.getAllMovieLists()
+        movieLists = movieListRepository.getAllCustomMovieListLiveData()
         _loading.value = false
     }
 

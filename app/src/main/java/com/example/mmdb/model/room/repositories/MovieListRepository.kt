@@ -42,7 +42,9 @@ class MovieListRepository(application: Application) : CoroutineScope {
 
     fun getMovieListById(id: Int) = movieListDao.getCustomListById(id)
 
-    fun getAllMovieLists() = movieListDao.getAllCustomMovieLists()
+    fun getAllCustomMovieListLiveData() = movieListDao.getAllCustomMovieListLiveData()
+
+    fun getAllCustomMovieLists() = movieListDao.getAllCustomMovieLists()
 
     fun deleteMovieFromList(movieList: CustomMovieList, movieRoomId: Int) {
         launch {

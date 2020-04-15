@@ -53,7 +53,6 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
             )
         ).get(RestMovieGridViewModel::class.java)
 
-        setupTitle()
         setupRecyclerView()
         observeViewModel()
 

@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.popup_windows
+package com.example.mmdb.ui.personal.customlists.createlist
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
