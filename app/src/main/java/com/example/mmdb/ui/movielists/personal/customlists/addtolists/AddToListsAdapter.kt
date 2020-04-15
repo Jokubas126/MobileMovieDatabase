@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.personal.customlists.addtolists
+package com.example.mmdb.ui.movielists.personal.customlists.addtolists
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

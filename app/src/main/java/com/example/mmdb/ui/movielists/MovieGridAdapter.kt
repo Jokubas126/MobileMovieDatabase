@@ -1,4 +1,4 @@
-package com.example.mmdb.ui
+package com.example.mmdb.ui.movielists
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +9,11 @@ import com.example.mmdb.R
 import com.example.mmdb.databinding.ItemMovieBinding
 import com.example.mmdb.model.data.Movie
 
-class GridAdapter(
+class MovieGridAdapter(
     private var customListBtnVisibility: Int,
     private var watchlistBtnVisibility: Int,
     private var deleteBtnVisibility: Int
-) : RecyclerView.Adapter<GridAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<MovieGridAdapter.ViewHolder>() {
 
     val movieList = mutableListOf<Movie>()
 

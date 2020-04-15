@@ -1,4 +1,4 @@
-package com.example.mmdb.ui
+package com.example.mmdb.ui.launcher
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.R
+import com.example.mmdb.ui.MainActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_launcher.*
 

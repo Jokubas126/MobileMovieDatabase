@@ -1,20 +1,16 @@
-package com.example.mmdb.ui.rest
+package com.example.mmdb.ui.movielists.personal.customlists.moviegrid
 
 import android.app.Application
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class RestMovieGridViewModelFactory(
+class MovieGridViewModelFactory(
     private val application: Application,
     private val arguments: Bundle?
-) : ViewModelProvider.AndroidViewModelFactory(application) {
-
+): ViewModelProvider.AndroidViewModelFactory(application) {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return RestMovieGridViewModel(
-            application,
-            arguments
-        ) as T
+        return MovieGridViewModel(application, arguments) as T
     }
 }

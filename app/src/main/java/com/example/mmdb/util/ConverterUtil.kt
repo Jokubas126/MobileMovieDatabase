@@ -42,8 +42,8 @@ fun stringListToListedString(list: List<String>): String {
 
 fun getAnyNameList(list: List<*>?): List<String> {
     val nameList = mutableListOf<String>()
-    if (list != null) {
-        for (value in list)
+    list?.let {
+        for (value in it)
             when (value) {
                 is Genre -> nameList.add(value.name)
                 is Country -> nameList.add(value.name)
@@ -68,7 +68,7 @@ fun imageUrlToFileUriString(context: Context, url: String?): String? {
 }
 
 private fun saveBitmapToFile(context: Context, bitmap: Bitmap?): File? {
-    if (bitmap != null) {
+    return bitmap?.let {
         val wrapper = ContextWrapper(context)
         var file = wrapper.getDir("images", Context.MODE_PRIVATE)
         file = File(file, "${UUID.randomUUID()}.jpg")
@@ -76,9 +76,10 @@ private fun saveBitmapToFile(context: Context, bitmap: Bitmap?): File? {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
         stream.flush()
         stream.close()
-        return file
+        file
+    } ?: run {
+        null
     }
-    return null
 }
 
 // ---------------------------------------------------------//
@@ -150,5 +151,3 @@ class ImageListTypeConverter {
         return Gson().fromJson(string, listType)
     }
 }
-
-

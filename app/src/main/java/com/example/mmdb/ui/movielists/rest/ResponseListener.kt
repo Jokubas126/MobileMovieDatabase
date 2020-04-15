@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.rest
+package com.example.mmdb.ui.movielists.rest
 
 import com.example.mmdb.model.data.MovieResults
 import retrofit2.Response

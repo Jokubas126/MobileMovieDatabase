@@ -12,6 +12,7 @@ import com.example.mmdb.MovieDetailsArgs
 import com.example.mmdb.R
 import com.example.mmdb.model.data.Credits
 import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
+import com.example.mmdb.model.room.repositories.RoomMovieRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,8 +40,7 @@ class CreditsViewModel(application: Application, arguments: Bundle?) : AndroidVi
 
     private fun getCreditsRemote(movieId: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = RemoteMovieRepository()
-                .getCredits(movieId)
+            val response = RemoteMovieRepository().getCredits(movieId)
             withContext(Dispatchers.Main) {
                 _credits.value = Credits(0, response.body()!!.castList, response.body()!!.crewList)
                 _loading.value = false
@@ -49,9 +49,7 @@ class CreditsViewModel(application: Application, arguments: Bundle?) : AndroidVi
     }
 
     private fun getCreditsLocal(movieId: Int) {
-        credits = com.example.mmdb.model.room.repositories.RoomMovieRepository(
-            getApplication()
-        ).getCreditsById(movieId)
+        credits = RoomMovieRepository(getApplication()).getCreditsById(movieId)
         _loading.value = false
     }
 

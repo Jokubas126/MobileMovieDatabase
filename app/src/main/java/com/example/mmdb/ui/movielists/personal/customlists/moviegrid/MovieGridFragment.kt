@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.personal.customlists.moviegrid
+package com.example.mmdb.ui.movielists.personal.customlists.moviegrid
 
 import android.os.Bundle
 import android.os.Handler
@@ -14,16 +14,20 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.R
 import com.example.mmdb.model.data.Movie
-import com.example.mmdb.ui.GridAdapter
+import com.example.mmdb.ui.movielists.MovieGridAdapter
 import com.example.mmdb.util.SNACKBAR_LENGTH_LONG_MS
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
-class MovieGridFragment : Fragment(), GridAdapter.ItemClickListener,
-    GridAdapter.PersonalListDeleteListener, GridAdapter.WatchlistActionListener {
+class MovieGridFragment : Fragment(), MovieGridAdapter.ItemClickListener,
+    MovieGridAdapter.PersonalListDeleteListener, MovieGridAdapter.WatchlistActionListener {
 
     private lateinit var viewModel: MovieGridViewModel
-    private val gridAdapter = GridAdapter(View.GONE, View.VISIBLE, View.VISIBLE)
+    private val gridAdapter = MovieGridAdapter(
+        View.GONE,
+        View.VISIBLE,
+        View.VISIBLE
+    )
 
     private var layoutManager: StaggeredGridLayoutManager? = null
     private var state: Parcelable? = null

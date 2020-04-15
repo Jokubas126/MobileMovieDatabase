@@ -34,24 +34,22 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
     }
 
     private suspend fun insertOrUpdateImages(context: Context, movie: Movie, movieRoomId: Int) {
-        val images = RemoteMovieRepository()
-            .getImages(movie.remoteId).body()
-        if (images != null) {
-            images.generateFileUris(context)
-            images.movieRoomId = movieRoomId
-            imagesDao.insertOrUpdateImages(images)
-        }
+        // insert if the images are retrieved not null from remote
+        RemoteMovieRepository().getImages(movie.remoteId).body()?.let {
+                it.generateFileUris(context)
+                it.movieRoomId = movieRoomId
+                imagesDao.insertOrUpdateImages(it)
+            }
     }
 
     fun getImagesById(movieId: Int) = imagesDao.getImageLiveDataById(movieId)
 
     private suspend fun insertOrUpdateCredits(context: Context, movie: Movie, movieRoomId: Int) {
-        val credits = RemoteMovieRepository()
-            .getCredits(movie.remoteId).body()
-        if (credits != null) {
-            credits.generateFileUris(context)
-            credits.movieRoomId = movieRoomId
-            creditsDao.insertOrUpdateCredits(credits)
+        // insert if the credits are retrieved not null from remote
+        RemoteMovieRepository().getCredits(movie.remoteId).body()?.let {
+            it.generateFileUris(context)
+            it.movieRoomId = movieRoomId
+            creditsDao.insertOrUpdateCredits(it)
         }
     }
 
@@ -76,47 +74,26 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
         }
     }
 
-    fun deleteMovie(movie: Movie) {
-        launch { deleteMovieBG(movie) }
-    }
-
-    private suspend fun deleteMovieBG(movie: Movie) {
-        withContext(Dispatchers.IO) {
-            deleteImageFiles(imagesDao.getImagesById(movie.roomId))
-            imagesDao.deleteImagesByMovieId(movie.roomId)
-            deleteCreditsFiles(creditsDao.getCreditsById(movie.roomId))
-            creditsDao.deleteCreditsByMovieId(movie.roomId)
-            deleteMovieFiles(movie)
-            movieDao.deleteMovie(movie)
-        }
-    }
-
     private fun deleteMovieFiles(movie: Movie) {
-        if (movie.posterImageUriString != null)
-            deleteFile(File(Uri.parse(movie.posterImageUriString).path!!))
-        if (movie.backdropImageUriString != null)
-            deleteFile(File(Uri.parse(movie.backdropImageUriString).path!!))
+        movie.posterImageUriString?.let { deleteFile(File(Uri.parse(it).path!!)) }
+        movie.backdropImageUriString?.let { deleteFile(File(Uri.parse(it).path!!)) }
     }
 
     private fun deleteImageFiles(images: Images) {
         if (!images.posterList.isNullOrEmpty())
             for (poster in images.posterList)
-                if (poster.imageUriString != null)
-                    deleteFile(File(Uri.parse(poster.imageUriString).path!!))
+                poster.imageUriString?.let { deleteFile(File(Uri.parse(it).path!!)) }
         if (!images.backdropList.isNullOrEmpty())
             for (backdrop in images.backdropList)
-                if (backdrop.imageUriString != null)
-                    deleteFile(File(Uri.parse(backdrop.imageUriString).path!!))
+                backdrop.imageUriString?.let { deleteFile(File(Uri.parse(it).path!!)) }
     }
 
     private fun deleteCreditsFiles(credits: Credits) {
         if (!credits.castList.isNullOrEmpty())
             for (person in credits.castList)
-                if (person.profileImageUriString != null)
-                    deleteFile(File(Uri.parse(person.profileImageUriString).path!!))
+                person.profileImageUriString?.let { deleteFile(File(Uri.parse(it).path!!)) }
         if (!credits.crewList.isNullOrEmpty())
             for (person in credits.crewList)
-                if (person.profileImageUriString != null)
-                    deleteFile(File(Uri.parse(person.profileImageUriString).path!!))
+                person.profileImageUriString?.let { deleteFile(File(Uri.parse(it).path!!)) }
     }
 }

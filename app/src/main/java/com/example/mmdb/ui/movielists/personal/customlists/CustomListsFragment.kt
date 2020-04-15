@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.personal.customlists
+package com.example.mmdb.ui.movielists.personal.customlists
 
 import android.os.Bundle
 import android.os.Handler

@@ -1,10 +1,9 @@
-package com.example.mmdb.ui.personal.customlists
+package com.example.mmdb.ui.movielists.personal.customlists
 
 import android.app.Application
 import android.content.Context
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.PopupWindow
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,10 +12,10 @@ import com.example.mmdb.R
 import com.example.mmdb.model.data.CustomMovieList
 import com.example.mmdb.model.room.repositories.MovieListRepository
 import com.example.mmdb.model.room.repositories.RoomMovieRepository
-import com.example.mmdb.ui.personal.customlists.createlist.CreateListPopupWindow
+import com.example.mmdb.ui.movielists.personal.customlists.createlist.CreateListPopupWindow
+import com.example.mmdb.ui.movielists.personal.customlists.createlist.CreateListTaskManager
 
-class CustomListsViewModel(application: Application) : AndroidViewModel(application),
-    CreateListPopupWindow.ListAddedListener {
+class CustomListsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _error = MutableLiveData<Boolean>()
     private val _loading = MutableLiveData<Boolean>()
@@ -28,8 +27,6 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     private val movieListRepository = MovieListRepository(application)
     private val movieRepository = RoomMovieRepository(application)
 
-    private lateinit var popupWindow: PopupWindow
-
     init {
         _loading.value = true
         _error.value = false
@@ -38,17 +35,14 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun showCreateListPopupWindow(context: Context) {
-        popupWindow =
+        CreateListTaskManager(
+            getApplication(),
             CreateListPopupWindow(
                 View.inflate(context, R.layout.popup_window_create_list, null),
                 FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                this
+                FrameLayout.LayoutParams.MATCH_PARENT
             )
-    }
-
-    override fun onListAdded(listName: String) {
-        movieListRepository.insertOrUpdateMovieList(CustomMovieList(0, null, listName, null))
+        )
     }
 
     fun onListClicked(view: View, list: CustomMovieList) {

@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.personal.customlists.createlist
+package com.example.mmdb.ui.movielists.personal.customlists.createlist
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -9,21 +9,17 @@ import kotlinx.android.synthetic.main.popup_window_create_list.view.*
 
 class CreateListPopupWindow(
     private val view: View,
-    width: Int, height: Int,
-    private val listener: ListAddedListener
+    width: Int, height: Int
 ) : PopupWindow(view, width, height, true) {
 
-    interface ListAddedListener {
-        fun onListAdded(listName: String)
-    }
+    private var listAddedListener: ListAddedListener? = null
 
     init {
         setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
         showAtLocation(view, Gravity.CENTER, 0, 0)
 
         view.create_button.setOnClickListener {
-            listener.onListAdded(view.list_title_edit_text.text.toString().trim())
+            listAddedListener?.onListAdded(view.list_title_edit_text.text.toString().trim())
             dismiss()
         }
 
@@ -31,4 +27,11 @@ class CreateListPopupWindow(
         view.popup_window_outside.setOnClickListener{ dismiss() }
     }
 
+    interface ListAddedListener {
+        fun onListAdded(listName: String)
+    }
+
+    fun setListAddedListener(listener: ListAddedListener) {
+        listAddedListener = listener
+    }
 }

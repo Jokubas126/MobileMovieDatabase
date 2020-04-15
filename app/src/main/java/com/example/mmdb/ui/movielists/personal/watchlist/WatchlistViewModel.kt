@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.personal.watchlist
+package com.example.mmdb.ui.movielists.personal.watchlist
 
 import android.app.Application
 import android.view.View
@@ -8,21 +8,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
-import com.example.mmdb.NavGraphDirections
 import com.example.mmdb.R
 import com.example.mmdb.model.data.*
 import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
-import com.example.mmdb.model.room.databases.MovieListDatabase
-import com.example.mmdb.model.room.repositories.MovieListRepository
-import com.example.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.model.room.repositories.WatchlistRepository
-import com.example.mmdb.ui.personal.customlists.addtolists.AddToListsPopupWindow
-import com.example.mmdb.ui.personal.customlists.addtolists.AddToListsTaskManager
+import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsPopupWindow
+import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsTaskManager
 import com.example.mmdb.util.isNetworkAvailable
 import com.example.mmdb.util.networkUnavailableNotification
-import com.example.mmdb.util.showProgressSnackBar
 import com.example.mmdb.util.showToast
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.personal.customlists.moviegrid
+package com.example.mmdb.ui.movielists.personal.customlists.moviegrid
 
 import android.app.Application
 import android.os.Bundle
@@ -25,17 +25,17 @@ class MovieGridViewModel(application: Application, arguments: Bundle?) : Android
 
     private var customMovieList: CustomMovieList? = null
     private var _movieList = MutableLiveData<List<Movie>>()
-    val movieList: LiveData<List<Movie>> = _movieList
-
-    private val _error = MutableLiveData<Boolean>()
     private val _loading = MutableLiveData<Boolean>()
-    val error: LiveData<Boolean> = _error
+    private val _error = MutableLiveData<Boolean>()
+
+    val movieList: LiveData<List<Movie>> = _movieList
     val loading: LiveData<Boolean> = _loading
+    val error: LiveData<Boolean> = _error
 
     private var movieListId: Int? = null
 
     private val movieRepository = RoomMovieRepository(application)
-    private val movieListRepository = MovieListRepository(getApplication())
+    private val movieListRepository = MovieListRepository(application)
     private val watchlistRepository = WatchlistRepository(application)
 
     init {
@@ -104,7 +104,7 @@ class MovieGridViewModel(application: Application, arguments: Bundle?) : Android
 
     fun deleteMovie(movie: Movie) {
         customMovieList?.let {
-            movieRepository.deleteMovie(movie)
+            movieRepository.deleteMovieById(movie.roomId)
             movieListRepository.deleteMovieFromList(it, movie.roomId)
         }
     }

@@ -35,7 +35,6 @@ private fun loadImageFromUrl(
         .into(imageView)
 }
 
-
 private fun loadImageFromUri(
     imageView: ImageView,
     uriString: String,
@@ -53,8 +52,10 @@ private fun loadImageFromUri(
 
 @BindingAdapter(value = ["imageUrl", "imageUriString"], requireAll = false)
 fun loadImage(imageView: ImageView, imageUrl: String?, imageUriString: String?) {
-    if (!imageUrl.isNullOrBlank() && imageUriString == null)
+    if (!imageUrl.isNullOrBlank())
         loadImageFromUrl(imageView, imageUrl, getProgressDrawable(imageView.context))
-    else if (imageUriString != null)
-        loadImageFromUri(imageView, imageUriString, getProgressDrawable(imageView.context))
+    else
+        imageUriString?.let {
+            loadImageFromUri(imageView, it, getProgressDrawable(imageView.context))
+        }
 }

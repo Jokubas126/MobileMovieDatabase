@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.rest
+package com.example.mmdb.ui.movielists.rest
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.R
 import com.example.mmdb.model.data.Movie
-import com.example.mmdb.ui.GridAdapter
-import com.example.mmdb.ui.GridAdapter.ItemClickListener
+import com.example.mmdb.ui.movielists.MovieGridAdapter
+import com.example.mmdb.ui.movielists.MovieGridAdapter.ItemClickListener
 import com.example.mmdb.util.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
@@ -23,11 +23,15 @@ import java.util.*
 
 @ExperimentalStdlibApi
 class RestMovieGridFragment : Fragment(), ItemClickListener,
-    GridAdapter.PersonalListActionListener,
-    GridAdapter.WatchlistActionListener {
+    MovieGridAdapter.PersonalListActionListener,
+    MovieGridAdapter.WatchlistActionListener {
 
     private lateinit var viewModel: RestMovieGridViewModel
-    private val gridAdapter = GridAdapter(View.VISIBLE, View.VISIBLE, View.GONE)
+    private val gridAdapter = MovieGridAdapter(
+        View.VISIBLE,
+        View.VISIBLE,
+        View.GONE
+    )
 
     private var isScrolledDown = true
 

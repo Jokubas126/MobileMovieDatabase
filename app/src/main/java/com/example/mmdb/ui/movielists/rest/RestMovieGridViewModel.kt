@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.rest
+package com.example.mmdb.ui.movielists.rest
 
 import android.app.Application
 import android.os.Bundle
@@ -7,16 +7,14 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.navigation.Navigation
-import com.example.mmdb.NavGraphDirections
 import com.example.mmdb.R
 import com.example.mmdb.model.data.*
 import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.example.mmdb.model.room.repositories.GenresRepository
 import com.example.mmdb.model.room.repositories.WatchlistRepository
-import com.example.mmdb.ui.personal.customlists.addtolists.AddToListsTaskManager
-import com.example.mmdb.ui.personal.customlists.addtolists.AddToListsPopupWindow
+import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsTaskManager
+import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsPopupWindow
 import com.example.mmdb.util.*
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
