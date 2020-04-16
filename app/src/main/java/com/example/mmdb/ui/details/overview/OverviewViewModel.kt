@@ -13,54 +13,63 @@ import com.example.mmdb.R
 import com.example.mmdb.model.data.Movie
 import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.example.mmdb.model.room.repositories.RoomMovieRepository
-import com.example.mmdb.util.getAnyNameList
-import com.example.mmdb.util.stringListToListedString
-import com.example.mmdb.util.stringListToString
+import com.example.mmdb.util.*
+import com.example.mmdb.util.managers.ProgressManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class OverviewViewModel(application: Application, arguments: Bundle?) : AndroidViewModel(application) {
+class OverviewViewModel(application: Application, arguments: Bundle?) :
+    AndroidViewModel(application) {
+
+    private val progressManager = ProgressManager()
 
     private val _currentMovie = MutableLiveData<Movie>()
-    private val _loading = MutableLiveData<Boolean>()
 
     var currentMovie: LiveData<Movie> = _currentMovie
-    val loading: LiveData<Boolean> = _loading
+    val loading: LiveData<Boolean> = progressManager.loading
+    val error: LiveData<Boolean> = progressManager.error
 
     private lateinit var args: MovieDetailsArgs
 
     init {
-        arguments?.let {
-            _loading.value = true
-            args = MovieDetailsArgs.fromBundle(it)
-            if (args.movieLocalId == 0)
-                getMovieDetailsRemote(args.movieRemoteId)
-            else getMovieDetailsLocal(args.movieLocalId)
+        CoroutineScope(Dispatchers.IO).launch {
+            progressManager.loading()
+            arguments?.let {
+                args = MovieDetailsArgs.fromBundle(it)
+                if (args.movieLocalId == 0)
+                    getMovieDetailsRemote(args.movieRemoteId)
+                else getMovieDetailsLocal(args.movieLocalId)
+            }?: run{ progressManager.error() }
         }
     }
 
     private fun getMovieDetailsRemote(movieId: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = RemoteMovieRepository().getMovieDetails(movieId)
-            withContext(Dispatchers.Main) {
+            if (isNetworkAvailable(getApplication())){
+                val response = RemoteMovieRepository().getMovieDetails(movieId)
                 if (response.isSuccessful) {
                     response.body()?.let {
                         it.genresString = stringListToString(getAnyNameList(it.genres))
                         it.productionCountryString =
                             stringListToListedString(getAnyNameList(it.productionCountryList))
-                        _currentMovie.value = it
+                        withContext(Dispatchers.Main) {
+                            _currentMovie.value = it
+                            progressManager.retrieved()
+                        }
                     }
                 }
-                _loading.value = false
+            } else {
+                progressManager.error()
+                networkUnavailableNotification(getApplication())
             }
         }
     }
 
     private fun getMovieDetailsLocal(movieId: Int) {
         currentMovie = RoomMovieRepository(getApplication()).getMovieById(movieId)
-        _loading.value = false
+        progressManager.retrieved()
     }
 
     fun onNavigationItemSelected(view: View, menuItem: MenuItem): Boolean {

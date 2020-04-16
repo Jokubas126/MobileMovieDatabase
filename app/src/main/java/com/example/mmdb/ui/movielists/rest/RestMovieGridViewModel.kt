@@ -18,56 +18,46 @@ import com.example.mmdb.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
-    AndroidViewModel(application), ResponseListener {
+    AndroidViewModel(application) {
+
+    private val progressManager = RemoteListProgressManager()
 
     private val _movies = MutableLiveData<List<Movie>>()
-    private val _error = MutableLiveData<Boolean>()
-    private val _loading = MutableLiveData<Boolean>()
 
     var movies: LiveData<List<Movie>> = _movies
-    val error: LiveData<Boolean> = _error
-    val loading: LiveData<Boolean> = _loading
-
-    private var currentPage = 1
-    private var fetchedPage = 0
-    private var isListFull = false
+    val error: LiveData<Boolean> = progressManager.error
+    val loading: LiveData<Boolean> = progressManager.loading
 
     private lateinit var args: RestMovieGridFragmentArgs
 
+    private val watchlistMovieIdList = mutableListOf<Int>()
+
     // repositories
     private val watchlistRepository = WatchlistRepository(application)
-    private val watchlistMovieIdList = mutableListOf<Int>()
     private val genresRepository = GenresRepository(application)
 
-    private val responseListener: ResponseListener = this
-
     init {
-        _loading.value = true
         CoroutineScope(Dispatchers.IO).launch {
+            progressManager.load()
             watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
             arguments?.let {
                 args = RestMovieGridFragmentArgs.fromBundle(it)
                 getResponse()
-            }
+            }?: run{ progressManager.error() }
         }
     }
 
     fun refresh() {
-        isListFull = false
-        _loading.value = true
-        currentPage = 1
-        fetchedPage = 0
+        progressManager.refresh()
         getResponse()
     }
 
     fun addData() {
-        if (!isListFull) {
-            _loading.value = true
-            currentPage++
+        if (!progressManager.isListFull) {
+            progressManager.addingData()
             getResponse()
         }
     }
@@ -78,17 +68,16 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
         synchronized(this) {
             CoroutineScope(Dispatchers.IO).launch {
                 if (isNetworkAvailable(getApplication())) {
-                    if (currentPage - fetchedPage > 1)
-                        currentPage = fetchedPage + 1
+                    progressManager.checkPages()
                     val response =
                         when (args.movieGridType) {
                             TYPE_MOVIE_GRID -> RemoteMovieRepository().getMovies(
                                 args.keyCategory!!,
-                                currentPage
+                                progressManager.currentPage
                             )
                             DISCOVER_MOVIE_GRID ->
                                 RemoteMovieRepository().getDiscoveredMovies(
-                                    currentPage,
+                                    progressManager.currentPage,
                                     args.startYear,
                                     args.endYear,
                                     args.genreId,
@@ -96,22 +85,17 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
                                 )
                             SEARCH_MOVIE_GRID -> RemoteMovieRepository().getSearchedMovies(
                                 args.searchQuery!!,
-                                currentPage
+                                progressManager.currentPage
                             )
                             else -> null
                         }
-                    responseListener.onResponseRetrieved(response)
-                } else
-                    withContext(Dispatchers.Main) {
-                        _loading.value = false
-                        networkUnavailableNotification(getApplication())
-                    }
+                    response?.let { getMovieList(it) } ?: run { progressManager.error() }
+                } else{
+                    progressManager.error()
+                    networkUnavailableNotification(getApplication())
+                }
             }
         }
-    }
-
-    override fun onResponseRetrieved(response: Response<MovieResults>?) {
-        response?.let { getMovieList(it) }
     }
 
     // -------- Data configuration -------//
@@ -119,14 +103,10 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
     private fun getMovieList(response: Response<MovieResults>) {
         CoroutineScope(Dispatchers.IO).launch {
             if (response.isSuccessful) {
-                if (currentPage == response.body()!!.totalPages)
-                    isListFull = true
+                progressManager.checkIfListFull(response.body()!!.totalPages)
                 formatGenres(response.body()!!.results)
             } else
-                withContext(Dispatchers.Main) {
-                    _loading.value = false
-                    _error.value = true
-                }
+                progressManager.error()
         }
     }
 
@@ -134,21 +114,19 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
         for (movie in movieList)
             movie.formatGenresString(genresRepository.getGenresByIdList(movie.genreIds))
         val finalList = checkWatchlistMovies(movieList)
-        insertMovieListToData(finalList)
+        insertMovieListToLiveData(finalList)
     }
 
-    private fun insertMovieListToData(movieList: List<Movie>) {
+    private fun insertMovieListToLiveData(movieList: List<Movie>) {
         CoroutineScope(Dispatchers.Main).launch {
-            if (currentPage == 1)
+            if (progressManager.currentPage == 1)
                 _movies.value = movieList
             else {
-                val tmpMovieList: MutableList<Movie> = _movies.value as MutableList
+                val tmpMovieList= _movies.value as MutableList
                 tmpMovieList.addAll(movieList)
                 _movies.value = tmpMovieList
             }
-            fetchedPage = currentPage
-            _loading.value = false
-            _error.value = false
+            progressManager.retrieved()
         }
     }
 

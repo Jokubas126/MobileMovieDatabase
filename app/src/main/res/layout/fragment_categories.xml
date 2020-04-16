@@ -1,134 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:stateListAnimator="@null"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:expanded="true"
-        app:layout_behavior=".ui.categories.ScrollingToolbarBehavior">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolbarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways"
-            app:statusBarScrim="?attr/colorPrimaryDark">
-
-            <LinearLayout
-                android:id="@+id/largeView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="?attr/actionBarSize"
-                android:orientation="vertical"
-                android:padding="15dp"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="1.0">
-
-                <TextView
-                    android:id="@+id/release_year_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/release_year_title"
-                    android:textAppearance="@style/ReleaseYearTextAppearance" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/release_year_slider_min_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:text="@string/infinity"
-                        android:textAppearance="@style/ReleaseYearItemsTextAppearance" />
-
-                    <TextView
-                        android:id="@+id/release_year_slider_max_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:text="@string/max_release_date_value"
-                        android:textAppearance="@style/ReleaseYearItemsTextAppearance" />
-
-                </FrameLayout>
-
-                <io.apptik.widget.MultiSlider
-                    android:id="@+id/release_year_slider"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:drawThumbsApart="true"
-                    app:rangeColor="@color/white"
-                    app:scaleMax="2020"
-                    app:scaleMin="1950"
-                    app:thumbColor="@color/white"
-                    app:thumbNumber="2"
-                    app:trackColor="@android:color/white" />
-
-            </LinearLayout>
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/collapsing_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_collapseMode="pin"
-                app:menu="@menu/toolbar_menu"
-                app:popupTheme="@style/AppTheme.PopupOverlay">
-
-                <LinearLayout
-                    android:id="@+id/expandCollapseButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?android:selectableItemBackground"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/titleTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="@string/categories_fragment"
-                        android:textAppearance="@style/ToolbarStyle"
-                        android:textColor="@android:color/white" />
-
-                    <ImageView
-                        android:id="@+id/arrowImageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginLeft="4dp"
-                        app:srcCompat="@drawable/ic_arrow_drop_up"
-                        tools:ignore="ContentDescription,RtlHardcoded" />
-                </LinearLayout>
-            </androidx.appcompat.widget.Toolbar>
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <com.example.mmdb.ui.categories.CategoryRecyclerView
-        android:id="@+id/categories_recycler_view"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        tools:context=".ui.MainActivity">
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:stateListAnimator="@null"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:expanded="true"
+            app:layout_behavior=".ui.categories.ScrollingToolbarBehavior">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsingToolbarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:fitsSystemWindows="true"
+                app:contentScrim="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways"
+                app:statusBarScrim="?attr/colorPrimaryDark">
+
+                <LinearLayout
+                    android:id="@+id/largeView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="?attr/actionBarSize"
+                    android:orientation="vertical"
+                    android:padding="15dp"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="1.0">
+
+                    <TextView
+                        android:id="@+id/release_year_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/release_year_title"
+                        android:textAppearance="@style/ReleaseYearTextAppearance" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/release_year_slider_min_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="start"
+                            android:text="@string/infinity"
+                            android:textAppearance="@style/ReleaseYearItemsTextAppearance" />
+
+                        <TextView
+                            android:id="@+id/release_year_slider_max_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:text="@string/max_release_date_value"
+                            android:textAppearance="@style/ReleaseYearItemsTextAppearance" />
+
+                    </FrameLayout>
+
+                    <io.apptik.widget.MultiSlider
+                        android:id="@+id/release_year_slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:drawThumbsApart="true"
+                        app:rangeColor="@color/white"
+                        app:scaleMax="2020"
+                        app:scaleMin="1950"
+                        app:thumbColor="@color/white"
+                        app:thumbNumber="2"
+                        app:trackColor="@android:color/white" />
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/collapsing_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:layout_collapseMode="pin"
+                    app:menu="@menu/toolbar_menu"
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                    <LinearLayout
+                        android:id="@+id/expandCollapseButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:background="?android:selectableItemBackground"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/titleTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/categories_fragment"
+                            android:textAppearance="@style/ToolbarStyle"
+                            android:textColor="@android:color/white" />
+
+                        <ImageView
+                            android:id="@+id/arrowImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginLeft="4dp"
+                            app:srcCompat="@drawable/ic_arrow_drop_up"
+                            tools:ignore="ContentDescription,RtlHardcoded" />
+                    </LinearLayout>
+                </androidx.appcompat.widget.Toolbar>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.example.mmdb.ui.categories.CategoryRecyclerView
+            android:id="@+id/categories_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:visibility="gone"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/loading_error_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading_error"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

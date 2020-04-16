@@ -74,20 +74,20 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
                 if (isScrolledDown) isScrolledDown = false
             }
         })
-        viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
-            isError?.let {
-                loading_error_text_view.visibility =
-                    if (it)
-                        View.VISIBLE
-                    else View.GONE
-            }
-        })
         viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
             isLoading?.let {
                 progress_bar_loading_movie_list.visibility =
                     if (it) View.VISIBLE
                     else View.GONE
                 if (it) loading_error_text_view.visibility = View.GONE
+            }
+        })
+        viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
+            isError?.let {
+                loading_error_text_view.visibility =
+                    if (it)
+                        View.VISIBLE
+                    else View.GONE
             }
         })
     }

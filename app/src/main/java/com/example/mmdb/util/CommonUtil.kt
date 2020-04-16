@@ -17,6 +17,8 @@ const val SNACKBAR_LENGTH_LONG_MS = 2750
 const val LANGUAGE_CATEGORY = "Languages"
 const val GENRE_CATEGORY = "Genres"
 
+const val DEFAULT_ID_VALUE = 0
+
 const val TYPE_MOVIE_GRID = "type"
 const val DISCOVER_MOVIE_GRID = "discover"
 const val SEARCH_MOVIE_GRID = "search"

@@ -6,6 +6,9 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.widget.Toast
 import com.example.mmdb.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 fun isNetworkAvailable(context: Context): Boolean {
     var isConnected = false
@@ -38,9 +41,11 @@ fun isNetworkAvailable(context: Context): Boolean {
 }
 
 fun networkUnavailableNotification(context: Context){
-    showToast(
-        context,
-        context.getString(R.string.no_internet_connection),
-        Toast.LENGTH_LONG
-    )
+    CoroutineScope(Dispatchers.Main).launch {
+        showToast(
+            context,
+            context.getString(R.string.no_internet_connection),
+            Toast.LENGTH_LONG
+        )
+    }
 }

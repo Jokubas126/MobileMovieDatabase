@@ -15,6 +15,7 @@ import com.example.mmdb.model.room.repositories.WatchlistRepository
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsPopupWindow
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsTaskManager
 import com.example.mmdb.util.isNetworkAvailable
+import com.example.mmdb.util.managers.ProgressManager
 import com.example.mmdb.util.networkUnavailableNotification
 import com.example.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope
@@ -24,13 +25,13 @@ import kotlinx.coroutines.withContext
 
 class WatchlistViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val progressManager = ProgressManager()
+
     private val _movies = MutableLiveData<MutableList<Movie>>()
-    private val _error = MutableLiveData<Boolean>()
-    private val _loading = MutableLiveData<Boolean>()
 
     var movies: LiveData<MutableList<Movie>> = _movies
-    val error: LiveData<Boolean> = _error
-    val loading: LiveData<Boolean> = _loading
+    val error: LiveData<Boolean>  = progressManager.error
+    val loading: LiveData<Boolean> = progressManager.loading
 
     private val movieList = mutableListOf<WatchlistMovie>()
 
@@ -47,21 +48,21 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun getWatchlist() {
-        _loading.value = true
-        _error.value = false
         if (isNetworkAvailable(getApplication())) {
             CoroutineScope(Dispatchers.IO).launch {
+                progressManager.loading()
                 movieList.clear()
                 movieList.addAll(watchlistRepository.getAllMovies())
-                for (movie in movieList)
-                    getMovie(movie.movieId)
-                withContext(Dispatchers.Main) { _error.value = movieList.isNullOrEmpty() }
+                if (movieList.isEmpty())
+                    progressManager.error()
+                else
+                    for (movie in movieList)
+                        getMovie(movie.movieId)
             }
         } else {
-            _error.value = true
+            progressManager.error()
             networkUnavailableNotification(getApplication())
         }
-        _loading.value = false
     }
 
     private fun getMovie(movieId: Int) {
@@ -71,17 +72,11 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
                 if (response.isSuccessful) {
                     response.body()?.let {
                         it.isInWatchlist = true
-                        formatGenres(it)
+                        it.formatGenresString(it.genres)
+                        insertMovieToData(it)
                     }
                 }
             }
-        }
-    }
-
-    private fun formatGenres(movie: Movie) {
-        CoroutineScope(Dispatchers.IO).launch {
-            movie.formatGenresString(movie.genres)
-            insertMovieToData(movie)
         }
     }
 

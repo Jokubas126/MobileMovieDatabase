@@ -144,7 +144,7 @@
             android:id="@+id/movieCast"
             android:name="com.example.mmdb.ui.details.credits.CreditsFragment"
             android:label="Cast and Crew"
-            tools:layout="@layout/fragment_movie_cast">
+            tools:layout="@layout/fragment_movie_credits">
             <argument
                 android:name="movieRemoteId"
                 android:defaultValue="0"

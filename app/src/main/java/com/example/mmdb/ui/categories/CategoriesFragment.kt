@@ -13,6 +13,8 @@ import com.example.mmdb.R
 import com.example.mmdb.model.data.Category
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_categories.*
+import kotlinx.android.synthetic.main.fragment_categories.loading_error_text_view
+import kotlinx.android.synthetic.main.fragment_categories.progress_bar
 
 class CategoriesFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     MenuItem.OnMenuItemClickListener {
@@ -48,11 +50,30 @@ class CategoriesFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
             categories?.let {
                 categoryAdapter = CategoryAdapter(it)
                 categories_recycler_view.adapter = categoryAdapter
+                categories_recycler_view.visibility = View.VISIBLE
                 categoryAdapter.setChildClickListener { _, checked, group, childIndex ->
-                    viewModel.onSubcategoryClicked(checked, group as Category, childIndex)
+                    viewModel.onSubcategorySelected(checked, group as Category, childIndex)
                 }
             }
             ViewCompat.setNestedScrollingEnabled(categories_recycler_view, false)
+        })
+        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+            isLoading?.let {
+                progress_bar.visibility =
+                    if (it) View.VISIBLE
+                    else View.GONE
+                if (it) {
+                    categories_recycler_view.visibility = View.GONE
+                }
+            }
+        })
+        viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
+            isError?.let {
+                loading_error_text_view.visibility =
+                    if (it)
+                        View.VISIBLE
+                    else View.GONE
+            }
         })
     }
 

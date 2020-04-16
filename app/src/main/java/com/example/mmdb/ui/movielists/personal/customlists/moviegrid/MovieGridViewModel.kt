@@ -15,70 +15,65 @@ import com.example.mmdb.model.data.WatchlistMovie
 import com.example.mmdb.model.room.repositories.MovieListRepository
 import com.example.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.model.room.repositories.WatchlistRepository
+import com.example.mmdb.util.managers.ProgressManager
 import com.example.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MovieGridViewModel(application: Application, arguments: Bundle?) : AndroidViewModel(application) {
+class MovieGridViewModel(application: Application, arguments: Bundle?) :
+    AndroidViewModel(application) {
+
+    private val progressManager = ProgressManager()
 
     private var customMovieList: CustomMovieList? = null
     private var _movieList = MutableLiveData<List<Movie>>()
-    private val _loading = MutableLiveData<Boolean>()
-    private val _error = MutableLiveData<Boolean>()
 
     val movieList: LiveData<List<Movie>> = _movieList
-    val loading: LiveData<Boolean> = _loading
-    val error: LiveData<Boolean> = _error
+    val loading: LiveData<Boolean> = progressManager.loading
+    val error: LiveData<Boolean> = progressManager.error
 
-    private var movieListId: Int? = null
+    private var customListId: Int? = null
 
     private val movieRepository = RoomMovieRepository(application)
     private val movieListRepository = MovieListRepository(application)
     private val watchlistRepository = WatchlistRepository(application)
 
     init {
-        _error.value = false
-        arguments?.let {
-            val args = MovieGridFragmentArgs.fromBundle(it)
-            movieListId = args.movieListId.toInt()
+        CoroutineScope(Dispatchers.IO).launch {
+            progressManager.loading()
+            arguments?.let {
+                val args = MovieGridFragmentArgs.fromBundle(it)
+                customListId = args.movieListId.toInt()
+                getMovieList()
+            }?: run{ progressManager.error() }
         }
-        getMovieList()
     }
 
     fun refresh() {
+        progressManager.load()
         getMovieList()
     }
 
     private fun getMovieList() {
-        _loading.value = true
         CoroutineScope(Dispatchers.IO).launch {
-            movieListId?.let {
+            customListId?.let {
                 customMovieList = movieListRepository.getMovieListById(it)
                 getMovies(customMovieList?.movieIdList)
-            } ?: run {
-                withContext(Dispatchers.Main) {
-                    _loading.value = false
-                    _error.value = true
-                }
-            }
+            } ?: run { progressManager.error() }
         }
     }
 
     private fun getMovies(movieIdList: List<Int>?) {
         CoroutineScope(Dispatchers.IO).launch {
-            if (movieIdList.isNullOrEmpty()) {
-                withContext(Dispatchers.Main){
-                    _error.value = true
-                    _loading.value = false
-                }
-            } else {
+            if (movieIdList.isNullOrEmpty())
+                progressManager.error()
+            else {
                 val list = movieRepository.getMoviesFromIdList(movieIdList)
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     _movieList.value = list
-                    _error.value = false
-                    _loading.value = false
+                    progressManager.retrieved()
                 }
             }
         }

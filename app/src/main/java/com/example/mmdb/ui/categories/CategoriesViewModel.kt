@@ -11,62 +11,59 @@ import com.example.mmdb.model.data.Genres
 import com.example.mmdb.model.data.Subcategory
 import com.example.mmdb.model.remote.repositories.CategoryRepository
 import com.example.mmdb.util.*
+import com.example.mmdb.util.managers.ProgressManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Collections.sort
 
 class CategoriesViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val progressManager = ProgressManager()
+
     private val _categories = MutableLiveData<MutableList<Category>>()
-    private val _loading = MutableLiveData<Boolean>()
 
     val categories: LiveData<MutableList<Category>> = _categories
-    val loading: LiveData<Boolean> = _loading
+    val loading: LiveData<Boolean> = progressManager.loading
+    val error: LiveData<Boolean> = progressManager.error
 
     init {
-        if (isNetworkAvailable(getApplication())) {
-            if (categories.value.isNullOrEmpty()) {
-                _loading.value = true
+        CoroutineScope(Dispatchers.IO).launch {
+            if (isNetworkAvailable(getApplication())) {
+                progressManager.loading()
                 getLanguages()
                 getGenres()
+            } else {
+                progressManager.error()
+                networkUnavailableNotification(getApplication())
             }
-        } else {
-            _loading.value = false
-            networkUnavailableNotification(getApplication())
         }
     }
 
     private fun getLanguages() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = CategoryRepository()
-                .getLanguages()
-            withContext(Dispatchers.Main) {
-                val subcategories = prepareSubcategories(response.body()!!)
-                var list = mutableListOf<Category>()
-                if (!categories.value.isNullOrEmpty())
-                    list = categories.value!!
-                list.add(Category(LANGUAGE_CATEGORY, subcategories))
-                _categories.value = list
-                _loading.value = false
-            }
+            val response = CategoryRepository().getLanguages()
+            if (response.isSuccessful)
+                response.body()?.let {
+                    insertCategoriesToLiveData(LANGUAGE_CATEGORY, formatSubcategories(it))
+                } ?: run { progressManager.error() }
+            else
+                progressManager.error()
         }
     }
 
     private fun getGenres() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = CategoryRepository()
-                .getGenres()
-            withContext(Dispatchers.Main) {
-                val subcategories = prepareSubcategories(genresToSubcategoryList(response.body()!!))
-                var list = mutableListOf<Category>()
-                if (!categories.value.isNullOrEmpty())
-                    list = categories.value!!
-                list.add(Category(GENRE_CATEGORY, subcategories))
-                _categories.value = list
-                _loading.value = false
-            }
+            val response = CategoryRepository().getGenres()
+            if (response.isSuccessful)
+                response.body()?.let {
+                    insertCategoriesToLiveData(
+                        GENRE_CATEGORY,
+                        formatSubcategories(genresToSubcategoryList(it))
+                    )
+                } ?: run { progressManager.error() }
+            else
+                progressManager.error()
         }
     }
 
@@ -78,13 +75,24 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
         return subcategoryList
     }
 
-    private fun prepareSubcategories(list: List<Subcategory>): List<Subcategory> {
+    private fun formatSubcategories(list: List<Subcategory>): List<Subcategory> {
         sort(list) { o1: Subcategory, o2: Subcategory -> o1.name.compareTo(o2.name) }
-        (list as MutableList<Subcategory>).add(
-            0,
-            Subcategory("", "")
-        ) // to have an empty item at the beginning for deselection
+        // to have an empty item at the beginning for deselection
+        (list as MutableList<Subcategory>).add(0, Subcategory("", ""))
         return list
+    }
+
+    private fun insertCategoriesToLiveData(
+        categoryName: String,
+        subcategoryList: List<Subcategory>
+    ) {
+        CoroutineScope(Dispatchers.Main).launch {
+            var list = mutableListOf<Category>()
+            categories.value?.let { list = it }
+            list.add(Category(categoryName, subcategoryList))
+            _categories.value = list
+            progressManager.retrieved()
+        }
     }
 
     // ------------ Navigation related -------------//
@@ -92,9 +100,9 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
     private var languageSubcategory: Subcategory? = null
     private var genreSubcategory: Subcategory? = null
 
-    fun onSubcategoryClicked(checked: Boolean, category: Category, subcategoryIndex: Int) {
+    fun onSubcategorySelected(checked: Boolean, category: Category, itemIndex: Int) {
         if (checked) {
-            if ((category.items[subcategoryIndex] as Subcategory).name.isBlank()) {
+            if ((category.items[itemIndex] as Subcategory).name.isBlank()) {
                 when (category.name) {
                     LANGUAGE_CATEGORY -> languageSubcategory = null
                     GENRE_CATEGORY -> genreSubcategory = null
@@ -102,9 +110,9 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
             } else {
                 when (category.name) {
                     LANGUAGE_CATEGORY -> languageSubcategory =
-                        category.items[subcategoryIndex] as Subcategory
+                        category.items[itemIndex] as Subcategory
                     GENRE_CATEGORY -> genreSubcategory =
-                        category.items[subcategoryIndex] as Subcategory
+                        category.items[itemIndex] as Subcategory
                 }
             }
         } else {

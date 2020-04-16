@@ -14,6 +14,8 @@ import com.example.mmdb.databinding.FragmentMovieOverviewBinding
 import com.example.mmdb.model.data.Movie
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_movie_overview.*
+import kotlinx.android.synthetic.main.fragment_movie_overview.loading_error_text_view
+import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
 class OverviewFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -56,6 +58,14 @@ class OverviewFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
                         View.VISIBLE
                     else View.GONE
                 if (it) information_layout.visibility = View.GONE
+            }
+        })
+        viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
+            isError?.let {
+                loading_error_text_view.visibility =
+                    if (it)
+                        View.VISIBLE
+                    else View.GONE
             }
         })
     }
