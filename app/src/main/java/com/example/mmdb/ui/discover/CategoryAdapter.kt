@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.categories
+package com.example.mmdb.ui.discover
 
 import android.view.LayoutInflater
 import android.view.View

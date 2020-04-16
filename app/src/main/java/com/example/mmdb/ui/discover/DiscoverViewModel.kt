@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.categories
+package com.example.mmdb.ui.discover
 
 import android.app.Application
 import android.view.View
@@ -17,7 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Collections.sort
 
-class CategoriesViewModel(application: Application) : AndroidViewModel(application) {
+class DiscoverViewModel(application: Application) : AndroidViewModel(application) {
 
     private val progressManager = ProgressManager()
 
@@ -87,8 +87,7 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
         subcategoryList: List<Subcategory>
     ) {
         CoroutineScope(Dispatchers.Main).launch {
-            var list = mutableListOf<Category>()
-            categories.value?.let { list = it }
+            val list = categories.value?: run{ mutableListOf<Category>() }
             list.add(Category(categoryName, subcategoryList))
             _categories.value = list
             progressManager.retrieved()
@@ -124,7 +123,7 @@ class CategoriesViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun onConfirmSelectionClicked(view: View, startYear: String, endYear: String) {
-        val action = CategoriesFragmentDirections.actionRemoteMovieGridFragment()
+        val action = DiscoverFragmentDirections.actionRemoteMovieGridFragment()
         action.movieGridType = DISCOVER_MOVIE_GRID
         action.startYear =
             if (startYear == "∞") null

@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.categories
+package com.example.mmdb.ui.discover
 
 import android.os.Bundle
 import android.view.*
@@ -12,16 +12,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mmdb.R
 import com.example.mmdb.model.data.Category
 import com.google.android.material.appbar.AppBarLayout
-import kotlinx.android.synthetic.main.fragment_categories.*
-import kotlinx.android.synthetic.main.fragment_categories.loading_error_text_view
-import kotlinx.android.synthetic.main.fragment_categories.progress_bar
+import kotlinx.android.synthetic.main.fragment_discover.*
+import kotlinx.android.synthetic.main.fragment_discover.loading_error_text_view
+import kotlinx.android.synthetic.main.fragment_discover.progress_bar
 
-class CategoriesFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
+class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     MenuItem.OnMenuItemClickListener {
 
     private lateinit var categoryAdapter: CategoryAdapter
 
-    private lateinit var viewModel: CategoriesViewModel
+    private lateinit var viewModel: DiscoverViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,12 +32,12 @@ class CategoriesFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_categories, container, false)
+        return inflater.inflate(R.layout.fragment_discover, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CategoriesViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(DiscoverViewModel::class.java)
 
         categories_recycler_view.layoutManager = LinearLayoutManager(context)
         setupSlider()
@@ -87,7 +87,6 @@ class CategoriesFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
                 release_year_slider_max_value.text = value.toString()
             }
         }
-
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
@@ -107,7 +106,7 @@ class CategoriesFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     private var isAppBarIdle = false
     private var appBarMaxOffset: Int = 0
 
-    private var isExpandedOrCollapsed: Boolean = true
+    private var isExpanded: Boolean = false
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
@@ -126,18 +125,18 @@ class CategoriesFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
             AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 appBarOffset = verticalOffset
                 setToolbarArrowRotation(verticalOffset, appBarLayout)
-                isExpandedOrCollapsed = verticalOffset == 0 || verticalOffset == appBarMaxOffset
+                isExpanded = verticalOffset == 0
                 // check beyond offset points to be safer
                 isAppBarIdle = appBarOffset >= 0 || appBarOffset <= appBarMaxOffset
                 if (isAppBarIdle)
-                    setExpandAndCollapseEnabled(isExpandedOrCollapsed)
+                    setExpandAndCollapseEnabled(isExpanded)
             })
         app_bar.post { appBarMaxOffset = -app_bar.totalScrollRange } // set max offset once
         categories_recycler_view.setAppBarTracking(this)
 
-        expandCollapseButton.setOnClickListener {
-            isExpandedOrCollapsed = !isExpandedOrCollapsed
-            app_bar.setExpanded(isExpandedOrCollapsed, true)
+        expand_collapse_btn.setOnClickListener {
+            isExpanded = !isExpanded
+            app_bar.setExpanded(isExpanded, true)
         }
     }
 
@@ -145,7 +144,7 @@ class CategoriesFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
         // get percent of progress for scrolling done
         // current offset / positive max offset
         val progress = (-verticalOffset).toFloat() / appBarLayout.totalScrollRange
-        arrowImageView.rotation = 180 + progress * 180
+        arrow_image_view.rotation = 180 + progress * 180
     }
 
     private fun setExpandAndCollapseEnabled(enabled: Boolean) {

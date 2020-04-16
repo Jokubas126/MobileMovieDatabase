@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.categories
+package com.example.mmdb.ui.discover
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,7 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-/**A RecyclerView that allows temporary pausing of causing its scroll to affect appBarLayout, based on https://stackoverflow.com/a/45338791/878126 */
+/**A RecyclerView that allows temporary pausing of causing its scroll to affect appBarLayout, based on https://stackoverflow.com/a/45338791/8781 **/
 class CategoryRecyclerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

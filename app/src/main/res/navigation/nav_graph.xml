@@ -176,9 +176,9 @@
 
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="com.example.mmdb.ui.categories.CategoriesFragment"
-        android:label="Categories"
-        tools:layout="@layout/fragment_categories">
+        android:name="com.example.mmdb.ui.discover.DiscoverFragment"
+        android:label="Discover"
+        tools:layout="@layout/fragment_discover">
         <action
             android:id="@+id/actionRemoteMovieGridFragment"
             app:destination="@id/restMovieGridFragment" />

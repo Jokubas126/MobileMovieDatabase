@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.categories
+package com.example.mmdb.ui.discover
 
 import android.content.Context
 import android.util.AttributeSet

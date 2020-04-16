@@ -13,10 +13,10 @@
 
     <!-- Toolbar titles -->
 
-    <string name="type_fragment">Movies</string>
-    <string name="search_fragment">Search:&#160;</string>
-    <string name="discover_fragment">Discover:&#160;</string>
-    <string name="categories_fragment">Categories</string>
+    <string name="type_movie_grid">Movies</string>
+    <string name="search_movie_grid">Search:&#160;</string>
+    <string name="discover_movie_grid">Discover:&#160;</string>
+    <string name="discover_fragment">Discover</string>
 
     <!-- Image descriptions -->
 
