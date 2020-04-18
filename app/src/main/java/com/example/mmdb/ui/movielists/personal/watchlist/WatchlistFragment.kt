@@ -9,11 +9,16 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.mmdb.NavGraphDirections
 import com.example.mmdb.R
 import com.example.mmdb.model.data.Movie
 import com.example.mmdb.ui.movielists.MovieGridAdapter
+import com.example.mmdb.util.getMovieGridLayoutManager
+import com.example.mmdb.util.showProgressSnackBar
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
@@ -55,10 +60,7 @@ class WatchlistFragment : Fragment(), MovieGridAdapter.ItemClickListener,
 
     private fun observeViewModel() {
         viewModel.movies.observe(viewLifecycleOwner, Observer { movies ->
-            movies?.let {
-                gridAdapter.updateMovieList(it)
-                movie_recycler_view.visibility = View.VISIBLE
-            }
+            gridAdapter.updateMovieList(movies)
         })
         viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
             isError?.let {
@@ -78,7 +80,7 @@ class WatchlistFragment : Fragment(), MovieGridAdapter.ItemClickListener,
     }
 
     private fun setupRecyclerView() {
-        layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        layoutManager = getMovieGridLayoutManager(context) as StaggeredGridLayoutManager
         movie_recycler_view.layoutManager = layoutManager
         state?.let { layoutManager?.onRestoreInstanceState(it) }
         movie_recycler_view.itemAnimator = DefaultItemAnimator()

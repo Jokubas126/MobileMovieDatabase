@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.example.mmdb.model.room.repositories.GenresRepository
 import com.example.mmdb.util.isNetworkAvailable
@@ -42,7 +43,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun checkForGenre() {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             isGenresRequired = genresRepository.getAnyGenre() == null
             checkIfAnyUpdateRequired()
         }
@@ -50,22 +51,16 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
 
     private fun updateGenres() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = movieRepository.getGenres()
-            if (response.isSuccessful) {
-                val genres = response.body()
-                genres?.let {
-                    genresRepository.updateGenresBG(genres.genreList)
-                    isGenresLoaded = true
-                    checkIfAllLoaded()
-                }
-            } else
-                checkForUpdates()
+            val genres = movieRepository.getGenres()
+            genresRepository.updateGenres(genres.genreList)
+            isGenresLoaded = true
+            checkIfAllLoaded()
         }
     }
 
     // done in this way for potential scaling later and checking other types of data
     private fun checkIfAnyUpdateRequired() {
-        CoroutineScope(Dispatchers.Main).launch {
+        viewModelScope.launch {
             if (isGenresRequired)
                 _isUpdateRequired.value = true
             else
@@ -74,7 +69,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun checkIfAllLoaded() {
-        CoroutineScope(Dispatchers.Main).launch {
+        viewModelScope.launch {
             if (isGenresLoaded)
                 _isLoaded.value = true
         }

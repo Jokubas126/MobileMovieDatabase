@@ -55,16 +55,20 @@ fun getAnyNameList(list: List<*>?): List<String> {
 // --------------- Image Related ---------------- //
 
 fun imageUrlToFileUriString(context: Context, url: String?): String? {
-    if (!url.isNullOrBlank()) {
-        val connection: HttpURLConnection =
-            URL(BASE_IMAGE_URL + url).openConnection() as HttpURLConnection
-        connection.connect()
-        val inputStream = connection.inputStream
-        val bitmap = BitmapFactory.decodeStream(inputStream)
-        val file = saveBitmapToFile(context, bitmap)
-        return Uri.parse(file?.absolutePath).toString()
-    }
-    return null
+    return if (!url.isNullOrBlank()) {
+        try {
+            val connection: HttpURLConnection =
+                URL(BASE_IMAGE_URL + url).openConnection() as HttpURLConnection
+            connection.connect()
+            val inputStream = connection.inputStream
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            val file = saveBitmapToFile(context, bitmap)
+            Uri.parse(file?.absolutePath).toString()
+        } catch (e: Exception) {
+            null
+        }
+    } else
+        null
 }
 
 private fun saveBitmapToFile(context: Context, bitmap: Bitmap?): File? {

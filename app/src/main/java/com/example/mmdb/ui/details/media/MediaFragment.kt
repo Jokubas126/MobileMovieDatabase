@@ -66,30 +66,17 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
                     .replace(youtube_fragment.id, youTubePlayerFragment).commit()
                 initializeYoutubePlayer(it.key)
             }
+            progress_bar.visibility = View.GONE
         })
-        viewModel.images?.observe(viewLifecycleOwner, Observer { images ->
+        viewModel.images.observe(viewLifecycleOwner, Observer { images ->
             images?.let {
                 updatePosters(it.posterList)
                 updateBackdrops(it.backdropList)
+                loading_error_text_view.visibility = View.GONE
+            } ?: run {
+                loading_error_text_view.visibility = View.VISIBLE
             }
-        })
-        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
-            isLoading?.let {
-                progress_bar.visibility =
-                    if (it) View.VISIBLE
-                    else View.GONE
-                information_layout.visibility =
-                    if (it) View.GONE
-                    else View.VISIBLE
-            }
-        })
-        viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
-            isError?.let {
-                loading_error_text_view.visibility =
-                    if (it)
-                        View.VISIBLE
-                    else View.GONE
-            }
+            progress_bar.visibility = View.GONE
         })
     }
 

@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation
 import com.example.mmdb.R
 import com.example.mmdb.model.data.*
@@ -21,74 +22,50 @@ import com.example.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class WatchlistViewModel(application: Application) : AndroidViewModel(application) {
 
     private val progressManager = ProgressManager()
 
-    private val _movies = MutableLiveData<MutableList<Movie>>()
+    private val _movies = MutableLiveData<List<Movie>>()
 
-    var movies: LiveData<MutableList<Movie>> = _movies
-    val error: LiveData<Boolean>  = progressManager.error
-    val loading: LiveData<Boolean> = progressManager.loading
-
-    private val movieList = mutableListOf<WatchlistMovie>()
+    val movies: LiveData<List<Movie>>
+        get() = _movies
+    val error: LiveData<Boolean>
+        get() = progressManager.error
+    val loading: LiveData<Boolean>
+        get() = progressManager.loading
 
     private val remoteMovieRepository = RemoteMovieRepository()
     private val watchlistRepository = WatchlistRepository(application)
 
     init {
+        progressManager.loading()
         getWatchlist()
     }
 
     fun refresh() {
-        _movies.value = null
+        progressManager.load()
         getWatchlist()
     }
 
     private fun getWatchlist() {
-        if (isNetworkAvailable(getApplication())) {
-            CoroutineScope(Dispatchers.IO).launch {
-                progressManager.loading()
-                movieList.clear()
-                movieList.addAll(watchlistRepository.getAllMovies())
-                if (movieList.isEmpty())
-                    progressManager.error()
-                else
-                    for (movie in movieList)
-                        getMovie(movie.movieId)
-            }
-        } else {
-            progressManager.error()
-            networkUnavailableNotification(getApplication())
-        }
-    }
-
-    private fun getMovie(movieId: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = remoteMovieRepository.getMovieDetails(movieId)
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        it.isInWatchlist = true
-                        it.formatGenresString(it.genres)
-                        insertMovieToData(it)
-                    }
-                }
+        CoroutineScope(Dispatchers.Default).launch {
+            if (isNetworkAvailable(getApplication())) {
+                getMovies(watchlistRepository.getAllMovies())
+            } else {
+                progressManager.error()
+                networkUnavailableNotification(getApplication())
             }
         }
     }
 
-    private fun insertMovieToData(movie: Movie) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val tmpList = _movies.value
-            if (tmpList.isNullOrEmpty())
-                _movies.value = mutableListOf(movie)
-            else {
-                tmpList.add(movie)
-                _movies.value = tmpList
-            }
+    private fun getMovies(watchlistMovies: List<WatchlistMovie>) {
+        viewModelScope.launch {
+            _movies.value = remoteMovieRepository.getMovieListFromWatchlists(watchlistMovies)
+            if (watchlistMovies.isEmpty())
+                progressManager.error()
+            else progressManager.success()
         }
     }
 
@@ -121,8 +98,8 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     fun onPlaylistAddCLicked(movie: Movie, root: View) {
         AddToListsTaskManager(
             getApplication(),
+            root,
             AddToListsPopupWindow(
-                root,
                 View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT,

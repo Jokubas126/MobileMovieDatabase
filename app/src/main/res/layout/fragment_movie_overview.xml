@@ -29,15 +29,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/loading_error"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/information_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -59,11 +61,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:adjustViewBounds="true"
-                    app:imageUrl="@{movie.backdropImageUrl}"
-                    app:imageUriString="@{movie.backdropImageUriString}"
                     android:scaleType="centerCrop"
                     android:tint="@color/detailsTop"
                     android:tintMode="src_over"
+                    app:imageUriString="@{movie.backdropImageUriString}"
+                    app:imageUrl="@{movie.backdropImageUrl}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -74,9 +76,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
-                    app:imageUrl="@{movie.posterImageUrl}"
-                    app:imageUriString="@{movie.posterImageUriString}"
                     android:padding="@dimen/general_margin"
+                    app:imageUriString="@{movie.posterImageUriString}"
+                    app:imageUrl="@{movie.posterImageUrl}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/guideline"
                     app:layout_constraintStart_toStartOf="parent"

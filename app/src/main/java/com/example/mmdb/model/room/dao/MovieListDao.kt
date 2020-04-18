@@ -1,8 +1,8 @@
 package com.example.mmdb.model.room.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.mmdb.model.data.CustomMovieList
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieListDao {
@@ -14,14 +14,11 @@ interface MovieListDao {
     fun getCustomListById(customListId: Int): CustomMovieList
 
     @Query("SELECT * FROM movie_list")
-    fun getAllCustomMovieListLiveData(): LiveData<List<CustomMovieList>>
+    fun getAllCustomMovieListFlow(): Flow<List<CustomMovieList>>
 
     @Query("SELECT * FROM movie_list")
-    fun getAllCustomMovieLists(): List<CustomMovieList>
+    suspend fun getAllCustomMovieLists(): List<CustomMovieList>
 
     @Delete
     fun deleteCustomList(list: CustomMovieList)
-
-    @Query("DELETE FROM movie_list")
-    fun deleteAllCustomLists()
 }

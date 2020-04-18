@@ -7,6 +7,7 @@ import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation
 import com.example.mmdb.MovieDetailsArgs
 import com.example.mmdb.R
@@ -15,57 +16,41 @@ import com.example.mmdb.model.data.Video
 import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.example.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.util.*
-import com.example.mmdb.util.managers.ProgressManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MediaViewModel(application: Application, arguments: Bundle?) : AndroidViewModel(application) {
-
-    private val progressManager = ProgressManager()
 
     private val _trailer = MutableLiveData<Video>()
     private val _images = MutableLiveData<Images>()
 
-    val trailer: LiveData<Video> = _trailer
-    var images: LiveData<Images>? = _images
-    val loading: LiveData<Boolean> = progressManager.loading
-    val error: LiveData<Boolean> = progressManager.error
+    val trailer: LiveData<Video>
+        get() = _trailer
+    val images: LiveData<Images>
+        get() = _images
 
-    private lateinit var args: MovieDetailsArgs
+    private var args = arguments?.let { MovieDetailsArgs.fromBundle(it) }
 
     init {
-        CoroutineScope(Dispatchers.IO).launch {
-            progressManager.loading()
-            arguments?.let {
-                args = MovieDetailsArgs.fromBundle(it)
-                if (args.movieLocalId == DEFAULT_ID_VALUE) {
-                    if (isNetworkAvailable(getApplication())){
-                        getImagesRemote(args.movieRemoteId)
-                        getTrailer(args.movieRemoteId)
-                    } else {
-                        progressManager.error()
-                        networkUnavailableNotification(getApplication())
+        CoroutineScope(Dispatchers.Default + viewModelScope.coroutineContext).launch {
+            if (args?.movieLocalId == DEFAULT_ID_VALUE) {
+                if (isNetworkAvailable(getApplication())) {
+                    args?.let {
+                        getImagesRemote(it.movieRemoteId)
+                        getTrailer(it.movieRemoteId)
                     }
-                } else {
-                    getImagesLocal(args.movieLocalId)
-                }
-            } ?: run { progressManager.error() }
+                } else
+                    networkUnavailableNotification(getApplication())
+            } else
+                args?.let { getImagesLocal(it.movieLocalId) }
         }
     }
 
     private fun getTrailer(movieId: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = RemoteMovieRepository().getVideo(movieId)
-            if (response.isSuccessful){
-                withContext(Dispatchers.Main) {
-                    _trailer.value = filterVideos(response.body()!!.videoList)
-                    progressManager.retrieved()
-                }
-            } else
-                progressManager.error()
-
+        viewModelScope.launch {
+            val videoResults = RemoteMovieRepository().getVideo(movieId)
+            _trailer.value = filterVideos(videoResults.videoList)
         }
     }
 
@@ -78,37 +63,34 @@ class MediaViewModel(application: Application, arguments: Bundle?) : AndroidView
     }
 
     private fun getImagesRemote(movieId: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = RemoteMovieRepository().getImages(movieId)
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    withContext(Dispatchers.Main) {
-                        _images.value = Images(0, it.posterList, it.backdropList)
-                        progressManager.retrieved()
-                    }
-                } ?: run { progressManager.error() }
-            } else progressManager.error()
+        viewModelScope.launch {
+            _images.value = RemoteMovieRepository().getImages(movieId)
         }
     }
 
     private fun getImagesLocal(movieId: Int) {
-        images = RoomMovieRepository(getApplication()).getImagesById(movieId)
-        progressManager.retrieved()
+        viewModelScope.launch {
+            _images.value = RoomMovieRepository(getApplication()).getImagesById(movieId)
+        }
     }
 
     fun onNavigationItemSelected(view: View, menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.overview_menu_item -> {
-                val action = MediaFragmentDirections.actionMovieOverview()
-                action.movieRemoteId = args.movieRemoteId
-                action.movieLocalId = args.movieLocalId
-                Navigation.findNavController(view).navigate(action)
+                args?.let {
+                    val action = MediaFragmentDirections.actionMovieOverview()
+                    action.movieRemoteId = it.movieRemoteId
+                    action.movieLocalId = it.movieLocalId
+                    Navigation.findNavController(view).navigate(action)
+                }
             }
             R.id.cast_menu_item -> {
-                val action = MediaFragmentDirections.actionMovieCast()
-                action.movieRemoteId = args.movieRemoteId
-                action.movieLocalId = args.movieLocalId
-                Navigation.findNavController(view).navigate(action)
+                args?.let {
+                    val action = MediaFragmentDirections.actionMovieCast()
+                    action.movieRemoteId = it.movieRemoteId
+                    action.movieLocalId = it.movieLocalId
+                    Navigation.findNavController(view).navigate(action)
+                }
             }
         }
         return true

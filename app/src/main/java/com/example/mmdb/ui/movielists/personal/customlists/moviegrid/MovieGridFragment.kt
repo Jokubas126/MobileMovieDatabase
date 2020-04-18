@@ -1,5 +1,6 @@
 package com.example.mmdb.ui.movielists.personal.customlists.moviegrid
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Parcelable
@@ -16,6 +17,7 @@ import com.example.mmdb.R
 import com.example.mmdb.model.data.Movie
 import com.example.mmdb.ui.movielists.MovieGridAdapter
 import com.example.mmdb.util.SNACKBAR_LENGTH_LONG_MS
+import com.example.mmdb.util.getMovieGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
@@ -81,7 +83,7 @@ class MovieGridFragment : Fragment(), MovieGridAdapter.ItemClickListener,
     }
 
     private fun setupRecyclerView() {
-        layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        layoutManager = getMovieGridLayoutManager(context) as StaggeredGridLayoutManager
         movie_recycler_view.layoutManager = layoutManager
         state?.let { layoutManager?.onRestoreInstanceState(it) }
         movie_recycler_view.itemAnimator = DefaultItemAnimator()
@@ -107,18 +109,15 @@ class MovieGridFragment : Fragment(), MovieGridAdapter.ItemClickListener,
         viewModel.onMovieClicked(view, movie)
     }
 
-    override fun onDeleteClicked(view: View, movie: Movie) {
-        val oldList = mutableListOf<Movie>()
-        val newList = mutableListOf<Movie>()
-        oldList.addAll(gridAdapter.movieList)
-        newList.addAll(oldList)
-        newList.remove(movie)
-        gridAdapter.updateMovieList(newList)
+    override fun onDeleteClicked(view: View, movie: Movie, position: Int) {
+        gridAdapter.movieList.removeAt(position)
+        gridAdapter.notifyItemRemoved(position)
         var restored = false
         Snackbar.make(view, R.string.movie_deleted, Snackbar.LENGTH_LONG)
             .setAction(R.string.undo) {
                 restored = true
-                gridAdapter.updateMovieList(oldList)
+                gridAdapter.movieList.add(position, movie)
+                gridAdapter.notifyItemInserted(position)
             }.show()
 
         Handler().postDelayed({

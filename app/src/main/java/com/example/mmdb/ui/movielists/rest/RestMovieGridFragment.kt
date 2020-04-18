@@ -70,7 +70,6 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
         viewModel.movies.observe(viewLifecycleOwner, Observer { movies ->
             movies?.let {
                 gridAdapter.updateMovieList(it)
-                movie_recycler_view.visibility = View.VISIBLE
                 if (isScrolledDown) isScrolledDown = false
             }
         })
@@ -79,13 +78,12 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
                 progress_bar_loading_movie_list.visibility =
                     if (it) View.VISIBLE
                     else View.GONE
-                if (it) loading_error_text_view.visibility = View.GONE
             }
         })
         viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
             isError?.let {
                 loading_error_text_view.visibility =
-                    if (it)
+                    if (it && gridAdapter.itemCount == 0)
                         View.VISIBLE
                     else View.GONE
             }
@@ -93,7 +91,7 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
     }
 
     private fun setupRecyclerView() {
-        layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        layoutManager = getMovieGridLayoutManager(context) as StaggeredGridLayoutManager
         movie_recycler_view.layoutManager = layoutManager
         state?.let { layoutManager?.onRestoreInstanceState(it) }
         movie_recycler_view.itemAnimator = DefaultItemAnimator()
@@ -123,7 +121,7 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
         val args = RestMovieGridFragmentArgs.fromBundle(arguments!!)
         val title =
             when (args.movieGridType) {
-                TYPE_MOVIE_GRID ->
+                TYPE_MOVIE_LIST ->
                     args.keyCategory?.let {
                         val title = StringBuilder()
                         val array = it.split("_").toTypedArray()
@@ -133,15 +131,8 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
                     } ?: run {
                         KEY_POPULAR.capitalize(Locale.ROOT) + " Movies"
                     }
-                SEARCH_MOVIE_GRID -> args.searchQuery
-                DISCOVER_MOVIE_GRID -> {
-                   /* var title = args.startYear?: run { "∞" }
-                    title += "-" + args.endYear*/
-                    var title = args.discoverNameArray?.let {
-                        stringListToString(args.discoverNameArray!!.toList())
-                    }
-                    title
-                }
+                SEARCH_MOVIE_LIST -> args.searchQuery
+                DISCOVER_MOVIE_LIST -> args.discoverNameArray?.let { stringListToString(it.toList()) }
                 else -> ""
             }
         (activity as AppCompatActivity).supportActionBar?.title = title.toString()

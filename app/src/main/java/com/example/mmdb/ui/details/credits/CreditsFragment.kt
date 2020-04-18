@@ -46,30 +46,15 @@ class CreditsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelecte
     }
 
     private fun observeViewModel() {
-        viewModel.credits.observe(viewLifecycleOwner, Observer { credits ->
+        viewModel.credits?.observe(viewLifecycleOwner, Observer { credits ->
             credits?.let {
                 updateCast(it.castList)
                 updateCrew(it.crewList)
+                loading_error_text_view.visibility = View.GONE
+            } ?: run {
+                loading_error_text_view.visibility = View.VISIBLE
             }
-        })
-        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
-            isLoading?.let {
-                progress_bar.visibility =
-                    if (it) View.VISIBLE
-                    else View.GONE
-                if (it) {
-                    cast_layout.visibility = View.GONE
-                    crew_layout.visibility = View.GONE
-                }
-            }
-        })
-        viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
-            isError?.let {
-                loading_error_text_view.visibility =
-                    if (it)
-                        View.VISIBLE
-                    else View.GONE
-            }
+            progress_bar.visibility = View.GONE
         })
     }
 

@@ -9,7 +9,7 @@ import com.example.mmdb.R
 import com.example.mmdb.model.data.CustomMovieList
 import com.example.mmdb.model.data.Movie
 import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
-import com.example.mmdb.model.room.repositories.MovieListRepository
+import com.example.mmdb.model.room.repositories.CustomMovieListRepository
 import com.example.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.util.isNetworkAvailable
 import com.example.mmdb.util.networkUnavailableNotification
@@ -23,11 +23,12 @@ import kotlinx.coroutines.withContext
 
 class AddToListsTaskManager(
     private val application: Application,
+    private val root: View,
     private val popupWindow: AddToListsPopupWindow
 ) : AddToListsPopupWindow.ListsConfirmedClickListener {
 
     private val remoteMovieRepository = RemoteMovieRepository()
-    private val movieListRepository = MovieListRepository(application)
+    private val movieListRepository = CustomMovieListRepository(application)
     private val roomMovieRepository = RoomMovieRepository(application)
 
     init {
@@ -37,8 +38,8 @@ class AddToListsTaskManager(
 
     private fun getCustomLists() {
         CoroutineScope(Dispatchers.IO).launch {
-            val customLists =  movieListRepository.getAllCustomMovieLists()
-            withContext(Dispatchers.Main){
+            val customLists = movieListRepository.getAllCustomMovieLists()
+            withContext(Dispatchers.Main) {
                 popupWindow.setupLists(customLists)
             }
         }
@@ -46,8 +47,7 @@ class AddToListsTaskManager(
 
     override fun onConfirmListsClicked(
         movie: Movie,
-        checkedLists: List<CustomMovieList>,
-        root: View
+        checkedLists: List<CustomMovieList>
     ): Boolean {
         return when {
             checkedLists.isNullOrEmpty() -> {
@@ -64,19 +64,15 @@ class AddToListsTaskManager(
                         root,
                         application.getString(R.string.being_uploaded_to_list)
                     )
-                    // get all movie details and add it only if it's not null
-                    remoteMovieRepository.getMovieDetails(movie.remoteId).body()?.let {
-                        it.finalizeInitialization(application)
-                        val movieRoomId = roomMovieRepository.insertOrUpdateMovie(application, it)
-                        for (list in checkedLists)
-                            movieListRepository.addMovieToMovieList(
-                                list,
-                                movieRoomId.toInt()
-                            )
-                        onMovieAdded(root)
-                    } ?: run {
-                        false
-                    }
+                    // get all movie details and insert it only if it's not null
+                    val fullMovie = remoteMovieRepository.getMovieDetails(movie.remoteId)
+                    fullMovie.finalizeInitialization(application)
+                    roomMovieRepository.insertOrUpdateMovie(
+                        application,
+                        fullMovie,
+                        checkedLists
+                    )
+                    onMovieInserted()
                 }
                 true
             }
@@ -87,17 +83,15 @@ class AddToListsTaskManager(
         }
     }
 
-    private fun onMovieAdded(root: View){
-        CoroutineScope(Dispatchers.Main).launch {
-            Snackbar.make(
-                root,
-                application.getString(R.string.successfully_uploaded_to_list),
-                Snackbar.LENGTH_LONG
-            )
-                .setAction(application.getString(R.string.action_check_lists)) {
-                    val action = NavGraphDirections.actionGlobalCustomListsFragment()
-                    Navigation.findNavController(root).navigate(action)
-                }.show()
-        }
+    private fun onMovieInserted() {
+        Snackbar.make(
+            root,
+            root.context.getString(R.string.successfully_uploaded_to_list),
+            Snackbar.LENGTH_LONG
+        )
+            .setAction(root.context.getString(R.string.action_check_lists)) {
+                val action = NavGraphDirections.actionGlobalCustomListsFragment()
+                Navigation.findNavController(root).navigate(action)
+            }.show()
     }
 }

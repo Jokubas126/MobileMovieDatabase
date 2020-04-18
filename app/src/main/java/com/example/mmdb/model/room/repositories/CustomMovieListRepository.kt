@@ -7,7 +7,7 @@ import com.example.mmdb.util.getCurrentDate
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class MovieListRepository(application: Application) : CoroutineScope {
+class CustomMovieListRepository(application: Application) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 
@@ -24,27 +24,29 @@ class MovieListRepository(application: Application) : CoroutineScope {
         }
     }
 
-    fun addMovieToMovieList(movieList: CustomMovieList, movieRoomId: Int){
+    fun addMovieToMovieList(movieList: CustomMovieList, movieRoomId: Int) {
         launch { addMovieToMovieListBG(movieList, movieRoomId) }
     }
 
-    private suspend fun addMovieToMovieListBG(movieList: CustomMovieList, movieRoomId: Int){
-        withContext(Dispatchers.IO){
-            if (!movieList.movieIdList.isNullOrEmpty()){
-                val list: MutableList<Int> = movieList.movieIdList!! as MutableList
+    private suspend fun addMovieToMovieListBG(movieList: CustomMovieList, movieRoomId: Int) {
+        withContext(Dispatchers.IO) {
+            movieList.movieIdList?.let {
+                val list: MutableList<Int> = it as MutableList<Int>
                 list.add(movieRoomId)
                 movieList.movieIdList = list
-            } else
+            } ?: run {
                 movieList.movieIdList = listOf(movieRoomId)
+            }
             insertOrUpdateMovieListBG(movieList)
         }
     }
 
     fun getMovieListById(id: Int) = movieListDao.getCustomListById(id)
 
-    fun getAllCustomMovieListLiveData() = movieListDao.getAllCustomMovieListLiveData()
+    suspend fun getAllCustomMovieLists() = movieListDao.getAllCustomMovieLists()
 
-    fun getAllCustomMovieLists() = movieListDao.getAllCustomMovieLists()
+    fun getAllCustomMovieListFlow() = movieListDao.getAllCustomMovieListFlow()
+
 
     fun deleteMovieFromList(movieList: CustomMovieList, movieRoomId: Int) {
         launch {
@@ -60,16 +62,6 @@ class MovieListRepository(application: Application) : CoroutineScope {
     private suspend fun deleteListBG(list: CustomMovieList) {
         withContext(Dispatchers.IO) {
             movieListDao.deleteCustomList(list)
-        }
-    }
-
-    fun deleteAllLists() {
-        launch { deleteAllListsBG() }
-    }
-
-    private suspend fun deleteAllListsBG(){
-        withContext(Dispatchers.IO){
-            movieListDao.deleteAllCustomLists()
         }
     }
 }

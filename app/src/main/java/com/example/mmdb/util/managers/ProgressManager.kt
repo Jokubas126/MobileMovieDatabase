@@ -6,15 +6,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-open class ProgressManager(
-
-) : CoroutineScope {
+open class ProgressManager: CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
 
     val loading = MutableLiveData<Boolean>()
     val error = MutableLiveData<Boolean>()
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
 
     open fun loading() {
         launch {
@@ -27,6 +24,10 @@ open class ProgressManager(
         launch { loading.value = true }
     }
 
+    open fun loaded() {
+        launch { loading.value = false }
+    }
+
     open fun error() {
         launch {
             loading.value = false
@@ -34,7 +35,7 @@ open class ProgressManager(
         }
     }
 
-    open fun retrieved() {
+    open fun success() {
         launch {
             loading.value = false
             error.value = false

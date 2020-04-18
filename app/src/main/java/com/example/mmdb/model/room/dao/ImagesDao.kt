@@ -1,6 +1,5 @@
 package com.example.mmdb.model.room.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -14,10 +13,7 @@ interface ImagesDao {
     fun insertOrUpdateImages(images: Images): Long
 
     @Query("SELECT * FROM images WHERE movieRoomId = :movieId")
-    fun getImageLiveDataById(movieId: Int): LiveData<Images>
-
-    @Query("SELECT * FROM images WHERE movieRoomId = :movieId")
-    fun getImagesById(movieId: Int): Images
+    suspend fun getImagesById(movieId: Int): Images
 
     @Query("DELETE FROM images WHERE movieRoomId = :movieId")
     fun deleteImagesByMovieId(movieId: Int)

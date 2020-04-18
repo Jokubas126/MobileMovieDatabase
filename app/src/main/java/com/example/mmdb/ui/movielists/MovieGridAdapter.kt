@@ -36,13 +36,12 @@ class MovieGridAdapter(
     }
 
     interface PersonalListDeleteListener {
-        fun onDeleteClicked(view: View, movie: Movie)
+        fun onDeleteClicked(view: View, movie: Movie, position: Int)
     }
 
     fun updateMovieList(movieList: List<Movie>?) {
         this.movieList.clear()
-        if (movieList != null)
-            this.movieList.addAll(movieList)
+        movieList?.let{ this.movieList.addAll(it) }
         notifyDataSetChanged()
     }
 
@@ -119,7 +118,7 @@ class MovieGridAdapter(
             view.deleteBtn.visibility = deleteBtnVisibility
             if (deleteBtnVisibility != View.GONE)
                 view.deleteBtn.setOnClickListener {
-                    personalListDeleteListener?.onDeleteClicked(it, movie)
+                    personalListDeleteListener?.onDeleteClicked(it, movie, adapterPosition)
                 }
         }
     }

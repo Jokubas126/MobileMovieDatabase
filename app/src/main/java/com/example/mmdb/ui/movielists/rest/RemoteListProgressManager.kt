@@ -31,8 +31,8 @@ class RemoteListProgressManager: ProgressManager() {
             isListFull = true
     }
 
-    override fun retrieved() {
-        super.retrieved()
+    override fun success() {
+        super.success()
         fetchedPage = currentPage
     }
 }

@@ -12,7 +12,6 @@ import com.example.mmdb.model.data.Movie
 import kotlinx.android.synthetic.main.popup_window_personal_lists_to_add.view.*
 
 class AddToListsPopupWindow(
-    private val root: View,
     private val view: View,
     width: Int, height: Int,
     private val selectedMovie: Movie
@@ -30,16 +29,15 @@ class AddToListsPopupWindow(
         view.popup_window_outside.setOnClickListener { dismiss() }
         view.confirm_btn.setOnClickListener {
             listsConfirmedClickListener?.let {
-                if (it.onConfirmListsClicked(selectedMovie, checkedLists, root))
+                if (it.onConfirmListsClicked(selectedMovie, checkedLists))
                     dismiss()
             }
         }
-
         setupRecyclerView()
     }
 
     interface ListsConfirmedClickListener {
-        fun onConfirmListsClicked(movie: Movie, checkedLists: List<CustomMovieList>, root: View): Boolean
+        fun onConfirmListsClicked(movie: Movie, checkedLists: List<CustomMovieList>): Boolean
     }
 
     fun setListsConfirmedClickListener(listener: ListsConfirmedClickListener) {
@@ -47,10 +45,10 @@ class AddToListsPopupWindow(
     }
 
     private fun setupRecyclerView(){
-        view.personal_lists_recycler_view.layoutManager = LinearLayoutManager(root.context)
+        view.personal_lists_recycler_view.layoutManager = LinearLayoutManager(view.context)
         view.personal_lists_recycler_view.addItemDecoration(
             DividerItemDecoration(
-                root.context,
+                view.context,
                 DividerItemDecoration.VERTICAL
             )
         )

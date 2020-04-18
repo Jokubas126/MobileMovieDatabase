@@ -46,7 +46,7 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     }
 
     private fun observeViewModel() {
-        viewModel.categories.observe(viewLifecycleOwner, Observer<List<Category>> { categories ->
+        viewModel.categories.observe(viewLifecycleOwner, Observer { categories ->
             categories?.let {
                 categoryAdapter = CategoryAdapter(it)
                 categories_recycler_view.adapter = categoryAdapter
@@ -54,26 +54,10 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
                 categoryAdapter.setChildClickListener { _, checked, group, childIndex ->
                     viewModel.onSubcategorySelected(checked, group as Category, childIndex)
                 }
-            }
+                loading_error_text_view.visibility = View.GONE
+            } ?: run { loading_error_text_view.visibility = View.VISIBLE }
+            progress_bar.visibility = View.GONE
             ViewCompat.setNestedScrollingEnabled(categories_recycler_view, false)
-        })
-        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
-            isLoading?.let {
-                progress_bar.visibility =
-                    if (it) View.VISIBLE
-                    else View.GONE
-                if (it) {
-                    categories_recycler_view.visibility = View.GONE
-                }
-            }
-        })
-        viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
-            isError?.let {
-                loading_error_text_view.visibility =
-                    if (it)
-                        View.VISIBLE
-                    else View.GONE
-            }
         })
     }
 

@@ -4,9 +4,7 @@ import android.app.Application
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import androidx.navigation.Navigation
 import com.example.mmdb.MovieDetailsArgs
 import com.example.mmdb.R
@@ -14,78 +12,68 @@ import com.example.mmdb.model.data.Movie
 import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.example.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.util.*
-import com.example.mmdb.util.managers.ProgressManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class OverviewViewModel(application: Application, arguments: Bundle?) :
     AndroidViewModel(application) {
 
-    private val progressManager = ProgressManager()
+    private var _currentMovie = MutableLiveData<Movie>()
 
-    private val _currentMovie = MutableLiveData<Movie>()
+    val currentMovie: LiveData<Movie>
+        get() = _currentMovie
 
-    var currentMovie: LiveData<Movie> = _currentMovie
-    val loading: LiveData<Boolean> = progressManager.loading
-    val error: LiveData<Boolean> = progressManager.error
-
-    private lateinit var args: MovieDetailsArgs
+    private var args = arguments?.let { MovieDetailsArgs.fromBundle(it) }
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
-            progressManager.loading()
-            arguments?.let {
-                args = MovieDetailsArgs.fromBundle(it)
-                if (args.movieLocalId == 0)
-                    getMovieDetailsRemote(args.movieRemoteId)
-                else getMovieDetailsLocal(args.movieLocalId)
-            }?: run{ progressManager.error() }
+            args?.let {
+                if (it.movieLocalId == 0)
+                    getMovieDetailsRemote(it.movieRemoteId)
+                else getMovieDetailsLocal(it.movieLocalId)
+            }
         }
     }
 
     private fun getMovieDetailsRemote(movieId: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            if (isNetworkAvailable(getApplication())){
-                val response = RemoteMovieRepository().getMovieDetails(movieId)
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        it.genresString = stringListToString(getAnyNameList(it.genres))
-                        it.productionCountryString =
-                            stringListToListedString(getAnyNameList(it.productionCountryList))
-                        withContext(Dispatchers.Main) {
-                            _currentMovie.value = it
-                            progressManager.retrieved()
-                        }
-                    }
-                }
+        viewModelScope.launch {
+            if (isNetworkAvailable(getApplication())) {
+                val movie = RemoteMovieRepository().getMovieDetails(movieId)
+                movie.genresString = stringListToString(getAnyNameList(movie.genres))
+                movie.productionCountryString =
+                    stringListToListedString(getAnyNameList(movie.productionCountryList))
+                _currentMovie.value = movie
             } else {
-                progressManager.error()
                 networkUnavailableNotification(getApplication())
             }
         }
     }
 
     private fun getMovieDetailsLocal(movieId: Int) {
-        currentMovie = RoomMovieRepository(getApplication()).getMovieById(movieId)
-        progressManager.retrieved()
+        viewModelScope.launch {
+            _currentMovie.value = RoomMovieRepository(getApplication()).getMovieById(movieId)
+        }
     }
 
     fun onNavigationItemSelected(view: View, menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             R.id.media_menu_item -> {
-                val action = OverviewFragmentDirections.actionMovieMedia()
-                action.movieRemoteId = args.movieRemoteId
-                action.movieLocalId = args.movieLocalId
-                Navigation.findNavController(view).navigate(action)
+                args?.let {
+                    val action = OverviewFragmentDirections.actionMovieMedia()
+                    action.movieRemoteId = it.movieRemoteId
+                    action.movieLocalId = it.movieLocalId
+                    Navigation.findNavController(view).navigate(action)
+                }
             }
 
             R.id.cast_menu_item -> {
-                val action = OverviewFragmentDirections.actionMovieCast()
-                action.movieRemoteId = args.movieRemoteId
-                action.movieLocalId = args.movieLocalId
-                Navigation.findNavController(view).navigate(action)
+                args?.let {
+                    val action = OverviewFragmentDirections.actionMovieCast()
+                    action.movieRemoteId = it.movieRemoteId
+                    action.movieLocalId = it.movieLocalId
+                    Navigation.findNavController(view).navigate(action)
+                }
             }
         }
         return true

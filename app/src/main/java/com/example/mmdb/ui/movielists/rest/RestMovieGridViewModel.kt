@@ -18,6 +18,7 @@ import com.example.mmdb.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Call
 import retrofit2.Response
 
 class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
@@ -27,26 +28,27 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
 
     private val _movies = MutableLiveData<List<Movie>>()
 
-    var movies: LiveData<List<Movie>> = _movies
-    val error: LiveData<Boolean> = progressManager.error
-    val loading: LiveData<Boolean> = progressManager.loading
+    val movies: LiveData<List<Movie>>
+        get() = _movies
+    val error: LiveData<Boolean>
+        get() = progressManager.error
+    val loading: LiveData<Boolean>
+        get() = progressManager.loading
 
-    private lateinit var args: RestMovieGridFragmentArgs
-
-    private val watchlistMovieIdList = mutableListOf<Int>()
+    private val args = arguments?.let { RestMovieGridFragmentArgs.fromBundle(arguments) }
 
     // repositories
+    private val remoteMovieRepository = RemoteMovieRepository()
     private val watchlistRepository = WatchlistRepository(application)
     private val genresRepository = GenresRepository(application)
 
+    private lateinit var watchlistMovieIdList: MutableList<Int>
+
     init {
-        CoroutineScope(Dispatchers.IO).launch {
-            progressManager.load()
-            watchlistMovieIdList.addAll(watchlistRepository.getAllMovieIds())
-            arguments?.let {
-                args = RestMovieGridFragmentArgs.fromBundle(it)
-                getResponse()
-            }?: run{ progressManager.error() }
+        viewModelScope.launch {
+            progressManager.loading()
+            watchlistMovieIdList = watchlistRepository.getAllMovieIds() as MutableList<Int>
+            getResponse()
         }
     }
 
@@ -62,35 +64,24 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
         }
     }
 
-    // -------------------------- Remote response -----------------------------//
-
     private fun getResponse() {
         synchronized(this) {
             CoroutineScope(Dispatchers.IO).launch {
                 if (isNetworkAvailable(getApplication())) {
                     progressManager.checkPages()
-                    val response =
-                        when (args.movieGridType) {
-                            TYPE_MOVIE_GRID -> RemoteMovieRepository().getMovies(
-                                args.keyCategory!!,
-                                progressManager.currentPage
-                            )
-                            DISCOVER_MOVIE_GRID ->
-                                RemoteMovieRepository().getDiscoveredMovies(
-                                    progressManager.currentPage,
-                                    args.startYear,
-                                    args.endYear,
-                                    args.genreId,
-                                    args.languageKey
-                                )
-                            SEARCH_MOVIE_GRID -> RemoteMovieRepository().getSearchedMovies(
-                                args.searchQuery!!,
-                                progressManager.currentPage
-                            )
-                            else -> null
-                        }
-                    response?.let { getMovieList(it) } ?: run { progressManager.error() }
-                } else{
+                    args?.let {
+                        remoteMovieRepository.getMovieResults(
+                            progressManager.currentPage,
+                            args.movieGridType,
+                            args.keyCategory,
+                            args.startYear,
+                            args.endYear,
+                            args.genreId,
+                            args.languageKey,
+                            args.searchQuery
+                        )?.let { getMovieList(it) }
+                    } ?: run { progressManager.error() }
+                } else {
                     progressManager.error()
                     networkUnavailableNotification(getApplication())
                 }
@@ -98,39 +89,17 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
         }
     }
 
-    // -------- Data configuration -------//
-
-    private fun getMovieList(response: Response<MovieResults>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            if (response.isSuccessful) {
-                progressManager.checkIfListFull(response.body()!!.totalPages)
-                formatGenres(response.body()!!.results)
-            } else
-                progressManager.error()
-        }
+    private fun getMovieList(results: MovieResults) {
+        progressManager.checkIfListFull(results.totalPages)
+        val formattedMovieList = checkWatchlistMovies(formatGenres(results.movieList))
+        insertMovieListToLiveData(formattedMovieList)
     }
 
-    private fun formatGenres(movieList: List<Movie>) {
+    private fun formatGenres(movieList: List<Movie>): List<Movie> {
         for (movie in movieList)
             movie.formatGenresString(genresRepository.getGenresByIdList(movie.genreIds))
-        val finalList = checkWatchlistMovies(movieList)
-        insertMovieListToLiveData(finalList)
+        return movieList
     }
-
-    private fun insertMovieListToLiveData(movieList: List<Movie>) {
-        CoroutineScope(Dispatchers.Main).launch {
-            if (progressManager.currentPage == 1)
-                _movies.value = movieList
-            else {
-                val tmpMovieList= _movies.value as MutableList
-                tmpMovieList.addAll(movieList)
-                _movies.value = tmpMovieList
-            }
-            progressManager.retrieved()
-        }
-    }
-
-//------------------------ Watchlist ----------------------------//
 
     private fun checkWatchlistMovies(movieList: List<Movie>): List<Movie> {
         for (movie in movieList)
@@ -138,6 +107,21 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
                 movie.isInWatchlist = true
         return movieList
     }
+
+    private fun insertMovieListToLiveData(movieList: List<Movie>) {
+        viewModelScope.launch {
+            if (progressManager.currentPage == 1)
+                _movies.value = movieList
+            else {
+                val tmpMovieList = _movies.value as MutableList
+                tmpMovieList.addAll(movieList)
+                _movies.value = tmpMovieList
+            }
+            progressManager.success()
+        }
+    }
+
+//------------------------ Watchlist ----------------------------//
 
     fun updateWatchlist(movie: Movie) {
         if (movie.isInWatchlist) {
@@ -163,8 +147,9 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
 
     fun onPlaylistAddCLicked(movie: Movie, root: View) {
         AddToListsTaskManager(
-            getApplication(), AddToListsPopupWindow(
-                root,
+            getApplication(),
+            root,
+            AddToListsPopupWindow(
                 View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT,

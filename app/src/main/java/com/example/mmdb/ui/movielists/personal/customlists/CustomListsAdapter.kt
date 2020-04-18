@@ -34,7 +34,7 @@ class CustomListsAdapter(val context: Context) :
 
     interface ListOptionsListener {
         fun onEditListTitle(list: CustomMovieList)
-        fun onDeleteClicked(view: View, list: CustomMovieList)
+        fun onDeleteClicked(view: View, list: CustomMovieList, position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -119,7 +119,7 @@ class CustomListsAdapter(val context: Context) :
                     return true
                 }
                 R.id.delete -> {
-                    listOptionsOnClickListener?.onDeleteClicked(itemView, movieList)
+                    listOptionsOnClickListener?.onDeleteClicked(itemView, movieList, adapterPosition)
                     return true
                 }
             }

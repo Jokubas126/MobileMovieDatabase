@@ -16,7 +16,7 @@ import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder
 import kotlinx.android.synthetic.main.item_category.view.*
 import kotlinx.android.synthetic.main.item_subcategory.view.*
 
-class CategoryAdapter(groups: List<Category>?) :
+class CategoryAdapter(groups: List<Category?>?) :
     CheckableChildRecyclerViewAdapter<CategoryAdapter.CategoryViewHolder, CategoryAdapter.SubcategoryViewHolder>(
         groups
     ) {
@@ -27,7 +27,10 @@ class CategoryAdapter(groups: List<Category>?) :
         return CategoryViewHolder(view)
     }
 
-    override fun onCreateCheckChildViewHolder(parent: ViewGroup?, viewType: Int): SubcategoryViewHolder {
+    override fun onCreateCheckChildViewHolder(
+        parent: ViewGroup?,
+        viewType: Int
+    ): SubcategoryViewHolder {
         val view =
             LayoutInflater.from(parent!!.context).inflate(R.layout.item_subcategory, parent, false)
         return SubcategoryViewHolder(view)

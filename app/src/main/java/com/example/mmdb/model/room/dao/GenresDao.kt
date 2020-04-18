@@ -16,10 +16,7 @@ interface GenresDao {
     fun insertAll(genreList: List<Genre>)
 
     @Query("SELECT * FROM genre LIMIT 1")
-    fun getAnyGenre(): Genre?
-
-    @Query("SELECT * FROM genre WHERE id = :genreId")
-    fun getGenreById(genreId: Int): Genre
+    suspend fun getAnyGenre(): Genre?
 
     @Query("SELECT * FROM genre WHERE id IN (:genreIdList)")
     fun getGenresByIdList(genreIdList: List<Int>): List<Genre>

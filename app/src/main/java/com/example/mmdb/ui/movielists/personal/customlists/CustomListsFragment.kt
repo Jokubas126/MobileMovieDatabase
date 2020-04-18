@@ -36,7 +36,6 @@ class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener,
         viewModel = ViewModelProvider(this).get(CustomListsViewModel::class.java)
 
         setupRecyclerView()
-
         observeViewModel()
 
         button_add_list.setOnClickListener {
@@ -46,27 +45,12 @@ class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener,
 
     private fun observeViewModel() {
         viewModel.movieLists.observe(viewLifecycleOwner, Observer {
-            if (!it.isNullOrEmpty()) {
-                listAdapter.updateMovieLists(it)
-            }
-        })
-
-        viewModel.error.observe(viewLifecycleOwner, Observer { isError: Boolean? ->
-            if (isError != null)
-                loading_error_text_view!!.visibility =
-                    if (isError)
-                        View.VISIBLE
-                    else View.GONE
-        })
-        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
-            if (isLoading != null) {
-                progress_bar_loading_movie_list!!.visibility =
-                    if (isLoading)
-                        View.VISIBLE
-                    else View.GONE
-                if (isLoading)
-                    loading_error_text_view!!.visibility = View.GONE
-            }
+            listAdapter.updateMovieLists(it)
+            loading_error_text_view.visibility =
+                if (it.isNullOrEmpty())
+                    View.VISIBLE
+                else View.GONE
+            progress_bar_loading_movie_list.visibility = View.GONE
         })
     }
 
@@ -88,18 +72,15 @@ class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener,
         viewModel.updateMovieList(list)
     }
 
-    override fun onDeleteClicked(view: View, list: CustomMovieList) {
-        val oldList = mutableListOf<CustomMovieList>()
-        val newList = mutableListOf<CustomMovieList>()
-        oldList.addAll(listAdapter.movieLists)
-        newList.addAll(oldList)
-        newList.remove(list)
-        listAdapter.updateMovieLists(newList)
+    override fun onDeleteClicked(view: View, list: CustomMovieList, position: Int) {
+        listAdapter.movieLists.removeAt(position)
+        listAdapter.notifyItemRemoved(position)
         var restored = false
         Snackbar.make(view, R.string.movie_list_deleted, Snackbar.LENGTH_LONG)
             .setAction(R.string.undo) {
                 restored = true
-                listAdapter.updateMovieLists(oldList)
+                listAdapter.movieLists.add(position, list)
+                listAdapter.notifyItemInserted(position)
             }.show()
 
         Handler().postDelayed({

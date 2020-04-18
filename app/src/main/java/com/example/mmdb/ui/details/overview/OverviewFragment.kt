@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
 class OverviewFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
 
-
     private lateinit var fragmentView: FragmentMovieOverviewBinding
     private lateinit var viewModel: OverviewViewModel
 
@@ -40,33 +39,20 @@ class OverviewFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
             OverviewViewModelFactory(activity!!.application, arguments)
         ).get(OverviewViewModel::class.java)
 
-        bottom_navigation.setOnNavigationItemSelectedListener(this)
         observeViewModel()
+        bottom_navigation.setOnNavigationItemSelectedListener(this)
     }
 
     private fun observeViewModel() {
-        viewModel.currentMovie.observe(viewLifecycleOwner, Observer { movie: Movie? ->
+        viewModel.currentMovie.observe(viewLifecycleOwner, Observer { movie ->
             movie?.let {
-                fragmentView.movie = it
+                fragmentView.movie = movie
                 information_layout.visibility = View.VISIBLE
+                loading_error_text_view.visibility = View.GONE
+            } ?: run {
+                loading_error_text_view.visibility = View.VISIBLE
             }
-        })
-        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
-            isLoading?.let {
-                progress_bar.visibility =
-                    if (it)
-                        View.VISIBLE
-                    else View.GONE
-                if (it) information_layout.visibility = View.GONE
-            }
-        })
-        viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
-            isError?.let {
-                loading_error_text_view.visibility =
-                    if (it)
-                        View.VISIBLE
-                    else View.GONE
-            }
+            progress_bar.visibility = View.GONE
         })
     }
 

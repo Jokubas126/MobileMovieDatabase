@@ -19,9 +19,9 @@ const val GENRE_CATEGORY = "Genres"
 
 const val DEFAULT_ID_VALUE = 0
 
-const val TYPE_MOVIE_GRID = "type"
-const val DISCOVER_MOVIE_GRID = "discover"
-const val SEARCH_MOVIE_GRID = "search"
+const val TYPE_MOVIE_LIST = "type"
+const val DISCOVER_MOVIE_LIST = "discover"
+const val SEARCH_MOVIE_LIST = "search"
 
 fun deleteFile(file: File) {
     file.delete()

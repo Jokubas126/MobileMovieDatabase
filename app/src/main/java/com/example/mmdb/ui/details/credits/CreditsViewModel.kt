@@ -4,9 +4,7 @@ import android.app.Application
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import androidx.navigation.Navigation
 import com.example.mmdb.MovieDetailsArgs
 import com.example.mmdb.R
@@ -20,72 +18,46 @@ import com.example.mmdb.util.networkUnavailableNotification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CreditsViewModel(application: Application, arguments: Bundle?) :
     AndroidViewModel(application) {
 
-    private val progressManager = ProgressManager()
+    private val args = arguments?.let { MovieDetailsArgs.fromBundle(it) }
 
-    private var _credits = MutableLiveData<Credits>()
-
-    var credits: LiveData<Credits> = _credits
-    val loading: LiveData<Boolean> = progressManager.loading
-    val error: LiveData<Boolean> = progressManager.error
-
-    private lateinit var args: MovieDetailsArgs
-
-    init {
-        CoroutineScope(Dispatchers.IO).launch {
-            progressManager.loading()
-            arguments?.let {
-                args = MovieDetailsArgs.fromBundle(it)
-                if (args.movieLocalId == DEFAULT_ID_VALUE)
-                    getCreditsRemote(args.movieRemoteId)
-                else getCreditsLocal(args.movieLocalId)
-            } ?: run { progressManager.error() }
-        }
-    }
-
-    private fun getCreditsRemote(movieId: Int) {
-        if (isNetworkAvailable(getApplication())) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = RemoteMovieRepository().getCredits(movieId)
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        withContext(Dispatchers.Main) {
-                            _credits.value = Credits(0, it.castList, it.crewList)
-                            progressManager.retrieved()
-                        }
-                    } ?: run { progressManager.error() }
-                } else progressManager.error()
+    private val _credits = args?.let {
+        if (it.movieLocalId == DEFAULT_ID_VALUE) {
+            if (isNetworkAvailable(getApplication())) {
+                RemoteMovieRepository().getCreditsFlow(args.movieRemoteId)
+                    .asLiveData(viewModelScope.coroutineContext)
+            } else {
+                networkUnavailableNotification(getApplication())
+                null
             }
-        } else {
-            progressManager.error()
-            networkUnavailableNotification(getApplication())
-        }
+        } else
+            RoomMovieRepository(getApplication()).getCreditsFlowById(args.movieLocalId)
+                .asLiveData(viewModelScope.coroutineContext)
     }
 
-    private fun getCreditsLocal(movieId: Int) {
-        credits = RoomMovieRepository(getApplication()).getCreditsById(movieId)
-        progressManager.retrieved()
-    }
+    val credits: LiveData<Credits>?
+        get() = _credits
 
     fun onNavigationItemSelected(view: View, menuItem: MenuItem): Boolean {
-        when (menuItem.itemId) {
-            R.id.media_menu_item -> {
-                val action = CreditsFragmentDirections.actionMovieMedia()
-                action.movieRemoteId = args.movieRemoteId
-                action.movieLocalId = args.movieLocalId
-                Navigation.findNavController(view).navigate(action)
+        return args?.let {
+            when (menuItem.itemId) {
+                R.id.media_menu_item -> {
+                    val action = CreditsFragmentDirections.actionMovieMedia()
+                    action.movieRemoteId = it.movieRemoteId
+                    action.movieLocalId = it.movieLocalId
+                    Navigation.findNavController(view).navigate(action)
+                }
+                R.id.overview_menu_item -> {
+                    val action = CreditsFragmentDirections.actionMovieOverview()
+                    action.movieRemoteId = it.movieRemoteId
+                    action.movieLocalId = it.movieLocalId
+                    Navigation.findNavController(view).navigate(action)
+                }
             }
-            R.id.overview_menu_item -> {
-                val action = CreditsFragmentDirections.actionMovieOverview()
-                action.movieRemoteId = args.movieRemoteId
-                action.movieLocalId = args.movieLocalId
-                Navigation.findNavController(view).navigate(action)
-            }
-        }
-        return true
+            true
+        } ?: run { false }
     }
 }
