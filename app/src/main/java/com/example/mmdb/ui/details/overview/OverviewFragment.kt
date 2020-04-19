@@ -47,6 +47,9 @@ class OverviewFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
         viewModel.currentMovie.observe(viewLifecycleOwner, Observer { movie ->
             movie?.let {
                 fragmentView.movie = movie
+                // due to some movies not having production countries written
+                if (!movie.productionCountryString.isNullOrBlank())
+                    production_countries_card_view.visibility = View.VISIBLE
                 information_layout.visibility = View.VISIBLE
                 loading_error_text_view.visibility = View.GONE
             } ?: run {
