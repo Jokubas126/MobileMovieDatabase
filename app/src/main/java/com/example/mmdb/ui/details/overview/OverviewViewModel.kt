@@ -69,7 +69,7 @@ class OverviewViewModel(application: Application, arguments: Bundle?) :
 
             R.id.cast_menu_item -> {
                 args?.let {
-                    val action = OverviewFragmentDirections.actionMovieCast()
+                    val action = OverviewFragmentDirections.actionMovieCredits()
                     action.movieRemoteId = it.movieRemoteId
                     action.movieLocalId = it.movieLocalId
                     Navigation.findNavController(view).navigate(action)

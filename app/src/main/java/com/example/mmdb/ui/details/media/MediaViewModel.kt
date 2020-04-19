@@ -86,7 +86,7 @@ class MediaViewModel(application: Application, arguments: Bundle?) : AndroidView
             }
             R.id.cast_menu_item -> {
                 args?.let {
-                    val action = MediaFragmentDirections.actionMovieCast()
+                    val action = MediaFragmentDirections.actionMovieCredits()
                     action.movieRemoteId = it.movieRemoteId
                     action.movieLocalId = it.movieLocalId
                     Navigation.findNavController(view).navigate(action)

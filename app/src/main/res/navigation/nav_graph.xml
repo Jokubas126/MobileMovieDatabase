@@ -10,11 +10,14 @@
     <fragment
         android:id="@+id/restMovieGridFragment"
         android:name="com.example.mmdb.ui.movielists.rest.RestMovieGridFragment"
-        android:label="RestMovieGridFragment"
         tools:layout="@layout/fragment_movies_grid">
         <action
             android:id="@+id/actionMovieDetails"
-            app:destination="@id/movieDetails" />
+            app:destination="@id/movieDetails"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
         <argument
             android:name="movie_grid_type"
             android:defaultValue="type"
@@ -67,7 +70,11 @@
             tools:layout="@layout/fragment_movies_grid">
             <action
                 android:id="@+id/actionMovieDetails"
-                app:destination="@id/movieDetails" />
+                app:destination="@id/movieDetails"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@android:anim/slide_in_left"
+                app:popExitAnim="@android:anim/slide_out_right" />
             <argument
                 android:name="movieListId"
                 app:argType="long" />
@@ -84,7 +91,11 @@
             tools:layout="@layout/fragment_custom_lists">
             <action
                 android:id="@+id/movieGridFragment"
-                app:destination="@id/movieGridFragment" />
+                app:destination="@id/movieGridFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@android:anim/slide_in_left"
+                app:popExitAnim="@android:anim/slide_out_right" />
         </fragment>
     </navigation>
 
@@ -95,14 +106,17 @@
         tools:layout="@layout/fragment_movies_grid">
         <action
             android:id="@+id/actionMovieDetails"
-            app:destination="@id/movieDetails" />
+            app:destination="@id/movieDetails"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
 
     <!-- MOVIE DETAILS -->
 
     <navigation
         android:id="@+id/movieDetails"
-        android:label="movieDetails"
         app:startDestination="@id/movieOverview">
         <argument
             android:name="movieRemoteId"
@@ -125,6 +139,24 @@
                 android:name="movieLocalId"
                 android:defaultValue="0"
                 app:argType="integer" />
+            <action
+                android:id="@+id/actionMovieMedia"
+                app:destination="@id/movieMedia"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@android:anim/slide_in_left"
+                app:popExitAnim="@android:anim/slide_out_right"
+                app:popUpTo="@id/movieOverview"
+                app:popUpToInclusive="false" />
+            <action
+                android:id="@+id/actionMovieCredits"
+                app:destination="@id/movieCredits"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@android:anim/slide_in_left"
+                app:popExitAnim="@android:anim/slide_out_right"
+                app:popUpTo="@id/movieOverview"
+                app:popUpToInclusive="false" />
         </fragment>
         <fragment
             android:id="@+id/movieMedia"
@@ -139,11 +171,29 @@
                 android:name="movieLocalId"
                 android:defaultValue="0"
                 app:argType="integer" />
+            <action
+                android:id="@+id/actionMovieCredits"
+                app:destination="@id/movieCredits"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@android:anim/slide_in_left"
+                app:popExitAnim="@android:anim/slide_out_right"
+                app:popUpTo="@id/movieOverview"
+                app:popUpToInclusive="false" />
+            <action
+                android:id="@+id/actionMovieOverview"
+                app:destination="@id/movieOverview"
+                app:enterAnim="@android:anim/slide_in_left"
+                app:exitAnim="@android:anim/slide_out_right"
+                app:popEnterAnim="@anim/slide_in_right"
+                app:popExitAnim="@anim/slide_out_left"
+                app:popUpTo="@id/movieOverview"
+                app:popUpToInclusive="true"/>
         </fragment>
         <fragment
-            android:id="@+id/movieCast"
+            android:id="@+id/movieCredits"
             android:name="com.example.mmdb.ui.details.credits.CreditsFragment"
-            android:label="Cast and Crew"
+            android:label="Credits"
             tools:layout="@layout/fragment_movie_credits">
             <argument
                 android:name="movieRemoteId"
@@ -153,22 +203,25 @@
                 android:name="movieLocalId"
                 android:defaultValue="0"
                 app:argType="integer" />
+            <action
+                android:id="@+id/actionMovieOverview"
+                app:destination="@id/movieOverview"
+                app:enterAnim="@android:anim/slide_in_left"
+                app:exitAnim="@android:anim/slide_out_right"
+                app:popEnterAnim="@anim/slide_in_right"
+                app:popExitAnim="@anim/slide_out_left"
+                app:popUpTo="@id/movieOverview"
+                app:popUpToInclusive="true"/>
+            <action
+                android:id="@+id/actionMovieMedia"
+                app:destination="@id/movieMedia"
+                app:enterAnim="@android:anim/slide_in_left"
+                app:exitAnim="@android:anim/slide_out_right"
+                app:popEnterAnim="@anim/slide_in_right"
+                app:popExitAnim="@anim/slide_out_left"
+                app:popUpTo="@id/movieOverview"
+                app:popUpToInclusive="false" />
         </fragment>
-        <action
-            android:id="@+id/action_movie_cast"
-            app:destination="@id/movieCast"
-            app:popUpTo="@id/movieOverview"
-            app:popUpToInclusive="false" />
-        <action
-            android:id="@+id/action_movie_media"
-            app:destination="@id/movieMedia"
-            app:popUpTo="@id/movieOverview"
-            app:popUpToInclusive="false" />
-        <action
-            android:id="@+id/actionMovieOverview"
-            app:destination="@id/movieOverview"
-            app:popUpTo="@id/movieOverview"
-            app:popUpToInclusive="true" />
 
     </navigation>
 
@@ -181,7 +234,11 @@
         tools:layout="@layout/fragment_discover">
         <action
             android:id="@+id/actionRemoteMovieGridFragment"
-            app:destination="@id/restMovieGridFragment" />
+            app:destination="@id/restMovieGridFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
     </fragment>
 
     <!-- ABOUT -->
@@ -196,18 +253,28 @@
 
     <action
         android:id="@+id/actionGlobalCustomListsFragment"
-        app:destination="@id/customLists" />
+        app:destination="@id/customLists"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fragment_open_exit" />
     <action
         android:id="@+id/actionGlobalRemoteMovieGridFragment"
-        app:destination="@id/restMovieGridFragment" />
+        app:destination="@id/restMovieGridFragment"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fragment_open_exit" />
     <action
         android:id="@+id/action_global_watchlistFragment"
-        app:destination="@id/watchlistFragment" />
+        app:destination="@id/watchlistFragment"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fragment_open_exit" />
     <action
         android:id="@+id/action_global_aboutFragment"
-        app:destination="@id/aboutFragment" />
+        app:destination="@id/aboutFragment"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fragment_open_exit" />
     <action
         android:id="@+id/actionGlobalCategoriesFragment"
-        app:destination="@id/categoriesFragment" />
+        app:destination="@id/categoriesFragment"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fragment_open_exit" />
 
 </navigation>

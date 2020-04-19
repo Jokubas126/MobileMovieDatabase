@@ -15,7 +15,7 @@
 
         <item
             android:id="@+id/cast_menu_item"
-            android:title="Cast"
+            android:title="Credits"
             android:icon="@drawable/ic_cast"/>
 
     </group>
