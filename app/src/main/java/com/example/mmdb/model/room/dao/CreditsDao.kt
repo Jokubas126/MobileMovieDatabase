@@ -1,6 +1,5 @@
 package com.example.mmdb.model.room.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -14,12 +13,8 @@ interface CreditsDao {
     fun insertOrUpdateCredits(credits: Credits): Long
 
     @Query("SELECT * FROM credits WHERE movieRoomId = :movieId")
-    fun getCreditsLiveDataById(movieId: Int): LiveData<Credits>
-
-    @Query("SELECT * FROM credits WHERE movieRoomId = :movieId")
-    fun getCreditsById(movieId: Int): Credits
+    suspend fun getCreditsById(movieId: Int): Credits
 
     @Query("DELETE FROM credits WHERE movieRoomId = :movieId")
     fun deleteCreditsByMovieId(movieId: Int)
-
 }

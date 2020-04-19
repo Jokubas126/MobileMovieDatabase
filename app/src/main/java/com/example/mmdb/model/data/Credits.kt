@@ -21,6 +21,7 @@ class Credits(
     @SerializedName(KEY_CREW_LIST)
     val crewList: List<Person>?
 ) {
+    // upload images to file system and get their URIs
     fun generateFileUris(context: Context): Credits {
         if (!castList.isNullOrEmpty())
             for (cast in castList)

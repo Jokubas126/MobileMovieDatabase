@@ -13,7 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mmdb.R
 import com.example.mmdb.model.data.Person
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.fragment_movie_cast.*
+import kotlinx.android.synthetic.main.fragment_movie_credits.*
+import kotlinx.android.synthetic.main.fragment_movie_credits.bottom_navigation
+import kotlinx.android.synthetic.main.fragment_movie_credits.loading_error_text_view
+import kotlinx.android.synthetic.main.fragment_movie_credits.progress_bar
+import kotlinx.android.synthetic.main.fragment_movie_media.*
 
 class CreditsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -25,7 +29,7 @@ class CreditsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelecte
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_movie_cast, container, false)
+        return inflater.inflate(R.layout.fragment_movie_credits, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,22 +46,15 @@ class CreditsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelecte
     }
 
     private fun observeViewModel() {
-        viewModel.credits.observe(viewLifecycleOwner, Observer { credits ->
+        viewModel.credits?.observe(viewLifecycleOwner, Observer { credits ->
             credits?.let {
                 updateCast(it.castList)
                 updateCrew(it.crewList)
+                loading_error_text_view.visibility = View.GONE
+            } ?: run {
+                loading_error_text_view.visibility = View.VISIBLE
             }
-        })
-        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
-            isLoading?.let {
-                progress_bar.visibility =
-                    if (it) View.VISIBLE
-                    else View.GONE
-                if (it) {
-                    cast_layout.visibility = View.GONE
-                    crew_layout.visibility = View.GONE
-                }
-            }
+            progress_bar.visibility = View.GONE
         })
     }
 

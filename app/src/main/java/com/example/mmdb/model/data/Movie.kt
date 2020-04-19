@@ -9,7 +9,7 @@ import java.util.*
 class MovieResults {
 
     @SerializedName(KEY_RESULT_LIST)
-    var results = listOf<Movie>()
+    var movieList = listOf<Movie>()
 
     @SerializedName(KEY_TOTAL_PAGES)
     var totalPages: Int = 0

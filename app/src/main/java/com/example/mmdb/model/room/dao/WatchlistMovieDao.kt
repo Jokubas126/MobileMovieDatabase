@@ -13,7 +13,7 @@ interface WatchlistMovieDao {
     fun getAllMovies(): List<WatchlistMovie>
 
     @Query("SELECT movieId FROM watchlist_movie")
-    fun getAllMovieIds(): List<Int>
+    suspend fun getAllMovieIds(): List<Int>
 
     @Query("DELETE FROM watchlist_movie WHERE movieId = :movieId")
     fun deleteMovieById(movieId: Int)

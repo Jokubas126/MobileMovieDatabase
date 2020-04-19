@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.net.Uri
 import com.example.mmdb.model.data.Credits
+import com.example.mmdb.model.data.CustomMovieList
 import com.example.mmdb.model.data.Images
 import com.example.mmdb.model.data.Movie
 import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
@@ -13,6 +14,7 @@ import com.example.mmdb.model.room.databases.MovieDatabase
 import com.example.mmdb.util.deleteFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -22,51 +24,65 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 
+    private val movieListRepository = CustomMovieListRepository(application)
+
     private val movieDao = MovieDatabase.getInstance(application).movieDao()
     private val imagesDao = ImagesDatabase.getInstance(application).imagesDao()
     private val creditsDao = CreditsDatabase.getInstance(application).creditsDao()
 
-    suspend fun insertOrUpdateMovie(context: Context, movie: Movie): Long {
-        val movieRoomId = movieDao.insertOrUpdateMovie(movie)
-        insertOrUpdateImages(context, movie, movieRoomId.toInt())
-        insertOrUpdateCredits(context, movie, movieRoomId.toInt())
-        return movieRoomId
+    // -------- INSERTION --------//
+
+    suspend fun insertOrUpdateMovie(
+        context: Context,
+        movie: Movie,
+        customMovieLists: List<CustomMovieList>
+    ) {
+        for (list in customMovieLists) {
+            val movieRoomId = movieDao.insertOrUpdateMovie(movie).toInt()
+            insertOrUpdateImages(context, movie, movieRoomId)
+            insertOrUpdateCredits(context, movie, movieRoomId)
+            movieListRepository.addMovieToMovieList(list, movieRoomId)
+        }
     }
 
     private suspend fun insertOrUpdateImages(context: Context, movie: Movie, movieRoomId: Int) {
-        val images = RemoteMovieRepository()
-            .getImages(movie.remoteId).body()
-        if (images != null) {
-            images.generateFileUris(context)
-            images.movieRoomId = movieRoomId
-            imagesDao.insertOrUpdateImages(images)
-        }
+        // insert if the images are retrieved not null from remote
+        val images = RemoteMovieRepository().getImages(movie.remoteId)
+        images.generateFileUris(context)
+        images.movieRoomId = movieRoomId
+        imagesDao.insertOrUpdateImages(images)
     }
-
-    fun getImagesById(movieId: Int) = imagesDao.getImageLiveDataById(movieId)
 
     private suspend fun insertOrUpdateCredits(context: Context, movie: Movie, movieRoomId: Int) {
-        val credits = RemoteMovieRepository()
-            .getCredits(movie.remoteId).body()
-        if (credits != null) {
-            credits.generateFileUris(context)
-            credits.movieRoomId = movieRoomId
-            creditsDao.insertOrUpdateCredits(credits)
-        }
+        // insert if the credits are retrieved not null from remote
+        val credits = RemoteMovieRepository().getCredits(movie.remoteId)
+        credits.generateFileUris(context)
+        credits.movieRoomId = movieRoomId
+        creditsDao.insertOrUpdateCredits(credits)
     }
 
-    fun getCreditsById(movieId: Int) = creditsDao.getCreditsLiveDataById(movieId)
+    // -------- GETTERS --------//
 
-    fun getMovieById(movieId: Int) = movieDao.getMovieLiveDataById(movieId)
+    suspend fun getImagesById(movieId: Int) = imagesDao.getImagesById(movieId)
 
-    fun getMoviesFromIdList(movieIdList: List<Int>) = movieDao.getMoviesFromIdList(movieIdList)
+    fun getCreditsFlowById(movieId: Int) = flow {
+        emit(creditsDao.getCreditsById(movieId))
+    }
+
+    suspend fun getMovieById(movieId: Int) = movieDao.getMovieById(movieId)
+
+    suspend fun getMoviesFromIdList(movieIdList: List<Int>) =
+        movieDao.getMoviesFromIdList(movieIdList)
+
+
+    // -------- DELETION ---------- //
 
     fun deleteMovieById(movieId: Int) {
         launch { deleteMovieByIdBG(movieId) }
     }
 
     private suspend fun deleteMovieByIdBG(movieId: Int) {
-        withContext(Dispatchers.IO) {
+        withContext(Dispatchers.Default) {
             deleteImageFiles(imagesDao.getImagesById(movieId))
             imagesDao.deleteImagesByMovieId(movieId)
             deleteCreditsFiles(creditsDao.getCreditsById(movieId))
@@ -76,47 +92,30 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
         }
     }
 
-    fun deleteMovie(movie: Movie) {
-        launch { deleteMovieBG(movie) }
-    }
-
-    private suspend fun deleteMovieBG(movie: Movie) {
-        withContext(Dispatchers.IO) {
-            deleteImageFiles(imagesDao.getImagesById(movie.roomId))
-            imagesDao.deleteImagesByMovieId(movie.roomId)
-            deleteCreditsFiles(creditsDao.getCreditsById(movie.roomId))
-            creditsDao.deleteCreditsByMovieId(movie.roomId)
-            deleteMovieFiles(movie)
-            movieDao.deleteMovie(movie)
-        }
-    }
-
     private fun deleteMovieFiles(movie: Movie) {
-        if (movie.posterImageUriString != null)
-            deleteFile(File(Uri.parse(movie.posterImageUriString).path!!))
-        if (movie.backdropImageUriString != null)
-            deleteFile(File(Uri.parse(movie.backdropImageUriString).path!!))
+        movie.posterImageUriString?.let { deleteFile(File(Uri.parse(it).path!!)) }
+        movie.backdropImageUriString?.let { deleteFile(File(Uri.parse(it).path!!)) }
     }
 
     private fun deleteImageFiles(images: Images) {
-        if (!images.posterList.isNullOrEmpty())
-            for (poster in images.posterList)
-                if (poster.imageUriString != null)
-                    deleteFile(File(Uri.parse(poster.imageUriString).path!!))
-        if (!images.backdropList.isNullOrEmpty())
-            for (backdrop in images.backdropList)
-                if (backdrop.imageUriString != null)
-                    deleteFile(File(Uri.parse(backdrop.imageUriString).path!!))
+        images.posterList?.let { posterList ->
+            for (poster in posterList)
+                poster.imageUriString?.let { deleteFile(File(Uri.parse(it).path!!)) }
+        }
+        images.backdropList?.let { backdropList ->
+            for (backdrop in backdropList)
+                backdrop.imageUriString?.let { deleteFile(File(Uri.parse(it).path!!)) }
+        }
     }
 
     private fun deleteCreditsFiles(credits: Credits) {
-        if (!credits.castList.isNullOrEmpty())
-            for (person in credits.castList)
-                if (person.profileImageUriString != null)
-                    deleteFile(File(Uri.parse(person.profileImageUriString).path!!))
-        if (!credits.crewList.isNullOrEmpty())
-            for (person in credits.crewList)
-                if (person.profileImageUriString != null)
-                    deleteFile(File(Uri.parse(person.profileImageUriString).path!!))
+        credits.castList?.let { castList ->
+            for (person in castList)
+                person.profileImageUriString?.let { deleteFile(File(Uri.parse(it).path!!)) }
+        }
+        credits.crewList?.let { crewList ->
+            for (person in crewList)
+                person.profileImageUriString?.let { deleteFile(File(Uri.parse(it).path!!)) }
+        }
     }
 }

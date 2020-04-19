@@ -20,6 +20,11 @@ import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerFragment
 import kotlinx.android.synthetic.main.fragment_movie_media.*
+import kotlinx.android.synthetic.main.fragment_movie_media.bottom_navigation
+import kotlinx.android.synthetic.main.fragment_movie_media.information_layout
+import kotlinx.android.synthetic.main.fragment_movie_media.loading_error_text_view
+import kotlinx.android.synthetic.main.fragment_movie_media.progress_bar
+import kotlinx.android.synthetic.main.fragment_movie_overview.*
 
 class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -61,22 +66,17 @@ class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedL
                     .replace(youtube_fragment.id, youTubePlayerFragment).commit()
                 initializeYoutubePlayer(it.key)
             }
+            progress_bar.visibility = View.GONE
         })
-        viewModel.images?.observe(viewLifecycleOwner, Observer { images ->
+        viewModel.images.observe(viewLifecycleOwner, Observer { images ->
             images?.let {
                 updatePosters(it.posterList)
                 updateBackdrops(it.backdropList)
+                loading_error_text_view.visibility = View.GONE
+            } ?: run {
+                loading_error_text_view.visibility = View.VISIBLE
             }
-        })
-        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading: Boolean? ->
-            isLoading?.let {
-                progress_bar.visibility =
-                    if (it) View.VISIBLE
-                    else View.GONE
-                information_layout.visibility =
-                    if (it) View.GONE
-                    else View.VISIBLE
-            }
+            progress_bar.visibility = View.GONE
         })
     }
 

@@ -7,15 +7,16 @@
     <string name="action_search">Search</string>
     <string name="loading_list_empty">There are no movies to display</string>
     <string name="personal_list_empty">There are no lists made yet</string>
+    <string name="loading_error">Error occurred when loading</string>
+    <string name="nothing_to_show">Unfortunately, there is nothing to be shown</string>
     <string name="undo">Undo</string>
 
     <!-- Toolbar titles -->
 
-    <string name="type_fragment">Movies</string>
-    <string name="search_fragment">Search:&#160;</string>
-    <string name="discover_fragment">Discover:&#160;</string>
-    <string name="categories_fragment">Categories</string>
-
+    <string name="type_movie_grid">Movies</string>
+    <string name="search_movie_grid">Search:&#160;</string>
+    <string name="discover_movie_grid">Discover:&#160;</string>
+    <string name="discover_fragment">Discover</string>
 
     <!-- Image descriptions -->
 
@@ -46,6 +47,7 @@
     <string name="add_to_lists_title">Add to the lists</string>
     <string name="select_a_list">Please select a list</string>
     <string name="successfully_uploaded_to_list">Movie successfully uploaded</string>
+    <string name="failed_to_upload_to_list">Movie failed to be uploaded</string>
     <string name="being_uploaded_to_list">Movie is being uploaded</string>
     <string name="action_check_lists">"CHECK LISTS"</string>
     <string name="movie_list_deleted">Movie list was deleted</string>

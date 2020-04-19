@@ -15,7 +15,7 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="45dp"
             app:cardBackgroundColor="@color/colorPopupWindow"
             app:cardElevation="0dp">
 
@@ -23,7 +23,7 @@
                 android:id="@+id/information_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="15dp">
+                android:padding="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -38,7 +38,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|end"
-                    android:buttonTint="@color/iconBlack" />
+                    android:buttonTint="@color/iconBlack"
+                    android:includeFontPadding="false"/>
 
             </FrameLayout>
 
