@@ -4,10 +4,7 @@ import android.app.Application
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.navigation.Navigation
 import com.example.mmdb.R
 import com.example.mmdb.model.data.CustomMovieList
@@ -16,7 +13,7 @@ import com.example.mmdb.model.data.WatchlistMovie
 import com.example.mmdb.model.room.repositories.CustomMovieListRepository
 import com.example.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.model.room.repositories.WatchlistRepository
-import com.example.mmdb.util.managers.ProgressManager
+import com.example.mmdb.ui.managers.ProgressManager
 import com.example.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +23,7 @@ class MovieGridViewModel(application: Application, arguments: Bundle?) :
     AndroidViewModel(application) {
 
     private val progressManager = ProgressManager()
+    private val args = arguments?.let { MovieGridFragmentArgs.fromBundle(arguments) }
 
     private var _movieList = MutableLiveData<List<Movie>>()
 
@@ -37,7 +35,7 @@ class MovieGridViewModel(application: Application, arguments: Bundle?) :
     val error: LiveData<Boolean>
         get() = progressManager.error
 
-    private var customListId: Int? = arguments?.let { MovieGridFragmentArgs.fromBundle(arguments).movieListId.toInt() }
+    private var customListId = args?.movieListId?.toInt()
 
     private val movieRepository = RoomMovieRepository(application)
     private val movieListRepository = CustomMovieListRepository(application)

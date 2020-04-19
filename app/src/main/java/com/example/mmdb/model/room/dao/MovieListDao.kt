@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface MovieListDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrUpdateCustomList(movieList: CustomMovieList): Long
+    suspend fun insertOrUpdateCustomList(movieList: CustomMovieList): Long
 
     @Query("SELECT * FROM movie_list WHERE roomId = :customListId")
     fun getCustomListById(customListId: Int): CustomMovieList

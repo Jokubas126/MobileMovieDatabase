@@ -64,14 +64,7 @@ class AddToListsTaskManager(
                         root,
                         application.getString(R.string.being_uploaded_to_list)
                     )
-                    // get all movie details and insert it only if it's not null
-                    val fullMovie = remoteMovieRepository.getMovieDetails(movie.remoteId)
-                    fullMovie.finalizeInitialization(application)
-                    roomMovieRepository.insertOrUpdateMovie(
-                        application,
-                        fullMovie,
-                        checkedLists
-                    )
+                    insertMovie(movie, checkedLists)
                     onMovieInserted()
                 }
                 true
@@ -81,6 +74,22 @@ class AddToListsTaskManager(
                 false
             }
         }
+    }
+
+    private suspend fun insertMovie(movie: Movie, checkedLists: List<CustomMovieList>) {
+        // to get all the details of movie
+        try {
+            val fullMovie = remoteMovieRepository.getMovieDetails(movie.remoteId)
+            fullMovie.finalizeInitialization(application)
+            roomMovieRepository.insertOrUpdateMovie(
+                application,
+                fullMovie,
+                checkedLists
+            )
+        } catch (e: Exception) {
+            onInsertFailed()
+        }
+
     }
 
     private fun onMovieInserted() {
@@ -93,5 +102,13 @@ class AddToListsTaskManager(
                 val action = NavGraphDirections.actionGlobalCustomListsFragment()
                 Navigation.findNavController(root).navigate(action)
             }.show()
+    }
+
+    private fun onInsertFailed() {
+        Snackbar.make(
+            root,
+            root.context.getString(R.string.failed_to_upload_to_list),
+            Snackbar.LENGTH_LONG
+        ).show()
     }
 }

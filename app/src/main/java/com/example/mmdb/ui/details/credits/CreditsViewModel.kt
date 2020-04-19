@@ -13,11 +13,7 @@ import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.example.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.util.DEFAULT_ID_VALUE
 import com.example.mmdb.util.isNetworkAvailable
-import com.example.mmdb.util.managers.ProgressManager
 import com.example.mmdb.util.networkUnavailableNotification
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class CreditsViewModel(application: Application, arguments: Bundle?) :
     AndroidViewModel(application) {

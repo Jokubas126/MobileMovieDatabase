@@ -13,32 +13,21 @@ class CustomMovieListRepository(application: Application) : CoroutineScope {
 
     private val movieListDao = MovieListDatabase.getInstance(application).movieListDao()
 
-    fun insertOrUpdateMovieList(movieList: CustomMovieList) {
-        launch { insertOrUpdateMovieListBG(movieList) }
+    suspend fun insertOrUpdateMovieList(movieList: CustomMovieList) {
+        movieList.updateDate = getCurrentDate()
+        movieListDao.insertOrUpdateCustomList(movieList)
     }
 
-    private suspend fun insertOrUpdateMovieListBG(movieList: CustomMovieList) {
-        withContext(Dispatchers.IO) {
-            movieList.updateDate = getCurrentDate()
-            movieListDao.insertOrUpdateCustomList(movieList)
+    suspend fun addMovieToMovieList(movieList: CustomMovieList, movieRoomId: Int) {
+        movieList.movieIdList?.let {
+            val list = mutableListOf<Int>()
+            list.addAll(it)
+            list.add(movieRoomId)
+            movieList.movieIdList = list
+        } ?: run {
+            movieList.movieIdList = listOf(movieRoomId)
         }
-    }
-
-    fun addMovieToMovieList(movieList: CustomMovieList, movieRoomId: Int) {
-        launch { addMovieToMovieListBG(movieList, movieRoomId) }
-    }
-
-    private suspend fun addMovieToMovieListBG(movieList: CustomMovieList, movieRoomId: Int) {
-        withContext(Dispatchers.IO) {
-            movieList.movieIdList?.let {
-                val list: MutableList<Int> = it as MutableList<Int>
-                list.add(movieRoomId)
-                movieList.movieIdList = list
-            } ?: run {
-                movieList.movieIdList = listOf(movieRoomId)
-            }
-            insertOrUpdateMovieListBG(movieList)
-        }
+        insertOrUpdateMovieList(movieList)
     }
 
     fun getMovieListById(id: Int) = movieListDao.getCustomListById(id)
@@ -51,7 +40,7 @@ class CustomMovieListRepository(application: Application) : CoroutineScope {
     fun deleteMovieFromList(movieList: CustomMovieList, movieRoomId: Int) {
         launch {
             (movieList.movieIdList as MutableList).remove(movieRoomId)
-            insertOrUpdateMovieListBG(movieList)
+            insertOrUpdateMovieList(movieList)
         }
     }
 

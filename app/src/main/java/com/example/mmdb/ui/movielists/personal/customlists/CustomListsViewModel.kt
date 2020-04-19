@@ -13,6 +13,7 @@ import com.example.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.ui.movielists.personal.customlists.createlist.CreateListPopupWindow
 import com.example.mmdb.ui.movielists.personal.customlists.createlist.CreateListTaskManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class CustomListsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -44,7 +45,9 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun updateMovieList(list: CustomMovieList) {
-        movieListRepository.insertOrUpdateMovieList(list)
+        viewModelScope.launch {
+            movieListRepository.insertOrUpdateMovieList(list)
+        }
     }
 
     fun deleteList(list: CustomMovieList) {

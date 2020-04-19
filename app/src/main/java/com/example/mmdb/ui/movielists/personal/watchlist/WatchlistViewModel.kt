@@ -16,7 +16,7 @@ import com.example.mmdb.model.room.repositories.WatchlistRepository
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsPopupWindow
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsTaskManager
 import com.example.mmdb.util.isNetworkAvailable
-import com.example.mmdb.util.managers.ProgressManager
+import com.example.mmdb.ui.managers.ProgressManager
 import com.example.mmdb.util.networkUnavailableNotification
 import com.example.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope

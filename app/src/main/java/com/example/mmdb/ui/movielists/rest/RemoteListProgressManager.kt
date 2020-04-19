@@ -1,6 +1,6 @@
 package com.example.mmdb.ui.movielists.rest
 
-import com.example.mmdb.util.managers.ProgressManager
+import com.example.mmdb.ui.managers.ProgressManager
 
 class RemoteListProgressManager: ProgressManager() {
 

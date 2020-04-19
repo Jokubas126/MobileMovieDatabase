@@ -48,10 +48,8 @@ class MovieGridFragment : Fragment(), MovieGridAdapter.ItemClickListener,
             this,
             MovieGridViewModelFactory(activity!!.application, arguments)
         ).get(MovieGridViewModel::class.java)
-
-        setupRecyclerView()
         observeViewModel()
-
+        setupRecyclerView()
         refresh_layout.setOnRefreshListener {
             viewModel.refresh()
             refresh_layout.isRefreshing = false
@@ -96,13 +94,15 @@ class MovieGridFragment : Fragment(), MovieGridAdapter.ItemClickListener,
 
     override fun onResume() {
         super.onResume()
-        val args = MovieGridFragmentArgs.fromBundle(arguments!!)
-        (activity as AppCompatActivity).supportActionBar?.title = args.movieListTitle
+        arguments?.let {
+            (activity as AppCompatActivity).supportActionBar?.title =
+                MovieGridFragmentArgs.fromBundle(it).movieListTitle
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        layoutManager?.let{ state = it.onSaveInstanceState() }
+        layoutManager?.let { state = it.onSaveInstanceState() }
     }
 
     override fun onMovieClick(view: View, movie: Movie) {

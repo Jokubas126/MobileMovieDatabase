@@ -47,6 +47,7 @@
     <string name="add_to_lists_title">Add to the lists</string>
     <string name="select_a_list">Please select a list</string>
     <string name="successfully_uploaded_to_list">Movie successfully uploaded</string>
+    <string name="failed_to_upload_to_list">Movie failed to be uploaded</string>
     <string name="being_uploaded_to_list">Movie is being uploaded</string>
     <string name="action_check_lists">"CHECK LISTS"</string>
     <string name="movie_list_deleted">Movie list was deleted</string>
