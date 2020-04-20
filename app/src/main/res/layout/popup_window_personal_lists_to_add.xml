@@ -42,7 +42,7 @@
                     android:padding="10dp"
                     android:src="@drawable/ic_big_check"
                     android:layout_gravity="end"
-                    android:background="@null"
+                    android:background="?android:selectableItemBackground"
                     android:tint="@color/iconBlack"
                     tools:ignore="ContentDescription" />
 

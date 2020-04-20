@@ -62,11 +62,11 @@
 
     <navigation
         android:id="@+id/customLists"
+        android:label="Custom lists"
         app:startDestination="@id/customListsFragment">
         <fragment
             android:id="@+id/movieGridFragment"
             android:name="com.example.mmdb.ui.movielists.personal.customlists.moviegrid.MovieGridFragment"
-            android:label="Personal Movie List"
             tools:layout="@layout/fragment_movies_grid">
             <action
                 android:id="@+id/actionMovieDetails"

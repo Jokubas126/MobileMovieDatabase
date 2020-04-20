@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.managers
+package com.example.mmdb.util.managers
 
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope

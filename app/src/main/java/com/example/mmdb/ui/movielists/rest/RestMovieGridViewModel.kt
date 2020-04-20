@@ -117,7 +117,9 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
                 tmpMovieList.addAll(movieList)
                 _movies.value = tmpMovieList
             }
-            progressManager.success()
+            if (movieList.isEmpty())
+                progressManager.error()
+            else progressManager.success()
         }
     }
 

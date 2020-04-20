@@ -18,7 +18,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="?android:selectableItemBackground">
 
             <CheckedTextView
                 android:id="@+id/subcategory_title_view"

@@ -25,6 +25,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="?android:selectableItemBackground"
                 android:orientation="vertical">
 
                 <TextView
@@ -46,8 +47,8 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/movie_image"
                         android:gravity="center_horizontal"
-                        app:imageUrl="@{movie.posterImageUrl}"
-                        app:imageUriString="@{movie.posterImageUriString}" />
+                        app:imageUriString="@{movie.posterImageUriString}"
+                        app:imageUrl="@{movie.posterImageUrl}" />
 
                     <FrameLayout
                         android:layout_width="match_parent"

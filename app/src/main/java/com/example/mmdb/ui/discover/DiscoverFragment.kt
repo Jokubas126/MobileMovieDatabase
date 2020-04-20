@@ -88,7 +88,6 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
 
     private var appBarOffset: Int = 0
     private var isAppBarIdle = false
-    private var appBarMaxOffset: Int = 0
 
     private var isExpanded: Boolean = false
 
@@ -111,17 +110,15 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
                 setToolbarArrowRotation(verticalOffset, appBarLayout)
                 isExpanded = verticalOffset == 0
                 // check beyond offset points to be safer
-                isAppBarIdle = appBarOffset >= 0 || appBarOffset <= appBarMaxOffset
+                isAppBarIdle = appBarOffset >= 0 || appBarOffset <= -app_bar.totalScrollRange
                 if (isAppBarIdle)
                     setExpandAndCollapseEnabled(isExpanded)
             })
-        app_bar.post { appBarMaxOffset = -app_bar.totalScrollRange } // set max offset once
         categories_recycler_view.setAppBarTracking(this)
 
         expand_collapse_btn.setOnClickListener {
             isExpanded = !isExpanded
-            app_bar.setExpanded(isExpanded, true)
-        }
+            app_bar.setExpanded(isExpanded, true)        }
     }
 
     private fun setToolbarArrowRotation(verticalOffset: Int, appBarLayout: AppBarLayout) {

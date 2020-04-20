@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     setSupportActionBar(toolbar)
                     searchItem?.isVisible = true
                     confirmItem?.isVisible = false
+                    toolbar.title = destination.label
                     toolbar.visibility = View.VISIBLE
                 }
             }

@@ -13,7 +13,7 @@ import com.example.mmdb.model.data.WatchlistMovie
 import com.example.mmdb.model.room.repositories.CustomMovieListRepository
 import com.example.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.model.room.repositories.WatchlistRepository
-import com.example.mmdb.ui.managers.ProgressManager
+import com.example.mmdb.util.managers.ProgressManager
 import com.example.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

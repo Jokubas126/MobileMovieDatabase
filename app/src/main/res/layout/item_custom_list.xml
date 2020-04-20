@@ -12,7 +12,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="15dp">
+        android:padding="15dp"
+        android:background="?android:selectableItemBackground">
 
         <EditText
             android:id="@+id/list_title"
@@ -53,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|end"
-            android:background="@null"
+            android:background="?android:selectableItemBackground"
             android:padding="5dp"
             android:src="@drawable/ic_more_vert"
             tools:ignore="ContentDescription" />
