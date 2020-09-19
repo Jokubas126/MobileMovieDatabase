@@ -8,12 +8,10 @@ import androidx.lifecycle.*
 import androidx.navigation.Navigation
 import com.example.mmdb.MovieDetailsArgs
 import com.example.mmdb.R
-import com.example.mmdb.model.data.Credits
-import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
-import com.example.mmdb.model.room.repositories.RoomMovieRepository
-import com.example.mmdb.util.DEFAULT_ID_VALUE
-import com.example.mmdb.util.isNetworkAvailable
-import com.example.mmdb.util.networkUnavailableNotification
+import com.jokubas.mmdb.model.data.dataclasses.Credits
+import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
+import com.jokubas.mmdb.util.isNetworkAvailable
+import com.jokubas.mmdb.util.networkUnavailableNotification
 
 class CreditsViewModel(application: Application, arguments: Bundle?) :
     AndroidViewModel(application) {
@@ -21,16 +19,20 @@ class CreditsViewModel(application: Application, arguments: Bundle?) :
     private val args = arguments?.let { MovieDetailsArgs.fromBundle(it) }
 
     private val _credits = args?.let {
-        if (it.movieLocalId == DEFAULT_ID_VALUE) {
+        if (it.movieLocalId == com.jokubas.mmdb.util.DEFAULT_ID_VALUE) {
             if (isNetworkAvailable(getApplication())) {
-                RemoteMovieRepository().getCreditsFlow(args.movieRemoteId)
+                RemoteMovieRepository()
+                    .getCreditsFlow(args.movieRemoteId)
                     .asLiveData(viewModelScope.coroutineContext)
             } else {
-                networkUnavailableNotification(getApplication())
+                networkUnavailableNotification(
+                    getApplication()
+                )
                 null
             }
         } else
-            RoomMovieRepository(getApplication()).getCreditsFlowById(args.movieLocalId)
+            com.jokubas.mmdb.model.room.repositories.RoomMovieRepository(getApplication())
+                .getCreditsFlowById(args.movieLocalId)
                 .asLiveData(viewModelScope.coroutineContext)
     }
 

@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmdb.R
 import com.example.mmdb.databinding.ItemImageBinding
-import com.example.mmdb.model.data.Image
+import com.jokubas.mmdb.model.data.dataclasses.Image
 import java.util.*
 
 class ImageAdapter: RecyclerView.Adapter<ImageAdapter.ViewHolder>(){

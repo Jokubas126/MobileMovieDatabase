@@ -4,10 +4,11 @@ import android.app.Application
 import android.view.View
 import androidx.lifecycle.*
 import androidx.navigation.Navigation
-import com.example.mmdb.model.data.Category
-import com.example.mmdb.model.data.Subcategory
-import com.example.mmdb.model.remote.repositories.CategoryRepository
-import com.example.mmdb.util.*
+import com.jokubas.mmdb.model.data.dataclasses.Category
+import com.jokubas.mmdb.model.data.dataclasses.Subcategory
+import com.jokubas.mmdb.model.remote.repositories.CategoryRepository
+import com.jokubas.mmdb.util.isNetworkAvailable
+import com.jokubas.mmdb.util.networkUnavailableNotification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 class DiscoverViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _categories =
-        CategoryRepository(application).getCategories().asLiveData(viewModelScope.coroutineContext)
+        CategoryRepository(application)
+            .getCategories().asLiveData(viewModelScope.coroutineContext)
 
     val categories
         get() = _categories
@@ -26,7 +28,9 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
     init {
         CoroutineScope(Dispatchers.IO).launch {
             if (!isNetworkAvailable(getApplication()))
-                networkUnavailableNotification(getApplication())
+                networkUnavailableNotification(
+                    getApplication()
+                )
         }
     }
 
@@ -34,28 +38,28 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
         if (checked) {
             if ((category.items[itemIndex] as Subcategory).name.isBlank()) {
                 when (category.name) {
-                    LANGUAGE_CATEGORY -> languageSubcategory = null
-                    GENRE_CATEGORY -> genreSubcategory = null
+                    com.jokubas.mmdb.util.LANGUAGE_CATEGORY -> languageSubcategory = null
+                    com.jokubas.mmdb.util.GENRE_CATEGORY -> genreSubcategory = null
                 }
             } else {
                 when (category.name) {
-                    LANGUAGE_CATEGORY -> languageSubcategory =
+                    com.jokubas.mmdb.util.LANGUAGE_CATEGORY -> languageSubcategory =
                         category.items[itemIndex] as Subcategory
-                    GENRE_CATEGORY -> genreSubcategory =
+                    com.jokubas.mmdb.util.GENRE_CATEGORY -> genreSubcategory =
                         category.items[itemIndex] as Subcategory
                 }
             }
         } else {
             when (category.name) {
-                LANGUAGE_CATEGORY -> languageSubcategory = null
-                GENRE_CATEGORY -> genreSubcategory = null
+                com.jokubas.mmdb.util.LANGUAGE_CATEGORY -> languageSubcategory = null
+                com.jokubas.mmdb.util.GENRE_CATEGORY -> genreSubcategory = null
             }
         }
     }
 
     fun onConfirmSelectionClicked(view: View, startYear: String, endYear: String) {
         val action = DiscoverFragmentDirections.actionRemoteMovieGridFragment()
-        action.movieGridType = DISCOVER_MOVIE_LIST
+        action.movieGridType = com.jokubas.mmdb.util.DISCOVER_MOVIE_LIST
         action.startYear =
             if (startYear == "∞") null
             else startYear

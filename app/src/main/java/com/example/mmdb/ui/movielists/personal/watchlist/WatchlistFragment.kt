@@ -9,16 +9,12 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.mmdb.NavGraphDirections
 import com.example.mmdb.R
-import com.example.mmdb.model.data.Movie
 import com.example.mmdb.ui.movielists.MovieGridAdapter
 import com.example.mmdb.util.getMovieGridLayoutManager
-import com.example.mmdb.util.showProgressSnackBar
-import com.google.android.material.snackbar.Snackbar
+import com.jokubas.mmdb.model.data.dataclasses.Movie
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 

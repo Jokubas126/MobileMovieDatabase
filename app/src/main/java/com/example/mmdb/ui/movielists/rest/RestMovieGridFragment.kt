@@ -13,10 +13,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.R
-import com.example.mmdb.model.data.Movie
 import com.example.mmdb.ui.movielists.MovieGridAdapter
 import com.example.mmdb.ui.movielists.MovieGridAdapter.ItemClickListener
 import com.example.mmdb.util.*
+import com.jokubas.mmdb.model.data.dataclasses.Movie
+import com.jokubas.mmdb.util.KEY_POPULAR
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 import java.util.*
@@ -121,7 +122,7 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
         val args = RestMovieGridFragmentArgs.fromBundle(arguments!!)
         val title =
             when (args.movieGridType) {
-                TYPE_MOVIE_LIST ->
+                com.jokubas.mmdb.util.TYPE_MOVIE_LIST ->
                     args.keyCategory?.let {
                         val title = StringBuilder()
                         val array = it.split("_").toTypedArray()
@@ -131,8 +132,12 @@ class RestMovieGridFragment : Fragment(), ItemClickListener,
                     } ?: run {
                         KEY_POPULAR.capitalize(Locale.ROOT) + " Movies"
                     }
-                SEARCH_MOVIE_LIST -> args.searchQuery
-                DISCOVER_MOVIE_LIST -> args.discoverNameArray?.let { stringListToString(it.toList()) }
+                com.jokubas.mmdb.util.SEARCH_MOVIE_LIST -> args.searchQuery
+                com.jokubas.mmdb.util.DISCOVER_MOVIE_LIST -> args.discoverNameArray?.let {
+                    com.jokubas.mmdb.util.stringListToString(
+                        it.toList()
+                    )
+                }
                 else -> ""
             }
         (activity as AppCompatActivity).supportActionBar?.title = title.toString()

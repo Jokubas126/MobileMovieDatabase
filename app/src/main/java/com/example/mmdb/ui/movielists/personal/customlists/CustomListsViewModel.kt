@@ -7,11 +7,11 @@ import android.widget.FrameLayout
 import androidx.lifecycle.*
 import androidx.navigation.Navigation
 import com.example.mmdb.R
-import com.example.mmdb.model.data.CustomMovieList
-import com.example.mmdb.model.room.repositories.CustomMovieListRepository
-import com.example.mmdb.model.room.repositories.RoomMovieRepository
+import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository
+import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.ui.movielists.personal.customlists.createlist.CreateListPopupWindow
 import com.example.mmdb.ui.movielists.personal.customlists.createlist.CreateListTaskManager
+import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

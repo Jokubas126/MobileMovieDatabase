@@ -1,6 +1,5 @@
 package com.example.mmdb.ui.movielists.personal.customlists.moviegrid
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Parcelable
@@ -14,11 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.R
-import com.example.mmdb.model.data.Movie
 import com.example.mmdb.ui.movielists.MovieGridAdapter
-import com.example.mmdb.util.SNACKBAR_LENGTH_LONG_MS
 import com.example.mmdb.util.getMovieGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.jokubas.mmdb.model.data.dataclasses.Movie
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
 class MovieGridFragment : Fragment(), MovieGridAdapter.ItemClickListener,
@@ -123,7 +121,7 @@ class MovieGridFragment : Fragment(), MovieGridAdapter.ItemClickListener,
         Handler().postDelayed({
             if (!restored)
                 viewModel.deleteMovie(movie)
-        }, SNACKBAR_LENGTH_LONG_MS.toLong())
+        }, com.jokubas.mmdb.util.SNACKBAR_LENGTH_LONG_MS.toLong())
     }
 
     override fun onWatchlistCheckChanged(movie: Movie) {

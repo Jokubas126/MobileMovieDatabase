@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmdb.R
 import com.example.mmdb.databinding.ItemPersonBinding
-import com.example.mmdb.model.data.Person
+import com.jokubas.mmdb.model.data.dataclasses.Person
 import java.util.*
 
 class PeopleAdapter : RecyclerView.Adapter<PeopleAdapter.ViewHolder>() {

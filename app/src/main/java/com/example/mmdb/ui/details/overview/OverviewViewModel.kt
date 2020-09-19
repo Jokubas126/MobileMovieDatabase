@@ -8,10 +8,13 @@ import androidx.lifecycle.*
 import androidx.navigation.Navigation
 import com.example.mmdb.MovieDetailsArgs
 import com.example.mmdb.R
-import com.example.mmdb.model.data.Movie
-import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
-import com.example.mmdb.model.room.repositories.RoomMovieRepository
-import com.example.mmdb.util.*
+import com.jokubas.mmdb.model.data.dataclasses.Movie
+import com.jokubas.mmdb.model.data.util.getAnyNameList
+import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
+import com.jokubas.mmdb.util.isNetworkAvailable
+import com.jokubas.mmdb.util.networkUnavailableNotification
+import com.jokubas.mmdb.util.stringListToListedString
+import com.jokubas.mmdb.util.stringListToString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,20 +42,27 @@ class OverviewViewModel(application: Application, arguments: Bundle?) :
     private fun getMovieDetailsRemote(movieId: Int) {
         viewModelScope.launch {
             if (isNetworkAvailable(getApplication())) {
-                val movie = RemoteMovieRepository().getMovieDetails(movieId)
+                val movie = RemoteMovieRepository()
+                    .getMovieDetails(movieId)
                 movie.genresString = stringListToString(getAnyNameList(movie.genres))
                 movie.productionCountryString =
-                    stringListToListedString(getAnyNameList(movie.productionCountryList))
+                    stringListToListedString(
+                        getAnyNameList(movie.productionCountryList)
+                    )
                 _currentMovie.value = movie
             } else {
-                networkUnavailableNotification(getApplication())
+                networkUnavailableNotification(
+                    getApplication()
+                )
             }
         }
     }
 
     private fun getMovieDetailsLocal(movieId: Int) {
         viewModelScope.launch {
-            _currentMovie.value = RoomMovieRepository(getApplication()).getMovieById(movieId)
+            _currentMovie.value = com.jokubas.mmdb.model.room.repositories.RoomMovieRepository(
+                getApplication()
+            ).getMovieById(movieId)
         }
     }
 

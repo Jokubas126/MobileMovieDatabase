@@ -3,7 +3,6 @@ package com.example.mmdb.ui.discover
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 

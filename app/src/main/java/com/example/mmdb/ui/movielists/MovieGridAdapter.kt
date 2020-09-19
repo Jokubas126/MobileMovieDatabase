@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmdb.R
 import com.example.mmdb.databinding.ItemMovieBinding
-import com.example.mmdb.model.data.Movie
+import com.jokubas.mmdb.model.data.dataclasses.Movie
 
 class MovieGridAdapter(
     private var customListBtnVisibility: Int,
@@ -31,7 +31,6 @@ class MovieGridAdapter(
     }
 
     interface PersonalListActionListener {
-
         fun onPlaylistAdd(movie: Movie)
     }
 

@@ -8,18 +8,20 @@ import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.navigation.Navigation
 import com.example.mmdb.R
-import com.example.mmdb.model.data.*
-import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
-import com.example.mmdb.model.room.repositories.GenresRepository
-import com.example.mmdb.model.room.repositories.WatchlistRepository
+import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
+import com.jokubas.mmdb.model.room.repositories.GenresRepository
+import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsTaskManager
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsPopupWindow
-import com.example.mmdb.util.*
+import com.jokubas.mmdb.model.data.dataclasses.Movie
+import com.jokubas.mmdb.model.data.dataclasses.MovieResults
+import com.jokubas.mmdb.model.data.dataclasses.WatchlistMovie
+import com.jokubas.mmdb.util.isNetworkAvailable
+import com.jokubas.mmdb.util.networkUnavailableNotification
+import com.jokubas.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Response
 
 class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
     AndroidViewModel(application) {
@@ -65,26 +67,26 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
     }
 
     private fun getResponse() {
-        synchronized(this) {
-            CoroutineScope(Dispatchers.IO).launch {
-                if (isNetworkAvailable(getApplication())) {
-                    progressManager.checkPages()
-                    args?.let {
-                        remoteMovieRepository.getMovieResults(
-                            progressManager.currentPage,
-                            args.movieGridType,
-                            args.keyCategory,
-                            args.startYear,
-                            args.endYear,
-                            args.genreId,
-                            args.languageKey,
-                            args.searchQuery
-                        )?.let { getMovieList(it) }
-                    } ?: run { progressManager.error() }
-                } else {
-                    progressManager.error()
-                    networkUnavailableNotification(getApplication())
-                }
+        CoroutineScope(Dispatchers.IO).launch {
+            if (isNetworkAvailable(getApplication())) {
+                progressManager.checkPages()
+                args?.let {
+                    remoteMovieRepository.getMovieResults(
+                        progressManager.currentPage,
+                        args.movieGridType,
+                        args.keyCategory,
+                        args.startYear,
+                        args.endYear,
+                        args.genreId,
+                        args.languageKey,
+                        args.searchQuery
+                    )?.let { getMovieList(it) }
+                } ?: run { progressManager.error() }
+            } else {
+                progressManager.error()
+                networkUnavailableNotification(
+                    getApplication()
+                )
             }
         }
     }

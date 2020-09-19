@@ -6,14 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mmdb.R
-import com.example.mmdb.model.data.CustomMovieList
-import com.example.mmdb.util.SNACKBAR_LENGTH_LONG_MS
+import com.jokubas.mmdb.util.SNACKBAR_LENGTH_LONG_MS
 import com.google.android.material.snackbar.Snackbar
+import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
 import kotlinx.android.synthetic.main.fragment_custom_lists.*
 
 class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener,
@@ -87,6 +86,6 @@ class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener,
         Handler().postDelayed({
             if (!restored)
                 viewModel.deleteList(list)
-        }, SNACKBAR_LENGTH_LONG_MS.toLong())
+        }, com.jokubas.mmdb.util.SNACKBAR_LENGTH_LONG_MS.toLong())
     }
 }

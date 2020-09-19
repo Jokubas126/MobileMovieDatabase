@@ -11,11 +11,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation
 import com.example.mmdb.MovieDetailsArgs
 import com.example.mmdb.R
-import com.example.mmdb.model.data.Images
-import com.example.mmdb.model.data.Video
-import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
-import com.example.mmdb.model.room.repositories.RoomMovieRepository
-import com.example.mmdb.util.*
+import com.jokubas.mmdb.model.data.dataclasses.Images
+import com.jokubas.mmdb.model.data.dataclasses.Video
+import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
+import com.jokubas.mmdb.util.KEY_TRAILER_TYPE
+import com.jokubas.mmdb.util.KEY_YOUTUBE_SITE
+import com.jokubas.mmdb.util.isNetworkAvailable
+import com.jokubas.mmdb.util.networkUnavailableNotification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,14 +36,16 @@ class MediaViewModel(application: Application, arguments: Bundle?) : AndroidView
 
     init {
         CoroutineScope(Dispatchers.Default + viewModelScope.coroutineContext).launch {
-            if (args?.movieLocalId == DEFAULT_ID_VALUE) {
+            if (args?.movieLocalId == com.jokubas.mmdb.util.DEFAULT_ID_VALUE) {
                 if (isNetworkAvailable(getApplication())) {
                     args?.let {
                         getImagesRemote(it.movieRemoteId)
                         getTrailer(it.movieRemoteId)
                     }
                 } else
-                    networkUnavailableNotification(getApplication())
+                    networkUnavailableNotification(
+                        getApplication()
+                    )
             } else
                 args?.let { getImagesLocal(it.movieLocalId) }
         }
@@ -49,7 +53,8 @@ class MediaViewModel(application: Application, arguments: Bundle?) : AndroidView
 
     private fun getTrailer(movieId: Int) {
         viewModelScope.launch {
-            val videoResults = RemoteMovieRepository().getVideo(movieId)
+            val videoResults = RemoteMovieRepository()
+                .getVideo(movieId)
             _trailer.value = filterVideos(videoResults.videoList)
         }
     }
@@ -64,13 +69,16 @@ class MediaViewModel(application: Application, arguments: Bundle?) : AndroidView
 
     private fun getImagesRemote(movieId: Int) {
         viewModelScope.launch {
-            _images.value = RemoteMovieRepository().getImages(movieId)
+            _images.value = RemoteMovieRepository()
+                .getImages(movieId)
         }
     }
 
     private fun getImagesLocal(movieId: Int) {
         viewModelScope.launch {
-            _images.value = RoomMovieRepository(getApplication()).getImagesById(movieId)
+            _images.value = com.jokubas.mmdb.model.room.repositories.RoomMovieRepository(
+                getApplication()
+            ).getImagesById(movieId)
         }
     }
 

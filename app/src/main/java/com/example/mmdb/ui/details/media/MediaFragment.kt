@@ -13,18 +13,16 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mmdb.R
-import com.example.mmdb.model.data.Image
-import com.example.mmdb.util.YOUTUBE_API_KEY
+import com.jokubas.mmdb.util.YOUTUBE_API_KEY
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerFragment
+import com.jokubas.mmdb.model.data.dataclasses.Image
 import kotlinx.android.synthetic.main.fragment_movie_media.*
 import kotlinx.android.synthetic.main.fragment_movie_media.bottom_navigation
-import kotlinx.android.synthetic.main.fragment_movie_media.information_layout
 import kotlinx.android.synthetic.main.fragment_movie_media.loading_error_text_view
 import kotlinx.android.synthetic.main.fragment_movie_media.progress_bar
-import kotlinx.android.synthetic.main.fragment_movie_overview.*
 
 class MediaFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
 

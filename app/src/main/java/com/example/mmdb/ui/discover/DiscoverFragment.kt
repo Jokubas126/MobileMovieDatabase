@@ -10,8 +10,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mmdb.R
-import com.example.mmdb.model.data.Category
 import com.google.android.material.appbar.AppBarLayout
+import com.jokubas.mmdb.model.data.dataclasses.Category
 import kotlinx.android.synthetic.main.fragment_discover.*
 import kotlinx.android.synthetic.main.fragment_discover.loading_error_text_view
 import kotlinx.android.synthetic.main.fragment_discover.progress_bar

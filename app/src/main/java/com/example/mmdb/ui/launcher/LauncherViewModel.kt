@@ -5,9 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
-import com.example.mmdb.model.room.repositories.GenresRepository
-import com.example.mmdb.util.isNetworkAvailable
+import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
+import com.jokubas.mmdb.model.room.repositories.GenresRepository
+import com.jokubas.mmdb.util.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

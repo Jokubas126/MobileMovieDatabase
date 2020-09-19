@@ -12,8 +12,11 @@ import androidx.navigation.*
 import androidx.navigation.ui.NavigationUI
 import com.example.mmdb.NavGraphDirections
 import com.example.mmdb.R
-import com.example.mmdb.util.*
 import com.google.android.material.navigation.NavigationView
+import com.jokubas.mmdb.util.KEY_NOW_PLAYING
+import com.jokubas.mmdb.util.KEY_POPULAR
+import com.jokubas.mmdb.util.KEY_TOP_RATED
+import com.jokubas.mmdb.util.KEY_UPCOMING
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
@@ -73,7 +76,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
-                action.movieGridType = SEARCH_MOVIE_LIST
+                action.movieGridType = com.jokubas.mmdb.util.SEARCH_MOVIE_LIST
                 action.searchQuery = query
                 navController.popBackStack(navController.currentDestination!!.id, true)
                 navController.navigate(action)

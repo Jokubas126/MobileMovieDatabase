@@ -7,8 +7,8 @@ import android.view.View
 import android.widget.PopupWindow
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mmdb.model.data.CustomMovieList
-import com.example.mmdb.model.data.Movie
+import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
+import com.jokubas.mmdb.model.data.dataclasses.Movie
 import kotlinx.android.synthetic.main.popup_window_personal_lists_to_add.view.*
 
 class AddToListsPopupWindow(

@@ -16,8 +16,8 @@
         android:contentDescription="@string/background_image"
         android:scaleType="centerCrop"
         android:src="@drawable/background"
-        android:tint="@color/tintBackgroundImage"
-        android:tintMode="src_over" />
+        android:tintMode="src_over"
+        app:tint="@color/tintBackgroundImage" />
 
     <fragment
         android:id="@+id/nav_host_fragment"

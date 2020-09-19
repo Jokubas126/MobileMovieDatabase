@@ -1,9 +1,9 @@
 package com.example.mmdb.ui.movielists.personal.customlists.createlist
 
 import android.app.Application
-import com.example.mmdb.model.data.CustomMovieList
-import com.example.mmdb.model.room.repositories.CustomMovieListRepository
-import com.example.mmdb.util.DEFAULT_ID_VALUE
+import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
+import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository
+import com.jokubas.mmdb.util.DEFAULT_ID_VALUE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,7 +13,8 @@ class CreateListTaskManager(
     popupWindow: CreateListPopupWindow
 ) : CreateListPopupWindow.ListAddedListener {
 
-    private val movieListRepository = CustomMovieListRepository(application)
+    private val movieListRepository =
+        CustomMovieListRepository(application)
 
     init {
         popupWindow.setListAddedListener(this)

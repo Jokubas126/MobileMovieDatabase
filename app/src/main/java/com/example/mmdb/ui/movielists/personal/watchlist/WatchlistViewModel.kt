@@ -10,15 +10,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation
 import com.example.mmdb.R
-import com.example.mmdb.model.data.*
-import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
-import com.example.mmdb.model.room.repositories.WatchlistRepository
+import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
+import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsPopupWindow
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsTaskManager
-import com.example.mmdb.util.isNetworkAvailable
+import com.jokubas.mmdb.util.isNetworkAvailable
 import com.example.mmdb.util.managers.ProgressManager
-import com.example.mmdb.util.networkUnavailableNotification
-import com.example.mmdb.util.showToast
+import com.jokubas.mmdb.model.data.dataclasses.Movie
+import com.jokubas.mmdb.model.data.dataclasses.WatchlistMovie
+import com.jokubas.mmdb.util.networkUnavailableNotification
+import com.jokubas.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,7 +56,9 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
                 getMovies(watchlistRepository.getAllMovies())
             } else {
                 progressManager.error()
-                networkUnavailableNotification(getApplication())
+                networkUnavailableNotification(
+                    getApplication()
+                )
             }
         }
     }

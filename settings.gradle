@@ -1,2 +1,6 @@
+include ':model:room'
+include ':util'
+include ':model:remote'
+include ':model:data'
 include ':app'
 rootProject.name='MobileMovieDatabase'

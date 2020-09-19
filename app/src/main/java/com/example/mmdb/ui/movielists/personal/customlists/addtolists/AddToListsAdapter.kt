@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmdb.R
 import com.example.mmdb.databinding.ItemCustomListToAddBinding
-import com.example.mmdb.model.data.CustomMovieList
+import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
 import kotlinx.android.synthetic.main.item_custom_list_to_add.view.*
 
 class AddToListsAdapter(
