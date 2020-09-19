@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="movie"
-            type="com.jokubas.mmdb.model.data.dataclasses.Movie" />
+            name="viewModel"
+            type="com.example.mmdb.ui.details.overview.OverviewViewModel" />
+
+        <import type="android.view.View" />
+        <import type="com.jokubas.mmdb.util.ConverterUtilKt" />
+        <import type="com.jokubas.mmdb.model.data.util.DataFormatterKt" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +23,7 @@
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="@{viewModel.currentMovie != null ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/loading_error"
-            android:visibility="gone"
+            android:visibility="@{viewModel.currentMovie == null ? progressBar.visibility == View.VISIBLE ? View.GONE : View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="@{viewModel.currentMovie != null ? View.VISIBLE : View.GONE}">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/main_details_layout"
@@ -66,14 +71,14 @@
                         android:layout_height="0dp"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
-                        android:tint="@color/detailsTop"
                         android:tintMode="src_over"
-                        app:imageUriString="@{movie.backdropImageUriString}"
-                        app:imageUrl="@{movie.backdropImageUrl}"
+                        app:imageUriString="@{viewModel.currentMovie.backdropImageUriString}"
+                        app:imageUrl="@{viewModel.currentMovie.backdropImageUrl}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/detailsTop" />
 
                     <ImageView
                         android:id="@+id/movie_poster_view"
@@ -81,8 +86,8 @@
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:padding="@dimen/general_margin"
-                        app:imageUriString="@{movie.posterImageUriString}"
-                        app:imageUrl="@{movie.posterImageUrl}"
+                        app:imageUriString="@{viewModel.currentMovie.posterImageUriString}"
+                        app:imageUrl="@{viewModel.currentMovie.posterImageUrl}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/guideline"
                         app:layout_constraintStart_toStartOf="parent"
@@ -104,14 +109,14 @@
                             android:layout_height="wrap_content"
                             android:includeFontPadding="false"
                             android:paddingBottom="@dimen/general_margin_half"
-                            android:text="@{movie.title}"
+                            android:text="@{viewModel.currentMovie.title}"
                             android:textAppearance="@style/TitleOverview" />
 
                         <TextView
                             android:id="@+id/movie_release_date_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{movie.releaseDate}"
+                            android:text="@{viewModel.currentMovie.releaseDate}"
                             android:textAppearance="@style/ContentOverview" />
 
                         <LinearLayout
@@ -122,7 +127,7 @@
                                 android:id="@+id/movie_runtime_view"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{String.valueOf(movie.runtime)}"
+                                android:text="@{String.valueOf(viewModel.currentMovie.runtime)}"
                                 android:textAppearance="@style/ContentOverview" />
 
                             <TextView
@@ -141,7 +146,7 @@
                                 android:id="@+id/movie_score_view"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{movie.score}"
+                                android:text="@{viewModel.currentMovie.score}"
                                 android:textAppearance="@style/ContentOverview" />
 
                             <TextView
@@ -156,7 +161,7 @@
                             android:id="@+id/movie_genre_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{movie.genresString}"
+                            android:text="@{ConverterUtilKt.stringListToString(DataFormatterKt.getAnyNameList(viewModel.currentMovie.genres))}"
                             android:textAppearance="@style/ContentOverview" />
 
                     </LinearLayout>
@@ -188,7 +193,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:text="@{movie.description}"
+                            android:text="@{viewModel.currentMovie.description}"
                             android:textAppearance="@style/DescriptionDetails" />
 
                     </LinearLayout>
@@ -199,10 +204,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/general_margin_half"
+                    android:visibility="@{viewModel.currentMovie.productionCountryList.isEmpty() ? View.GONE : View.VISIBLE}"
                     app:cardBackgroundColor="@color/colorCardBackground"
                     app:cardCornerRadius="@dimen/default_card_corner_radius"
-                    app:cardElevation="0dp"
-                    android:visibility="gone" >
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -222,7 +227,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:text="@{movie.productionCountryString}"
+                            android:text="@{ConverterUtilKt.stringListToListedString(DataFormatterKt.getAnyNameList(viewModel.currentMovie.productionCountryList))}"
                             android:textAppearance="@style/DescriptionDetails" />
 
                     </LinearLayout>

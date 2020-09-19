@@ -2,62 +2,60 @@ package com.example.mmdb.ui.details.overview
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.mmdb.MovieDetailsArgs
 import com.example.mmdb.R
 import com.example.mmdb.databinding.FragmentMovieOverviewBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_movie_overview.*
-import kotlinx.android.synthetic.main.fragment_movie_overview.loading_error_text_view
 
-class OverviewFragment : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
+class OverviewFragment : Fragment() {
 
-    private lateinit var fragmentView: FragmentMovieOverviewBinding
     private lateinit var viewModel: OverviewViewModel
+    private val args by lazy { MovieDetailsArgs.fromBundle(arguments ?: Bundle()) }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragmentView =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_movie_overview, container, false)
-        return fragmentView.root
+        val binding =
+            FragmentMovieOverviewBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(
+            this,
+            OverviewViewModelFactory(
+                activity!!.application,
+                args.movieLocalId,
+                args.movieRemoteId
+            )
+        ).get(OverviewViewModel::class.java)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(
-            this,
-            OverviewViewModelFactory(activity!!.application, arguments)
-        ).get(OverviewViewModel::class.java)
-
-        observeViewModel()
-        bottom_navigation.setOnNavigationItemSelectedListener(this)
-    }
-
-    private fun observeViewModel() {
-        viewModel.currentMovie.observe(viewLifecycleOwner, Observer { movie ->
-            movie?.let {
-                fragmentView.movie = movie
-                // due to some movies not having production countries written
-                if (!movie.productionCountryString.isNullOrBlank())
-                    production_countries_card_view.visibility = View.VISIBLE
-                information_layout.visibility = View.VISIBLE
-                loading_error_text_view.visibility = View.GONE
-            } ?: run {
-                loading_error_text_view.visibility = View.VISIBLE
+        bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.media_menu_item ->
+                    OverviewFragmentDirections.actionMovieMedia().apply {
+                        movieRemoteId = args.movieRemoteId
+                        movieLocalId = args.movieLocalId
+                        findNavController().navigate(this)
+                    }
+                R.id.cast_menu_item ->
+                    OverviewFragmentDirections.actionMovieCredits().apply {
+                        movieRemoteId = args.movieRemoteId
+                        movieLocalId = args.movieLocalId
+                        findNavController().navigate(this)
+                    }
             }
-            progress_bar.visibility = View.GONE
-        })
-    }
-
-    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        return viewModel.onNavigationItemSelected(bottom_navigation, menuItem)
+            true
+        }
     }
 }

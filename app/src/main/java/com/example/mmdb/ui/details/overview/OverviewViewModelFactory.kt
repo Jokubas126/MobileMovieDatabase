@@ -7,10 +7,11 @@ import androidx.lifecycle.ViewModelProvider
 
 class OverviewViewModelFactory(
     private val application: Application,
-    private val arguments: Bundle?
+    private val movieLocalId: Int,
+    private val movieRemoteId: Int
 ) : ViewModelProvider.AndroidViewModelFactory(application) {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return OverviewViewModel(application, arguments) as T
+        return OverviewViewModel(application, movieLocalId, movieRemoteId) as T
     }
 }
