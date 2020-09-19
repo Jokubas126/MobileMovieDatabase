@@ -1,7 +1,6 @@
 package com.jokubas.mmdb.model.room.repositories
 
 import android.app.Application
-import android.content.Context
 import android.net.Uri
 import com.jokubas.mmdb.model.data.dataclasses.Credits
 import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
@@ -31,36 +30,17 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
     // -------- INSERTION --------//
 
     suspend fun insertOrUpdateMovie(
-        context: Context,
         movie: Movie,
-        customMovieLists: List<CustomMovieList>
+        images: Images,
+        credits: Credits,
+        customMovieList: CustomMovieList
     ) {
-        for (list in customMovieLists) {
-            val movieRoomId = movieDao.insertOrUpdateMovie(movie).toInt()
-            insertOrUpdateImages(context, movie, movieRoomId)
-            insertOrUpdateCredits(context, movie, movieRoomId)
-            movieListRepository.addMovieToMovieList(list, movieRoomId)
-        }
-    }
-
-//TODO get images through the attributes
-    private suspend fun insertOrUpdateImages(context: Context, movie: Movie, movieRoomId: Int) {
-        // insert if the images are retrieved not null from remote
-//        val images = RemoteMovieRepository()
-//            .getImages(movie.remoteId)
-//        images.generateFileUris(context)
-//        images.movieRoomId = movieRoomId
-//        imagesDao.insertOrUpdateImages(images)
-    }
-
-//TODO get credits through the attributes
-    private suspend fun insertOrUpdateCredits(context: Context, movie: Movie, movieRoomId: Int) {
-        // insert if the credits are retrieved not null from remote
-//        val credits = RemoteMovieRepository()
-//            .getCredits(movie.remoteId)
-//        credits.generateFileUris(context)
-//        credits.movieRoomId = movieRoomId
-//        creditsDao.insertOrUpdateCredits(credits)
+        val movieRoomId = movieDao.insertOrUpdateMovie(movie).toInt()
+        images.movieRoomId = movieRoomId
+        credits.movieRoomId = movieRoomId
+        imagesDao.insertOrUpdateImages(images)
+        creditsDao.insertOrUpdateCredits(credits)
+        movieListRepository.addMovieToMovieList(customMovieList, movieRoomId)
     }
 
     // -------- GETTERS --------//
@@ -75,7 +55,6 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
 
     suspend fun getMoviesFromIdList(movieIdList: List<Int>) =
         movieDao.getMoviesFromIdList(movieIdList)
-
 
     // -------- DELETION ---------- //
 

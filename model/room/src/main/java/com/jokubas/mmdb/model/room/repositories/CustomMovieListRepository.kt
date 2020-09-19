@@ -2,6 +2,7 @@ package com.jokubas.mmdb.model.room.repositories
 
 import android.app.Application
 import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
+import com.jokubas.mmdb.model.room.databases.MovieListDatabase
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -9,7 +10,8 @@ class CustomMovieListRepository(application: Application) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 
-    private val movieListDao = com.jokubas.mmdb.model.room.databases.MovieListDatabase.getInstance(application).movieListDao()
+    private val movieListDao = MovieListDatabase.getInstance(application)
+            .movieListDao()
 
     suspend fun insertOrUpdateMovieList(movieList: CustomMovieList) {
         movieList.updateDate = com.jokubas.mmdb.util.getCurrentDate()
@@ -17,14 +19,13 @@ class CustomMovieListRepository(application: Application) : CoroutineScope {
     }
 
     suspend fun addMovieToMovieList(movieList: CustomMovieList, movieRoomId: Int) {
-        movieList.movieIdList?.let {
-            val list = mutableListOf<Int>()
-            list.addAll(it)
-            list.add(movieRoomId)
-            movieList.movieIdList = list
-        } ?: run {
-            movieList.movieIdList = listOf(movieRoomId)
-        }
+        movieList.movieIdList =
+            movieList.movieIdList?.let {
+                val list = mutableListOf<Int>()
+                list.addAll(it)
+                list.add(movieRoomId)
+                list
+            } ?: listOf(movieRoomId)
         insertOrUpdateMovieList(movieList)
     }
 
