@@ -60,6 +60,10 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
     implementation "com.thoughtbot:expandablerecyclerview:$expandableRecyclerViewVersion"
     implementation "com.thoughtbot:expandablecheckrecyclerview:$expandableCheckableRecyclerViewVersion"
+
+    implementation "me.tatarka.bindingcollectionadapter2:bindingcollectionadapter:$tatarkaBindingAdapterVersion"
+    implementation "me.tatarka.bindingcollectionadapter2:bindingcollectionadapter-recyclerview:$tatarkaBindingAdapterVersion"
+
     implementation "androidx.cardview:cardview:$cardViewVersion"
     implementation "com.etsy.android.grid:library:$gridLayoutVersion"
     implementation "io.apptik.widget:multislider:$multiSliderVersion"
