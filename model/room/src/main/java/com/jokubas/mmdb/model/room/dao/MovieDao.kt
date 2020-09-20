@@ -10,7 +10,7 @@ interface MovieDao {
     fun insertOrUpdateMovie(movie: Movie): Long
 
     @Query("SELECT * FROM movie WHERE roomId = :movieId")
-    suspend fun getMovieById(movieId: Int): Movie
+    suspend fun getMovieById(movieId: Int): Movie?
 
     @Query("SELECT * FROM movie WHERE roomId IN (:movieIdList)")
     suspend fun getMoviesFromIdList(movieIdList: List<Int>): List<Movie>

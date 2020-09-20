@@ -17,6 +17,7 @@ import com.example.mmdb.ui.movielists.MovieGridAdapter
 import com.example.mmdb.util.getMovieGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.jokubas.mmdb.model.data.dataclasses.Movie
+import com.jokubas.mmdb.util.SNACKBAR_LENGTH_LONG_MS
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
 class MovieGridFragment : Fragment(), MovieGridAdapter.ItemClickListener,
@@ -121,7 +122,7 @@ class MovieGridFragment : Fragment(), MovieGridAdapter.ItemClickListener,
         Handler().postDelayed({
             if (!restored)
                 viewModel.deleteMovie(movie)
-        }, com.jokubas.mmdb.util.SNACKBAR_LENGTH_LONG_MS.toLong())
+        }, SNACKBAR_LENGTH_LONG_MS.toLong())
     }
 
     override fun onWatchlistCheckChanged(movie: Movie) {

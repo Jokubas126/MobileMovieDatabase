@@ -68,7 +68,7 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
             imagesDao.deleteImagesByMovieId(movieId)
             deleteCreditsFiles(creditsDao.getCreditsById(movieId))
             creditsDao.deleteCreditsByMovieId(movieId)
-            deleteMovieFiles(movieDao.getMovieById(movieId))
+            movieDao.getMovieById(movieId)?.let { deleteMovieFiles(it) }
             movieDao.deleteMovieById(movieId)
         }
     }

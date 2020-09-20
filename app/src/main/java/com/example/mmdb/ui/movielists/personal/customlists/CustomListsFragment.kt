@@ -86,6 +86,6 @@ class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener,
         Handler().postDelayed({
             if (!restored)
                 viewModel.deleteList(list)
-        }, com.jokubas.mmdb.util.SNACKBAR_LENGTH_LONG_MS.toLong())
+        }, SNACKBAR_LENGTH_LONG_MS.toLong())
     }
 }

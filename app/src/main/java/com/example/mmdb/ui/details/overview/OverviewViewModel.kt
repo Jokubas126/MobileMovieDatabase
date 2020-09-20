@@ -2,14 +2,13 @@ package com.example.mmdb.ui.details.overview
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.example.mmdb.util.managers.ProgressManager
 import com.jokubas.mmdb.model.data.dataclasses.Movie
-import com.jokubas.mmdb.model.data.util.getAnyNameList
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
+import com.jokubas.mmdb.util.DEFAULT_ID_VALUE
 import com.jokubas.mmdb.util.isNetworkAvailable
 import com.jokubas.mmdb.util.networkUnavailableNotification
-import com.jokubas.mmdb.util.stringListToListedString
-import com.jokubas.mmdb.util.stringListToString
 import kotlinx.coroutines.launch
 
 class OverviewViewModel(application: Application, movieLocalId: Int, movieRemoteId: Int) :
@@ -20,10 +19,16 @@ class OverviewViewModel(application: Application, movieLocalId: Int, movieRemote
     val currentMovie: LiveData<Movie?>
         get() = _currentMovie
 
+    val progressManager = ProgressManager()
+
+    private val roomMovieRepository by lazy { RoomMovieRepository(application) }
+    private val remoteMovieRepository by lazy { RemoteMovieRepository() }
+
     init {
         viewModelScope.launch {
+            progressManager.loading()
             when (movieLocalId) {
-                0 -> getRemoteMovieDetails(movieRemoteId)
+                DEFAULT_ID_VALUE -> getRemoteMovieDetails(movieRemoteId)
                 else -> getLocalMovieDetails(movieLocalId)
             }
         }
@@ -31,14 +36,21 @@ class OverviewViewModel(application: Application, movieLocalId: Int, movieRemote
 
     private suspend fun getRemoteMovieDetails(movieId: Int) {
         when {
-            isNetworkAvailable(getApplication()) ->
-                _currentMovie.postValue(RemoteMovieRepository().getMovieDetails(movieId))
-
-            else -> networkUnavailableNotification(getApplication())
+            isNetworkAvailable(getApplication()) -> {
+                _currentMovie.postValue(remoteMovieRepository.getMovieDetails(movieId))
+                progressManager.loaded()
+            }
+            else -> {
+                networkUnavailableNotification(getApplication())
+                progressManager.error()
+            }
         }
     }
 
     private suspend fun getLocalMovieDetails(movieId: Int) {
-        _currentMovie.postValue(RoomMovieRepository(getApplication()).getMovieById(movieId))
+        roomMovieRepository.getMovieById(movieId)?.let { movie ->
+            _currentMovie.postValue(movie)
+            progressManager.loaded()
+        } ?: progressManager.error()
     }
 }
