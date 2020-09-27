@@ -48,7 +48,7 @@ class OverviewFragment : Fragment() {
                         movieLocalId = args.movieLocalId
                         findNavController().navigate(this)
                     }
-                R.id.cast_menu_item ->
+                R.id.credits_menu_item ->
                     OverviewFragmentDirections.actionMovieCredits().apply {
                         movieRemoteId = args.movieRemoteId
                         movieLocalId = args.movieLocalId

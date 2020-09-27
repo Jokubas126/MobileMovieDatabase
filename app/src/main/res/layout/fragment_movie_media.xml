@@ -3,27 +3,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.mmdb.ui.details.media.MediaViewModel" />
+
+        <variable
+            name="fragmentManager"
+            type="android.app.FragmentManager" />
+
+        <import type="android.view.View" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.MainActivity">
 
         <ProgressBar
-            android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:visibility="@{viewModel.progressManager.loading ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/loading_error_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/nothing_to_show"
-            android:visibility="gone"
+            android:visibility="@{viewModel.progressManager.error ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,39 +50,38 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/information_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/trailer_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="@{viewModel.trailer == null ? View.GONE : View.VISIBLE}">
 
                     <TextView
-                        android:id="@+id/video_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/general_margin_half"
-                        android:textAppearance="@style/SectionTitleDetails" />
+                        android:textAppearance="@style/SectionTitleDetails"
+                        android:text="@{viewModel.trailer.name}"/>
 
-                    <FrameLayout
+                    <com.example.mmdb.ui.details.media.YoutubePlayerFragmentView
                         android:id="@+id/youtube_fragment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/general_margin_half" />
+                        android:padding="@dimen/general_margin_half"
+                        app:fragmentManager="@{fragmentManager}"
+                        app:key="@{viewModel.trailer.key}"/>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/poster_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="@{viewModel.images.posterList.isEmpty() || viewModel.images.posterList == null ? View.GONE : View.VISIBLE}">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -80,31 +91,35 @@
                         android:textAppearance="@style/SectionTitleDetails" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/poster_recycler_view"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        app:itemBinding="@{viewModel.imageBinding}"
+                        app:items="@{viewModel.images.posterList}"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:spanCount="2" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/backdrop_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="@{viewModel.images.backdropList.isEmpty() || viewModel.images.backdropList == null ? View.GONE : View.VISIBLE}">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/general_margin_half"
-                        android:paddingBottom="@dimen/general_margin_half"
+                        android:padding="@dimen/general_margin_half"
                         android:text="@string/backdrops_section"
                         android:textAppearance="@style/SectionTitleDetails" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/backdrop_recycler_view"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:itemBinding="@{viewModel.imageBinding}"
+                        app:items="@{viewModel.images.backdropList}"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
                 </LinearLayout>
 
             </LinearLayout>

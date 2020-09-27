@@ -62,31 +62,38 @@ class RemoteMovieRepository {
     suspend fun getGenres() = service.getGenres(MOVIE_DB_API_KEY)
 
     suspend fun getMovieDetails(movieId: Int) =
-        service.getMovieDetails(movieId.toString(),
+        service.getMovieDetails(
+            movieId.toString(),
             MOVIE_DB_API_KEY,
             MOVIE_DB_LANGUAGE_EN
         )
 
     suspend fun getImages(movieId: Int) =
-        service.getImages(movieId.toString(),
+        service.getImages(
+            movieId.toString(),
             MOVIE_DB_API_KEY,
             MOVIE_DB_IMAGE_LANGUAGE_EN
         )
 
 
     suspend fun getVideo(movieId: Int) =
-        service.getVideo(movieId.toString(),
+        service.getVideo(
+            movieId.toString(),
             MOVIE_DB_API_KEY,
             MOVIE_DB_IMAGE_LANGUAGE_EN
         )
 
-    suspend fun getCredits(movieId: Int) = service.getCredits(movieId.toString(),
+    suspend fun getCredits(movieId: Int) = service.getCredits(
+        movieId.toString(),
         MOVIE_DB_API_KEY
     )
 
     fun getCreditsFlow(movieId: Int) = flow {
-        emit(service.getCredits(movieId.toString(),
-            MOVIE_DB_API_KEY
-        ))
+        emit(
+            service.getCredits(
+                movieId.toString(),
+                MOVIE_DB_API_KEY
+            )
+        )
     }
 }

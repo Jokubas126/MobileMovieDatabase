@@ -14,7 +14,7 @@
             android:icon="@drawable/ic_media"/>
 
         <item
-            android:id="@+id/cast_menu_item"
+            android:id="@+id/credits_menu_item"
             android:title="Credits"
             android:icon="@drawable/ic_cast"/>
 
