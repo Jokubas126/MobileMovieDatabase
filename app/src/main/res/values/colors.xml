@@ -40,4 +40,6 @@
 
     <color name="customListTitleBlack">#242424</color>
 
+    <color name="ic_main_launcher_icon_background">#FFFFFF</color>
+
 </resources>

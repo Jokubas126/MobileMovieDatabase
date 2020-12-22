@@ -3,7 +3,6 @@ package com.example.mmdb.ui.launcher
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.R
 import com.example.mmdb.ui.MainActivity
@@ -22,19 +21,18 @@ class LauncherActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.isLoaded.observe(this, Observer { isLoaded ->
+        viewModel.loadedEvent.observe(this, { isLoaded ->
             isLoaded?.let {
-                if (it) startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
             }
         })
-        viewModel.isUpdateRequired.observe(this, Observer { isUpdateRequired ->
+        viewModel.updateRequiredEvent.observe(this, { isUpdateRequired ->
             isUpdateRequired?.let {
-                if (it)
-                    Snackbar.make(launcher_layout, "Data update required. Connect to internet and try again", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("TRY AGAIN") {
-                            viewModel.updateApplication()
-                        }
-                        .show()
+                Snackbar.make(launcher_layout, R.string.update_required, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.try_again) {
+                        viewModel.updateApplication()
+                    }
+                    .show()
             }
         })
     }
