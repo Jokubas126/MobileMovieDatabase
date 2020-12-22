@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mmdb.R
+import com.example.mmdb.databinding.FragmentDiscoverBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.jokubas.mmdb.model.data.dataclasses.Category
 import kotlinx.android.synthetic.main.fragment_discover.*
@@ -32,14 +33,15 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_discover, container, false)
+        val binding = FragmentDiscoverBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this).get(DiscoverViewModel::class.java)
+        binding.viewModel = viewModel
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DiscoverViewModel::class.java)
 
-        categories_recycler_view.layoutManager = LinearLayoutManager(context)
         setupSlider()
         setupToolbar()
         observeViewModel()
