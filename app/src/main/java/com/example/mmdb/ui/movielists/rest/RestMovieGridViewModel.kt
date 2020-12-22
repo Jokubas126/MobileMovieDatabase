@@ -13,9 +13,9 @@ import com.jokubas.mmdb.model.room.repositories.GenresRepository
 import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsTaskManager
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsPopupWindow
-import com.jokubas.mmdb.model.data.dataclasses.Movie
-import com.jokubas.mmdb.model.data.dataclasses.MovieResults
-import com.jokubas.mmdb.model.data.dataclasses.WatchlistMovie
+import com.jokubas.mmdb.model.data.entities.Movie
+import com.jokubas.mmdb.model.data.entities.MovieResults
+import com.jokubas.mmdb.model.data.entities.WatchlistMovie
 import com.jokubas.mmdb.util.isNetworkAvailable
 import com.jokubas.mmdb.util.networkUnavailableNotification
 import com.jokubas.mmdb.util.showToast

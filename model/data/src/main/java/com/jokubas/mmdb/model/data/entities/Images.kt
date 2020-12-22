@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.model.data.dataclasses
+package com.jokubas.mmdb.model.data.entities
 
 import android.content.Context
 import android.graphics.BitmapFactory

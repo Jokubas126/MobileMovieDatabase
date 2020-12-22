@@ -1,4 +1,4 @@
-package com.example.mmdb.util
+package com.jokubas.mmdb.util
 
 import android.content.Context
 import android.net.Uri
@@ -8,7 +8,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
-import com.jokubas.mmdb.util.BASE_IMAGE_URL
+import com.jokubas.mmdb.util.constants.BASE_IMAGE_URL
 import java.io.File
 
 // ---------------- Image related -------------//

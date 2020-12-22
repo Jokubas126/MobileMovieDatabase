@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.R
 import com.example.mmdb.ui.movielists.MovieGridAdapter
-import com.example.mmdb.util.getMovieGridLayoutManager
+import com.jokubas.mmdb.util.getMovieGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.jokubas.mmdb.model.data.dataclasses.Movie
+import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.util.SNACKBAR_LENGTH_LONG_MS
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 

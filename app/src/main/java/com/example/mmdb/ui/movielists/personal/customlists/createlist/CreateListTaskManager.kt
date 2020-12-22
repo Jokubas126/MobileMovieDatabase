@@ -1,7 +1,7 @@
 package com.example.mmdb.ui.movielists.personal.customlists.createlist
 
 import android.app.Application
-import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
+import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository
 import com.jokubas.mmdb.util.DEFAULT_ID_VALUE
 import kotlinx.coroutines.CoroutineScope

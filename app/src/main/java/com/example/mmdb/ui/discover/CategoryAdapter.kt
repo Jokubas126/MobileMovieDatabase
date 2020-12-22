@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.Checkable
 import android.widget.CheckedTextView
 import com.example.mmdb.R
-import com.jokubas.mmdb.model.data.dataclasses.Category
-import com.jokubas.mmdb.model.data.dataclasses.Subcategory
+import com.jokubas.mmdb.model.data.entities.Category
+import com.jokubas.mmdb.model.data.entities.Subcategory
 import com.thoughtbot.expandablecheckrecyclerview.CheckableChildRecyclerViewAdapter
 import com.thoughtbot.expandablecheckrecyclerview.models.CheckedExpandableGroup
 import com.thoughtbot.expandablecheckrecyclerview.viewholders.CheckableChildViewHolder

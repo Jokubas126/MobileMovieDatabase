@@ -10,10 +10,10 @@ import com.example.mmdb.R
 import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
-import com.example.mmdb.util.managers.ProgressManager
-import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
-import com.jokubas.mmdb.model.data.dataclasses.Movie
-import com.jokubas.mmdb.model.data.dataclasses.WatchlistMovie
+import com.example.mmdb.managers.ProgressManager
+import com.jokubas.mmdb.model.data.entities.CustomMovieList
+import com.jokubas.mmdb.model.data.entities.Movie
+import com.jokubas.mmdb.model.data.entities.WatchlistMovie
 import com.jokubas.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,7 +1,7 @@
 package com.jokubas.mmdb.model.room.dao
 
 import androidx.room.*
-import com.jokubas.mmdb.model.data.dataclasses.Movie
+import com.jokubas.mmdb.model.data.entities.Movie
 
 @Dao
 interface MovieDao {

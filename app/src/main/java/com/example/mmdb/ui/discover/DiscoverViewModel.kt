@@ -4,8 +4,8 @@ import android.app.Application
 import android.view.View
 import androidx.lifecycle.*
 import androidx.navigation.Navigation
-import com.jokubas.mmdb.model.data.dataclasses.Category
-import com.jokubas.mmdb.model.data.dataclasses.Subcategory
+import com.jokubas.mmdb.model.data.entities.Category
+import com.jokubas.mmdb.model.data.entities.Subcategory
 import com.jokubas.mmdb.model.remote.repositories.CategoryRepository
 import com.jokubas.mmdb.util.*
 import kotlinx.coroutines.CoroutineScope

@@ -1,4 +1,4 @@
-package com.example.mmdb.util
+package com.jokubas.mmdb.util
 
 import android.content.Context
 import android.content.res.Configuration

@@ -1,7 +1,7 @@
 package com.jokubas.mmdb.model.room.repositories
 
 import android.app.Application
-import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
+import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import com.jokubas.mmdb.model.room.databases.MovieListDatabase
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext

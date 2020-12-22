@@ -12,8 +12,8 @@ import com.jokubas.mmdb.util.networkUnavailableNotification
 import com.jokubas.mmdb.util.showProgressSnackBar
 import com.jokubas.mmdb.util.showToast
 import com.google.android.material.snackbar.Snackbar
-import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
-import com.jokubas.mmdb.model.data.dataclasses.Movie
+import com.jokubas.mmdb.model.data.entities.CustomMovieList
+import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import kotlinx.coroutines.CoroutineScope

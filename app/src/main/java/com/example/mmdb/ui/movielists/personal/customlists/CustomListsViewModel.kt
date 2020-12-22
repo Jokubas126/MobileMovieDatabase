@@ -11,7 +11,7 @@ import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.ui.movielists.personal.customlists.createlist.CreateListPopupWindow
 import com.example.mmdb.ui.movielists.personal.customlists.createlist.CreateListTaskManager
-import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
+import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

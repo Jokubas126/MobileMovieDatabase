@@ -7,7 +7,7 @@
 
         <variable
             name="movie"
-            type="com.jokubas.mmdb.model.data.dataclasses.Movie" />
+            type="com.jokubas.mmdb.model.data.entities.Movie" />
     </data>
 
     <LinearLayout

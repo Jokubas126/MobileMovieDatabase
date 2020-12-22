@@ -6,7 +6,7 @@
 
         <variable
             name="movieList"
-            type="com.jokubas.mmdb.model.data.dataclasses.CustomMovieList" />
+            type="com.jokubas.mmdb.model.data.entities.CustomMovieList" />
     </data>
 
     <FrameLayout

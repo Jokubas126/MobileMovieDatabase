@@ -7,13 +7,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mmdb.BR
 import com.example.mmdb.R
-import com.example.mmdb.util.managers.ProgressManager
-import com.jokubas.mmdb.model.data.dataclasses.Image
-import com.jokubas.mmdb.model.data.dataclasses.Images
-import com.jokubas.mmdb.model.data.dataclasses.Video
+import com.example.mmdb.managers.ProgressManager
+import com.jokubas.mmdb.model.data.entities.Image
+import com.jokubas.mmdb.model.data.entities.Images
+import com.jokubas.mmdb.model.data.entities.Video
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.jokubas.mmdb.util.*
+import com.jokubas.mmdb.util.constants.KEY_TRAILER_TYPE
+import com.jokubas.mmdb.util.constants.KEY_YOUTUBE_SITE
 import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 

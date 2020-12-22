@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmdb.R
 import com.example.mmdb.databinding.ItemMovieBinding
-import com.jokubas.mmdb.model.data.dataclasses.Movie
+import com.jokubas.mmdb.model.data.entities.Movie
 
 class MovieGridAdapter(
     private var customListBtnVisibility: Int,

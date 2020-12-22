@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
+import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import com.jokubas.mmdb.model.room.dao.MovieListDao
 import com.jokubas.mmdb.util.DateConverter
 import com.jokubas.mmdb.util.IntListTypeConverter

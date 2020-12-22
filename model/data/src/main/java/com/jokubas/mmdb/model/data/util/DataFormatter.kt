@@ -1,7 +1,7 @@
 package com.jokubas.mmdb.model.data.util
 
-import com.jokubas.mmdb.model.data.dataclasses.Country
-import com.jokubas.mmdb.model.data.dataclasses.Genre
+import com.jokubas.mmdb.model.data.entities.Country
+import com.jokubas.mmdb.model.data.entities.Genre
 
 fun getAnyNameList(list: List<*>?): List<String> {
     val nameList = mutableListOf<String>()

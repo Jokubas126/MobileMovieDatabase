@@ -2,8 +2,8 @@ package com.example.mmdb.ui.details.overview
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.example.mmdb.util.managers.ProgressManager
-import com.jokubas.mmdb.model.data.dataclasses.Movie
+import com.example.mmdb.managers.ProgressManager
+import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.jokubas.mmdb.util.DEFAULT_ID_VALUE

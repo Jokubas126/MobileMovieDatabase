@@ -6,7 +6,7 @@
 
         <variable
             name="person"
-            type="com.jokubas.mmdb.model.data.dataclasses.Person" />
+            type="com.jokubas.mmdb.model.data.entities.Person" />
     </data>
 
     <FrameLayout

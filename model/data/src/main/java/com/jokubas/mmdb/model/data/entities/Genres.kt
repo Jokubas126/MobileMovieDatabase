@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.model.data.dataclasses
+package com.jokubas.mmdb.model.data.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

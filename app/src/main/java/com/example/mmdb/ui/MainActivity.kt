@@ -13,10 +13,10 @@ import androidx.navigation.ui.NavigationUI
 import com.example.mmdb.NavGraphDirections
 import com.example.mmdb.R
 import com.google.android.material.navigation.NavigationView
-import com.jokubas.mmdb.util.KEY_NOW_PLAYING
-import com.jokubas.mmdb.util.KEY_POPULAR
-import com.jokubas.mmdb.util.KEY_TOP_RATED
-import com.jokubas.mmdb.util.KEY_UPCOMING
+import com.jokubas.mmdb.util.constants.KEY_NOW_PLAYING
+import com.jokubas.mmdb.util.constants.KEY_POPULAR
+import com.jokubas.mmdb.util.constants.KEY_TOP_RATED
+import com.jokubas.mmdb.util.constants.KEY_UPCOMING
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 

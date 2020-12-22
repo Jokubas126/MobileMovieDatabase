@@ -15,9 +15,9 @@ import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsPopupWindow
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsTaskManager
 import com.jokubas.mmdb.util.isNetworkAvailable
-import com.example.mmdb.util.managers.ProgressManager
-import com.jokubas.mmdb.model.data.dataclasses.Movie
-import com.jokubas.mmdb.model.data.dataclasses.WatchlistMovie
+import com.example.mmdb.managers.ProgressManager
+import com.jokubas.mmdb.model.data.entities.Movie
+import com.jokubas.mmdb.model.data.entities.WatchlistMovie
 import com.jokubas.mmdb.util.networkUnavailableNotification
 import com.jokubas.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope

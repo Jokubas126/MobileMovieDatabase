@@ -1,7 +1,7 @@
 package com.jokubas.mmdb.model.room.dao
 
 import androidx.room.*
-import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
+import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import kotlinx.coroutines.flow.Flow
 
 @Dao

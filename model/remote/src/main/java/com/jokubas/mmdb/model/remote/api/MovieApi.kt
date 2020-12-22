@@ -1,7 +1,7 @@
 package com.jokubas.mmdb.model.remote.api
 
-import com.jokubas.mmdb.model.data.dataclasses.*
-import com.jokubas.mmdb.util.*
+import com.jokubas.mmdb.model.data.entities.*
+import com.jokubas.mmdb.util.constants.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

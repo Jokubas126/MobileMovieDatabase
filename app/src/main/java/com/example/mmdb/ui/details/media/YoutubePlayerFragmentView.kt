@@ -7,7 +7,7 @@ import android.widget.FrameLayout
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerFragment
-import com.jokubas.mmdb.util.YOUTUBE_API_KEY
+import com.jokubas.mmdb.util.constants.YOUTUBE_API_KEY
 
 class YoutubePlayerFragmentView @JvmOverloads constructor(
     context: Context,

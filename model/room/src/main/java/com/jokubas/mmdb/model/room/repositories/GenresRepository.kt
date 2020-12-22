@@ -1,7 +1,7 @@
 package com.jokubas.mmdb.model.room.repositories
 
 import android.content.Context
-import com.jokubas.mmdb.model.data.dataclasses.Genre
+import com.jokubas.mmdb.model.data.entities.Genre
 import com.jokubas.mmdb.model.room.databases.GenresDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

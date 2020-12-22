@@ -1,9 +1,12 @@
 package com.jokubas.mmdb.model.remote.repositories
 
-import com.jokubas.mmdb.model.data.dataclasses.Movie
-import com.jokubas.mmdb.model.data.dataclasses.WatchlistMovie
+import com.jokubas.mmdb.model.data.entities.Movie
+import com.jokubas.mmdb.model.data.entities.WatchlistMovie
 import com.jokubas.mmdb.model.remote.services.MovieApiService
 import com.jokubas.mmdb.util.*
+import com.jokubas.mmdb.util.constants.MOVIE_DB_API_KEY
+import com.jokubas.mmdb.util.constants.MOVIE_DB_IMAGE_LANGUAGE_EN
+import com.jokubas.mmdb.util.constants.MOVIE_DB_LANGUAGE_EN
 import kotlinx.coroutines.flow.flow
 
 class RemoteMovieRepository {

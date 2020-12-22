@@ -2,10 +2,10 @@ package com.jokubas.mmdb.model.room.repositories
 
 import android.app.Application
 import android.net.Uri
-import com.jokubas.mmdb.model.data.dataclasses.Credits
-import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
-import com.jokubas.mmdb.model.data.dataclasses.Images
-import com.jokubas.mmdb.model.data.dataclasses.Movie
+import com.jokubas.mmdb.model.data.entities.Credits
+import com.jokubas.mmdb.model.data.entities.CustomMovieList
+import com.jokubas.mmdb.model.data.entities.Images
+import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.room.databases.CreditsDatabase
 import com.jokubas.mmdb.model.room.databases.ImagesDatabase
 import com.jokubas.mmdb.model.room.databases.MovieDatabase

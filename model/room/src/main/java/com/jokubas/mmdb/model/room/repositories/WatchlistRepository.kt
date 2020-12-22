@@ -1,7 +1,7 @@
 package com.jokubas.mmdb.model.room.repositories
 
 import android.app.Application
-import com.jokubas.mmdb.model.data.dataclasses.WatchlistMovie
+import com.jokubas.mmdb.model.data.entities.WatchlistMovie
 import com.jokubas.mmdb.model.room.databases.WatchlistDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

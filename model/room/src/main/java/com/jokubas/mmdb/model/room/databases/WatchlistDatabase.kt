@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.jokubas.mmdb.model.data.dataclasses.WatchlistMovie
+import com.jokubas.mmdb.model.data.entities.WatchlistMovie
 import com.jokubas.mmdb.model.room.dao.WatchlistMovieDao
 
 private const val DATABASE = "watchlist"

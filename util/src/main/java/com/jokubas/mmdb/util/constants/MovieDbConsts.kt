@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.util
+package com.jokubas.mmdb.util.constants
 
 // GENERAL
 const val MOVIE_DB_API_KEY = "c6c88c6e91d206e35fa6aff0b9d1cc36"

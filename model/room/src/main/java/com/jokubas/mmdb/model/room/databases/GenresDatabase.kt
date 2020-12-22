@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.jokubas.mmdb.model.data.dataclasses.Genre
+import com.jokubas.mmdb.model.data.entities.Genre
 import com.jokubas.mmdb.model.room.dao.GenresDao
 
 private const val DATABASE = "genres"

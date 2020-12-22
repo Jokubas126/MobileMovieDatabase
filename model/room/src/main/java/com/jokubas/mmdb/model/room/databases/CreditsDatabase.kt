@@ -5,8 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.jokubas.mmdb.model.data.dataclasses.Credits
-import com.jokubas.mmdb.model.data.dataclasses.PersonListTypeConverter
+import com.jokubas.mmdb.model.data.entities.Credits
+import com.jokubas.mmdb.model.data.entities.PersonListTypeConverter
 import com.jokubas.mmdb.model.room.dao.CreditsDao
 
 private const val DATABASE = "credits"

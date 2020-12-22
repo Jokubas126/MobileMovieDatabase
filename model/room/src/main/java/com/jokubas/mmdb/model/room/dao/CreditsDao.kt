@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.jokubas.mmdb.model.data.dataclasses.Credits
+import com.jokubas.mmdb.model.data.entities.Credits
 
 @Dao
 interface CreditsDao {

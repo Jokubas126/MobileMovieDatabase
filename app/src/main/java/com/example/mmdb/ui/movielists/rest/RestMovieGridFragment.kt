@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.R
 import com.example.mmdb.ui.movielists.MovieGridAdapter
 import com.example.mmdb.ui.movielists.MovieGridAdapter.ItemClickListener
-import com.example.mmdb.util.*
-import com.jokubas.mmdb.model.data.dataclasses.Movie
-import com.jokubas.mmdb.util.KEY_POPULAR
+import com.jokubas.mmdb.model.data.entities.Movie
+import com.jokubas.mmdb.util.constants.KEY_POPULAR
+import com.jokubas.mmdb.util.getMovieGridLayoutManager
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 import java.util.*

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mmdb.R
 import com.jokubas.mmdb.util.SNACKBAR_LENGTH_LONG_MS
 import com.google.android.material.snackbar.Snackbar
-import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
+import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import kotlinx.android.synthetic.main.fragment_custom_lists.*
 
 class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener,

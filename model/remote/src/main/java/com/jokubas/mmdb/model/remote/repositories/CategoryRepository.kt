@@ -1,11 +1,12 @@
 package com.jokubas.mmdb.model.remote.repositories
 
 import android.app.Application
-import com.jokubas.mmdb.model.data.dataclasses.Category
-import com.jokubas.mmdb.model.data.dataclasses.Genres
-import com.jokubas.mmdb.model.data.dataclasses.Subcategory
+import com.jokubas.mmdb.model.data.entities.Category
+import com.jokubas.mmdb.model.data.entities.Genres
+import com.jokubas.mmdb.model.data.entities.Subcategory
 import com.jokubas.mmdb.model.remote.services.MovieApiService
 import com.jokubas.mmdb.util.*
+import com.jokubas.mmdb.util.constants.MOVIE_DB_API_KEY
 import kotlinx.coroutines.flow.flow
 import java.util.Collections.sort
 

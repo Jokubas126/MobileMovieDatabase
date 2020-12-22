@@ -6,9 +6,9 @@ import androidx.databinding.ObservableList
 import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
-import com.example.mmdb.util.managers.ProgressManager
-import com.jokubas.mmdb.model.data.dataclasses.Credits
-import com.jokubas.mmdb.model.data.dataclasses.Person
+import com.example.mmdb.managers.ProgressManager
+import com.jokubas.mmdb.model.data.entities.Credits
+import com.jokubas.mmdb.model.data.entities.Person
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.jokubas.mmdb.util.DEFAULT_ID_VALUE

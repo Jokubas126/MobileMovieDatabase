@@ -10,7 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmdb.R
-import com.jokubas.mmdb.model.data.dataclasses.CustomMovieList
+import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import com.jokubas.mmdb.util.dateToString
 import kotlinx.android.synthetic.main.item_custom_list.view.*
 
