@@ -101,7 +101,6 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     fun onPlaylistAddCLicked(movie: Movie, root: View) {
         AddToListsTaskManager(
             getApplication(),
-            root,
             AddToListsPopupWindow(
                 View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
                 FrameLayout.LayoutParams.MATCH_PARENT,

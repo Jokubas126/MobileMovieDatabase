@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.R
 import com.example.mmdb.ui.movielists.MovieGridAdapter
-import com.jokubas.mmdb.util.getMovieGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.util.SNACKBAR_LENGTH_LONG_MS
@@ -80,15 +79,7 @@ class MovieGridFragment : Fragment(), MovieGridAdapter.ItemClickListener,
     }
 
     private fun setupRecyclerView() {
-        layoutManager = getMovieGridLayoutManager(context) as StaggeredGridLayoutManager
-        movie_recycler_view.layoutManager = layoutManager
         state?.let { layoutManager?.onRestoreInstanceState(it) }
-        movie_recycler_view.itemAnimator = DefaultItemAnimator()
-        movie_recycler_view.adapter = gridAdapter
-
-        gridAdapter.setItemClickListener(this)
-        gridAdapter.setWatchlistActionListener(this)
-        gridAdapter.setPersonalListDeleteListener(this)
     }
 
     override fun onResume() {
@@ -101,7 +92,7 @@ class MovieGridFragment : Fragment(), MovieGridAdapter.ItemClickListener,
 
     override fun onPause() {
         super.onPause()
-        layoutManager?.let { state = it.onSaveInstanceState() }
+        state = movie_recycler_view.layoutManager?.onSaveInstanceState()
     }
 
     override fun onMovieClick(view: View, movie: Movie) {

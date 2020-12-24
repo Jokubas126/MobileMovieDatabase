@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 
 class AddToListsTaskManager(
     private val application: Application,
-    private val root: View,
+    //private val root: View,
     private val popupWindow: AddToListsPopupWindow
 ) : AddToListsPopupWindow.ListsConfirmedClickListener {
 
@@ -60,10 +60,10 @@ class AddToListsTaskManager(
             }
             isNetworkAvailable(application) -> {
                 CoroutineScope(Dispatchers.IO).launch {
-                    showProgressSnackBar(
+                    /*showProgressSnackBar(
                         root,
                         application.getString(R.string.being_uploaded_to_list)
-                    )
+                    )*/
                     insertMovie(movie, checkedLists)
                     onMovieInserted()
                 }
@@ -106,7 +106,7 @@ class AddToListsTaskManager(
 
 
     private fun onMovieInserted() {
-        Snackbar.make(
+        /*Snackbar.make(
             root,
             root.context.getString(R.string.successfully_uploaded_to_list),
             Snackbar.LENGTH_LONG
@@ -114,14 +114,14 @@ class AddToListsTaskManager(
             .setAction(root.context.getString(R.string.action_check_lists)) {
                 val action = NavGraphDirections.actionGlobalCustomListsFragment()
                 Navigation.findNavController(root).navigate(action)
-            }.show()
+            }.show()*/
     }
 
     private fun onInsertFailed() {
-        Snackbar.make(
+        /*Snackbar.make(
             root,
             root.context.getString(R.string.failed_to_upload_to_list),
             Snackbar.LENGTH_LONG
-        ).show()
+        ).show()*/
     }
 }

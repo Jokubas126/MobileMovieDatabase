@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.R
 import com.example.mmdb.ui.movielists.MovieGridAdapter
-import com.jokubas.mmdb.util.getMovieGridLayoutManager
 import com.jokubas.mmdb.model.data.entities.Movie
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
@@ -55,17 +54,17 @@ class WatchlistFragment : Fragment(), MovieGridAdapter.ItemClickListener,
     }
 
     private fun observeViewModel() {
-        viewModel.movies.observe(viewLifecycleOwner, Observer { movies ->
+        viewModel.movies.observe(viewLifecycleOwner, { movies ->
             gridAdapter.updateMovieList(movies)
         })
-        viewModel.error.observe(viewLifecycleOwner, Observer { isError ->
+        viewModel.error.observe(viewLifecycleOwner, { isError ->
             isError?.let {
                 loading_error_text_view.visibility =
                     if (it) View.VISIBLE
                     else View.GONE
             }
         })
-        viewModel.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+        viewModel.loading.observe(viewLifecycleOwner, { isLoading ->
             isLoading?.let {
                 progress_bar_loading_movie_list.visibility =
                     if (it) View.VISIBLE
@@ -76,15 +75,12 @@ class WatchlistFragment : Fragment(), MovieGridAdapter.ItemClickListener,
     }
 
     private fun setupRecyclerView() {
-        layoutManager = getMovieGridLayoutManager(context) as StaggeredGridLayoutManager
-        movie_recycler_view.layoutManager = layoutManager
         state?.let { layoutManager?.onRestoreInstanceState(it) }
-        movie_recycler_view.itemAnimator = DefaultItemAnimator()
         movie_recycler_view.adapter = gridAdapter
 
-        gridAdapter.setPersonalListActionListener(this)
+        /*gridAdapter.setPersonalListActionListener(this)
         gridAdapter.setWatchlistActionListener(this)
-        gridAdapter.setItemClickListener(this)
+        gridAdapter.setItemClickListener(this)*/
     }
 
     override fun onMovieClick(view: View, movie: Movie) {
@@ -93,7 +89,7 @@ class WatchlistFragment : Fragment(), MovieGridAdapter.ItemClickListener,
 
     override fun onPause() {
         super.onPause()
-        layoutManager?.let { state = it.onSaveInstanceState() }
+        state = movie_recycler_view.layoutManager?.onSaveInstanceState()
     }
 
     override fun onWatchlistCheckChanged(movie: Movie) {

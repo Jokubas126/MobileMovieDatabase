@@ -5,14 +5,18 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.*
-import androidx.navigation.Navigation
+import com.example.mmdb.BR
 import com.example.mmdb.R
+import com.example.mmdb.ui.movielists.ItemMovieConfig
+import com.example.mmdb.ui.movielists.ItemMovieViewModel
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.room.repositories.GenresRepository
 import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsTaskManager
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsPopupWindow
+import com.example.mmdb.ui.movielists.toItemMovieViewModel
 import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.data.entities.MovieResults
 import com.jokubas.mmdb.model.data.entities.WatchlistMovie
@@ -22,16 +26,16 @@ import com.jokubas.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import me.tatarka.bindingcollectionadapter2.ItemBinding
 
-class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
-    AndroidViewModel(application) {
+class RestMovieGridViewModel(
+    application: Application,
+    arguments: Bundle?,
+    private val onMovieClicked: (movieId: Int) -> Unit
+) : AndroidViewModel(application) {
 
     private val progressManager = RemoteListProgressManager()
 
-    private val _movies = MutableLiveData<List<Movie>>()
-
-    val movies: LiveData<List<Movie>>
-        get() = _movies
     val error: LiveData<Boolean>
         get() = progressManager.error
     val loading: LiveData<Boolean>
@@ -45,6 +49,10 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
     private val genresRepository = GenresRepository(application)
 
     private lateinit var watchlistMovieIdList: MutableList<Int>
+
+    val items = ObservableArrayList<ItemMovieViewModel>()
+    val itemBinding: ItemBinding<ItemMovieViewModel> =
+        ItemBinding.of(BR.viewModel, R.layout.item_movie)
 
     init {
         viewModelScope.launch {
@@ -94,7 +102,7 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
     private fun getMovieList(results: MovieResults) {
         progressManager.checkIfListFull(results.totalPages)
         val formattedMovieList = checkWatchlistMovies(formatGenres(results.movieList))
-        insertMovieListToLiveData(formattedMovieList)
+        insertMovieListToData(formattedMovieList)
     }
 
     private fun formatGenres(movieList: List<Movie>): List<Movie> {
@@ -104,30 +112,41 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
     }
 
     private fun checkWatchlistMovies(movieList: List<Movie>): List<Movie> {
-        for (movie in movieList)
+        movieList.forEach { movie ->
             if (watchlistMovieIdList.contains(movie.remoteId))
                 movie.isInWatchlist = true
+        }
         return movieList
     }
 
-    private fun insertMovieListToLiveData(movieList: List<Movie>) {
+    private fun insertMovieListToData(movieList: List<Movie>) {
         viewModelScope.launch {
-            if (progressManager.currentPage == 1)
-                _movies.value = movieList
-            else {
-                val tmpMovieList = _movies.value as MutableList
-                tmpMovieList.addAll(movieList)
-                _movies.value = tmpMovieList
+            when (movieList.isNotEmpty()) {
+                true -> {
+                    movieList.forEach { movie ->
+                        items.add(
+                            movie.toItemMovieViewModel(
+                                ItemMovieConfig(
+                                    onItemSelected = { onMovieClicked(movie.remoteId) },
+                                    onCustomListSelected = { onPlaylistAddCLicked(movie) },
+                                    onWatchlistSelected = {
+                                        movie.isInWatchlist = !movie.isInWatchlist
+                                        updateWatchlist(movie)
+                                    }
+                                )
+                            )
+                        )
+                    }
+                    progressManager.success()
+                }
+                else -> progressManager.error()
             }
-            if (movieList.isEmpty())
-                progressManager.error()
-            else progressManager.success()
         }
     }
 
 //------------------------ Watchlist ----------------------------//
 
-    fun updateWatchlist(movie: Movie) {
+    private fun updateWatchlist(movie: Movie) {
         if (movie.isInWatchlist) {
             watchlistRepository.insertOrUpdateMovie(WatchlistMovie(movie.remoteId))
             watchlistMovieIdList.add(movie.remoteId)
@@ -149,25 +168,15 @@ class RestMovieGridViewModel(application: Application, arguments: Bundle?) :
 
 //------------------ Custom lists --------------------------//
 
-    fun onPlaylistAddCLicked(movie: Movie, root: View) {
+    private fun onPlaylistAddCLicked(movie: Movie) {
         AddToListsTaskManager(
             getApplication(),
-            root,
             AddToListsPopupWindow(
-                View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
+                View.inflate(getApplication(), R.layout.popup_window_personal_lists_to_add, null),
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 movie
             )
         )
-    }
-
-//------------------ Navigation -----------------------------//
-
-    fun onMovieClicked(view: View, movie: Movie) {
-        val action =
-            RestMovieGridFragmentDirections.actionMovieDetails()
-        action.movieRemoteId = movie.remoteId
-        Navigation.findNavController(view).navigate(action)
     }
 }

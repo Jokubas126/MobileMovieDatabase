@@ -40,84 +40,70 @@ class MovieGridAdapter(
 
     fun updateMovieList(movieList: List<Movie>?) {
         this.movieList.clear()
-        movieList?.let{ this.movieList.addAll(it) }
+        movieList?.let { this.movieList.addAll(it) }
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val view: ItemMovieBinding =
-            DataBindingUtil.inflate(inflater, R.layout.item_movie, parent, false)
-        return ViewHolder(view)
+        val binding = ItemMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.onBind(movieList[position])
+
     }
 
     override fun getItemCount(): Int {
         return movieList.size
     }
 
-    fun setItemClickListener(listener: ItemClickListener) {
+    /*fun setItemClickListener(listener: ItemClickListener) {
         itemClickListener = listener
-    }
+    }*/
 
-    fun setWatchlistActionListener(listener: WatchlistActionListener) {
-        watchlistActionListener = listener
-    }
 
-    fun setPersonalListActionListener(listener: PersonalListActionListener) {
-        personalListActionListener = listener
-    }
+    inner class ViewHolder(binding: ItemMovieBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val view = binding
+        private lateinit var viewModel: ItemMovieViewModel
 
-    fun setPersonalListDeleteListener(listener: PersonalListDeleteListener) {
-        personalListDeleteListener = listener
-    }
-
-    inner class ViewHolder(itemView: ItemMovieBinding) : RecyclerView.ViewHolder(itemView.root) {
-        private val view = itemView
-        private lateinit var movie: Movie
-
-        fun onBind(movie: Movie) {
-            view.movie = movie
-            this.movie = movie
-            view.root.setOnClickListener { itemClickListener?.onMovieClick(it, movie) }
+        fun onBind(viewModel: ItemMovieViewModel) {
+            view.viewModel = viewModel
+            view.root.setOnClickListener { itemClickListener?.onMovieClick(it, viewModel.movie) }
 
             configurePlaylistAdd()
             configureWatchlist()
             configureDeleteMovie()
         }
 
-        private fun configureWatchlist(){
-            if (movie.isInWatchlist)
+        private fun configureWatchlist() {
+            if (viewModel.movie.isInWatchlist)
                 view.watchlistBtn.setBackgroundResource(R.drawable.ic_star_full)
             else
                 view.watchlistBtn.setBackgroundResource(R.drawable.ic_star_empty)
             view.watchlistBtn.visibility = watchlistBtnVisibility
 
             view.watchlistBtn.setOnClickListener {
-                movie.isInWatchlist = !movie.isInWatchlist
-                watchlistActionListener?.onWatchlistCheckChanged(movie)
-                if (movie.isInWatchlist)
+                viewModel.movie.isInWatchlist = !viewModel.movie.isInWatchlist
+                watchlistActionListener?.onWatchlistCheckChanged(viewModel.movie)
+                if (viewModel.movie.isInWatchlist)
                     it.setBackgroundResource(R.drawable.ic_star_full)
                 else it.setBackgroundResource(R.drawable.ic_star_empty)
             }
         }
 
-        private fun configurePlaylistAdd(){
+        private fun configurePlaylistAdd() {
             view.playlistAddBtn.visibility = customListBtnVisibility
             if (customListBtnVisibility != View.GONE)
                 view.playlistAddBtn.setOnClickListener {
-                    personalListActionListener?.onPlaylistAdd(movie)
+                    personalListActionListener?.onPlaylistAdd(viewModel.movie)
                 }
         }
 
-        private fun configureDeleteMovie(){
+        private fun configureDeleteMovie() {
             view.deleteBtn.visibility = deleteBtnVisibility
             if (deleteBtnVisibility != View.GONE)
                 view.deleteBtn.setOnClickListener {
-                    personalListDeleteListener?.onDeleteClicked(it, movie, adapterPosition)
+                    personalListDeleteListener?.onDeleteClicked(it, viewModel.movie, adapterPosition)
                 }
         }
     }
