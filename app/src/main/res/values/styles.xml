@@ -30,7 +30,7 @@
     <!-- General -->
 
     <style name="BaseTextStyle">
-        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:fontFamily">@font/roboto_condensed_regular</item>
     </style>
 
         <!-- Welcome Screen -->
@@ -38,13 +38,13 @@
     <style name="WelcomeScreenTitle" parent="BaseTextStyle">
         <item name="android:textSize">45sp</item>
         <item name="android:textColor">@color/primary_500</item>
-        <item name="android:textStyle">normal</item>
     </style>
 
     <!-- Toolbars -->
 
     <style name="ToolbarStyle" parent="BaseTextStyle">
         <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
     <!-- Navigation Menu Layout -->
@@ -79,13 +79,11 @@
     <style name="CustomListCreateTitleAppearance" parent="BaseTextStyle">
         <item name="android:textColor">@color/primary_700</item>
         <item name="android:textSize">30sp</item>
-        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="CustomListAddToListTitleAppearance" parent="BaseTextStyle">
         <item name="android:textColor">@color/primary_700</item>
         <item name="android:textSize">25sp</item>
-        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="CustomListUpdateDataAppearance" parent="BaseTextStyle" >
@@ -98,11 +96,13 @@
     <style name="ReleaseYearTextAppearance" parent="BaseTextStyle">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
     <style name="ReleaseYearItemsTextAppearance" parent="BaseTextStyle">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
     <style name="MainCategoryTextAppearance" parent="BaseTextStyle">
@@ -119,13 +119,13 @@
 
     <style name="TitleCard" parent="BaseTextStyle">
         <item name="android:textSize">27sp</item>
-        <item name="android:textColor">@color/grey_700</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/grey_900</item>
+        <item name="android:fontFamily">@font/roboto_condensed_bold</item>
     </style>
 
     <style name="ContentCard" parent="BaseTextStyle">
         <item name="android:textSize">17sp</item>
-        <item name="android:textColor">@color/grey_500</item>
+        <item name="android:textColor">@color/grey_700</item>
     </style>
 
     <!-- Movie Details -->
@@ -140,12 +140,12 @@
     <style name="TitleOverview" parent="BaseTextStyle">
         <item name="android:textSize">33sp</item>
         <item name="android:textColor">@color/grey_100</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/roboto_condensed_bold</item>
     </style>
 
     <style name="ContentOverview" parent="BaseTextStyle">
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/grey_200</item>
+        <item name="android:textColor">@color/grey_300</item>
     </style>
 
     <style name="DescriptionDetails" parent="BaseTextStyle">
@@ -157,7 +157,7 @@
 
     <style name="PersonName" parent="BaseTextStyle">
         <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textColor">@color/grey_900</item>
     </style>
 
