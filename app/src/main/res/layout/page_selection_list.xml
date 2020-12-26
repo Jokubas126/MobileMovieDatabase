@@ -13,19 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:padding="8dp"
-        android:background="@drawable/bg_page_list_container">
-
-        <TextView
-            android:id="@+id/page_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="3dp"
-            android:text="Page:"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+        android:background="@drawable/bg_page_list_container"
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
