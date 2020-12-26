@@ -17,14 +17,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="3dp"
-            android:activated="@{viewModel.selected}"
+            android:activated="@{viewModel.currentPage}"
             android:background="@drawable/bg_page_number_selector"
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="@{(Int) -> viewModel.onSelected.invoke(viewModel.pageNumber)}"
             android:paddingHorizontal="8dp"
             android:paddingVertical="3dp"
             android:text="@{String.valueOf(viewModel.pageNumber)}"
             android:textColor="@color/page_color_selector"
             android:textSize="20sp"
             tools:text="10"
-            tools:textColor="@color/primary_700"/>
+            tools:textColor="@color/primary_700" />
     </FrameLayout>
 </layout>

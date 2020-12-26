@@ -5,11 +5,11 @@ import com.example.mmdb.BR
 import com.example.mmdb.R
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
-class PageSelectionListViewModel(totalPages: Int, currentPage: Int = 1) {
+class PageSelectionListViewModel(totalPages: Int, currentPage: Int = 1, onSelected: (pageNumber: Int) -> Unit) {
 
     val itemsPage = ObservableArrayList<ItemPageViewModel>().apply {
         IntRange(1, totalPages).forEach {
-            add(ItemPageViewModel(it, it == currentPage))
+            add(ItemPageViewModel(it, it == currentPage, onSelected ))
         }
     }
     val itemPageBinding: ItemBinding<ItemPageViewModel> =

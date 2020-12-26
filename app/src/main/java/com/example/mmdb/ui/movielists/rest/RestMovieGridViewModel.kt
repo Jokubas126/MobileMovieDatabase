@@ -59,23 +59,18 @@ class RestMovieGridViewModel(
 
     init {
         progressManager.loading()
-        progressManager.checkPages()
         getResponse(progressManager.currentPage)
     }
 
     fun refresh() {
-        progressManager.refresh()
+        progressManager.load()
         getResponse(progressManager.currentPage)
     }
 
-    //TODO replace this with fetchData or smth like that
-    fun addData() {
-        if (!progressManager.isListFull) {
-            progressManager.addingData()
-            progressManager.checkPages()
-            getResponse(progressManager.currentPage)
-        }
+    private fun fetchData(page: Int) {
+        getResponse(page)
     }
+
 
     private fun getResponse(page: Int) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -101,7 +96,7 @@ class RestMovieGridViewModel(
 
     private fun configureResults(results: MovieResults) {
         results.apply {
-
+            progressManager.currentPage = results.page
             progressManager.checkIfListFull(totalPages)
 
             for (movie in movieList)
@@ -121,7 +116,12 @@ class RestMovieGridViewModel(
                 viewModelScope.launch {
                     pageSelectionListViewModel.set(
                         PageSelectionListViewModel(results.totalPages, results.page)
+                        { pageNumber ->
+                            fetchData(pageNumber)
+                        }
                     )
+
+                    itemsMovie.removeAll { true }
 
                     results.movieList.forEach { movie ->
                         itemsMovie.add(
