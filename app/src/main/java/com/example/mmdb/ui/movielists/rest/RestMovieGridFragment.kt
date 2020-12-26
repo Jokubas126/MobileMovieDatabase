@@ -59,28 +59,28 @@ class RestMovieGridFragment : Fragment() {
     // TODO change title setup for showing the title always as Mobile Movie Database (or similar)
     //  and having a little notch thing below it with additional info
     private fun setupTitle() {
-        val args = RestMovieGridFragmentArgs.fromBundle(arguments!!)
-        val title =
-            when (args.movieGridType) {
-                TYPE_MOVIE_LIST ->
-                    args.keyCategory?.let {
-                        val title = StringBuilder()
-                        val array = it.split("_").toTypedArray()
-                        for (stringPart in array)
-                            title.append(stringPart.capitalize(Locale.getDefault())).append(" ")
-                        title.append("Movies")
-                    } ?: run {
-                        KEY_POPULAR.capitalize(Locale.ROOT) + " Movies"
+        arguments?.let { arguments ->
+            val args = RestMovieGridFragmentArgs.fromBundle(arguments)
+            val title =
+                when (args.movieGridType) {
+                    TYPE_MOVIE_LIST ->
+                        args.keyCategory?.let {
+                            val title = StringBuilder()
+                            val array = it.split("_").toTypedArray()
+                            for (stringPart in array)
+                                title.append(stringPart.capitalize(Locale.getDefault())).append(" ")
+                            title.append("Movies")
+                        } ?: run {
+                            KEY_POPULAR.capitalize(Locale.ROOT) + " Movies"
+                        }
+                    SEARCH_MOVIE_LIST -> args.searchQuery
+                    DISCOVER_MOVIE_LIST -> args.discoverNameArray?.let {
+                        stringListToString(it.toList())
                     }
-                SEARCH_MOVIE_LIST -> args.searchQuery
-                DISCOVER_MOVIE_LIST -> args.discoverNameArray?.let {
-                    stringListToString(
-                        it.toList()
-                    )
+                    else -> ""
                 }
-                else -> ""
-            }
-        (activity as AppCompatActivity).supportActionBar?.title = title.toString()
+            (activity as AppCompatActivity).supportActionBar?.title = title.toString()
+        }
     }
 
     override fun onResume() {
