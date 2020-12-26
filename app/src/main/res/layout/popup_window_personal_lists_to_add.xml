@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     tools:context=".ui.MainActivity"
-    android:background="@color/colorPopupWindowBackground"
+    android:background="@color/black_20"
     android:id="@+id/popup_window_outside">
 
     <androidx.cardview.widget.CardView
@@ -14,7 +14,7 @@
         android:layout_height="280dp"
         android:layout_gravity="center"
         android:layout_margin="30dp"
-        app:cardBackgroundColor="@color/colorPopupWindow"
+        app:cardBackgroundColor="@color/white_80"
         app:cardCornerRadius="@dimen/default_card_corner_radius"
         app:cardElevation="0dp">
 
@@ -43,7 +43,7 @@
                     android:src="@drawable/ic_big_check"
                     android:layout_gravity="end"
                     android:background="?android:selectableItemBackground"
-                    android:tint="@color/iconBlack"
+                    android:tint="@color/grey_900"
                     tools:ignore="ContentDescription" />
 
             </FrameLayout>

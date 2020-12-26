@@ -2,6 +2,7 @@ package com.jokubas.mmdb.model.room.dao
 
 import androidx.room.*
 import com.jokubas.mmdb.model.data.entities.WatchlistMovie
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WatchlistMovieDao {
@@ -13,7 +14,7 @@ interface WatchlistMovieDao {
     fun getAllMovies(): List<WatchlistMovie>
 
     @Query("SELECT movieId FROM watchlist_movie")
-    suspend fun getAllMovieIds(): List<Int>
+    fun getAllMovieIds(): Flow<List<Int>>
 
     @Query("DELETE FROM watchlist_movie WHERE movieId = :movieId")
     fun deleteMovieById(movieId: Int)

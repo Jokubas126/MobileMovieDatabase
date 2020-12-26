@@ -16,6 +16,7 @@ fun RecyclerView.setMovieGridLayoutManager(landscapeSpanCount: Int = 4) {
     }
 }
 
+/*
 @BindingAdapter(value = ["isDataLoading", "addData"], requireAll = true)
 fun RecyclerView.loadDataOnScrolledDown(isDataLoading: Boolean, addData: () -> Unit) {
     addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -25,4 +26,4 @@ fun RecyclerView.loadDataOnScrolledDown(isDataLoading: Boolean, addData: () -> U
                 addData.invoke()
         }
     })
-}
+}*/

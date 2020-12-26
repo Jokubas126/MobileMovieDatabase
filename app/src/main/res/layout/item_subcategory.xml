@@ -21,7 +21,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardBackgroundColor="@color/colorCategoryBackground"
+            app:cardBackgroundColor="@color/white_80"
             app:cardCornerRadius="@dimen/default_card_corner_radius"
             app:cardElevation="0dp">
 
@@ -36,7 +36,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
                     android:checkMark="?android:attr/listChoiceIndicatorSingle"
-                    android:checkMarkTint="@color/colorSubcategoryText"
+                    android:checkMarkTint="@color/grey_800"
                     android:gravity="center"
                     android:paddingStart="40dp"
                     android:paddingEnd="10dp"

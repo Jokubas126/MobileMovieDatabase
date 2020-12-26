@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.mmdb.ui.movielists.rest.ItemPageViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="3dp"
+            android:activated="@{viewModel.selected}"
+            android:background="@drawable/bg_page_number_selector"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp"
+            android:text="@{String.valueOf(viewModel.pageNumber)}"
+            android:textColor="@color/page_color_selector"
+            android:textSize="20sp"
+            tools:text="10"
+            tools:textColor="@color/primary_700"/>
+    </FrameLayout>
+</layout>

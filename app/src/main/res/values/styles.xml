@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:layout">@layout/activity_main</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorBackground</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primary_700</item>
+        <item name="colorPrimaryDark">@color/primary_900</item>
+        <item name="colorAccent">@color/secondary_700</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="android:textColorPrimary">@color/white</item>
@@ -18,12 +18,12 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="PopupMenu" parent="ThemeOverlay.AppCompat.Light" >
-        <item name="android:popupBackground">@color/colorCardBackground</item>
+        <item name="android:popupBackground">@color/grey_700</item>
         <item name="android:itemTextAppearance">@style/PopupMenuItemStyle</item>
     </style>
 
     <style name="PopupMenuItemStyle" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
-        <item name="android:textColor">@color/itemTextDarkGrey</item>
+        <item name="android:textColor">@color/grey_700</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -37,7 +37,7 @@
 
     <style name="WelcomeScreenTitle" parent="BaseTextStyle">
         <item name="android:textSize">45sp</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/primary_500</item>
         <item name="android:textStyle">normal</item>
     </style>
 
@@ -51,45 +51,45 @@
 
     <style name="TitleHeaderText" parent="BaseTextStyle">
         <item name="android:textSize">25sp</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/primary_500</item>
     </style>
 
     <style name="ItemCategoryTextAppearance" parent="BaseTextStyle">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/primary_700</item>
         <item name="android:textSize">19sp</item>
     </style>
 
     <style name="ItemTextAppearance" parent="BaseTextStyle">
         <item name="android:textSize">17sp</item>
-        <item name="android:textColor">@color/navigationViewItem</item>
+        <item name="android:textColor">@color/grey_800</item>
     </style>
 
     <!-- Personal lists -->
 
     <style name="CustomListBigTitleAppearance" parent="BaseTextStyle">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/primary_700</item>
         <item name="android:textSize">25sp</item>
     </style>
 
     <style name="CustomListSmallTitleAppearance" parent="BaseTextStyle">
-        <item name="android:textColor">@color/customListTitleBlack</item>
+        <item name="android:textColor">@color/grey_900</item>
         <item name="android:textSize">18sp</item>
     </style>
 
     <style name="CustomListCreateTitleAppearance" parent="BaseTextStyle">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/primary_700</item>
         <item name="android:textSize">30sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="CustomListAddToListTitleAppearance" parent="BaseTextStyle">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/primary_700</item>
         <item name="android:textSize">25sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="CustomListUpdateDataAppearance" parent="BaseTextStyle" >
-        <item name="android:textColor">@color/itemTextLightGrey</item>
+        <item name="android:textColor">@color/grey_700</item>
         <item name="android:textSize">12sp</item>
     </style>
 
@@ -106,51 +106,51 @@
     </style>
 
     <style name="MainCategoryTextAppearance" parent="BaseTextStyle">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/primary_700</item>
         <item name="android:textSize">19sp</item>
     </style>
 
     <style name="SubcategoryTextAppearance" parent="BaseTextStyle">
         <item name="android:textSize">17sp</item>
-        <item name="android:textColor">@color/colorSubcategoryText</item>
+        <item name="android:textColor">@color/grey_800</item>
     </style>
 
     <!-- Movie Grid Fragment -->
 
     <style name="TitleCard" parent="BaseTextStyle">
         <item name="android:textSize">27sp</item>
-        <item name="android:textColor">@color/cardTitle</item>
+        <item name="android:textColor">@color/grey_700</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ContentCard" parent="BaseTextStyle">
         <item name="android:textSize">17sp</item>
-        <item name="android:textColor">@color/cardContent</item>
+        <item name="android:textColor">@color/grey_500</item>
     </style>
 
     <!-- Movie Details -->
 
     <style name="SectionTitleDetails" parent="BaseTextStyle">
         <item name="android:textSize">19sp</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/primary_500</item>
     </style>
 
     <!-- Movie Overview Fragment -->
 
     <style name="TitleOverview" parent="BaseTextStyle">
         <item name="android:textSize">33sp</item>
-        <item name="android:textColor">@color/detailsTitle</item>
+        <item name="android:textColor">@color/grey_100</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ContentOverview" parent="BaseTextStyle">
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/detailsContent</item>
+        <item name="android:textColor">@color/grey_200</item>
     </style>
 
     <style name="DescriptionDetails" parent="BaseTextStyle">
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/detailsDescription</item>
+        <item name="android:textColor">@color/grey_900</item>
     </style>
 
     <!-- Movie Cast Fragment -->
@@ -158,12 +158,12 @@
     <style name="PersonName" parent="BaseTextStyle">
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/personDetails</item>
+        <item name="android:textColor">@color/grey_900</item>
     </style>
 
     <style name="PersonPosition" parent="BaseTextStyle">
         <item name="android:textSize">13sp</item>
-        <item name="android:textColor">@color/personDetails</item>
+        <item name="android:textColor">@color/grey_700</item>
     </style>
 
 </resources>

@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+//TODO set this part up using Toast and popup notification with loading
 class AddToListsTaskManager(
     private val application: Application,
     //private val root: View,

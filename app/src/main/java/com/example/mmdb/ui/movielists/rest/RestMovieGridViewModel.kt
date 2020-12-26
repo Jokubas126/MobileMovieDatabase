@@ -2,10 +2,9 @@ package com.example.mmdb.ui.movielists.rest
 
 import android.app.Application
 import android.os.Bundle
-import android.view.View
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.databinding.ObservableArrayList
+import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
@@ -14,8 +13,6 @@ import com.example.mmdb.ui.movielists.ItemMovieViewModel
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.room.repositories.GenresRepository
 import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
-import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsTaskManager
-import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsPopupWindow
 import com.example.mmdb.ui.movielists.toItemMovieViewModel
 import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.data.entities.MovieResults
@@ -48,124 +45,139 @@ class RestMovieGridViewModel(
     private val watchlistRepository = WatchlistRepository(application)
     private val genresRepository = GenresRepository(application)
 
-    private lateinit var watchlistMovieIdList: MutableList<Int>
+    private var watchlistMovieIdList = watchlistRepository.getAllMovieIds().asLiveData().apply {
+        observeForever {
+            refresh()
+        }
+    }
 
-    val items = ObservableArrayList<ItemMovieViewModel>()
-    val itemBinding: ItemBinding<ItemMovieViewModel> =
+    val pageSelectionListViewModel = ObservableField<PageSelectionListViewModel>()
+
+    val itemsMovie = ObservableArrayList<ItemMovieViewModel>()
+    val itemMoviesBinding: ItemBinding<ItemMovieViewModel> =
         ItemBinding.of(BR.viewModel, R.layout.item_movie)
 
     init {
-        viewModelScope.launch {
-            progressManager.loading()
-            watchlistMovieIdList = watchlistRepository.getAllMovieIds() as MutableList<Int>
-            getResponse()
-        }
+        progressManager.loading()
+        progressManager.checkPages()
+        getResponse(progressManager.currentPage)
     }
 
     fun refresh() {
         progressManager.refresh()
-        getResponse()
+        getResponse(progressManager.currentPage)
     }
 
+    //TODO replace this with fetchData or smth like that
     fun addData() {
         if (!progressManager.isListFull) {
             progressManager.addingData()
-            getResponse()
+            progressManager.checkPages()
+            getResponse(progressManager.currentPage)
         }
     }
 
-    private fun getResponse() {
+    private fun getResponse(page: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             if (isNetworkAvailable(getApplication())) {
-                progressManager.checkPages()
-                args?.let {
+                args?.apply {
                     remoteMovieRepository.getMovieResults(
-                        progressManager.currentPage,
-                        args.movieGridType,
-                        args.keyCategory,
-                        args.startYear,
-                        args.endYear,
-                        args.genreId,
-                        args.languageKey,
-                        args.searchQuery
-                    )?.let { getMovieList(it) }
-                } ?: run { progressManager.error() }
+                        page,
+                        movieGridType,
+                        keyCategory,
+                        startYear,
+                        endYear,
+                        genreId,
+                        languageKey,
+                        searchQuery
+                    )?.let { configureResults(it) }
+                } ?: progressManager.error()
             } else {
                 progressManager.error()
-                networkUnavailableNotification(
-                    getApplication()
-                )
+                networkUnavailableNotification(getApplication())
             }
         }
     }
 
-    private fun getMovieList(results: MovieResults) {
-        progressManager.checkIfListFull(results.totalPages)
-        val formattedMovieList = checkWatchlistMovies(formatGenres(results.movieList))
-        insertMovieListToData(formattedMovieList)
-    }
+    private fun configureResults(results: MovieResults) {
+        results.apply {
 
-    private fun formatGenres(movieList: List<Movie>): List<Movie> {
-        for (movie in movieList)
-            movie.formatGenresString(genresRepository.getGenresByIdList(movie.genreIds))
-        return movieList
-    }
+            progressManager.checkIfListFull(totalPages)
 
-    private fun checkWatchlistMovies(movieList: List<Movie>): List<Movie> {
-        movieList.forEach { movie ->
-            if (watchlistMovieIdList.contains(movie.remoteId))
-                movie.isInWatchlist = true
+            for (movie in movieList)
+                movie.formatGenresString(genresRepository.getGenresByIdList(movie.genreIds))
+
+            movieList.forEach { movie ->
+                movie.isInWatchlist = watchlistMovieIdList.value?.contains(movie.remoteId) == true
+            }
         }
-        return movieList
+
+        insertMovieListToData(results)
     }
 
-    private fun insertMovieListToData(movieList: List<Movie>) {
-        viewModelScope.launch {
-            when (movieList.isNotEmpty()) {
-                true -> {
-                    movieList.forEach { movie ->
-                        items.add(
+    private fun insertMovieListToData(results: MovieResults) {
+        when (results.movieList.isNotEmpty()) {
+            true -> {
+                viewModelScope.launch {
+                    pageSelectionListViewModel.set(
+                        PageSelectionListViewModel(results.totalPages, results.page)
+                    )
+
+                    results.movieList.forEach { movie ->
+                        itemsMovie.add(
                             movie.toItemMovieViewModel(
-                                ItemMovieConfig(
-                                    onItemSelected = { onMovieClicked(movie.remoteId) },
-                                    onCustomListSelected = { onPlaylistAddCLicked(movie) },
-                                    onWatchlistSelected = {
-                                        movie.isInWatchlist = !movie.isInWatchlist
-                                        updateWatchlist(movie)
-                                    }
-                                )
+                                getItemMovieConfig(movie, results.page, itemsMovie.size)
                             )
                         )
                     }
                     progressManager.success()
                 }
-                else -> progressManager.error()
             }
+            else -> progressManager.error()
         }
     }
+
+    private fun getItemMovieConfig(movie: Movie, page: Int, position: Int) =
+        ItemMovieConfig(
+            position = position,
+            page = page,
+            onItemSelected = {
+                onMovieClicked(movie.remoteId)
+            },
+            onCustomListSelected = {
+                Toast.makeText(getApplication(), "Playlist clicked", Toast.LENGTH_SHORT).show()
+                //onPlaylistAddCLicked(movie)
+            },
+            onWatchlistSelected = {
+                updateWatchlist(movie)
+            }
+        )
 
 //------------------------ Watchlist ----------------------------//
 
     private fun updateWatchlist(movie: Movie) {
         if (movie.isInWatchlist) {
-            watchlistRepository.insertOrUpdateMovie(WatchlistMovie(movie.remoteId))
-            watchlistMovieIdList.add(movie.remoteId)
-            showToast(
-                getApplication(),
-                getApplication<Application>().getString(R.string.added_to_watchlist),
-                Toast.LENGTH_SHORT
-            )
-        } else {
             watchlistRepository.deleteWatchlistMovie(movie.remoteId)
-            watchlistMovieIdList.remove(movie.remoteId)
             showToast(
                 getApplication(),
                 getApplication<Application>().getString(R.string.deleted_from_watchlist),
                 Toast.LENGTH_SHORT
             )
+        } else {
+            watchlistRepository.insertOrUpdateMovie(WatchlistMovie(movie.remoteId))
+            showToast(
+                getApplication(),
+                getApplication<Application>().getString(R.string.added_to_watchlist),
+                Toast.LENGTH_SHORT
+            )
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        watchlistMovieIdList.removeObserver {}
+    }
+/*
 //------------------ Custom lists --------------------------//
 
     private fun onPlaylistAddCLicked(movie: Movie) {
@@ -178,5 +190,5 @@ class RestMovieGridViewModel(
                 movie
             )
         )
-    }
+    }*/
 }

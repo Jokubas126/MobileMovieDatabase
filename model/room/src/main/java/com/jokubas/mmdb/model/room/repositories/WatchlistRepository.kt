@@ -5,6 +5,7 @@ import com.jokubas.mmdb.model.data.entities.WatchlistMovie
 import com.jokubas.mmdb.model.room.databases.WatchlistDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
@@ -27,7 +28,8 @@ class WatchlistRepository(application: Application) : CoroutineScope {
 
     fun getAllMovies() = watchlistMovieDao.getAllMovies()
 
-    suspend fun getAllMovieIds() = watchlistMovieDao.getAllMovieIds()
+    fun getAllMovieIds() = watchlistMovieDao.getAllMovieIds()
+
 
     fun deleteWatchlistMovie(movieId: Int) {
         launch { deleteWatchlistMovieBG(movieId) }

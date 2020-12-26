@@ -9,10 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.databinding.FragmentMoviesGridBinding
-import com.example.mmdb.ui.movielists.MovieGridAdapter
 import com.jokubas.mmdb.util.*
 import com.jokubas.mmdb.util.constants.KEY_POPULAR
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
@@ -58,6 +56,8 @@ class RestMovieGridFragment : Fragment() {
         }
     }
 
+    // TODO change title setup for showing the title always as Mobile Movie Database (or similar)
+    //  and having a little notch thing below it with additional info
     private fun setupTitle() {
         val args = RestMovieGridFragmentArgs.fromBundle(arguments!!)
         val title =

@@ -10,14 +10,16 @@ import com.jokubas.mmdb.model.data.util.*
 import com.jokubas.mmdb.util.stringListToString
 import java.util.*
 
-class MovieResults {
+class MovieResults(
+    @SerializedName("page")
+    val page: Int,
 
     @SerializedName(KEY_RESULT_LIST)
-    var movieList = listOf<Movie>()
+    val movieList: List<Movie>,
 
     @SerializedName(KEY_TOTAL_PAGES)
-    var totalPages: Int = 0
-}
+    val totalPages: Int
+)
 
 @Entity(tableName = "movie_list")
 data class CustomMovieList(

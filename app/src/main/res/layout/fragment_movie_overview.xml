@@ -76,7 +76,7 @@
                         app:layout_constraintEnd_toStartOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/detailsTop" />
+                        app:tint="@color/black_60" />
 
                     <ImageView
                         android:layout_width="0dp"
@@ -163,7 +163,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/general_margin_half"
-                    app:cardBackgroundColor="@color/colorCardBackground"
+                    app:cardBackgroundColor="@color/white_80"
                     app:cardCornerRadius="@dimen/default_card_corner_radius"
                     app:cardElevation="0dp">
 
@@ -195,7 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/general_margin_half"
                     android:visibility="@{viewModel.currentMovie.productionCountryList.isEmpty() ? View.GONE : View.VISIBLE}"
-                    app:cardBackgroundColor="@color/colorCardBackground"
+                    app:cardBackgroundColor="@color/white_80"
                     app:cardCornerRadius="@dimen/default_card_corner_radius"
                     app:cardElevation="0dp">
 
@@ -228,7 +228,7 @@
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/primary_500"
             app:itemIconTint="@android:color/white"
             app:itemTextColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
