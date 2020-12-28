@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
-    android:background="@null"
+    android:background="@android:color/transparent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
     tools:context=".ui.MainActivity">
@@ -18,8 +18,10 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/header_drawer_layout"
-        android:background="@color/primary_50"
+        android:background="@color/secondary_500"
+        app:itemBackground="@color/secondary_500"
         app:menu="@menu/drawer_layout_menu"
-        app:itemTextAppearance="@style/ItemTextAppearance"/>
+        app:itemTextAppearance="@style/ItemTextAppearance"
+        app:itemTextColor="@color/white"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

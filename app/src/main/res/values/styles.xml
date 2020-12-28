@@ -3,19 +3,22 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:layout">@layout/activity_main</item>
-        <item name="colorPrimary">@color/primary_700</item>
-        <item name="colorPrimaryDark">@color/primary_900</item>
-        <item name="colorAccent">@color/secondary_700</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="colorControlNormal">@android:color/white</item>
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="colorControlNormal">@color/primary</item>
+        <item name="android:textColorPrimary">@color/primary</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <item name="android:itemTextAppearance">@style/PopupMenuItemStyle</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/primary</item>
+    </style>
 
     <style name="PopupMenu" parent="ThemeOverlay.AppCompat.Light" >
         <item name="android:popupBackground">@color/grey_700</item>
@@ -37,7 +40,7 @@
 
     <style name="WelcomeScreenTitle" parent="BaseTextStyle">
         <item name="android:textSize">45sp</item>
-        <item name="android:textColor">@color/primary_500</item>
+        <item name="android:textColor">@color/primary</item>
     </style>
 
     <!-- Toolbars -->
@@ -51,23 +54,26 @@
 
     <style name="TitleHeaderText" parent="BaseTextStyle">
         <item name="android:textSize">25sp</item>
-        <item name="android:textColor">@color/primary_500</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
     <style name="ItemCategoryTextAppearance" parent="BaseTextStyle">
-        <item name="android:textColor">@color/primary_700</item>
-        <item name="android:textSize">19sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
     <style name="ItemTextAppearance" parent="BaseTextStyle">
-        <item name="android:textSize">17sp</item>
-        <item name="android:textColor">@color/grey_800</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
     <!-- Personal lists -->
 
     <style name="CustomListBigTitleAppearance" parent="BaseTextStyle">
-        <item name="android:textColor">@color/primary_700</item>
+        <item name="android:textColor">@color/primary</item>
         <item name="android:textSize">25sp</item>
     </style>
 
@@ -77,12 +83,12 @@
     </style>
 
     <style name="CustomListCreateTitleAppearance" parent="BaseTextStyle">
-        <item name="android:textColor">@color/primary_700</item>
+        <item name="android:textColor">@color/primary</item>
         <item name="android:textSize">30sp</item>
     </style>
 
     <style name="CustomListAddToListTitleAppearance" parent="BaseTextStyle">
-        <item name="android:textColor">@color/primary_700</item>
+        <item name="android:textColor">@color/primary</item>
         <item name="android:textSize">25sp</item>
     </style>
 
@@ -106,33 +112,33 @@
     </style>
 
     <style name="MainCategoryTextAppearance" parent="BaseTextStyle">
-        <item name="android:textColor">@color/primary_700</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">19sp</item>
     </style>
 
     <style name="SubcategoryTextAppearance" parent="BaseTextStyle">
         <item name="android:textSize">17sp</item>
-        <item name="android:textColor">@color/grey_800</item>
+        <item name="android:textColor">@color/grey_100</item>
     </style>
 
     <!-- Movie Grid Fragment -->
 
     <style name="TitleCard" parent="BaseTextStyle">
         <item name="android:textSize">27sp</item>
-        <item name="android:textColor">@color/grey_900</item>
+        <item name="android:textColor">@color/primary</item>
         <item name="android:fontFamily">@font/roboto_condensed_bold</item>
     </style>
 
     <style name="ContentCard" parent="BaseTextStyle">
         <item name="android:textSize">17sp</item>
-        <item name="android:textColor">@color/grey_700</item>
+        <item name="android:textColor">@color/primary</item>
     </style>
 
     <!-- Movie Details -->
 
     <style name="SectionTitleDetails" parent="BaseTextStyle">
         <item name="android:textSize">19sp</item>
-        <item name="android:textColor">@color/primary_500</item>
+        <item name="android:textColor">@color/primary</item>
     </style>
 
     <!-- Movie Overview Fragment -->

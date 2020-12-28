@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary_50">#e3f2fd</color>
-    <color name="primary_100">#90caf9</color>
-    <color name="primary_300">#42a5f5</color>
-    <color name="primary_500">#1e88e5</color>
-    <color name="primary_700">#1976d2</color>
-    <color name="primary_900">#0d47a1</color>
-    <color name="secondary_100">#c8e6c9</color>
-    <color name="secondary_300">#81c784</color>
-    <color name="secondary_500">#4caf50</color>
-    <color name="secondary_700">#388e3c</color>
-    <color name="secondary_900">#1b5e20</color>
+    <color name="primary">#141414</color>
+    <color name="secondary_100">#d7787f</color>
+    <color name="secondary_300">#ca4b54</color>
+    <color name="secondary_500">#ad2025</color>
+    <color name="secondary_700">#84151d</color>
+    <color name="secondary_900">#5f0f15</color>
     <color name="teritary_100">#ffecb3</color>
     <color name="teritary_300">#ffd54f</color>
     <color name="teritary_500">#ffc107</color>

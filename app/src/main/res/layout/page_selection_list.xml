@@ -13,9 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/bg_page_list_container"
+        android:background="@android:color/transparent"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="3dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"

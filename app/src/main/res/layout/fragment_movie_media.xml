@@ -130,7 +130,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/primary_500"
+            android:background="@color/primary"
             app:itemIconTint="@android:color/white"
             app:itemTextColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"

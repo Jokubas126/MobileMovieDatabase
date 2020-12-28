@@ -27,7 +27,7 @@
             android:focusableInTouchMode="false"
             android:text="Default title"
             android:textAppearance="@style/CustomListBigTitleAppearance"
-            android:textColor="@color/primary_700"
+            android:textColor="@color/primary"
             tools:ignore="Autofill,LabelFor" />
 
         <LinearLayout

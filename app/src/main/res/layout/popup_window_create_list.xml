@@ -37,11 +37,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:autofillHints="false"
-                android:backgroundTint="@color/primary_700"
+                android:backgroundTint="@color/primary"
                 android:inputType="textCapSentences"
                 android:maxLines="1"
                 android:textAppearance="@style/CustomListBigTitleAppearance"
-                android:textColor="@color/primary_500"
+                android:textColor="@color/primary"
                 tools:ignore="LabelFor" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -76,7 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:backgroundTint="@color/primary_500"
+                    android:backgroundTint="@color/secondary_500"
                     android:padding="17dp"
                     android:text="CREATE"
                     android:textColor="@color/white"

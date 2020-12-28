@@ -29,7 +29,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:paddingTop="10dp">
 
                     <include
                         android:id="@+id/pages"
@@ -37,6 +38,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toTopOf="parent"
+                        android:visibility="visible"
                         app:viewModel="@{viewModel.pageSelectionListViewModel}" />
 
                     <androidx.recyclerview.widget.RecyclerView

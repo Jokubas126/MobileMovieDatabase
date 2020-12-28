@@ -26,6 +26,6 @@
             android:textColor="@color/page_color_selector"
             android:textSize="20sp"
             tools:text="10"
-            tools:textColor="@color/primary_700" />
+            tools:textColor="@color/primary" />
     </FrameLayout>
 </layout>
