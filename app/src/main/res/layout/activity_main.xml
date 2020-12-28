@@ -7,8 +7,7 @@
     android:id="@+id/drawer_layout"
     android:background="@android:color/transparent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start"
-    tools:context=".ui.MainActivity">
+    tools:openDrawer="start">
 
     <include layout="@layout/app_bar_main"/>
 

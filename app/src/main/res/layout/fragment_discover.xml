@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.mmdb.ui.discover.DiscoverViewModel" />
@@ -15,15 +16,12 @@
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ui.MainActivity">
+            android:layout_height="match_parent">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fitsSystemWindows="true"
-                android:stateListAnimator="@null"
                 android:theme="@style/AppTheme.AppBarOverlay"
                 app:expanded="true"
                 app:layout_behavior=".ui.discover.ScrollingToolbarBehavior">
@@ -32,18 +30,14 @@
                     android:id="@+id/collapsing_toolbar_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:clipChildren="false"
-                    android:clipToPadding="false"
-                    android:fitsSystemWindows="true"
-                    app:contentScrim="?attr/colorPrimary"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways"
-                    app:statusBarScrim="?attr/colorPrimaryDark">
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways">
 
                     <LinearLayout
                         android:id="@+id/large_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="?attr/actionBarSize"
+                        android:background="@drawable/bg_release_date_layout"
                         android:orientation="vertical"
                         android:padding="15dp"
                         app:layout_collapseMode="parallax"
@@ -84,20 +78,19 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:drawThumbsApart="true"
-                            app:rangeColor="@color/white"
+                            app:rangeColor="@color/secondary_500"
                             app:scaleMax="2020"
                             app:scaleMin="1950"
-                            app:thumbColor="@color/white"
+                            app:thumbColor="@color/secondary_500"
                             app:thumbNumber="2"
-                            app:trackColor="@android:color/white" />
-
+                            app:trackColor="@color/secondary_500" />
                     </LinearLayout>
 
                     <androidx.appcompat.widget.Toolbar
                         android:id="@+id/collapsing_toolbar"
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
-                        android:background="?attr/colorPrimary"
+                        android:background="@color/white_80"
                         app:layout_collapseMode="pin"
                         app:menu="@menu/toolbar_menu"
                         app:popupTheme="@style/AppTheme.PopupOverlay">
@@ -120,7 +113,7 @@
                                 android:maxLines="1"
                                 android:text="@string/discover_fragment"
                                 android:textAppearance="@style/ToolbarStyle"
-                                android:textColor="@android:color/white" />
+                                android:textColor="@color/primary" />
 
                             <ImageView
                                 android:id="@+id/arrow_image_view"
@@ -141,8 +134,8 @@
                 android:id="@+id/categories_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
                 android:orientation="vertical"
+                android:visibility="gone"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

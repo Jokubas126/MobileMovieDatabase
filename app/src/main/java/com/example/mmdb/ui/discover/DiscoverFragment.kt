@@ -47,7 +47,7 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     }
 
     private fun observeViewModel() {
-        viewModel.categories.observe(viewLifecycleOwner, Observer { categories ->
+        viewModel.categories.observe(viewLifecycleOwner, { categories ->
             categories?.let {
                 categoryAdapter = CategoryAdapter(it)
                 categories_recycler_view.adapter = categoryAdapter
