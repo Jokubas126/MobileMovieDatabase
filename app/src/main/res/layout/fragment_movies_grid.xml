@@ -12,11 +12,9 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/grid_movies_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.MainActivity">
+        android:layout_height="match_parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/refresh_layout"
@@ -25,20 +23,19 @@
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingTop="10dp">
+                    android:layout_height="match_parent">
 
                     <include
                         android:id="@+id/pages"
                         layout="@layout/page_selection_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toTopOf="parent"
                         android:visibility="visible"
+                        app:layout_constraintTop_toTopOf="parent"
                         app:viewModel="@{viewModel.pageSelectionListViewModel}" />
 
                     <androidx.recyclerview.widget.RecyclerView

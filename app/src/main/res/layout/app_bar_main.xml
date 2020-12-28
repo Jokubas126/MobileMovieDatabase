@@ -54,11 +54,7 @@
             </FrameLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- negative top margin needed for having to disappear under the toolbar -->
-        <include layout="@layout/content_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="-10dp"/>
+        <include layout="@layout/content_main" />
 
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
