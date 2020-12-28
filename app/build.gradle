@@ -60,7 +60,6 @@ dependencies {
 
     implementation "androidx.cardview:cardview:$cardViewVersion"
     implementation "com.etsy.android.grid:library:$gridLayoutVersion"
-    implementation "io.apptik.widget:multislider:$multiSliderVersion"
 
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation project(':model:data')

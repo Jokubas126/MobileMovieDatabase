@@ -6,7 +6,6 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.R
 import com.example.mmdb.databinding.FragmentDiscoverBinding
@@ -31,7 +30,7 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentDiscoverBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(DiscoverViewModel::class.java)
         binding.viewModel = viewModel
@@ -63,13 +62,13 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     }
 
     private fun setupSlider() {
-        release_year_slider.setOnThumbValueChangeListener { multiSlider, _, thumbIndex, value ->
-            if (thumbIndex == 0)
-                if (value != multiSlider.min)
-                    release_year_slider_min_value.text = value.toString()
-                else release_year_slider_min_value.text = "∞"
-            if (thumbIndex == 1) {
-                release_year_slider_max_value.text = value.toString()
+        rangeSlider.addOnChangeListener { rangeSlider, value, _ ->
+            if (rangeSlider.activeThumbIndex == 0) {
+                if (value == rangeSlider.valueFrom)
+                    release_year_slider_min_value.text = "∞"
+                else release_year_slider_min_value.text = value.toInt().toString()
+            } else {
+                release_year_slider_max_value.text = value.toInt().toString()
             }
         }
     }
@@ -119,7 +118,8 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
 
         expand_collapse_btn.setOnClickListener {
             isExpanded = !isExpanded
-            app_bar.setExpanded(isExpanded, true)        }
+            app_bar.setExpanded(isExpanded, true)
+        }
     }
 
     private fun setToolbarArrowRotation(verticalOffset: Int, appBarLayout: AppBarLayout) {

@@ -73,17 +73,21 @@
 
                         </FrameLayout>
 
-                        <io.apptik.widget.MultiSlider
-                            android:id="@+id/release_year_slider"
+                        <com.google.android.material.slider.RangeSlider
+                            android:id="@+id/rangeSlider"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:drawThumbsApart="true"
-                            app:rangeColor="@color/secondary_500"
-                            app:scaleMax="2020"
-                            app:scaleMin="1950"
+                            android:stepSize="1.0"
+                            android:valueFrom="1950.0"
+                            android:valueTo="2020.0"
+                            app:labelBehavior="gone"
                             app:thumbColor="@color/secondary_500"
-                            app:thumbNumber="2"
-                            app:trackColor="@color/secondary_500" />
+                            app:thumbRadius="10dp"
+                            app:tickColorActive="@color/secondary_300"
+                            app:tickColorInactive="@color/secondary_100"
+                            app:trackColorActive="@color/secondary_500"
+                            app:trackColorInactive="@color/secondary_300"
+                            app:values="@array/initial_range_slider_values" />
                     </LinearLayout>
 
                     <androidx.appcompat.widget.Toolbar

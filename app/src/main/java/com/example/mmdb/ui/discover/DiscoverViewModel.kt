@@ -15,8 +15,7 @@ import kotlinx.coroutines.launch
 class DiscoverViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _categories =
-        CategoryRepository(application)
-            .getCategories().asLiveData(viewModelScope.coroutineContext)
+        CategoryRepository(application).getCategories().asLiveData(viewModelScope.coroutineContext)
 
     val categories
         get() = _categories
@@ -45,6 +44,10 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
                 GENRE_CATEGORY -> genreSubcategory = null
             }
         }
+    }
+
+    fun onRangeSliderValueChanged(){
+        
     }
 
     fun onConfirmSelectionClicked(view: View, startYear: String, endYear: String) {
