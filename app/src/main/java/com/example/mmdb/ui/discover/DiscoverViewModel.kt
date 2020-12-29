@@ -27,20 +27,19 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
 
     val categoriesAdapter = ObservableField<ConcatAdapter>()
 
-    private val categories =
-        CategoryRepository(application).getCategories()
-            .asLiveData(viewModelScope.coroutineContext).apply {
-                observeForever {
-                    val adapters = arrayListOf<ItemsExpandableAdapter>()
-                    value?.forEach { category ->
-                        adapters.add(ItemsExpandableAdapter(category)
-                        { categoryType, subcategory ->
-                            onSubcategoryClicked(categoryType, subcategory)
-                        })
-                    }
-                    categoriesAdapter.set(ConcatAdapter(adapters))
+    private val categories = CategoryRepository().getCategories()
+        .asLiveData(viewModelScope.coroutineContext).apply {
+            observeForever { categoryList ->
+                val adapters = arrayListOf<ItemsExpandableAdapter>()
+                categoryList.forEach { category ->
+                    adapters.add(ItemsExpandableAdapter(category)
+                    { categoryType, subcategory ->
+                        onSubcategoryClicked(categoryType, subcategory)
+                    })
                 }
+                categoriesAdapter.set(ConcatAdapter(adapters))
             }
+        }
 
     private var languageSubcategory = mutableListOf<Subcategory>()
     private var genreSubcategory = mutableListOf<Subcategory>()
@@ -87,13 +86,18 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
             else startYear.get().toString()
         action.endYear = endYear.get().toString()
 
-        val discoveryArrayList = arrayListOf("From: ${action.startYear}", "To: ${action.endYear}")
-
         action.genreKeys = genreSubcategory.map { it.code }.toTypedArray()
         action.languageKeys = languageSubcategory.map { it.code }.toTypedArray()
 
-        if (discoveryArrayList.isNotEmpty())
-            action.discoverNameArray = discoveryArrayList.toTypedArray()
+        arrayListOf<String>().apply {
+            action.startYear?.let { add("From: $it") }
+            add("To: ${action.endYear}")
+            addAll(genreSubcategory.map { it.name })
+            addAll(languageSubcategory.map { it.name })
+            if (isNotEmpty())
+                action.discoverNameArray = this.toTypedArray()
+        }
+
         navController.navigate(action)
     }
 

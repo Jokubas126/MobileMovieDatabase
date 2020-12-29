@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 
 class RestMovieGridViewModelFactory(
     private val application: Application,
-    private val arguments: Bundle?,
+    private val args: RestMovieGridFragmentArgs?,
     private val onMovieSelected: (movieRemoteId: Int) -> Unit
 ) : ViewModelProvider.AndroidViewModelFactory(application) {
 
@@ -15,7 +15,7 @@ class RestMovieGridViewModelFactory(
         @Suppress("UNCHECKED_CAST")
         return RestMovieGridViewModel(
             application,
-            arguments,
+            args,
             onMovieSelected
         ) as T
     }

@@ -1,27 +1,20 @@
 package com.jokubas.mmdb.model.remote.repositories
 
-import android.app.Application
 import com.jokubas.mmdb.model.data.entities.Category
 import com.jokubas.mmdb.model.data.entities.CategoryType
 import com.jokubas.mmdb.model.data.entities.Genres
 import com.jokubas.mmdb.model.data.entities.Subcategory
 import com.jokubas.mmdb.model.remote.services.MovieApiService
-import com.jokubas.mmdb.util.*
 import com.jokubas.mmdb.util.constants.MOVIE_DB_API_KEY
 import kotlinx.coroutines.flow.flow
 import java.util.Collections.sort
 
-class CategoryRepository(private val application: Application) {
+class CategoryRepository {
 
     private var service = MovieApiService.api
 
     fun getCategories() = flow {
-        if (isNetworkAvailable(application))
-            emit(listOf(getGenresCategory(), getLanguagesCategory()))
-        else {
-            networkUnavailableNotification(application)
-            emit(null)
-        }
+        emit(listOf(getGenresCategory(), getLanguagesCategory()))
     }
 
     private suspend fun getLanguagesCategory(): Category {

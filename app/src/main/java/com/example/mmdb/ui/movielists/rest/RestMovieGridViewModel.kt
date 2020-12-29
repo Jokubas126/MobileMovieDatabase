@@ -27,7 +27,7 @@ import me.tatarka.bindingcollectionadapter2.ItemBinding
 
 class RestMovieGridViewModel(
     application: Application,
-    arguments: Bundle?,
+    private val args: RestMovieGridFragmentArgs?,
     private val onMovieClicked: (movieId: Int) -> Unit
 ) : AndroidViewModel(application) {
 
@@ -37,8 +37,6 @@ class RestMovieGridViewModel(
         get() = progressManager.error
     val loading: LiveData<Boolean>
         get() = progressManager.loading
-
-    private val args = arguments?.let { RestMovieGridFragmentArgs.fromBundle(arguments) }
 
     // repositories
     private val remoteMovieRepository = RemoteMovieRepository()
@@ -52,6 +50,10 @@ class RestMovieGridViewModel(
     }
 
     val pageSelectionListViewModel = ObservableField<PageSelectionListViewModel>()
+    val discoverSelectionViewModel =
+        args?.discoverNameArray?.let { nameArray ->
+            DiscoverSelectionViewModel(nameArray.toList())
+        }
 
     val itemsMovie = ObservableArrayList<ItemMovieViewModel>()
     val itemMoviesBinding: ItemBinding<ItemMovieViewModel> =
@@ -70,7 +72,6 @@ class RestMovieGridViewModel(
     private fun fetchData(page: Int) {
         getResponse(page)
     }
-
 
     private fun getResponse(page: Int) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -96,7 +97,7 @@ class RestMovieGridViewModel(
 
     private fun configureResults(results: MovieResults) {
         results.apply {
-            progressManager.currentPage = results.page
+            progressManager.currentPage = page
             progressManager.checkIfListFull(totalPages)
 
             for (movie in movieList)
@@ -106,7 +107,6 @@ class RestMovieGridViewModel(
                 movie.isInWatchlist = watchlistMovieIdList.value?.contains(movie.remoteId) == true
             }
         }
-
         insertMovieListToData(results)
     }
 
@@ -146,7 +146,7 @@ class RestMovieGridViewModel(
             },
             onCustomListSelected = {
                 Toast.makeText(getApplication(), "Playlist clicked", Toast.LENGTH_SHORT).show()
-                //onPlaylistAddCLicked(movie)
+                //onPlaylistAddCLicked(movie) // TODO implement this
             },
             onWatchlistSelected = {
                 updateWatchlist(movie)
