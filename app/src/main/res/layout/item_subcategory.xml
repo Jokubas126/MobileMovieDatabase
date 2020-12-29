@@ -31,16 +31,18 @@
                 android:background="?android:selectableItemBackground">
 
                 <CheckedTextView
-                    android:id="@+id/subcategory_title_view"
+                    android:id="@+id/item"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:checkMark="?android:attr/listChoiceIndicatorSingle"
-                    android:checkMarkTint="@color/secondary_500"
+                    android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+                    android:checkMarkTint="@color/subcategory_check_mark_tint_selector"
                     android:gravity="center"
                     android:paddingStart="40dp"
                     android:paddingEnd="10dp"
-                    android:text="@{viewModel.title}"
+                    android:checked="@{viewModel.isChecked()}"
+                    android:onClick="@{() -> viewModel.onItemClicked()}"
+                    android:text="@{viewModel.subcategory.name}"
                     android:textAppearance="@style/SubcategoryTextAppearance" />
 
             </LinearLayout>

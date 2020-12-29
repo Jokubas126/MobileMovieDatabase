@@ -4,8 +4,12 @@ import com.google.gson.annotations.SerializedName
 import com.jokubas.mmdb.model.data.util.KEY_ENGLISH_NAME
 import com.jokubas.mmdb.model.data.util.KEY_LANGUAGE_ISO_CODE
 
+enum class CategoryType{
+    GENRES, LANGUAGES
+}
+
 class Category(
-    val name: String,
+    var type: CategoryType,
     val subcategoryList: List<Subcategory>
 )
 

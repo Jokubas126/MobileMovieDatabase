@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -12,8 +11,6 @@ import com.example.mmdb.R
 import com.example.mmdb.databinding.FragmentDiscoverBinding
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_discover.*
-import kotlinx.android.synthetic.main.fragment_discover.loading_error_text_view
-import kotlinx.android.synthetic.main.fragment_discover.progress_bar
 
 class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     MenuItem.OnMenuItemClickListener {
@@ -38,33 +35,11 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupSlider()
-        setupToolbar()
-        observeViewModel()
-    }
-
-    private fun observeViewModel() {
-        viewModel.categories.observe(viewLifecycleOwner, { categories ->
-            categories?.let {
-                categories_recycler_view.visibility = View.VISIBLE
-                /*categoryAdapter.setChildClickListener { _, checked, group, childIndex ->
-                    viewModel.onSubcategorySelected(
-                        checked,
-                        group.name,
-                        (group.items[childIndex] as Subcategory)
-                    )
-                }*/
-                loading_error_text_view.visibility = View.GONE
-            } ?: run { loading_error_text_view.visibility = View.VISIBLE }
-            progress_bar.visibility = View.GONE
-            ViewCompat.setNestedScrollingEnabled(categories_recycler_view, false)
-        })
-    }
-
-    private fun setupSlider() {
         rangeSlider.addOnChangeListener { slider, value, _ ->
             viewModel.onRangeSliderValueChanged(slider.activeThumbIndex == 0, value.toInt())
         }
+
+        setupToolbar()
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
@@ -104,7 +79,6 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
                 if (isAppBarIdle)
                     setExpandAndCollapseEnabled(isExpanded)
             })
-        //categories_recycler_view.setAppBarTracking(this)
 
         expand_collapse_btn.setOnClickListener {
             isExpanded = !isExpanded

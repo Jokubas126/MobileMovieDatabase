@@ -7,10 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mmdb.databinding.ItemCategoryBinding
 import com.example.mmdb.databinding.ItemSubcategoryBinding
 import com.jokubas.mmdb.model.data.entities.Category
+import com.jokubas.mmdb.model.data.entities.CategoryType
 import com.jokubas.mmdb.model.data.entities.Subcategory
 
-class ItemsExpandableAdapter(private val category: Category) :
-    RecyclerView.Adapter<ItemsExpandableAdapter.ViewHolder>() {
+class ItemsExpandableAdapter(
+    private val category: Category,
+    private val onSubcategoryClicked: ((categoryType: CategoryType, subcategory: Subcategory, isChecked: Boolean) -> Unit)? = null
+) : RecyclerView.Adapter<ItemsExpandableAdapter.ViewHolder>() {
 
     enum class ViewType {
         HEADER, ITEM
@@ -34,7 +37,6 @@ class ItemsExpandableAdapter(private val category: Category) :
             else -> ViewHolder.ItemVH(
                 ItemSubcategoryBinding.inflate(inflater, parent, false)
             )
-
         }
     }
 
@@ -50,7 +52,11 @@ class ItemsExpandableAdapter(private val category: Category) :
                     }
                 }
             }
-            is ViewHolder.ItemVH -> holder.bind(category.subcategoryList[position - 1])
+            is ViewHolder.ItemVH -> holder.bind(
+                category.type,
+                category.subcategoryList[position - 1],
+                onSubcategoryClicked
+            )
         }
     }
 
@@ -59,14 +65,18 @@ class ItemsExpandableAdapter(private val category: Category) :
         class HeaderVH(private val binding: ItemCategoryBinding) : ViewHolder(binding.root) {
 
             fun bind(category: Category, onClick: () -> Unit) {
-                binding.viewModel = CategoryViewModel(category.name, onClick)
+                binding.viewModel = CategoryViewModel(category, onClick)
             }
         }
 
         class ItemVH(private val binding: ItemSubcategoryBinding) : ViewHolder(binding.root) {
 
-            fun bind(subcategory: Subcategory) {
-                binding.viewModel = SubCategoryViewModel(subcategory.name)
+            fun bind(
+                categoryType: CategoryType,
+                subcategory: Subcategory,
+                onClick: ((categoryType: CategoryType, subcategory: Subcategory, isChecked: Boolean) -> Unit)?
+            ) {
+                binding.viewModel = SubCategoryViewModel(subcategory, categoryType, onClick)
             }
         }
     }
