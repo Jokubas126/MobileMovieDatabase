@@ -42,8 +42,8 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
                 }
             }
 
-    private var languageSubcategory: Subcategory? = null
-    private var genreSubcategory: Subcategory? = null
+    private var languageSubcategory = mutableListOf<Subcategory>()
+    private var genreSubcategory = mutableListOf<Subcategory>()
 
     init {
         if (!isNetworkAvailable(getApplication()))
@@ -55,17 +55,22 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
         subcategory: Subcategory,
         isChecked: Boolean
     ) {
-        if (isChecked && subcategory.name.isNotBlank()) {
+        if (isChecked) {
             when (categoryType) {
-                CategoryType.LANGUAGES -> languageSubcategory = subcategory
-                CategoryType.GENRES -> genreSubcategory = subcategory
+                CategoryType.LANGUAGES -> languageSubcategory.addSubcategory(subcategory)
+                CategoryType.GENRES -> genreSubcategory.addSubcategory(subcategory)
             }
         } else {
             when (categoryType) {
-                CategoryType.LANGUAGES -> languageSubcategory = null
-                CategoryType.GENRES -> genreSubcategory = null
+                CategoryType.LANGUAGES -> languageSubcategory.remove(subcategory)
+                CategoryType.GENRES -> genreSubcategory.remove(subcategory)
             }
         }
+    }
+
+    private fun MutableList<Subcategory>.addSubcategory(subcategory: Subcategory) {
+        if (!contains(subcategory))
+            add(subcategory)
     }
 
     fun onRangeSliderValueChanged(isLeftThumb: Boolean, value: Int) {
@@ -82,15 +87,12 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
             if (startYear.get() == INITIAL_START_YEAR_VALUE) null
             else startYear.get().toString()
         action.endYear = endYear.get().toString()
-        val discoveryArrayList = arrayListOf("${startYear.get()} - ${endYear.get()}")
-        genreSubcategory?.let {
-            action.genreId = Integer.parseInt(it.code)
-            discoveryArrayList.add(it.name)
-        }
-        languageSubcategory?.let {
-            action.languageKey = it.code
-            discoveryArrayList.add(it.name)
-        }
+
+        val discoveryArrayList = arrayListOf("From: ${startYear.get()}", "To: ${endYear.get()}")
+
+        action.genreKeys = genreSubcategory.map { it.code }.toTypedArray()
+        action.languageKeys = languageSubcategory.map { it.code }.toTypedArray()
+
         if (discoveryArrayList.isNotEmpty())
             action.discoverNameArray = discoveryArrayList.toTypedArray()
         navController.navigate(action)

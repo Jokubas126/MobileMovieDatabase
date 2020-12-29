@@ -48,14 +48,15 @@
             app:argType="string[]"
             app:nullable="true" />
         <argument
-            android:name="genre_id"
-            android:defaultValue="0"
-            app:argType="integer" />
+            android:name="genre_keys"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
-            android:name="language_key"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
+            android:name="language_keys"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
     <!-- PERSONAL LISTS -->

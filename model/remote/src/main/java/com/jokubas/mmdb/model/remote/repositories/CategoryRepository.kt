@@ -45,9 +45,6 @@ class CategoryRepository(private val application: Application) {
 
     private fun formatSubcategories(list: List<Subcategory>): List<Subcategory> {
         sort(list) { o1: Subcategory, o2: Subcategory -> o1.name.compareTo(o2.name) }
-
-        // to have an empty item at the beginning for deselection
-        (list as MutableList<Subcategory>).add(0, Subcategory("", ""))
         return list
     }
 }

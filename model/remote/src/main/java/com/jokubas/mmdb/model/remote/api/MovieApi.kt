@@ -49,7 +49,7 @@ interface MovieApi {
         @Query(QUERY_PAGE) page: String,
         @Query(QUERY_RELEASE_DATE_START) startDate: String?,
         @Query(QUERY_RELEASE_DATE_END) endDate: String?,
-        @Query(QUERY_GENRES) genreId: String?,
+        @Query(QUERY_GENRES) genreKeys: String?,
         @Query(QUERY_ORIGINAL_LANGUAGE) language: String?
     ): MovieResults
 }

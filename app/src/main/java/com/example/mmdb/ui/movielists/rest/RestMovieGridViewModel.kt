@@ -82,8 +82,8 @@ class RestMovieGridViewModel(
                         keyCategory,
                         startYear,
                         endYear,
-                        genreId,
-                        languageKey,
+                        genreKeys,
+                        languageKeys,
                         searchQuery
                     )?.let { configureResults(it) }
                 } ?: progressManager.error()

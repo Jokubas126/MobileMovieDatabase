@@ -19,12 +19,12 @@ class RemoteMovieRepository {
         type: String?,
         startYear: String?,
         endYear: String?,
-        genreId: Int,
-        languageKey: String?,
+        genreKeys: Array<String>?,
+        languageKeys: Array<String>?,
         searchQuery: String?
     ) = when (movieListType) {
         TYPE_MOVIE_LIST -> type?.let { getTypeMovies(type, page) }
-        DISCOVER_MOVIE_LIST -> getDiscoveredMovies(page, startYear, endYear, genreId, languageKey)
+        DISCOVER_MOVIE_LIST -> getDiscoveredMovies(page, startYear, endYear, genreKeys, languageKeys)
         SEARCH_MOVIE_LIST -> searchQuery?.let { getSearchedMovies(searchQuery, page) }
         else -> null
     }
@@ -39,16 +39,15 @@ class RemoteMovieRepository {
         page: Int,
         startYear: String?,
         endYear: String?,
-        genreId: Int,
-        languageKey: String?
+        genreKeys: Array<String>?,
+        languageKeys: Array<String>?
     ) = service.getDiscoveredMovies(
         MOVIE_DB_API_KEY,
         page.toString(),
         startYear?.let { "$it-01-01" },
         "$endYear-12-31",
-        if (genreId == 0) null
-        else genreId.toString(),
-        languageKey
+        genreKeys?.joinToString(separator = ", "),
+        languageKeys?.joinToString(separator = ", ")
     )
 
     suspend fun getMovieListFromWatchlists(watchlists: List<WatchlistMovie>): List<Movie> {
