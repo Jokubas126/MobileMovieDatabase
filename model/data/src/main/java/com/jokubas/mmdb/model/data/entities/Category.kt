@@ -19,4 +19,6 @@ class Subcategory(
 
     @SerializedName(KEY_ENGLISH_NAME)
     val name: String
-)
+){
+    var isChecked = false
+}

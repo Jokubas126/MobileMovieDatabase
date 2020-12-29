@@ -34,8 +34,8 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
                     val adapters = arrayListOf<ItemsExpandableAdapter>()
                     value?.forEach { category ->
                         adapters.add(ItemsExpandableAdapter(category)
-                        { categoryType, subcategory, isChecked ->
-                            onSubcategoryClicked(categoryType, subcategory, isChecked)
+                        { categoryType, subcategory ->
+                            onSubcategoryClicked(categoryType, subcategory)
                         })
                     }
                     categoriesAdapter.set(ConcatAdapter(adapters))
@@ -52,10 +52,9 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
 
     private fun onSubcategoryClicked(
         categoryType: CategoryType,
-        subcategory: Subcategory,
-        isChecked: Boolean
+        subcategory: Subcategory
     ) {
-        if (isChecked) {
+        if (subcategory.isChecked) {
             when (categoryType) {
                 CategoryType.LANGUAGES -> languageSubcategory.addSubcategory(subcategory)
                 CategoryType.GENRES -> genreSubcategory.addSubcategory(subcategory)
@@ -88,7 +87,7 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
             else startYear.get().toString()
         action.endYear = endYear.get().toString()
 
-        val discoveryArrayList = arrayListOf("From: ${startYear.get()}", "To: ${endYear.get()}")
+        val discoveryArrayList = arrayListOf("From: ${action.startYear}", "To: ${action.endYear}")
 
         action.genreKeys = genreSubcategory.map { it.code }.toTypedArray()
         action.languageKeys = languageSubcategory.map { it.code }.toTypedArray()

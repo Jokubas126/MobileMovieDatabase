@@ -12,7 +12,7 @@ import com.jokubas.mmdb.model.data.entities.Subcategory
 
 class ItemsExpandableAdapter(
     private val category: Category,
-    private val onSubcategoryClicked: ((categoryType: CategoryType, subcategory: Subcategory, isChecked: Boolean) -> Unit)? = null
+    private val onSubcategoryClicked: ((categoryType: CategoryType, subcategory: Subcategory) -> Unit)? = null
 ) : RecyclerView.Adapter<ItemsExpandableAdapter.ViewHolder>() {
 
     enum class ViewType {
@@ -74,7 +74,7 @@ class ItemsExpandableAdapter(
             fun bind(
                 categoryType: CategoryType,
                 subcategory: Subcategory,
-                onClick: ((categoryType: CategoryType, subcategory: Subcategory, isChecked: Boolean) -> Unit)?
+                onClick: ((categoryType: CategoryType, subcategory: Subcategory) -> Unit)?
             ) {
                 binding.viewModel = SubCategoryViewModel(subcategory, categoryType, onClick)
             }
