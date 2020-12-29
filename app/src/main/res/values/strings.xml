@@ -43,8 +43,6 @@
     <!-- Release date related -->
 
     <string name="release_year_title">Release year</string>
-    <string name="infinity">∞</string>
-    <string name="max_release_date_value">2020</string>
 
     <!-- Custom lists -->
 

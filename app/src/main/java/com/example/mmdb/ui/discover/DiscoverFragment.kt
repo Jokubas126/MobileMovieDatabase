@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.mmdb.R
 import com.example.mmdb.databinding.FragmentDiscoverBinding
 import com.google.android.material.appbar.AppBarLayout
@@ -62,24 +63,14 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     }
 
     private fun setupSlider() {
-        rangeSlider.addOnChangeListener { rangeSlider, value, _ ->
-            if (rangeSlider.activeThumbIndex == 0) {
-                if (value == rangeSlider.valueFrom)
-                    release_year_slider_min_value.text = "∞"
-                else release_year_slider_min_value.text = value.toInt().toString()
-            } else {
-                release_year_slider_max_value.text = value.toInt().toString()
-            }
+        rangeSlider.addOnChangeListener { slider, value, _ ->
+            viewModel.onRangeSliderValueChanged(slider.activeThumbIndex == 0, value.toInt())
         }
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_confirm) {
-            viewModel.onConfirmSelectionClicked(
-                view!!,
-                release_year_slider_min_value.text.toString(),
-                release_year_slider_max_value.text.toString()
-            )
+            viewModel.onConfirmSelectionClicked(findNavController())
         }
         return true
     }

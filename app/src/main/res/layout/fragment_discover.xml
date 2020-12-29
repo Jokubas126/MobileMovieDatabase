@@ -8,6 +8,7 @@
         <variable
             name="viewModel"
             type="com.example.mmdb.ui.discover.DiscoverViewModel" />
+        <import type="java.text.DecimalFormatSymbols"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -56,20 +57,20 @@
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:id="@+id/release_year_slider_min_value"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="start"
-                                android:text="@string/infinity"
-                                android:textAppearance="@style/ReleaseYearItemsTextAppearance" />
+                                android:text="@{viewModel.startYear == 1950 ? DecimalFormatSymbols.getInstance().infinity : String.valueOf(viewModel.startYear)}"
+                                android:textAppearance="@style/ReleaseYearItemsTextAppearance"
+                                tools:text="1951"/>
 
                             <TextView
-                                android:id="@+id/release_year_slider_max_value"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="end"
-                                android:text="@string/max_release_date_value"
-                                android:textAppearance="@style/ReleaseYearItemsTextAppearance" />
+                                android:text="@{String.valueOf(viewModel.endYear)}"
+                                android:textAppearance="@style/ReleaseYearItemsTextAppearance"
+                                tools:text="2021"/>
 
                         </FrameLayout>
 
@@ -78,8 +79,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:stepSize="1.0"
-                            android:valueFrom="1950.0"
-                            android:valueTo="2020.0"
+                            android:valueFrom="@{Float.parseFloat(String.valueOf(viewModel.Companion.INITIAL_START_YEAR_VALUE))}"
+                            android:valueTo="@{Float.parseFloat(String.valueOf(viewModel.Companion.INITIAL_END_YEAR_VALUE))}"
                             app:labelBehavior="gone"
                             app:thumbColor="@color/secondary_500"
                             app:thumbRadius="10dp"
