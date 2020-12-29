@@ -36,7 +36,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
                     android:checkMark="?android:attr/listChoiceIndicatorSingle"
-                    android:checkMarkTint="@color/grey_800"
+                    android:checkMarkTint="@color/secondary_500"
                     android:gravity="center"
                     android:paddingStart="40dp"
                     android:paddingEnd="10dp"

@@ -22,7 +22,8 @@
             android:layout_marginBottom="3dp"
             app:cardBackgroundColor="@color/white_80"
             app:cardCornerRadius="@dimen/default_card_corner_radius"
-            app:cardElevation="0dp">
+            app:cardElevation="0dp"
+            android:onClick="@{() -> viewModel.onClick.invoke()}">
 
             <LinearLayout
                 android:layout_width="match_parent"

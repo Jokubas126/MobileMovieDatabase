@@ -11,15 +11,12 @@ import androidx.navigation.fragment.findNavController
 import com.example.mmdb.R
 import com.example.mmdb.databinding.FragmentDiscoverBinding
 import com.google.android.material.appbar.AppBarLayout
-import com.jokubas.mmdb.model.data.entities.Category
 import kotlinx.android.synthetic.main.fragment_discover.*
 import kotlinx.android.synthetic.main.fragment_discover.loading_error_text_view
 import kotlinx.android.synthetic.main.fragment_discover.progress_bar
 
 class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     MenuItem.OnMenuItemClickListener {
-
-    private lateinit var categoryAdapter: CategoryAdapter
 
     private lateinit var viewModel: DiscoverViewModel
 
@@ -49,12 +46,14 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     private fun observeViewModel() {
         viewModel.categories.observe(viewLifecycleOwner, { categories ->
             categories?.let {
-                categoryAdapter = CategoryAdapter(it)
-                categories_recycler_view.adapter = categoryAdapter
                 categories_recycler_view.visibility = View.VISIBLE
-                categoryAdapter.setChildClickListener { _, checked, group, childIndex ->
-                    viewModel.onSubcategorySelected(checked, group as Category, childIndex)
-                }
+                /*categoryAdapter.setChildClickListener { _, checked, group, childIndex ->
+                    viewModel.onSubcategorySelected(
+                        checked,
+                        group.name,
+                        (group.items[childIndex] as Subcategory)
+                    )
+                }*/
                 loading_error_text_view.visibility = View.GONE
             } ?: run { loading_error_text_view.visibility = View.VISIBLE }
             progress_bar.visibility = View.GONE
@@ -105,7 +104,7 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
                 if (isAppBarIdle)
                     setExpandAndCollapseEnabled(isExpanded)
             })
-        categories_recycler_view.setAppBarTracking(this)
+        //categories_recycler_view.setAppBarTracking(this)
 
         expand_collapse_btn.setOnClickListener {
             isExpanded = !isExpanded

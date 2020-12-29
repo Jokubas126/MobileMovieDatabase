@@ -7,6 +7,26 @@
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <item name="android:itemTextAppearance">@style/PopupMenuItemStyle</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <!-- Background for the search query section (e.g. EditText) -->
+        <item name="queryBackground">@drawable/bg_release_date_layout</item>
+        <!-- Background for the actions section (e.g. voice, submit) -->
+        <item name="submitBackground">@color/black_10</item>
+        <!-- Close button icon
+        <item name="closeIcon">@drawable/ic_big_</item>-->
+        <!-- Search button icon -->
+        <item name="searchIcon">@drawable/ic_search</item>
+        <!-- Go/commit button icon -->
+        <item name="goIcon">@drawable/ic_check</item>
+        <!-- Voice search button icon
+        <item name="voiceIcon">...</item>-->
+        <!-- Commit icon shown in the query suggestion row
+        <item name="commitIcon">...</item>-->
+        <!-- Layout for query suggestion rows
+        <item name="suggestionRowLayout">...</item>-->
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

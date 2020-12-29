@@ -13,6 +13,7 @@ import androidx.navigation.ui.NavigationUI
 import com.example.mmdb.NavGraphDirections
 import com.example.mmdb.R
 import com.google.android.material.navigation.NavigationView
+import com.jokubas.mmdb.util.SEARCH_MOVIE_LIST
 import com.jokubas.mmdb.util.constants.KEY_NOW_PLAYING
 import com.jokubas.mmdb.util.constants.KEY_POPULAR
 import com.jokubas.mmdb.util.constants.KEY_TOP_RATED
@@ -72,21 +73,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
         searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem!!.actionView as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
-                action.movieGridType = com.jokubas.mmdb.util.SEARCH_MOVIE_LIST
-                action.searchQuery = query
-                navController.popBackStack(navController.currentDestination!!.id, true)
-                navController.navigate(action)
-                return false
-            }
+        (searchItem?.actionView as SearchView?)?.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
+                    action.movieGridType = SEARCH_MOVIE_LIST
+                    action.searchQuery = query
+                    navController.popBackStack(navController.currentDestination!!.id, true)
+                    navController.navigate(action)
+                    return false
+                }
 
-            override fun onQueryTextChange(newText: String): Boolean {
-                return false
-            }
-        })
+                override fun onQueryTextChange(newText: String): Boolean {
+                    return false
+                }
+            })
         confirmItem = menu.findItem(R.id.action_confirm)
         confirmItem!!.isVisible = false
         return true

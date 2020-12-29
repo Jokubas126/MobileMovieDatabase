@@ -44,8 +44,5 @@ dependencies {
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
 
-    implementation "com.thoughtbot:expandablerecyclerview:$expandableRecyclerViewVersion"
-    implementation "com.thoughtbot:expandablecheckrecyclerview:$expandableCheckableRecyclerViewVersion"
-
     implementation project(':util')
 }

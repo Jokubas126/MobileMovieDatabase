@@ -52,8 +52,6 @@ dependencies {
 
 
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
-    implementation "com.thoughtbot:expandablerecyclerview:$expandableRecyclerViewVersion"
-    implementation "com.thoughtbot:expandablecheckrecyclerview:$expandableCheckableRecyclerViewVersion"
 
     implementation "me.tatarka.bindingcollectionadapter2:bindingcollectionadapter:$tatarkaBindingAdapterVersion"
     implementation "me.tatarka.bindingcollectionadapter2:bindingcollectionadapter-recyclerview:$tatarkaBindingAdapterVersion"

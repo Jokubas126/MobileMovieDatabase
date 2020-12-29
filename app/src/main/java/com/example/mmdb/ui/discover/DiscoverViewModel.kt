@@ -1,22 +1,16 @@
 package com.example.mmdb.ui.discover
 
 import android.app.Application
-import android.view.View
+import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import com.jokubas.mmdb.model.data.entities.Category
+import androidx.recyclerview.widget.ConcatAdapter
 import com.jokubas.mmdb.model.data.entities.Subcategory
 import com.jokubas.mmdb.model.remote.repositories.CategoryRepository
 import com.jokubas.mmdb.util.*
-import kotlinx.android.synthetic.main.fragment_discover.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.time.Year
-import java.time.ZonedDateTime
 import java.util.*
+
 
 class DiscoverViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -31,37 +25,44 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
     val startYear = ObservableInt(INITIAL_START_YEAR_VALUE)
     val endYear = ObservableInt(INITIAL_END_YEAR_VALUE)
 
-    private val _categories =
-        CategoryRepository(application).getCategories().asLiveData(viewModelScope.coroutineContext)
+    val categoriesAdapter = ObservableField<ConcatAdapter>()
 
-    val categories
-        get() = _categories
+    val categories =
+        CategoryRepository(application).getCategories()
+            .asLiveData(viewModelScope.coroutineContext).apply {
+                observeForever {
+                    val adapters = arrayListOf<ItemsExpandableAdapter>()
+                    value?.forEach {
+                        it?.let { category ->
+                            adapters.add(ItemsExpandableAdapter(category))
+                        }
+                    }
+                    categoriesAdapter.set(ConcatAdapter(adapters))
+                }
+            }
 
     private var languageSubcategory: Subcategory? = null
     private var genreSubcategory: Subcategory? = null
 
     init {
-        CoroutineScope(Dispatchers.IO).launch {
-            if (!isNetworkAvailable(getApplication()))
-                networkUnavailableNotification(getApplication())
-        }
+        if (!isNetworkAvailable(getApplication()))
+            networkUnavailableNotification(getApplication())
     }
 
-    fun onSubcategorySelected(checked: Boolean, category: Category, itemIndex: Int) {
-        if (checked && (category.items[itemIndex] as Subcategory).name.isNotBlank()) {
-            when (category.name) {
-                LANGUAGE_CATEGORY -> languageSubcategory =
-                    category.items[itemIndex] as Subcategory
-                GENRE_CATEGORY -> genreSubcategory =
-                    category.items[itemIndex] as Subcategory
+    fun onSubcategorySelected(checked: Boolean, categoryName: String, subcategory: Subcategory) {
+        if (checked && subcategory.name.isNotBlank()) {
+            when (categoryName) {
+                LANGUAGE_CATEGORY -> languageSubcategory = subcategory
+                GENRE_CATEGORY -> genreSubcategory = subcategory
             }
         } else {
-            when (category.name) {
+            when (categoryName) {
                 LANGUAGE_CATEGORY -> languageSubcategory = null
                 GENRE_CATEGORY -> genreSubcategory = null
             }
         }
     }
+
 
     fun onRangeSliderValueChanged(isLeftThumb: Boolean, value: Int) {
         when (isLeftThumb) {
@@ -89,5 +90,10 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
         if (discoveryArrayList.isNotEmpty())
             action.discoverNameArray = discoveryArrayList.toTypedArray()
         navController.navigate(action)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        categories.removeObserver {}
     }
 }
