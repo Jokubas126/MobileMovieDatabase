@@ -6,9 +6,9 @@ import androidx.databinding.ObservableInt
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.ConcatAdapter
+import com.example.mmdb.config.requireAppConfig
 import com.jokubas.mmdb.model.data.entities.CategoryType
 import com.jokubas.mmdb.model.data.entities.Subcategory
-import com.jokubas.mmdb.model.remote.repositories.CategoryRepository
 import com.jokubas.mmdb.util.*
 import java.util.*
 
@@ -27,7 +27,7 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
 
     val categoriesAdapter = ObservableField<ConcatAdapter>()
 
-    private val categories = CategoryRepository().getCategories()
+    private val categories = application.requireAppConfig().movieConfig.categoryRepository.getCategories()
         .asLiveData(viewModelScope.coroutineContext).apply {
             observeForever { categoryList ->
                 val adapters = arrayListOf<ItemsExpandableAdapter>()

@@ -2,6 +2,7 @@ package com.example.mmdb.ui.details.overview
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.managers.ProgressManager
 import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
@@ -22,7 +23,7 @@ class OverviewViewModel(application: Application, movieLocalId: Int, movieRemote
     val progressManager = ProgressManager()
 
     private val roomMovieRepository by lazy { RoomMovieRepository(application) }
-    private val remoteMovieRepository by lazy { RemoteMovieRepository() }
+    private val remoteMovieRepository = application.requireAppConfig().movieConfig.remoteMovieRepository
 
     init {
         viewModelScope.launch {

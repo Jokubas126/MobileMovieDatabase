@@ -1,17 +1,14 @@
 package com.jokubas.mmdb.model.remote.repositories
 
-import com.jokubas.mmdb.model.data.entities.Category
-import com.jokubas.mmdb.model.data.entities.CategoryType
-import com.jokubas.mmdb.model.data.entities.Genres
-import com.jokubas.mmdb.model.data.entities.Subcategory
-import com.jokubas.mmdb.model.remote.services.MovieApiService
+import com.jokubas.mmdb.model.data.entities.*
+import com.jokubas.mmdb.model.remote.services.MovieService
 import com.jokubas.mmdb.util.constants.MOVIE_DB_API_KEY
 import kotlinx.coroutines.flow.flow
 import java.util.Collections.sort
 
-class CategoryRepository {
-
-    private var service = MovieApiService.api
+class CategoryRepository(
+    private val service: MovieService
+) {
 
     fun getCategories() = flow {
         emit(listOf(getGenresCategory(), getLanguagesCategory()))

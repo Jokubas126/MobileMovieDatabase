@@ -25,9 +25,9 @@ class CreditsViewModel(application: Application, movieLocalId: Int, movieRemoteI
         when (movieLocalId) {
             DEFAULT_ID_VALUE -> {
                 if (isNetworkAvailable(application)) {
-                    RemoteMovieRepository()
+                    /*RemoteMovieRepository()
                         .getCreditsFlow(movieRemoteId)
-                        .asLiveData(viewModelScope.coroutineContext)
+                        .asLiveData(viewModelScope.coroutineContext)*/
                 } else {
                     networkUnavailableNotification(application)
                     progressManager.error()
@@ -60,11 +60,11 @@ class CreditsViewModel(application: Application, movieLocalId: Int, movieRemoteI
     }
 
     init {
-        credits?.observeForever(creditsObserver)
+        //credits?.observeForever(creditsObserver)
     }
 
     override fun onCleared() {
         super.onCleared()
-        credits?.removeObserver(creditsObserver)
+        //credits?.removeObserver(creditsObserver)
     }
 }

@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.navigation.Navigation
 import com.example.mmdb.NavGraphDirections
 import com.example.mmdb.R
+import com.example.mmdb.config.requireAppConfig
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.util.isNetworkAvailable
 import com.jokubas.mmdb.util.networkUnavailableNotification
@@ -28,7 +29,7 @@ class AddToListsTaskManager(
     private val popupWindow: AddToListsPopupWindow
 ) : AddToListsPopupWindow.ListsConfirmedClickListener {
 
-    private val remoteMovieRepository = RemoteMovieRepository()
+    private val remoteMovieRepository = application.requireAppConfig().movieConfig.remoteMovieRepository
     private val movieListRepository = CustomMovieListRepository(application)
     private val roomMovieRepository = RoomMovieRepository(application)
 

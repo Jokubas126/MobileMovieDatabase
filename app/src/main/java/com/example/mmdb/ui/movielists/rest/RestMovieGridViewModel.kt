@@ -8,6 +8,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
+import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.ui.movielists.ItemMovieConfig
 import com.example.mmdb.ui.movielists.ItemMovieViewModel
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
@@ -39,7 +40,7 @@ class RestMovieGridViewModel(
         get() = progressManager.loading
 
     // repositories
-    private val remoteMovieRepository = RemoteMovieRepository()
+    private val remoteMovieRepository = application.requireAppConfig().movieConfig.remoteMovieRepository
     private val watchlistRepository = WatchlistRepository(application)
     private val genresRepository = GenresRepository(application)
 

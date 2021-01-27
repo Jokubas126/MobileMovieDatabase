@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation
 import com.example.mmdb.R
+import com.example.mmdb.config.requireAppConfig
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsPopupWindow
@@ -37,7 +38,7 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     val loading: LiveData<Boolean>
         get() = progressManager.loading
 
-    private val remoteMovieRepository = RemoteMovieRepository()
+    private val remoteMovieRepository = application.requireAppConfig().movieConfig.remoteMovieRepository
     private val watchlistRepository = WatchlistRepository(application)
 
     init {
