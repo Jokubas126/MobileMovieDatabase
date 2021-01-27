@@ -58,7 +58,7 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        menu.findItem(R.id.action_search).isVisible = false
+        //menu.findItem(R.id.action_search).isVisible = false
         val confirmItem = menu.findItem(R.id.action_confirm)
         confirmItem.isVisible = true
         confirmItem.setOnMenuItemClickListener(this)
