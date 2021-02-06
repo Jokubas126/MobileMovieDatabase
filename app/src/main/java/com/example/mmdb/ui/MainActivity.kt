@@ -3,60 +3,77 @@ package com.example.mmdb.ui
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.TextAppearanceSpan
-import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
-import androidx.navigation.*
-import androidx.navigation.ui.NavigationUI
-import com.example.mmdb.NavGraphDirections
 import com.example.mmdb.R
-import com.google.android.material.navigation.NavigationView
-import com.jokubas.mmdb.util.SEARCH_MOVIE_LIST
-import com.jokubas.mmdb.util.constants.KEY_NOW_PLAYING
-import com.jokubas.mmdb.util.constants.KEY_POPULAR
-import com.jokubas.mmdb.util.constants.KEY_TOP_RATED
-import com.jokubas.mmdb.util.constants.KEY_UPCOMING
+import com.example.mmdb.navigation.NavigationActivity
+import com.example.mmdb.navigation.NavigationController
+import com.example.mmdb.navigation.actions.AboutFragmentAction
+import com.example.mmdb.ui.drawer.DrawerAction
+import com.example.mmdb.ui.drawer.DrawerBehaviorInteractor
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-
-    private lateinit var navController: NavController
+class MainActivity : NavigationActivity(R.layout.activity_main) {
 
     private var searchItem: MenuItem? = null
     private var confirmItem: MenuItem? = null
+
+    override val navigationController: NavigationController by lazy {
+        NavigationController(
+            activity = this,
+            drawerInteractor = DrawerBehaviorInteractor(
+                drawerLayout = drawerLayout,
+                contentView = rootContainer
+            )
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(toolbar)
         loadAppNavigation()
-        prepareDrawerMenuItemCategoryStyle()
     }
 
     private fun loadAppNavigation() {
-        navigation_view.setNavigationItemSelectedListener(this)
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-        NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
-
-        navController.addOnDestinationChangedListener { controller: NavController, destination: NavDestination, _: Bundle? ->
-            run {
-                if (destination != controller.graph.findNode(R.id.categoriesFragment)) {
-                    setSupportActionBar(toolbar)
-                    searchItem?.isVisible = true
-                    confirmItem?.isVisible = false
-                    toolbar.title = destination.label
-                    toolbar.visibility = View.VISIBLE
+        menu_icon.setOnClickListener { navigationController.goTo(DrawerAction.Open) }
+        navigationController.apply {
+            navigation_view.setNavigationItemSelectedListener { menuItem ->
+                when (menuItem.itemId) {
+                    /*R.id.menu_categories -> navController?.navigate(NavGraphDirections.actionGlobalCategoriesFragment())
+                    R.id.menu_watchlist -> navController?.navigate(NavGraphDirections.actionGlobalWatchlistFragment())
+                    R.id.menu_custom_lists -> navController?.navigate(NavGraphDirections.actionGlobalCustomListsFragment())
+                    R.id.menu_popular -> {
+                        val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
+                        action.keyCategory = KEY_POPULAR
+                        navController?.navigate(action)
+                    }
+                    R.id.menu_top_rated -> {
+                        val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
+                        action.keyCategory = KEY_TOP_RATED
+                        navController?.navigate(action)
+                    }
+                    R.id.menu_now_playing -> {
+                        val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
+                        action.keyCategory = KEY_NOW_PLAYING
+                        navController?.navigate(action)
+                    }
+                    R.id.menu_upcoming -> {
+                        val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
+                        action.keyCategory = KEY_UPCOMING
+                        navController?.navigate(action)
+                    }*/
+                    R.id.menu_about -> navigationController.goTo(
+                        action = AboutFragmentAction(),
+                        animation = NavigationController.Animation.FadeIn
+                    )
                 }
+                navigationController.goTo(DrawerAction.Close)
+                true
             }
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController, drawer_layout)
+        prepareDrawerMenuItemCategoryStyle()
     }
 
     // to make drawer menu group titles styled
@@ -92,36 +109,4 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         confirmItem!!.isVisible = false
         return true
     }*/
-
-    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        when (menuItem.itemId) {
-            R.id.menu_categories -> navController.navigate(NavGraphDirections.actionGlobalCategoriesFragment())
-            R.id.menu_watchlist -> navController.navigate(NavGraphDirections.actionGlobalWatchlistFragment())
-            R.id.menu_custom_lists -> navController.navigate(NavGraphDirections.actionGlobalCustomListsFragment())
-
-            R.id.menu_popular -> {
-                val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
-                action.keyCategory = KEY_POPULAR
-                navController.navigate(action)
-            }
-            R.id.menu_top_rated -> {
-                val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
-                action.keyCategory = KEY_TOP_RATED
-                navController.navigate(action)
-            }
-            R.id.menu_now_playing -> {
-                val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
-                action.keyCategory = KEY_NOW_PLAYING
-                navController.navigate(action)
-            }
-            R.id.menu_upcoming -> {
-                val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
-                action.keyCategory = KEY_UPCOMING
-                navController.navigate(action)
-            }
-            R.id.menu_about -> navController.navigate(NavGraphDirections.actionGlobalAboutFragment())
-        }
-        drawer_layout.closeDrawers()
-        return true
-    }
 }

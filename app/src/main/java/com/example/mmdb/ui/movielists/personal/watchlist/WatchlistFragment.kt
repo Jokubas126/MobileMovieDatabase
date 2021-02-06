@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.R
 import com.example.mmdb.ui.movielists.MovieGridAdapter
@@ -99,7 +97,7 @@ class WatchlistFragment : Fragment(), MovieGridAdapter.ItemClickListener,
     override fun onPlaylistAdd(movie: Movie) {
         viewModel.onPlaylistAddCLicked(
             movie,
-            (activity as AppCompatActivity).nav_host_fragment.requireView()
+            (activity as AppCompatActivity).rootContainer.rootView
         )
     }
 }

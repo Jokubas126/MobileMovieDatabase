@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient
 
 class AppConfig(context: Context) {
 
-    val configVars: ConfigVars = ConfigVars()
+    private val configVars: ConfigVars = ConfigVars()
 
     val movieConfig: MovieConfig by lazy {
         MovieConfig(
@@ -17,6 +17,8 @@ class AppConfig(context: Context) {
             httpClientBuilder = OkHttpClient.Builder()
         )
     }
+
+    //val navControllerConfig = NavigationControllerConfig()
 }
 
 fun Application.requireAppConfig(): AppConfig = (this as MainApplication).config
