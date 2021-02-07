@@ -11,7 +11,8 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
         <include layout="@layout/view_main_background" />
 
@@ -40,50 +41,49 @@
                         android:layout_height="wrap_content"
                         android:theme="@style/AppTheme.AppBarOverlay">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:padding="@dimen/spacing_xxs">
-
-                            <ImageView
-                                android:id="@+id/menu_icon"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:adjustViewBounds="true"
-                                android:padding="@dimen/spacing_s"
-                                android:src="@drawable/ic_drawer_menu"
-                                app:layout_constraintStart_toStartOf="parent" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent">
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:padding="@dimen/spacing_xxs">
 
                                 <ImageView
-                                    android:id="@+id/title_icon"
+                                    android:id="@+id/menu_icon"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
+                                    android:layout_height="match_parent"
                                     android:adjustViewBounds="true"
-                                    android:padding="@dimen/spacing_xs"
-                                    android:src="@drawable/ic_main" />
+                                    android:padding="@dimen/spacing_s"
+                                    android:src="@drawable/ic_drawer_menu"
+                                    app:layout_constraintStart_toStartOf="parent" />
 
-                                <TextView
+                                <LinearLayout
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:fontFamily="@font/roboto_condensed_bold_italic"
-                                    android:text="Mmdb"
-                                    android:textColor="@color/primary"
-                                    android:textSize="25sp" />
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent">
 
-                            </LinearLayout>
+                                    <ImageView
+                                        android:id="@+id/title_icon"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:adjustViewBounds="true"
+                                        android:padding="@dimen/spacing_xs"
+                                        android:src="@drawable/ic_main" />
 
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:fontFamily="@font/roboto_condensed_bold_italic"
+                                        android:text="Mmdb"
+                                        android:textColor="@color/primary"
+                                        android:textSize="25sp" />
 
+                                </LinearLayout>
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
                     </com.google.android.material.appbar.AppBarLayout>
                 </FrameLayout>
             </androidx.cardview.widget.CardView>

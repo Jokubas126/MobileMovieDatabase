@@ -3,10 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="android:layout">@layout/activity_main</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:outlineAmbientShadowColor">#60000000</item>
-        <item name="android:outlineSpotShadowColor">#60000000</item>
+        <item name="android:windowTranslucentStatus">true</item>\
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <item name="android:itemTextAppearance">@style/PopupMenuItemStyle</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>

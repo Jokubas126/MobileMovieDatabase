@@ -6,7 +6,6 @@ import com.example.mmdb.R
 import com.example.mmdb.navigation.NavigationActivity
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.configproviders.NavigationWrapperFragmentConfigProvider
-import com.example.mmdb.navigation.configproviders.RemoteMovieGridFragmentConfigProvider
 import com.example.mmdb.ui.drawer.DrawerBehaviorInteractor
 import com.example.mmdb.ui.drawer.DrawerLayoutInteractor
 import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragmentAction
@@ -46,7 +45,7 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
                 })
             .commit()
 
-        drawerLayoutInteractor.configureDrawerItems(navigation_view, navigationController)
+        drawerLayoutInteractor.configureDrawerItems(navigationView, navigationController)
     }
 
     /*override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -15,18 +15,18 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme"
-        tools:context=".MainActivity"/>
+        tools:context=".MainActivity" />
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation_view"
+        android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/header_drawer_layout"
         android:background="@color/secondary_500"
+        app:headerLayout="@layout/header_drawer_layout"
         app:itemBackground="@color/secondary_500"
-        app:menu="@menu/drawer_layout_menu"
         app:itemTextAppearance="@style/ItemTextAppearance"
-        app:itemTextColor="@color/white"/>
+        app:itemTextColor="@color/white"
+        app:menu="@menu/drawer_layout_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
