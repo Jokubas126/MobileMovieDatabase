@@ -6,14 +6,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mmdb.BR
-import com.example.mmdb.MainApplication
 import com.example.mmdb.R
 import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.managers.ProgressManager
 import com.jokubas.mmdb.model.data.entities.Image
 import com.jokubas.mmdb.model.data.entities.Images
 import com.jokubas.mmdb.model.data.entities.Video
-import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.jokubas.mmdb.util.*
 import com.jokubas.mmdb.util.constants.KEY_TRAILER_TYPE

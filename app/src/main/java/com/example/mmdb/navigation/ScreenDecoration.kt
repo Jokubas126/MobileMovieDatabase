@@ -7,16 +7,6 @@ package com.example.mmdb.navigation
  */
 sealed class ScreenDecoration {
 
-    open class Toolbar(
-        protected var title: String
-    ) : ScreenDecoration() {
-
-        /*constructor(
-            @StringRes titleRes: Int
-        ) : this(
-            title = titleRes.toTitle()
-        )*/
-    }
-
-    object None : ScreenDecoration()
+    object Wrapper : ScreenDecoration()
+    object Full : ScreenDecoration()
 }

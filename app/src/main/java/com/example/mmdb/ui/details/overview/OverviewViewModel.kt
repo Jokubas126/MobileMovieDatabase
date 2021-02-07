@@ -5,7 +5,6 @@ import androidx.lifecycle.*
 import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.managers.ProgressManager
 import com.jokubas.mmdb.model.data.entities.Movie
-import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.jokubas.mmdb.util.DEFAULT_ID_VALUE
 import com.jokubas.mmdb.util.isNetworkAvailable

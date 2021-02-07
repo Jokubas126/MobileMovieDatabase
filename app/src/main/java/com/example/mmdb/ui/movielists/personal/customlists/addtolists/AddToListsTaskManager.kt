@@ -1,17 +1,12 @@
 package com.example.mmdb.ui.movielists.personal.customlists.addtolists
 
 import android.app.Application
-import android.view.View
 import android.widget.Toast
-import androidx.navigation.Navigation
 import com.example.mmdb.R
 import com.example.mmdb.config.requireAppConfig
-import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.util.isNetworkAvailable
 import com.jokubas.mmdb.util.networkUnavailableNotification
-import com.jokubas.mmdb.util.showProgressSnackBar
 import com.jokubas.mmdb.util.showToast
-import com.google.android.material.snackbar.Snackbar
 import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository

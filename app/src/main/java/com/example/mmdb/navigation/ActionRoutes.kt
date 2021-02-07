@@ -25,7 +25,7 @@ val actionRoutes: List<ActionFragmentProviderPair<*>> = listOf(
             RemoteMovieGridFragment().apply {
                 arguments = RemoteMovieGridFragmentArgs.create(
                     action = action,
-                    configProvider = RemoteMovieGridFragmentConfigProvider::class.java
+                    configProvider = RemoteMovieGridFragmentConfigProvider::class.java,
                 )
             }
         }
@@ -46,5 +46,5 @@ val actionRoutes: List<ActionFragmentProviderPair<*>> = listOf(
 data class ActionFragmentProviderPair<T : Parcelable>(
     internal val key: Class<T>,
     internal val value: FragmentProvider<T>,
-    internal val screenDecoration: ScreenDecoration = ScreenDecoration.None
+    internal val screenDecoration: ScreenDecoration = ScreenDecoration.Wrapper
 )

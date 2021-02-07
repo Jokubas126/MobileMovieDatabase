@@ -7,6 +7,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.mmdb.R
+import com.example.mmdb.navigation.configproviders.NavigationWrapperFragmentConfigProvider
+import com.example.mmdb.ui.NavigationWrapperFragment
+import com.example.mmdb.ui.NavigationWrapperFragmentArgs
 import com.example.mmdb.ui.drawer.DrawerAction
 import com.example.mmdb.ui.drawer.DrawerBehaviorInterface
 import java.util.*
@@ -105,8 +108,8 @@ class NavigationController(
                         if (isTerminalFragment) {
                             goBack()
                         }
-                        showFragment(fragment, animation)
-                        isTerminalFragment = decoration == ScreenDecoration.None
+                        showFragment(action, fragment, decoration, animation)
+                        isTerminalFragment = decoration == ScreenDecoration.Wrapper
                     }
                 }
             }
@@ -134,13 +137,24 @@ class NavigationController(
     }
 
     private fun showFragment(
+        action: Parcelable,
         fragment: Fragment,
+        decoration: ScreenDecoration,
         animation: Animation?
     ) {
-        when (fragment) {
-            is DialogFragment -> {
+        when {
+            fragment is DialogFragment -> {
                 dialogFragmentStack.push(fragment)
                 fragment.show(currentFragmentManager, fragment.javaClass.simpleName)
+            }
+            animation.toRootFrame && decoration is ScreenDecoration.Wrapper -> {
+                if (isStackControllerVisible) {
+                    resetStacks()
+                }
+                showFragmentInFullscreen(
+                    fragment = createWrapperFragment(action),
+                    animation = animation
+                )
             }
             else -> showFragmentInFullscreen(fragment, animation)
         }
@@ -150,9 +164,9 @@ class NavigationController(
         val transactionId: String = UUID.randomUUID().toString()
         val isToRootFrame = animation.toRootFrame
 
-        val containerId: Int? = if (isToRootFrame) {
+        val containerId: Int = if (isToRootFrame) {
             R.id.rootContainer
-        } else null//R.id.wrapperContainer
+        } else R.id.wrapperContainer
 
         val fragmentManager = if (isToRootFrame) {
             parentFragmentManager
@@ -162,32 +176,32 @@ class NavigationController(
             .beginTransaction()
             .apply {
                 animation?.let { anim ->
-                    setCustomAnimations(
-                        anim.enter,
-                        anim.exit,
-                        anim.popEnter,
-                        anim.popExit
-                    )
+                    setCustomAnimations(anim.enter, anim.exit, anim.popEnter, anim.popExit)
                 }
-
-                containerId?.let {
-                    if (isToRootFrame) {
-                        this.add(containerId, fragment, transactionId)
-                    } else {
-                        this.replace(containerId, fragment, transactionId)
-                    }
-                    if (animation != null) {
-                        this.addToBackStack(fragment.id.toString())
-                    }
+                if (isToRootFrame) {
+                    this.add(containerId, fragment, transactionId)
+                } else {
+                    this.replace(containerId, fragment, transactionId)
                 }
-
+                animation?.let { this.addToBackStack(fragment.id.toString()) }
             }
             .commitAllowingStateLoss()
     }
 
+    private fun createWrapperFragment(action: Parcelable): Fragment =
+        NavigationWrapperFragment().apply {
+            arguments = NavigationWrapperFragmentArgs.create(
+                action = action,
+                configProvider = NavigationWrapperFragmentConfigProvider::class.java
+            )
+        }
+
     override fun isOnForeground(): Boolean =
         isStackControllerVisible && isTopStackControllerFragment
 
+    private fun resetStacks() {
+        navigationHolderStack.clear()
+    }
 
     private data class NavigationHolder(
         val fragmentManager: FragmentManager

@@ -21,4 +21,3 @@ class AppConfig(context: Context) {
 
 fun Application.requireAppConfig(): AppConfig = (this as MainApplication).config
 fun Activity.requireAppConfig(): AppConfig = (application as MainApplication).config
-fun Fragment.requireAppConfig(): AppConfig = (requireActivity().application as MainApplication).config
