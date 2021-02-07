@@ -79,7 +79,7 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun onConfirmSelectionClicked(navController: NavController) {
-        val action = DiscoverFragmentDirections.actionRemoteMovieGridFragment()
+        /*val action = DiscoverFragmentDirections.actionRemoteMovieGridFragment()
         action.movieGridType = DISCOVER_MOVIE_LIST
         action.startYear =
             if (startYear.get() == INITIAL_START_YEAR_VALUE) null
@@ -98,7 +98,7 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
                 action.discoverNameArray = this.toTypedArray()
         }
 
-        navController.navigate(action)
+        navController.navigate(action)*/
     }
 
     override fun onCleared() {

@@ -17,8 +17,6 @@ class AppConfig(context: Context) {
             httpClientBuilder = OkHttpClient.Builder()
         )
     }
-
-    //val navControllerConfig = NavigationControllerConfig()
 }
 
 fun Application.requireAppConfig(): AppConfig = (this as MainApplication).config

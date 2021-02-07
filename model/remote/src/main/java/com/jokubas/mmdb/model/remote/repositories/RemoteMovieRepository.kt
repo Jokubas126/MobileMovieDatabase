@@ -13,34 +13,37 @@ class RemoteMovieRepository(
     private val service: MovieService
 ) {
 
-    suspend fun getMovieResults(
+    /*suspend fun getMovieResults(
         page: Int,
-        movieListType: String?,
-        type: String?,
-        startYear: String?,
-        endYear: String?,
-        genreKeys: Array<String>?,
-        languageKeys: Array<String>?,
-        searchQuery: String?
-    ) = when (movieListType) {
-        TYPE_MOVIE_LIST -> type?.let { getTypeMovies(type, page) }
-        DISCOVER_MOVIE_LIST -> getDiscoveredMovies(page, startYear, endYear, genreKeys, languageKeys)
-        SEARCH_MOVIE_LIST -> searchQuery?.let { getSearchedMovies(searchQuery, page) }
-        else -> null
-    }
+        type: String?
+    ) = type?.let { getTypeMovies(type, page) }
 
-    private suspend fun getTypeMovies(listType: String, page: Int) =
-        service.getMovies(listType, MOVIE_DB_API_KEY, page.toString())
-
-    private suspend fun getSearchedMovies(query: String, page: Int) =
-        service.getSearchedMovies(MOVIE_DB_API_KEY, query, page.toString())
-
-    private suspend fun getDiscoveredMovies(
+    suspend fun getMovieResults(
         page: Int,
         startYear: String?,
         endYear: String?,
         genreKeys: Array<String>?,
         languageKeys: Array<String>?
+    ) = getDiscoveredMovies(page, startYear, endYear, genreKeys, languageKeys)
+
+    suspend fun getMovieResults(
+        page: Int,
+        searchQuery: String?
+    ) = searchQuery?.let { getSearchedMovies(searchQuery, page) }*/
+
+
+    suspend fun getTypeMovies(listType: String, page: Int) =
+        service.getMovies(listType, MOVIE_DB_API_KEY, page.toString())
+
+    suspend fun getSearchedMovies(query: String, page: Int) =
+        service.getSearchedMovies(MOVIE_DB_API_KEY, query, page.toString())
+
+    suspend fun getDiscoveredMovies(
+        page: Int,
+        startYear: String?,
+        endYear: String?,
+        genreKeys: Array<String?>?,
+        languageKeys: Array<String?>?
     ) = service.getDiscoveredMovies(
         MOVIE_DB_API_KEY,
         page.toString(),

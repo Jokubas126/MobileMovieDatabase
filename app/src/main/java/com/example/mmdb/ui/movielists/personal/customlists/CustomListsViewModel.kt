@@ -39,9 +39,9 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun onListClicked(view: View, list: CustomMovieList) {
-        val action =
+        /*val action =
             CustomListsFragmentDirections.movieGridFragment(list.roomId.toLong(), list.listTitle)
-        Navigation.findNavController(view).navigate(action)
+        Navigation.findNavController(view).navigate(action)*/
     }
 
     fun updateMovieList(list: CustomMovieList) {

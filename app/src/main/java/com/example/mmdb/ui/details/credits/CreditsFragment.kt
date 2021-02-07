@@ -7,16 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.mmdb.MovieDetailsArgs
 import com.example.mmdb.R
 import com.example.mmdb.databinding.FragmentMovieCreditsBinding
 import kotlinx.android.synthetic.main.fragment_movie_credits.bottom_navigation
 
 class CreditsFragment : Fragment() {
-
+/*
     private val args by lazy {
         MovieDetailsArgs.fromBundle(arguments ?: Bundle())
-    }
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,7 +24,7 @@ class CreditsFragment : Fragment() {
         val binding =
             FragmentMovieCreditsBinding.inflate(inflater, container, false)
 
-        binding.viewModel =
+/*        binding.viewModel =
             ViewModelProvider(
                 this,
                 CreditsViewModelFactory(
@@ -33,7 +32,7 @@ class CreditsFragment : Fragment() {
                     args.movieLocalId,
                     args.movieRemoteId
                 )
-            ).get(CreditsViewModel::class.java)
+            ).get(CreditsViewModel::class.java)*/
         binding.lifecycleOwner = this
         return binding.root
     }
@@ -42,7 +41,7 @@ class CreditsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
+            /*when (menuItem.itemId) {
                 R.id.media_menu_item -> {
                     CreditsFragmentDirections.actionMovieMedia().apply {
                         movieRemoteId = args.movieRemoteId
@@ -57,7 +56,7 @@ class CreditsFragment : Fragment() {
                         findNavController().navigate(this)
                     }
                 }
-            }
+            }*/
             true
         }
     }

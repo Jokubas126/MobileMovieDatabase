@@ -7,17 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.databinding.FragmentMoviesGridBinding
+import com.example.mmdb.navigation.ConfigFragmentArgs
+import com.example.mmdb.navigation.action
+import com.example.mmdb.navigation.config
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 
-class RestMovieGridFragment : Fragment() {
+object RemoteMovieGridFragmentArgs : ConfigFragmentArgs<RemoteMovieGridFragmentAction, RemoteMovieGridFragmentConfig>()
 
-    private lateinit var viewModel: RestMovieGridViewModel
+class RemoteMovieGridFragment : Fragment() {
+
+    private lateinit var viewModel: RemoteMovieGridViewModel
 
     private var layoutManager: StaggeredGridLayoutManager? = null
     private var state: Parcelable? = null
+
+    private val action: RemoteMovieGridFragmentAction by action()
+    private val config: RemoteMovieGridFragmentConfig by config()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,16 +34,17 @@ class RestMovieGridFragment : Fragment() {
         val binding = FragmentMoviesGridBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(
             this,
-            RestMovieGridViewModelFactory(
+            RemoteMovieGridViewModelFactory(
                 activity!!.application,
-                arguments?.let { RestMovieGridFragmentArgs.fromBundle(it) }
+                action,
+                config
             ) { movieRemoteId ->
-                val action =
+                /*val action =
                     RestMovieGridFragmentDirections.actionMovieDetails()
                 action.movieRemoteId = movieRemoteId
-                findNavController().navigate(action)
+                findNavController().navigate(action)*/
             }
-        ).get(RestMovieGridViewModel::class.java)
+        ).get(RemoteMovieGridViewModel::class.java)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         return binding.root

@@ -7,27 +7,26 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.mmdb.MovieDetailsArgs
 import com.example.mmdb.R
 import com.example.mmdb.databinding.FragmentMovieMediaBinding
 import kotlinx.android.synthetic.main.fragment_movie_media.bottom_navigation
 
 class MediaFragment : Fragment() {
 
-    private val args by lazy {
+/*    private val args by lazy {
         MovieDetailsArgs.fromBundle(arguments ?: Bundle())
-    }
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentMovieMediaBinding.inflate(inflater, container, false)
-        binding.viewModel =
+        /*binding.viewModel =
             ViewModelProvider(
                 this,
                 MediaViewModelFactory(activity!!.application, args.movieLocalId, args.movieRemoteId)
-            ).get(MediaViewModel::class.java)
+            ).get(MediaViewModel::class.java)*/
         binding.lifecycleOwner = this
         binding.fragmentManager = activity!!.fragmentManager
         return binding.root
@@ -37,7 +36,7 @@ class MediaFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
+            /*when (menuItem.itemId) {
                 R.id.overview_menu_item -> {
                     MediaFragmentDirections.actionMovieOverview().apply {
                         movieRemoteId = args.movieRemoteId
@@ -52,7 +51,7 @@ class MediaFragment : Fragment() {
                         findNavController().navigate(this)
                     }
                 }
-            }
+            }*/
             true
         }
     }

@@ -92,9 +92,9 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun onMovieClicked(view: View, movie: Movie) {
-        val action = WatchlistFragmentDirections.actionMovieDetails()
+        /*val action = WatchlistFragmentDirections.actionMovieDetails()
         action.movieRemoteId = movie.remoteId
-        Navigation.findNavController(view).navigate(action)
+        Navigation.findNavController(view).navigate(action)*/
     }
 
     // ------------ Custom lists ------------//

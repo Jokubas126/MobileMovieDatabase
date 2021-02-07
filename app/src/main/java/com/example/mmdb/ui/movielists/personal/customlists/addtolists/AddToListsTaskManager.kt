@@ -4,7 +4,6 @@ import android.app.Application
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.Navigation
-import com.example.mmdb.NavGraphDirections
 import com.example.mmdb.R
 import com.example.mmdb.config.requireAppConfig
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository

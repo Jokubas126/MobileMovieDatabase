@@ -5,11 +5,14 @@ import android.text.SpannableString
 import android.text.style.TextAppearanceSpan
 import android.view.MenuItem
 import com.example.mmdb.R
+import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.navigation.NavigationActivity
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.actions.AboutFragmentAction
 import com.example.mmdb.ui.drawer.DrawerAction
 import com.example.mmdb.ui.drawer.DrawerBehaviorInteractor
+import com.example.mmdb.ui.movielists.rest.MovieListType
+import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragmentAction
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -33,6 +36,11 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        navigationController.goTo(
+            action = RemoteMovieGridFragmentAction(MovieListType.Popular),
+            animation = NavigationController.Animation.FadeIn
+        )
+
         loadAppNavigation()
     }
 
@@ -41,29 +49,25 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
         navigationController.apply {
             navigation_view.setNavigationItemSelectedListener { menuItem ->
                 when (menuItem.itemId) {
-                    /*R.id.menu_categories -> navController?.navigate(NavGraphDirections.actionGlobalCategoriesFragment())
-                    R.id.menu_watchlist -> navController?.navigate(NavGraphDirections.actionGlobalWatchlistFragment())
-                    R.id.menu_custom_lists -> navController?.navigate(NavGraphDirections.actionGlobalCustomListsFragment())
-                    R.id.menu_popular -> {
-                        val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
-                        action.keyCategory = KEY_POPULAR
-                        navController?.navigate(action)
-                    }
-                    R.id.menu_top_rated -> {
-                        val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
-                        action.keyCategory = KEY_TOP_RATED
-                        navController?.navigate(action)
-                    }
-                    R.id.menu_now_playing -> {
-                        val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
-                        action.keyCategory = KEY_NOW_PLAYING
-                        navController?.navigate(action)
-                    }
-                    R.id.menu_upcoming -> {
-                        val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
-                        action.keyCategory = KEY_UPCOMING
-                        navController?.navigate(action)
-                    }*/
+                    //R.id.menu_categories -> navController?.navigate(NavGraphDirections.actionGlobalCategoriesFragment())
+                    //R.id.menu_watchlist -> navController?.navigate(NavGraphDirections.actionGlobalWatchlistFragment())
+                    //R.id.menu_custom_lists -> navController?.navigate(NavGraphDirections.actionGlobalCustomListsFragment())
+                    R.id.menu_popular -> navigationController.goTo(
+                        action = RemoteMovieGridFragmentAction(MovieListType.Popular),
+                        animation = NavigationController.Animation.FadeIn
+                    )
+                    R.id.menu_top_rated -> navigationController.goTo(
+                        action = RemoteMovieGridFragmentAction(MovieListType.TopRated),
+                        animation = NavigationController.Animation.FadeIn
+                    )
+                    R.id.menu_now_playing -> navigationController.goTo(
+                        action = RemoteMovieGridFragmentAction(MovieListType.NowPlaying),
+                        animation = NavigationController.Animation.FadeIn
+                    )
+                    R.id.menu_upcoming -> navigationController.goTo(
+                        action = RemoteMovieGridFragmentAction(MovieListType.Upcoming),
+                        animation = NavigationController.Animation.FadeIn
+                    )
                     R.id.menu_about -> navigationController.goTo(
                         action = AboutFragmentAction(),
                         animation = NavigationController.Animation.FadeIn

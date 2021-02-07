@@ -6,6 +6,10 @@ import com.example.mmdb.ui.about.AboutFragment
 import com.example.mmdb.ui.about.AboutFragmentArgs
 import com.example.mmdb.navigation.actions.AboutFragmentAction
 import com.example.mmdb.navigation.configproviders.AboutFragmentConfigProvider
+import com.example.mmdb.navigation.configproviders.RemoteMovieGridFragmentConfigProvider
+import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragment
+import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragmentAction
+import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragmentArgs
 
 internal typealias FragmentProvider<T> = (action: T) -> Fragment
 
@@ -15,6 +19,17 @@ internal typealias FragmentProvider<T> = (action: T) -> Fragment
  * . value: FragmentProvider<Action>: (Action) -> Fragment
  */
 val actionRoutes: List<ActionFragmentProviderPair<*>> = listOf(
+    ActionFragmentProviderPair(
+        key = RemoteMovieGridFragmentAction::class.java,
+        value = { action ->
+            RemoteMovieGridFragment().apply {
+                arguments = RemoteMovieGridFragmentArgs.create(
+                    action = action,
+                    configProvider = RemoteMovieGridFragmentConfigProvider::class.java
+                )
+            }
+        }
+    ),
     ActionFragmentProviderPair(
         key = AboutFragmentAction::class.java,
         value = { action ->

@@ -23,7 +23,6 @@ class MovieGridViewModel(application: Application, arguments: Bundle?) :
     AndroidViewModel(application) {
 
     private val progressManager = ProgressManager()
-    private val args = arguments?.let { MovieGridFragmentArgs.fromBundle(arguments) }
 
     private var _movieList = MutableLiveData<List<Movie>>()
 
@@ -35,7 +34,7 @@ class MovieGridViewModel(application: Application, arguments: Bundle?) :
     val error: LiveData<Boolean>
         get() = progressManager.error
 
-    private var customListId = args?.movieListId?.toInt()
+   // private var customListId = args?.movieListId?.toInt()
 
     private val movieRepository = RoomMovieRepository(application)
     private val movieListRepository = CustomMovieListRepository(application)
@@ -55,11 +54,11 @@ class MovieGridViewModel(application: Application, arguments: Bundle?) :
 
     private fun getMovieList() {
         CoroutineScope(Dispatchers.IO).launch {
-            customListId?.let { listId ->
+            /*customListId?.let { listId ->
                 customMovieList = movieListRepository.getMovieListById(listId)
                 customMovieList.movieIdList?.let { getMovies(it) }
                     ?: run { progressManager.error() }
-            } ?: run { progressManager.error() }
+            } ?: run { progressManager.error() }*/
         }
     }
 
@@ -96,8 +95,8 @@ class MovieGridViewModel(application: Application, arguments: Bundle?) :
     }
 
     fun onMovieClicked(view: View, movie: Movie) {
-        val action =
+        /*val action =
             MovieGridFragmentDirections.actionMovieDetails().setMovieLocalId(movie.roomId)
-        Navigation.findNavController(view).navigate(action)
+        Navigation.findNavController(view).navigate(action)*/
     }
 }

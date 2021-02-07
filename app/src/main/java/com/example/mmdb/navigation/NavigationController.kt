@@ -116,9 +116,6 @@ class NavigationController(
 
     override fun goBack(toRoot: Boolean) {
         when {
-            /*dialogFragmentStack.isNotEmpty() -> {
-                dialogFragmentStack.popSafe()?.dismiss()
-            }*/
             toRoot -> {
                 parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 isTerminalFragment = false

@@ -1,7 +1,6 @@
 package com.example.mmdb.ui.movielists.rest
 
 import android.app.Application
-import android.os.Bundle
 import android.widget.Toast
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
@@ -11,13 +10,16 @@ import com.example.mmdb.R
 import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.ui.movielists.ItemMovieConfig
 import com.example.mmdb.ui.movielists.ItemMovieViewModel
-import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.room.repositories.GenresRepository
 import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
 import com.example.mmdb.ui.movielists.toItemMovieViewModel
 import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.data.entities.MovieResults
 import com.jokubas.mmdb.model.data.entities.WatchlistMovie
+import com.jokubas.mmdb.util.constants.KEY_NOW_PLAYING
+import com.jokubas.mmdb.util.constants.KEY_POPULAR
+import com.jokubas.mmdb.util.constants.KEY_TOP_RATED
+import com.jokubas.mmdb.util.constants.KEY_UPCOMING
 import com.jokubas.mmdb.util.isNetworkAvailable
 import com.jokubas.mmdb.util.networkUnavailableNotification
 import com.jokubas.mmdb.util.showToast
@@ -26,9 +28,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
-class RestMovieGridViewModel(
+class RemoteMovieGridViewModel(
     application: Application,
-    private val args: RestMovieGridFragmentArgs?,
+    private val action: RemoteMovieGridFragmentAction,
+    private val config: RemoteMovieGridFragmentConfig,
     private val onMovieClicked: (movieId: Int) -> Unit
 ) : AndroidViewModel(application) {
 
@@ -40,7 +43,8 @@ class RestMovieGridViewModel(
         get() = progressManager.loading
 
     // repositories
-    private val remoteMovieRepository = application.requireAppConfig().movieConfig.remoteMovieRepository
+    private val remoteMovieRepository =
+        application.requireAppConfig().movieConfig.remoteMovieRepository
     private val watchlistRepository = WatchlistRepository(application)
     private val genresRepository = GenresRepository(application)
 
@@ -51,10 +55,11 @@ class RestMovieGridViewModel(
     }
 
     val pageSelectionListViewModel = ObservableField<PageSelectionListViewModel>()
-    val discoverSelectionViewModel =
-        args?.discoverNameArray?.let { nameArray ->
-            DiscoverSelectionViewModel(nameArray.toList())
-        }
+    val discoverSelectionViewModel: DiscoverSelectionViewModel? =
+        if (action.movieListType is MovieListType.Discover) {
+            DiscoverSelectionViewModel(action.movieListType.discoverNameList)
+        } else null
+
 
     val itemsMovie = ObservableArrayList<ItemMovieViewModel>()
     val itemMoviesBinding: ItemBinding<ItemMovieViewModel> =
@@ -77,7 +82,38 @@ class RestMovieGridViewModel(
     private fun getResponse(page: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             if (isNetworkAvailable(getApplication())) {
-                args?.apply {
+                val movieResults = when (action.movieListType) {
+                    is MovieListType.Popular -> remoteMovieRepository.getTypeMovies(
+                        KEY_POPULAR,
+                        page
+                    )
+                    is MovieListType.TopRated -> remoteMovieRepository.getTypeMovies(
+                        KEY_TOP_RATED,
+                        page
+                    )
+                    is MovieListType.NowPlaying -> remoteMovieRepository.getTypeMovies(
+                        KEY_NOW_PLAYING,
+                        page
+                    )
+                    is MovieListType.Upcoming -> remoteMovieRepository.getTypeMovies(
+                        KEY_UPCOMING,
+                        page
+                    )
+                    is MovieListType.Discover -> remoteMovieRepository.getDiscoveredMovies(
+                        page = page,
+                        startYear = action.movieListType.startYear,
+                        endYear = action.movieListType.endYear,
+                        genreKeys = action.movieListType.genreKeys.toTypedArray(),
+                        languageKeys = action.movieListType.languageKeys.toTypedArray()
+                    )
+                    is MovieListType.Search -> remoteMovieRepository.getSearchedMovies(
+                        page = page,
+                        query = action.movieListType.searchQuery ?: ""
+                    )
+                    else -> null
+                }
+                movieResults?.let { configureResults(it) } ?: progressManager.error()
+                /*args?.apply {
                     remoteMovieRepository.getMovieResults(
                         page,
                         movieGridType,
@@ -87,8 +123,8 @@ class RestMovieGridViewModel(
                         genreKeys,
                         languageKeys,
                         searchQuery
-                    )?.let { configureResults(it) }
-                } ?: progressManager.error()
+                    )?.let {  }
+                } ?: progressManager.error()*/
             } else {
                 progressManager.error()
                 networkUnavailableNotification(getApplication())

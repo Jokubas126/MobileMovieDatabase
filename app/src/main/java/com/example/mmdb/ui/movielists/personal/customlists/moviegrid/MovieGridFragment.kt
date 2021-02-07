@@ -84,10 +84,10 @@ class MovieGridFragment : Fragment(), MovieGridAdapter.ItemClickListener,
 
     override fun onResume() {
         super.onResume()
-        arguments?.let {
+        /*arguments?.let {
             (activity as AppCompatActivity).supportActionBar?.title =
                 MovieGridFragmentArgs.fromBundle(it).movieListTitle
-        }
+        }*/
     }
 
     override fun onPause() {
