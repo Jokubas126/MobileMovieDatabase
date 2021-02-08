@@ -6,38 +6,40 @@ import androidx.databinding.ObservableList
 import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
+import com.example.mmdb.config.AppConfig
 import com.example.mmdb.managers.ProgressManager
 import com.jokubas.mmdb.model.data.entities.Credits
 import com.jokubas.mmdb.model.data.entities.Person
-import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.jokubas.mmdb.util.DEFAULT_ID_VALUE
-import com.jokubas.mmdb.util.isNetworkAvailable
-import com.jokubas.mmdb.util.networkUnavailableNotification
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
-class CreditsViewModel(application: Application, movieLocalId: Int, movieRemoteId: Int) :
-    AndroidViewModel(application) {
+class CreditsViewModel(
+    appConfig: AppConfig,
+    movieLocalId: Int,
+    movieRemoteId: Int
+) : ViewModel() {
 
     val progressManager = ProgressManager().apply { loading() }
 
     private val credits =
         when (movieLocalId) {
             DEFAULT_ID_VALUE -> {
-                if (isNetworkAvailable(application)) {
+                if (appConfig.networkCheckConfig.isNetworkAvailable()) {
                     /*RemoteMovieRepository()
                         .getCreditsFlow(movieRemoteId)
                         .asLiveData(viewModelScope.coroutineContext)*/
                 } else {
-                    networkUnavailableNotification(application)
+                    appConfig.networkCheckConfig.networkUnavailableNotification()
                     progressManager.error()
                     null
                 }
             }
             else -> {
-                RoomMovieRepository(application)
-                    .getCreditsFlowById(movieLocalId)
-                    .asLiveData(viewModelScope.coroutineContext)
+                null
+                //RoomMovieRepository(application)
+                    //.getCreditsFlowById(movieLocalId)
+                    //.asLiveData(viewModelScope.coroutineContext)
             }
         }
 

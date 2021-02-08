@@ -1,17 +1,16 @@
 package com.example.mmdb.ui.launcher
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mmdb.config.requireAppConfig
-import com.jokubas.mmdb.model.room.repositories.GenresRepository
+import com.example.mmdb.config.AppConfig
 import com.jokubas.mmdb.util.LiveEvent
-import com.jokubas.mmdb.util.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LauncherViewModel(application: Application) : AndroidViewModel(application) {
+class LauncherViewModel(
+    private val appConfig: AppConfig
+) : ViewModel() {
 
     inner class UpdateRequired
 
@@ -20,8 +19,8 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
     val updateRequiredEvent = LiveEvent<UpdateRequired>()
     val loadedEvent = LiveEvent<Loaded>()
 
-    private val movieRepository = application.requireAppConfig().movieConfig.remoteMovieRepository
-    private val genresRepository = GenresRepository(application)
+    private val movieRepository = appConfig.movieConfig.remoteMovieRepository
+    //private val genresRepository = GenresRepository(application)
 
     private var isGenresLoaded: Boolean = false
     private var isGenresRequired: Boolean = false
@@ -31,7 +30,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun updateApplication() {
-        if (isNetworkAvailable(getApplication())) {
+        if (appConfig.networkCheckConfig.isNetworkAvailable()) {
             updateGenres()
         } else
             checkForUpdates()
@@ -43,7 +42,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
 
     private fun checkForGenre() {
         viewModelScope.launch {
-            isGenresRequired = genresRepository.getAnyGenre() == null
+            //isGenresRequired = genresRepository.getAnyGenre() == null
             checkIfAnyUpdateRequired()
         }
     }
@@ -51,7 +50,7 @@ class LauncherViewModel(application: Application) : AndroidViewModel(application
     private fun updateGenres() {
         CoroutineScope(Dispatchers.IO).launch {
             val genres = movieRepository.getGenres()
-            genresRepository.updateGenres(genres.genreList)
+            //genresRepository.updateGenres(genres.genreList)
             isGenresLoaded = true
             checkIfAllLoaded()
         }

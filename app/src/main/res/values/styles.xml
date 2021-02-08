@@ -3,11 +3,18 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="android:layout">@layout/activity_main</item>
-        <item name="android:windowTranslucentStatus">true</item>\
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <item name="android:itemTextAppearance">@style/PopupMenuItemStyle</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="searchViewStyle">@style/SearchViewStyle</item>
+    </style>
+
+    <style name="AppTheme.TransparentStatusBar">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="AppTheme.WhiteStatusBar">
+        <item name="android:windowTranslucentStatus">false</item>
     </style>
 
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">

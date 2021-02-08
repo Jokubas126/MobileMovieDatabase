@@ -6,10 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.R
+import com.example.mmdb.extensions.requireAppConfig
 import com.example.mmdb.ui.movielists.MovieGridAdapter
 import com.jokubas.mmdb.model.data.entities.Movie
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
@@ -39,7 +39,10 @@ class WatchlistFragment : Fragment(), MovieGridAdapter.ItemClickListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(WatchlistViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            WatchlistViewModelFactory(requireActivity().application, requireAppConfig())
+        ).get(WatchlistViewModel::class.java)
 
         setupRecyclerView()
         observeViewModel()

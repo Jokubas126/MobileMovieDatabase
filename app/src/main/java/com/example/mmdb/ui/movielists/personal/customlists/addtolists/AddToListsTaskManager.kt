@@ -3,9 +3,7 @@ package com.example.mmdb.ui.movielists.personal.customlists.addtolists
 import android.app.Application
 import android.widget.Toast
 import com.example.mmdb.R
-import com.example.mmdb.config.requireAppConfig
-import com.jokubas.mmdb.util.isNetworkAvailable
-import com.jokubas.mmdb.util.networkUnavailableNotification
+import com.example.mmdb.config.AppConfig
 import com.jokubas.mmdb.util.showToast
 import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import com.jokubas.mmdb.model.data.entities.Movie
@@ -19,11 +17,12 @@ import kotlinx.coroutines.withContext
 //TODO set this part up using Toast and popup notification with loading
 class AddToListsTaskManager(
     private val application: Application,
+    private val appConfig: AppConfig,
     //private val root: View,
     private val popupWindow: AddToListsPopupWindow
 ) : AddToListsPopupWindow.ListsConfirmedClickListener {
 
-    private val remoteMovieRepository = application.requireAppConfig().movieConfig.remoteMovieRepository
+    private val remoteMovieRepository = appConfig.movieConfig.remoteMovieRepository
     private val movieListRepository = CustomMovieListRepository(application)
     private val roomMovieRepository = RoomMovieRepository(application)
 
@@ -54,7 +53,7 @@ class AddToListsTaskManager(
                 )
                 false
             }
-            isNetworkAvailable(application) -> {
+            appConfig.networkCheckConfig.isNetworkAvailable() -> {
                 CoroutineScope(Dispatchers.IO).launch {
                     /*showProgressSnackBar(
                         root,
@@ -66,7 +65,7 @@ class AddToListsTaskManager(
                 true
             }
             else -> {
-                networkUnavailableNotification(application)
+                appConfig.networkCheckConfig.networkUnavailableNotification()
                 false
             }
         }

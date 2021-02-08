@@ -1,13 +1,9 @@
 package com.example.mmdb.ui.details.media
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
-import com.example.mmdb.config.requireAppConfig
+import com.example.mmdb.config.AppConfig
 import com.example.mmdb.managers.ProgressManager
 import com.jokubas.mmdb.model.data.entities.Image
 import com.jokubas.mmdb.model.data.entities.Images
@@ -20,10 +16,10 @@ import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
 class MediaViewModel(
-    application: Application,
+    appConfig: AppConfig,
     private val movieLocalId: Int,
     private val movieRemoteId: Int
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     val progressManager = ProgressManager()
 
@@ -37,20 +33,20 @@ class MediaViewModel(
 
     val imageBinding: ItemBinding<Image> = ItemBinding.of(BR.image, R.layout.item_image)
 
-    private val remoteMovieRepository = application.requireAppConfig().movieConfig.remoteMovieRepository
-    private val roomMovieRepository by lazy { RoomMovieRepository(application) }
+    private val remoteMovieRepository = appConfig.movieConfig.remoteMovieRepository
+    //private val roomMovieRepository by lazy { RoomMovieRepository(application) }
 
     init {
         progressManager.loading()
         viewModelScope.launch {
             when (movieLocalId) {
                 DEFAULT_ID_VALUE -> {
-                    if (isNetworkAvailable(getApplication())) {
+                    if (appConfig.networkCheckConfig.isNetworkAvailable()) {
                         getImagesRemote()
                         getTrailer(movieRemoteId)
                         progressManager.loaded()
                     } else {
-                        networkUnavailableNotification(getApplication())
+                        appConfig.networkCheckConfig.networkUnavailableNotification()
                         progressManager.error()
                     }
                 }
@@ -79,6 +75,6 @@ class MediaViewModel(
     }
 
     private suspend fun getImagesLocal() {
-        _images.postValue(roomMovieRepository.getImagesById(movieLocalId))
+        //_images.postValue(roomMovieRepository.getImagesById(movieLocalId))
     }
 }

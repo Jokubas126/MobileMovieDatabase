@@ -37,7 +37,8 @@ class NavigationWrapperFragment : BaseNavigationFragment() {
 
         navController.goTo(
             action = action,
-            animation = null
+            animation = null,
+            shouldAddWrapper = false
         )
     }
 }

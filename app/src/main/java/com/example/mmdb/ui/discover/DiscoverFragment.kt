@@ -2,14 +2,14 @@ package com.example.mmdb.ui.discover
 
 import android.os.Bundle
 import android.view.*
-
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import com.example.mmdb.R
+import com.example.mmdb.config.AppConfig
 import com.example.mmdb.databinding.FragmentDiscoverBinding
+import com.example.mmdb.extensions.requireAppConfig
+import com.example.mmdb.extensions.requireNavController
 import com.example.mmdb.navigation.ConfigFragmentArgs
+import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.action
 import com.example.mmdb.navigation.actions.DiscoverFragmentAction
 import com.example.mmdb.navigation.config
@@ -18,25 +18,30 @@ import kotlinx.android.synthetic.main.fragment_discover.*
 
 object DiscoverFragmentArgs: ConfigFragmentArgs<DiscoverFragmentAction, DiscoverFragmentConfig>()
 
-class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
-    MenuItem.OnMenuItemClickListener {
+class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking {
+
+    private val appConfig: AppConfig by lazy {
+        requireAppConfig()
+    }
+
+    private val navController: NavigationController by lazy {
+        requireNavController()
+    }
 
     private val action: DiscoverFragmentAction by action()
     private val config: DiscoverFragmentConfig by config()
 
     private lateinit var discoverViewModel: DiscoverViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true) // needed because toolbar is changed
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         return FragmentDiscoverBinding.inflate(inflater, container, false).apply {
-            discoverViewModel = ViewModelProvider(this@DiscoverFragment).get(DiscoverViewModel::class.java)
+            discoverViewModel = ViewModelProvider(
+                this@DiscoverFragment,
+                DiscoverViewModelFactory(appConfig, navController, action, config)
+            ).get(DiscoverViewModel::class.java)
             viewModel = discoverViewModel
         }.root
     }
@@ -51,12 +56,12 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
         setupToolbar()
     }
 
-    override fun onMenuItemClick(item: MenuItem?): Boolean {
+    /*override fun onMenuItemClick(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_confirm) {
-            discoverViewModel.onConfirmSelectionClicked(findNavController())
+            //discoverViewModel.onConfirmSelectionClicked(findNavController())
         }
         return true
-    }
+    }*/
 
     // --------- Toolbar functionality ------------//
 

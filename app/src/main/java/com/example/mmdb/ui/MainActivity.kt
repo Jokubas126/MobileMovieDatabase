@@ -2,6 +2,7 @@ package com.example.mmdb.ui
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.core.content.ContextCompat
 import com.example.mmdb.R
 import com.example.mmdb.navigation.NavigationActivity
 import com.example.mmdb.navigation.NavigationController
@@ -9,6 +10,8 @@ import com.example.mmdb.navigation.configproviders.NavigationWrapperFragmentConf
 import com.example.mmdb.ui.drawer.DrawerBehaviorInteractor
 import com.example.mmdb.ui.drawer.DrawerLayoutInteractor
 import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
+import com.jokubas.mmdb.util.extensions.adjustStatusBar
+import com.jokubas.mmdb.util.extensions.setLightStatusBar
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : NavigationActivity(R.layout.activity_main) {
@@ -46,9 +49,9 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
             .commit()
 
         drawerLayoutInteractor.configureDrawerItems(navigationView, navigationController)
+        window.adjustStatusBar(R.color.white)
     }
-
-    // TODO setup dynamic options menu in the toolbar
+    // TODO setup dynamic options menu in the toolbar through its viewModel
 
     /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)

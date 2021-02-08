@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.databinding.FragmentMoviesGridBinding
+import com.example.mmdb.extensions.requireAppConfig
 import com.example.mmdb.navigation.ConfigFragmentArgs
 import com.example.mmdb.navigation.action
 import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
@@ -36,7 +37,8 @@ class RemoteMovieGridFragment : Fragment() {
         viewModel = ViewModelProvider(
             this,
             RemoteMovieGridViewModelFactory(
-                activity!!.application,
+                requireActivity().application,
+                requireAppConfig(),
                 action,
                 config
             ) { movieRemoteId ->

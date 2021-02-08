@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.R
+import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.ui.MainActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_launcher.*
@@ -16,7 +17,10 @@ class LauncherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launcher)
-        viewModel = ViewModelProvider(this).get(LauncherViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            LauncherViewModelFactory(requireAppConfig())
+        ).get(LauncherViewModel::class.java)
         observeViewModel()
     }
 

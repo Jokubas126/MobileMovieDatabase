@@ -1,18 +1,18 @@
 package com.example.mmdb.ui.details.overview
 
-import android.app.Application
 import androidx.lifecycle.*
-import com.example.mmdb.config.requireAppConfig
+import com.example.mmdb.config.AppConfig
 import com.example.mmdb.managers.ProgressManager
 import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.jokubas.mmdb.util.DEFAULT_ID_VALUE
-import com.jokubas.mmdb.util.isNetworkAvailable
-import com.jokubas.mmdb.util.networkUnavailableNotification
 import kotlinx.coroutines.launch
 
-class OverviewViewModel(application: Application, movieLocalId: Int, movieRemoteId: Int) :
-    AndroidViewModel(application) {
+class OverviewViewModel(
+    private val appConfig: AppConfig,
+    movieLocalId: Int,
+    movieRemoteId: Int
+) : ViewModel() {
 
     private var _currentMovie = MutableLiveData<Movie?>()
 
@@ -21,8 +21,8 @@ class OverviewViewModel(application: Application, movieLocalId: Int, movieRemote
 
     val progressManager = ProgressManager()
 
-    private val roomMovieRepository by lazy { RoomMovieRepository(application) }
-    private val remoteMovieRepository = application.requireAppConfig().movieConfig.remoteMovieRepository
+    //private val roomMovieRepository by lazy { RoomMovieRepository(application) }
+    private val remoteMovieRepository = appConfig.movieConfig.remoteMovieRepository
 
     init {
         viewModelScope.launch {
@@ -36,21 +36,21 @@ class OverviewViewModel(application: Application, movieLocalId: Int, movieRemote
 
     private suspend fun getRemoteMovieDetails(movieId: Int) {
         when {
-            isNetworkAvailable(getApplication()) -> {
+            appConfig.networkCheckConfig.isNetworkAvailable() -> {
                 _currentMovie.postValue(remoteMovieRepository.getMovieDetails(movieId))
                 progressManager.loaded()
             }
             else -> {
-                networkUnavailableNotification(getApplication())
+                appConfig.networkCheckConfig.networkUnavailableNotification()
                 progressManager.error()
             }
         }
     }
 
     private suspend fun getLocalMovieDetails(movieId: Int) {
-        roomMovieRepository.getMovieById(movieId)?.let { movie ->
+        /*roomMovieRepository.getMovieById(movieId)?.let { movie ->
             _currentMovie.postValue(movie)
             progressManager.loaded()
-        } ?: progressManager.error()
+        } ?: progressManager.error()*/
     }
 }

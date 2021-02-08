@@ -10,19 +10,19 @@ class RemoteMovieGridFragmentAction(
 ) : Action
 
 @Parcelize
-open class MovieListType: Parcelable {
+open class MovieListType : Parcelable {
 
     @Parcelize
-    object Popular: MovieListType()
+    object Popular : MovieListType()
 
     @Parcelize
-    object TopRated: MovieListType()
+    object TopRated : MovieListType()
 
     @Parcelize
-    object NowPlaying: MovieListType()
+    object NowPlaying : MovieListType()
 
     @Parcelize
-    object Upcoming: MovieListType()
+    object Upcoming : MovieListType()
 
     @Parcelize
     data class Discover(
@@ -30,11 +30,17 @@ open class MovieListType: Parcelable {
         val endYear: String? = null,
         val genreKeys: List<String?> = listOf(),
         val languageKeys: List<String?> = listOf()
-    ): MovieListType(){
+    ) : MovieListType() {
 
-        val discoverNameList = listOf(startYear, endYear).plus(genreKeys).plus(languageKeys)
+        val discoverNameList =
+            listOf(
+                startYear?.let { "From: $startYear" },
+                "To: $endYear"
+            )
+                .plus(genreKeys)
+                .plus(languageKeys)
     }
 
     @Parcelize
-    data class Search(val searchQuery: String? = null): MovieListType()
+    data class Search(val searchQuery: String? = null) : MovieListType()
 }

@@ -1,18 +1,25 @@
 package com.example.mmdb.ui.discover
 
-import android.app.Application
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.ConcatAdapter
-import com.example.mmdb.config.requireAppConfig
+import com.example.mmdb.config.AppConfig
+import com.example.mmdb.navigation.NavigationController
+import com.example.mmdb.navigation.actions.DiscoverFragmentAction
+import com.example.mmdb.navigation.actions.MovieListType
+import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
 import com.jokubas.mmdb.model.data.entities.CategoryType
 import com.jokubas.mmdb.model.data.entities.Subcategory
-import com.jokubas.mmdb.util.*
 import java.util.*
 
-class DiscoverViewModel(application: Application) : AndroidViewModel(application) {
+class DiscoverViewModel(
+    appConfig: AppConfig,
+    private val navigationController: NavigationController,
+    private val discoverFragmentAction: DiscoverFragmentAction,
+    private val discoverFragmentConfig: DiscoverFragmentConfig
+) : ViewModel() {
 
     companion object {
         @JvmStatic
@@ -27,7 +34,7 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
 
     val categoriesAdapter = ObservableField<ConcatAdapter>()
 
-    private val categories = application.requireAppConfig().movieConfig.categoryRepository.getCategories()
+    private val categories = appConfig.movieConfig.categoryRepository.getCategories()
         .asLiveData(viewModelScope.coroutineContext).apply {
             observeForever { categoryList ->
                 val adapters = arrayListOf<ItemsExpandableAdapter>()
@@ -45,8 +52,8 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
     private var genreSubcategory = mutableListOf<Subcategory>()
 
     init {
-        if (!isNetworkAvailable(getApplication()))
-            networkUnavailableNotification(getApplication())
+        if (!appConfig.networkCheckConfig.isNetworkAvailable())
+            appConfig.networkCheckConfig.networkUnavailableNotification()
     }
 
     private fun onSubcategoryClicked(
@@ -78,27 +85,19 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun onConfirmSelectionClicked(navController: NavController) {
-        /*val action = DiscoverFragmentDirections.actionRemoteMovieGridFragment()
-        action.movieGridType = DISCOVER_MOVIE_LIST
-        action.startYear =
-            if (startYear.get() == INITIAL_START_YEAR_VALUE) null
-            else startYear.get().toString()
-        action.endYear = endYear.get().toString()
-
-        action.genreKeys = genreSubcategory.map { it.code }.toTypedArray()
-        action.languageKeys = languageSubcategory.map { it.code }.toTypedArray()
-
-        arrayListOf<String>().apply {
-            action.startYear?.let { add("From: $it") }
-            add("To: ${action.endYear}")
-            addAll(genreSubcategory.map { it.name })
-            addAll(languageSubcategory.map { it.name })
-            if (isNotEmpty())
-                action.discoverNameArray = this.toTypedArray()
-        }
-
-        navController.navigate(action)*/
+    fun onConfirmSelectionClicked() {
+        navigationController.goTo(
+            action = RemoteMovieGridFragmentAction(
+                MovieListType.Discover(
+                    startYear = if (startYear.get() == INITIAL_START_YEAR_VALUE) null
+                    else startYear.get().toString(),
+                    endYear = endYear.get().toString(),
+                    genreKeys = genreSubcategory.map { it.code },
+                    languageKeys = languageSubcategory.map { it.code }
+                )
+            ),
+            animation = NavigationController.Animation.FromRight
+        )
     }
 
     override fun onCleared() {

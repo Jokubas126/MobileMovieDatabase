@@ -95,7 +95,7 @@ class NavigationController(
 
     private val navigationHolderStack: Stack<NavigationHolder> = Stack()
 
-    override fun goTo(action: Parcelable, animation: Animation?) {
+    override fun goTo(action: Parcelable, animation: Animation?, shouldAddWrapper: Boolean) {
         when (action) {
             is DrawerAction -> {
                 if (action == DrawerAction.Open) {
@@ -108,7 +108,7 @@ class NavigationController(
                         if (isTerminalFragment) {
                             goBack()
                         }
-                        showFragment(action, fragment, decoration, animation)
+                        showFragment(action, fragment, decoration, animation, shouldAddWrapper)
                         isTerminalFragment = decoration == ScreenDecoration.Wrapper
                     }
                 }
@@ -140,23 +140,24 @@ class NavigationController(
         action: Parcelable,
         fragment: Fragment,
         decoration: ScreenDecoration,
-        animation: Animation?
+        animation: Animation?,
+        shouldAddWrapper: Boolean
     ) {
         when {
             fragment is DialogFragment -> {
                 dialogFragmentStack.push(fragment)
                 fragment.show(currentFragmentManager, fragment.javaClass.simpleName)
             }
-            animation.toRootFrame && decoration is ScreenDecoration.Wrapper -> {
+            !animation.toRootFrame && decoration is ScreenDecoration.Wrapper -> {
                 if (isStackControllerVisible) {
                     resetStacks()
                 }
                 showFragmentInFullscreen(
-                    fragment = createWrapperFragment(action),
+                    fragment = if (shouldAddWrapper) createWrapperFragment(action) else fragment,
                     animation = animation
                 )
             }
-            else -> showFragmentInFullscreen(fragment, animation)
+            else -> showFragmentInFullscreen(if (shouldAddWrapper) createWrapperFragment(action) else fragment, animation)
         }
     }
 

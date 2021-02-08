@@ -9,21 +9,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mmdb.R
-import com.example.mmdb.config.requireAppConfig
+import com.example.mmdb.config.AppConfig
 import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsPopupWindow
 import com.example.mmdb.ui.movielists.personal.customlists.addtolists.AddToListsTaskManager
-import com.jokubas.mmdb.util.isNetworkAvailable
 import com.example.mmdb.managers.ProgressManager
 import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.data.entities.WatchlistMovie
-import com.jokubas.mmdb.util.networkUnavailableNotification
 import com.jokubas.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class WatchlistViewModel(application: Application) : AndroidViewModel(application) {
+class WatchlistViewModel(
+    application: Application,
+    private val appConfig: AppConfig
+) : AndroidViewModel(application) {
 
     private val progressManager = ProgressManager()
 
@@ -36,7 +37,7 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     val loading: LiveData<Boolean>
         get() = progressManager.loading
 
-    private val remoteMovieRepository = application.requireAppConfig().movieConfig.remoteMovieRepository
+    private val remoteMovieRepository = appConfig.movieConfig.remoteMovieRepository
     private val watchlistRepository = WatchlistRepository(application)
 
     init {
@@ -51,13 +52,11 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
 
     private fun getWatchlist() {
         CoroutineScope(Dispatchers.Default).launch {
-            if (isNetworkAvailable(getApplication())) {
+            if (appConfig.networkCheckConfig.isNetworkAvailable()) {
                 getMovies(watchlistRepository.getAllMovies())
             } else {
                 progressManager.error()
-                networkUnavailableNotification(
-                    getApplication()
-                )
+                appConfig.networkCheckConfig.networkUnavailableNotification()
             }
         }
     }
@@ -100,6 +99,7 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     fun onPlaylistAddCLicked(movie: Movie, root: View) {
         AddToListsTaskManager(
             getApplication(),
+            appConfig,
             AddToListsPopupWindow(
                 View.inflate(root.context, R.layout.popup_window_personal_lists_to_add, null),
                 FrameLayout.LayoutParams.MATCH_PARENT,

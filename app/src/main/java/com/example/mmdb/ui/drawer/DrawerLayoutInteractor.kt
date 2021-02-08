@@ -10,6 +10,7 @@ import com.example.mmdb.navigation.actions.DiscoverFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
 import com.google.android.material.navigation.NavigationView
+import com.jokubas.mmdb.util.extensions.adjustStatusBar
 
 class DrawerLayoutInteractor(private val context: Context) {
 
@@ -20,10 +21,13 @@ class DrawerLayoutInteractor(private val context: Context) {
         prepareDrawerMenuItemCategoryStyle(navigationView)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.menu_discover -> navigationController.goTo(
-                    action = DiscoverFragmentAction(),
-                    animation = NavigationController.Animation.FromBottom
-                )
+                R.id.menu_discover -> {
+                    navigationController.goTo(
+                        action = DiscoverFragmentAction(),
+                        animation = NavigationController.Animation.FromBottom,
+                        shouldAddWrapper = false
+                    )
+                }
                 //R.id.menu_watchlist -> navController?.navigate(NavGraphDirections.actionGlobalWatchlistFragment())
                 //R.id.menu_custom_lists -> navController?.navigate(NavGraphDirections.actionGlobalCustomListsFragment())
                 R.id.menu_popular -> navigationController.goTo(

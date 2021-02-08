@@ -7,6 +7,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
+import com.example.mmdb.config.AppConfig
 import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
@@ -22,8 +23,6 @@ import com.jokubas.mmdb.util.constants.KEY_NOW_PLAYING
 import com.jokubas.mmdb.util.constants.KEY_POPULAR
 import com.jokubas.mmdb.util.constants.KEY_TOP_RATED
 import com.jokubas.mmdb.util.constants.KEY_UPCOMING
-import com.jokubas.mmdb.util.isNetworkAvailable
-import com.jokubas.mmdb.util.networkUnavailableNotification
 import com.jokubas.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +31,7 @@ import me.tatarka.bindingcollectionadapter2.ItemBinding
 
 class RemoteMovieGridViewModel(
     application: Application,
+    private val appConfig: AppConfig,
     private val action: RemoteMovieGridFragmentAction,
     private val config: RemoteMovieGridFragmentConfig,
     private val onMovieClicked: (movieId: Int) -> Unit
@@ -45,8 +45,7 @@ class RemoteMovieGridViewModel(
         get() = progressManager.loading
 
     // repositories
-    private val remoteMovieRepository =
-        application.requireAppConfig().movieConfig.remoteMovieRepository
+    private val remoteMovieRepository = appConfig.movieConfig.remoteMovieRepository
     private val watchlistRepository = WatchlistRepository(application)
     private val genresRepository = GenresRepository(application)
 
@@ -83,7 +82,7 @@ class RemoteMovieGridViewModel(
 
     private fun getResponse(page: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            if (isNetworkAvailable(getApplication())) {
+            if (appConfig.networkCheckConfig.isNetworkAvailable()) {
                 val movieResults = when (action.movieListType) {
                     is MovieListType.Popular -> remoteMovieRepository.getTypeMovies(
                         KEY_POPULAR,
@@ -129,7 +128,7 @@ class RemoteMovieGridViewModel(
                 } ?: progressManager.error()*/
             } else {
                 progressManager.error()
-                networkUnavailableNotification(getApplication())
+                appConfig.networkCheckConfig.networkUnavailableNotification()
             }
         }
     }

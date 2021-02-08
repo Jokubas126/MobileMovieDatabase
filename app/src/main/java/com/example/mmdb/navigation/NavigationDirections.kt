@@ -6,7 +6,8 @@ interface NavigationDirections {
 
     fun goTo(
         action: Parcelable,
-        animation: NavigationController.Animation? = NavigationController.Animation.FromRight
+        animation: NavigationController.Animation? = NavigationController.Animation.FromRight,
+        shouldAddWrapper: Boolean = true
     )
 
     fun goBack(
