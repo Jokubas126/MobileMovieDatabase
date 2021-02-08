@@ -5,10 +5,14 @@ import androidx.fragment.app.Fragment
 import com.example.mmdb.ui.about.AboutFragment
 import com.example.mmdb.ui.about.AboutFragmentArgs
 import com.example.mmdb.navigation.actions.AboutFragmentAction
+import com.example.mmdb.navigation.actions.DiscoverFragmentAction
 import com.example.mmdb.navigation.configproviders.AboutFragmentConfigProvider
 import com.example.mmdb.navigation.configproviders.RemoteMovieGridFragmentConfigProvider
 import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragment
-import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragmentAction
+import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
+import com.example.mmdb.navigation.configproviders.DiscoverFragmentConfigProvider
+import com.example.mmdb.ui.discover.DiscoverFragment
+import com.example.mmdb.ui.discover.DiscoverFragmentArgs
 import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragmentArgs
 
 internal typealias FragmentProvider<T> = (action: T) -> Fragment
@@ -25,10 +29,22 @@ val actionRoutes: List<ActionFragmentProviderPair<*>> = listOf(
             RemoteMovieGridFragment().apply {
                 arguments = RemoteMovieGridFragmentArgs.create(
                     action = action,
-                    configProvider = RemoteMovieGridFragmentConfigProvider::class.java,
+                    configProvider = RemoteMovieGridFragmentConfigProvider::class.java
                 )
             }
         }
+    ),
+    ActionFragmentProviderPair(
+        key = DiscoverFragmentAction::class.java,
+        value = { action ->
+            DiscoverFragment().apply {
+                arguments = DiscoverFragmentArgs.create(
+                    action = action,
+                    configProvider = DiscoverFragmentConfigProvider::class.java
+                )
+            }
+        },
+        screenDecoration = ScreenDecoration.Full
     ),
     ActionFragmentProviderPair(
         key = AboutFragmentAction::class.java,

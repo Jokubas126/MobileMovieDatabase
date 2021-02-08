@@ -17,6 +17,6 @@ abstract class BaseNavigationFragment: Fragment() {
     }
 
     protected val toolbarViewModel: ToolbarViewModel by lazy {
-        ToolbarViewModel()
+        ToolbarViewModel(navController)
     }
 }

@@ -9,7 +9,6 @@ import com.example.mmdb.databinding.FragmentMainBinding
 import com.example.mmdb.navigation.BaseNavigationFragment
 import com.example.mmdb.navigation.ConfigFragmentArgs
 import com.example.mmdb.navigation.action
-import com.example.mmdb.ui.drawer.DrawerAction
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -35,8 +34,6 @@ class NavigationWrapperFragment : BaseNavigationFragment() {
     @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        menu_icon.setOnClickListener { navController.goTo(DrawerAction.Open) }
 
         navController.goTo(
             action = action,

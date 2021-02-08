@@ -9,13 +9,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.mmdb.R
 import com.example.mmdb.databinding.FragmentDiscoverBinding
+import com.example.mmdb.navigation.ConfigFragmentArgs
+import com.example.mmdb.navigation.action
+import com.example.mmdb.navigation.actions.DiscoverFragmentAction
+import com.example.mmdb.navigation.config
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_discover.*
+
+object DiscoverFragmentArgs: ConfigFragmentArgs<DiscoverFragmentAction, DiscoverFragmentConfig>()
 
 class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     MenuItem.OnMenuItemClickListener {
 
-    private lateinit var viewModel: DiscoverViewModel
+    private val action: DiscoverFragmentAction by action()
+    private val config: DiscoverFragmentConfig by config()
+
+    private lateinit var discoverViewModel: DiscoverViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,17 +35,17 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentDiscoverBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this).get(DiscoverViewModel::class.java)
-        binding.viewModel = viewModel
-        return binding.root
+        return FragmentDiscoverBinding.inflate(inflater, container, false).apply {
+            discoverViewModel = ViewModelProvider(this@DiscoverFragment).get(DiscoverViewModel::class.java)
+            viewModel = discoverViewModel
+        }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         rangeSlider.addOnChangeListener { slider, value, _ ->
-            viewModel.onRangeSliderValueChanged(slider.activeThumbIndex == 0, value.toInt())
+            discoverViewModel.onRangeSliderValueChanged(slider.activeThumbIndex == 0, value.toInt())
         }
 
         setupToolbar()
@@ -44,7 +53,7 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_confirm) {
-            viewModel.onConfirmSelectionClicked(findNavController())
+            discoverViewModel.onConfirmSelectionClicked(findNavController())
         }
         return true
     }
@@ -65,9 +74,9 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking,
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity).supportActionBar!!.hide()
-        (activity as AppCompatActivity).setSupportActionBar(collapsing_toolbar)
-        activity!!.invalidateOptionsMenu()
+        //(activity as AppCompatActivity).supportActionBar!!.hide()
+        //(activity as AppCompatActivity).setSupportActionBar(collapsing_toolbar)
+        //activity!!.invalidateOptionsMenu()
 
         app_bar.addOnOffsetChangedListener(
             AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->

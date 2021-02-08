@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.movielists.rest
+package com.example.mmdb.navigation.actions
 
 import android.os.Parcelable
 import com.example.mmdb.navigation.Action

@@ -8,6 +8,8 @@ import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
 import com.example.mmdb.config.requireAppConfig
+import com.example.mmdb.navigation.actions.MovieListType
+import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
 import com.example.mmdb.ui.movielists.ItemMovieConfig
 import com.example.mmdb.ui.movielists.ItemMovieViewModel
 import com.jokubas.mmdb.model.room.repositories.GenresRepository

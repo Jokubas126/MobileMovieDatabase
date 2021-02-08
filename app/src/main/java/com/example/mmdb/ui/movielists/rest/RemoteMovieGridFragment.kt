@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mmdb.databinding.FragmentMoviesGridBinding
 import com.example.mmdb.navigation.ConfigFragmentArgs
 import com.example.mmdb.navigation.action
+import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
 import com.example.mmdb.navigation.config
 import kotlinx.android.synthetic.main.fragment_movies_grid.*
 

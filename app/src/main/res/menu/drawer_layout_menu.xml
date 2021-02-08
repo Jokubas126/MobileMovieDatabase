@@ -11,7 +11,7 @@
             android:title="General">
             <menu>
                 <item
-                    android:id="@+id/menu_categories"
+                    android:id="@+id/menu_discover"
                     android:title="Discover movies" />
             </menu>
         </item>

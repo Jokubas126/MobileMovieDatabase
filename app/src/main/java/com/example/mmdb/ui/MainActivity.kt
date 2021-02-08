@@ -8,7 +8,7 @@ import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.configproviders.NavigationWrapperFragmentConfigProvider
 import com.example.mmdb.ui.drawer.DrawerBehaviorInteractor
 import com.example.mmdb.ui.drawer.DrawerLayoutInteractor
-import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragmentAction
+import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : NavigationActivity(R.layout.activity_main) {
@@ -47,6 +47,8 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
 
         drawerLayoutInteractor.configureDrawerItems(navigationView, navigationController)
     }
+
+    // TODO setup dynamic options menu in the toolbar
 
     /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
