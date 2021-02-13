@@ -3,11 +3,14 @@ package com.example.mmdb.ui.drawer
 import android.graphics.Color
 import android.view.View
 import androidx.core.view.GravityCompat
+import androidx.databinding.Observable
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.mmdb.config.DrawerConfig
 
 class DrawerBehaviorInteractor(
     private val drawerLayout: DrawerLayout,
     contentView: View,
+    private val drawerConfig: DrawerConfig,
     style: DrawerStyle = DrawerStyle()
 ) : DrawerBehaviorInterface {
 
@@ -16,7 +19,8 @@ class DrawerBehaviorInteractor(
     }
 
     override fun openDrawer() {
-        drawerLayout.openDrawer(GravityCompat.START)
+        if (drawerConfig.isDrawerEnabled.get())
+            drawerLayout.openDrawer(GravityCompat.START)
     }
 
     override fun closeDrawer() {
@@ -27,8 +31,10 @@ class DrawerBehaviorInteractor(
         contentView: View,
         style: DrawerStyle
     ) {
-        val drawerListener = when (style.behavior) {
-            DrawerBehavior.PushContent -> DrawerPushContentBehavior(contentView)
+        val drawerListener: DrawerLayout.DrawerListener = when (style.behavior) {
+            DrawerBehavior.PushContent -> DrawerPushContentBehavior(
+                drawerLayout, contentView, drawerConfig
+            )
         }
 
         drawerLayout.apply {

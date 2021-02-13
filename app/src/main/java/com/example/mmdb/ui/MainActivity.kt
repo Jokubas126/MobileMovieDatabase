@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import com.example.mmdb.R
+import com.example.mmdb.config.AppConfig
+import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.navigation.NavigationActivity
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.configproviders.NavigationWrapperFragmentConfigProvider
@@ -19,11 +21,16 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
     private var searchItem: MenuItem? = null
     private var confirmItem: MenuItem? = null
 
+    private val appConfig: AppConfig by lazy {
+        requireAppConfig()
+    }
+
     override val navigationController: NavigationController by lazy {
         NavigationController(
             activity = this,
             drawerInteractor = DrawerBehaviorInteractor(
                 drawerLayout = drawerLayout,
+                drawerConfig = appConfig.drawerConfig,
                 contentView = rootContainer
             )
         )
@@ -47,6 +54,8 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
                     )
                 })
             .commit()
+
+        appConfig.toolbarConfig.setDrawerFragment()
 
         drawerLayoutInteractor.configureDrawerItems(navigationView, navigationController)
         window.adjustStatusBar(R.color.white)

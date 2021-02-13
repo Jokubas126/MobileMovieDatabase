@@ -10,6 +10,8 @@ import com.example.mmdb.extensions.requireAppConfig
 import com.example.mmdb.extensions.requireNavController
 import com.example.mmdb.navigation.*
 import com.example.mmdb.navigation.actions.DiscoverFragmentAction
+import com.example.mmdb.navigation.actions.MovieListType
+import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_discover.*
 
@@ -21,6 +23,10 @@ class DiscoverFragment : BaseNavigationFragment(), CategoryRecyclerView.AppBarTr
     private val config: DiscoverFragmentConfig by config()
 
     private lateinit var discoverViewModel: DiscoverViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,13 +51,6 @@ class DiscoverFragment : BaseNavigationFragment(), CategoryRecyclerView.AppBarTr
         setupToolbar()
     }
 
-    /*override fun onMenuItemClick(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.action_confirm) {
-            //discoverViewModel.onConfirmSelectionClicked(findNavController())
-        }
-        return true
-    }*/
-
     // --------- Toolbar functionality ------------//
 
     private var appBarOffset: Int = 0
@@ -59,19 +58,7 @@ class DiscoverFragment : BaseNavigationFragment(), CategoryRecyclerView.AppBarTr
 
     private var isExpanded: Boolean = false
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-        //menu.findItem(R.id.action_search).isVisible = false
-        /*val confirmItem = menu.findItem(R.id.action_confirm)
-        confirmItem.isVisible = true
-        confirmItem.setOnMenuItemClickListener(this)*/
-    }
-
     private fun setupToolbar() {
-        //(activity as AppCompatActivity).supportActionBar!!.hide()
-        //(activity as AppCompatActivity).setSupportActionBar(collapsing_toolbar)
-        //activity!!.invalidateOptionsMenu()
-
         app_bar.addOnOffsetChangedListener(
             AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 appBarOffset = verticalOffset

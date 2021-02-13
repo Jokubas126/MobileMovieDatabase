@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.mmdb.R
+import com.example.mmdb.config.DrawerConfig
 import com.example.mmdb.navigation.configproviders.NavigationWrapperFragmentConfigProvider
 import com.example.mmdb.ui.NavigationWrapperFragment
 import com.example.mmdb.ui.NavigationWrapperFragmentArgs
@@ -89,6 +90,9 @@ class NavigationController(
     private val hasNoChild: Boolean
         get() = childCount == 0
 
+    private val isLastChild: Boolean
+        get() = childCount == 1
+
     private val dialogFragmentStack: Stack<DialogFragment> = Stack()
 
     private val navigationHolderStack: Stack<NavigationHolder> = Stack()
@@ -121,17 +125,22 @@ class NavigationController(
                 dialogFragmentStack.popSafe()?.dismiss()
             }
             toRoot -> {
+                currentNavigationHolder?.onToolbarChanged?.invoke(true)
                 parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 isTerminalFragment = false
             }
             isTerminalFragment -> {
+                currentNavigationHolder?.onToolbarChanged?.invoke(isLastChild)
                 parentFragmentManager.popBackStack()
                 isTerminalFragment = false
             }
             hasNoChild -> {
+                currentNavigationHolder?.onToolbarChanged?.invoke(true)
                 parentFragmentManager.popBackStack()
+                navigationHolderStack.popSafe()
             }
             else -> {
+                currentNavigationHolder?.onToolbarChanged?.invoke(isLastChild)
                 currentFragmentManager.popBackStack()
             }
         }
@@ -220,7 +229,7 @@ class NavigationController(
 
     fun attachChildFragmentManager(
         fragmentManager: FragmentManager,
-        onToolbarChanged: (() -> Unit)? = null
+        onToolbarChanged: ((isTopFragment: Boolean) -> Unit)? = null
     ) {
         navigationHolderStack.push(
             NavigationHolder(
@@ -243,7 +252,7 @@ class NavigationController(
 
     private data class NavigationHolder(
         val fragmentManager: FragmentManager,
-        val onToolbarChanged: (() -> Unit)?
+        val onToolbarChanged: ((isTopFragment: Boolean) -> Unit)?
     )
 }
 

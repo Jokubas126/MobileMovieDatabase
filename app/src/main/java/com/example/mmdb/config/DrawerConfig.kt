@@ -1,6 +1,8 @@
 package com.example.mmdb.config
 
+import androidx.databinding.ObservableBoolean
+
 class DrawerConfig {
 
-    val isDrawerEnabled: Boolean = true
+    var isDrawerEnabled = ObservableBoolean(false)
 }

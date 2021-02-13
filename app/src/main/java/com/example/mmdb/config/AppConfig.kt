@@ -22,6 +22,10 @@ class AppConfig(context: Context) {
         )
     }
 
+    val toolbarConfig: ToolbarConfig by lazy {
+        ToolbarConfig()
+    }
+
     val drawerConfig: DrawerConfig by lazy {
         DrawerConfig()
     }

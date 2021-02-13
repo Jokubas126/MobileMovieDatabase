@@ -10,6 +10,8 @@
             type="com.example.mmdb.ui.discover.DiscoverViewModel" />
 
         <import type="java.text.DecimalFormatSymbols" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -96,54 +98,78 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="@color/white_80"
+                    app:contentInsetStart="0dp"
                     app:layout_collapseMode="pin"
-                    app:menu="@menu/toolbar_menu"
                     app:popupTheme="@style/AppTheme.PopupOverlay">
 
-                    <LinearLayout
-                        android:id="@+id/expand_collapse_btn"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize"
-                        android:background="?android:selectableItemBackground"
-                        android:orientation="horizontal"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:padding="@dimen/spacing_xxs"
+                        app:layout_collapseMode="pin"
+                        app:popupTheme="@style/AppTheme.PopupOverlay">
 
-                        <ImageView
-                            android:id="@+id/menu_icon"
+                        <LinearLayout
+                            android:id="@+id/expand_collapse_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:adjustViewBounds="true"
-                            android:onClick="@{() -> viewModel.toolbarViewModel.onBackClicked.invoke()}"
-                            android:paddingTop="@dimen/spacing_m"
-                            android:paddingEnd="@dimen/spacing_s"
-                            android:paddingBottom="@dimen/spacing_m"
-                            android:src="@drawable/ic_close_x"
-                            app:layout_constraintStart_toStartOf="parent" />
+                            android:background="?android:selectableItemBackground"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/title_text_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="@string/discover_fragment"
-                            android:textAppearance="@style/ToolbarStyle"
-                            android:textColor="@color/primary" />
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"
+                                android:background="?android:selectableItemBackground"
+                                android:onClick="@{() -> viewModel.toolbarViewModel.onBackClicked.invoke()}"
+                                android:paddingStart="@dimen/spacing_s"
+                                android:paddingTop="@dimen/spacing_m"
+                                android:paddingEnd="@dimen/spacing_s"
+                                android:paddingBottom="@dimen/spacing_m"
+                                android:src="@drawable/ic_close_x"
+                                app:layout_constraintStart_toStartOf="parent" />
+
+                            <TextView
+                                android:id="@+id/title_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@string/discover_fragment"
+                                android:textAppearance="@style/ToolbarStyle"
+                                android:textColor="@color/primary" />
+
+                            <ImageView
+                                android:id="@+id/arrow_image_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="4dp"
+                                android:layout_marginEnd="4dp"
+                                app:srcCompat="@drawable/ic_arrow_drop_up"
+                                tools:ignore="ContentDescription" />
+                        </LinearLayout>
 
                         <ImageView
-                            android:id="@+id/arrow_image_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="4dp"
-                            android:layout_marginEnd="4dp"
-                            app:srcCompat="@drawable/ic_arrow_drop_up"
-                            tools:ignore="ContentDescription" />
-                    </LinearLayout>
-                </androidx.appcompat.widget.Toolbar>
+                            android:adjustViewBounds="true"
+                            android:background="?android:selectableItemBackground"
+                            android:onClick="@{() -> viewModel.toolbarViewModel.toolbarConfig.onConfirmClicked.invoke()}"
+                            android:padding="@dimen/spacing_s"
+                            android:src="@drawable/ic_check"
+                            android:visibility="@{viewModel.toolbarViewModel.toolbarConfig.confirmButtonEnabled ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.appcompat.widget.Toolbar>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 

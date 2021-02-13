@@ -7,6 +7,8 @@
         <variable
             name="viewModel"
             type="com.example.mmdb.ui.ToolbarViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <!-- TODO add additional layer below the main action bar, which would have a title of a section that the user is in (Popular Movies, Watchlist etc.) -->
@@ -32,13 +34,24 @@
                 android:padding="@dimen/spacing_xxs">
 
                 <ImageView
-                    android:id="@+id/menu_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:onClick="@{() -> viewModel.onDrawerOpenClicked.invoke()}"
                     android:padding="@dimen/spacing_s"
                     android:src="@drawable/ic_drawer_menu"
+                    android:visibility="@{viewModel.toolbarConfig.drawerButtonEnabled ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:background="?android:selectableItemBackground"
+                    android:onClick="@{() -> viewModel.onBackClicked.invoke()}"
+                    android:padding="@dimen/spacing_s"
+                    android:src="@drawable/ic_arrow_back"
+                    android:visibility="@{viewModel.toolbarConfig.backButtonEnabled ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <LinearLayout

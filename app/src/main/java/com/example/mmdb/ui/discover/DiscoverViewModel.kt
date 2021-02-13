@@ -16,7 +16,7 @@ import com.jokubas.mmdb.model.data.entities.Subcategory
 import java.util.*
 
 class DiscoverViewModel(
-    appConfig: AppConfig,
+    private val appConfig: AppConfig,
     private val navigationController: NavigationController,
     private val discoverFragmentAction: DiscoverFragmentAction,
     private val discoverFragmentConfig: DiscoverFragmentConfig,
@@ -54,6 +54,7 @@ class DiscoverViewModel(
     private var genreSubcategory = mutableListOf<Subcategory>()
 
     init {
+        setupConfirmButton()
         if (!appConfig.networkCheckConfig.isNetworkAvailable())
             appConfig.networkCheckConfig.networkUnavailableNotification()
     }
@@ -87,19 +88,25 @@ class DiscoverViewModel(
         }
     }
 
-    fun onConfirmSelectionClicked() {
-        navigationController.goTo(
-            action = RemoteMovieGridFragmentAction(
-                MovieListType.Discover(
-                    startYear = if (startYear.get() == INITIAL_START_YEAR_VALUE) null
-                    else startYear.get().toString(),
-                    endYear = endYear.get().toString(),
-                    genreKeys = genreSubcategory.map { it.code },
-                    languageKeys = languageSubcategory.map { it.code }
+    private fun setupConfirmButton() {
+        appConfig.toolbarConfig.apply {
+            confirmButtonEnabled.set(true)
+            onConfirmClicked.set {
+                setBackFragment()
+                navigationController.goTo(
+                    action = RemoteMovieGridFragmentAction(
+                        MovieListType.Discover(
+                            startYear = if (startYear.get() == INITIAL_START_YEAR_VALUE) null
+                            else startYear.get().toString(),
+                            endYear = endYear.get().toString(),
+                            genreKeys = genreSubcategory.map { it.code },
+                            languageKeys = languageSubcategory.map { it.code }
+                        )
+                    ),
+                    animation = NavigationController.Animation.FromRight
                 )
-            ),
-            animation = NavigationController.Animation.FromRight
-        )
+            }
+        }
     }
 
     override fun onCleared() {

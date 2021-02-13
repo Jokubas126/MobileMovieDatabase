@@ -9,6 +9,7 @@ abstract class NavigationActivity(@LayoutRes layoutId: Int) : AppCompatActivity(
 
     override fun onBackPressed() {
         if (navigationController.isOnForeground()) {
+            navigationController.goBack(true)
             super.onBackPressed()
         } else {
             navigationController.goBack()

@@ -84,29 +84,44 @@ class RemoteMovieGridViewModel(
         CoroutineScope(Dispatchers.IO).launch {
             if (appConfig.networkCheckConfig.isNetworkAvailable()) {
                 val movieResults = when (action.movieListType) {
-                    is MovieListType.Popular -> remoteMovieRepository.getTypeMovies(
-                        KEY_POPULAR,
-                        page
-                    )
-                    is MovieListType.TopRated -> remoteMovieRepository.getTypeMovies(
-                        KEY_TOP_RATED,
-                        page
-                    )
-                    is MovieListType.NowPlaying -> remoteMovieRepository.getTypeMovies(
-                        KEY_NOW_PLAYING,
-                        page
-                    )
-                    is MovieListType.Upcoming -> remoteMovieRepository.getTypeMovies(
-                        KEY_UPCOMING,
-                        page
-                    )
-                    is MovieListType.Discover -> remoteMovieRepository.getDiscoveredMovies(
-                        page = page,
-                        startYear = action.movieListType.startYear,
-                        endYear = action.movieListType.endYear,
-                        genreKeys = action.movieListType.genreKeys.toTypedArray(),
-                        languageKeys = action.movieListType.languageKeys.toTypedArray()
-                    )
+                    is MovieListType.Popular -> {
+                        appConfig.toolbarConfig.setDrawerFragment()
+                        remoteMovieRepository.getTypeMovies(
+                            KEY_POPULAR,
+                            page
+                        )
+                    }
+                    is MovieListType.TopRated -> {
+                        appConfig.toolbarConfig.setDrawerFragment()
+                        remoteMovieRepository.getTypeMovies(
+                            KEY_TOP_RATED,
+                            page
+                        )
+                    }
+                    is MovieListType.NowPlaying -> {
+                        appConfig.toolbarConfig.setDrawerFragment()
+                        remoteMovieRepository.getTypeMovies(
+                            KEY_NOW_PLAYING,
+                            page
+                        )
+                    }
+                    is MovieListType.Upcoming -> {
+                        appConfig.toolbarConfig.setDrawerFragment()
+                        remoteMovieRepository.getTypeMovies(
+                            KEY_UPCOMING,
+                            page
+                        )
+                    }
+                    is MovieListType.Discover -> {
+                        appConfig.toolbarConfig.setBackFragment()
+                        remoteMovieRepository.getDiscoveredMovies(
+                            page = page,
+                            startYear = action.movieListType.startYear,
+                            endYear = action.movieListType.endYear,
+                            genreKeys = action.movieListType.genreKeys.toTypedArray(),
+                            languageKeys = action.movieListType.languageKeys.toTypedArray()
+                        )
+                    }
                     is MovieListType.Search -> remoteMovieRepository.getSearchedMovies(
                         page = page,
                         query = action.movieListType.searchQuery ?: ""
@@ -114,18 +129,6 @@ class RemoteMovieGridViewModel(
                     else -> null
                 }
                 movieResults?.let { configureResults(it) } ?: progressManager.error()
-                /*args?.apply {
-                    remoteMovieRepository.getMovieResults(
-                        page,
-                        movieGridType,
-                        keyCategory,
-                        startYear,
-                        endYear,
-                        genreKeys,
-                        languageKeys,
-                        searchQuery
-                    )?.let {  }
-                } ?: progressManager.error()*/
             } else {
                 progressManager.error()
                 appConfig.networkCheckConfig.networkUnavailableNotification()
