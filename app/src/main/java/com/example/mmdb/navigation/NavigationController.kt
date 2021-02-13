@@ -126,18 +126,18 @@ class NavigationController(
             }
             toRoot -> {
                 currentNavigationHolder?.onToolbarChanged?.invoke(true)
+                resetStacks()
                 parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 isTerminalFragment = false
             }
             isTerminalFragment -> {
-                currentNavigationHolder?.onToolbarChanged?.invoke(isLastChild)
                 parentFragmentManager.popBackStack()
                 isTerminalFragment = false
             }
             hasNoChild -> {
                 currentNavigationHolder?.onToolbarChanged?.invoke(true)
                 parentFragmentManager.popBackStack()
-                navigationHolderStack.popSafe()
+                resetStacks()
             }
             else -> {
                 currentNavigationHolder?.onToolbarChanged?.invoke(isLastChild)
