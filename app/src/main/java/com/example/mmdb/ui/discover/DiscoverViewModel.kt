@@ -10,6 +10,7 @@ import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.actions.DiscoverFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
+import com.example.mmdb.ui.ToolbarViewModel
 import com.jokubas.mmdb.model.data.entities.CategoryType
 import com.jokubas.mmdb.model.data.entities.Subcategory
 import java.util.*
@@ -18,7 +19,8 @@ class DiscoverViewModel(
     appConfig: AppConfig,
     private val navigationController: NavigationController,
     private val discoverFragmentAction: DiscoverFragmentAction,
-    private val discoverFragmentConfig: DiscoverFragmentConfig
+    private val discoverFragmentConfig: DiscoverFragmentConfig,
+    val toolbarViewModel: ToolbarViewModel
 ) : ViewModel() {
 
     companion object {

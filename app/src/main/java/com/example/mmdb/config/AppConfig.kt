@@ -21,6 +21,10 @@ class AppConfig(context: Context) {
             httpClientBuilder = OkHttpClient.Builder()
         )
     }
+
+    val drawerConfig: DrawerConfig by lazy {
+        DrawerConfig()
+    }
 }
 
 fun Application.requireAppConfig(): AppConfig = (this as MainApplication).config

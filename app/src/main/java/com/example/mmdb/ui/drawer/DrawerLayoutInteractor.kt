@@ -10,7 +10,6 @@ import com.example.mmdb.navigation.actions.DiscoverFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
 import com.google.android.material.navigation.NavigationView
-import com.jokubas.mmdb.util.extensions.adjustStatusBar
 
 class DrawerLayoutInteractor(private val context: Context) {
 
@@ -48,7 +47,7 @@ class DrawerLayoutInteractor(private val context: Context) {
                 )
                 R.id.menu_about -> navigationController.goTo(
                     action = AboutFragmentAction(),
-                    animation = NavigationController.Animation.FadeIn
+                    animation = NavigationController.Animation.FromBottom
                 )
             }
             navigationController.goTo(DrawerAction.Close)

@@ -7,6 +7,6 @@ package com.example.mmdb.navigation
  */
 sealed class ScreenDecoration {
 
-    object Wrapper : ScreenDecoration()
+    object Wrapped : ScreenDecoration()
     object Full : ScreenDecoration()
 }

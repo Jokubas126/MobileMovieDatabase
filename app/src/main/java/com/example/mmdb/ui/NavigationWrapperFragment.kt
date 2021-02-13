@@ -10,7 +10,6 @@ import com.example.mmdb.navigation.BaseNavigationFragment
 import com.example.mmdb.navigation.ConfigFragmentArgs
 import com.example.mmdb.navigation.action
 import kotlinx.android.synthetic.main.fragment_main.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 object NavigationWrapperFragmentConfig
 object NavigationWrapperFragmentArgs :
@@ -31,14 +30,18 @@ class NavigationWrapperFragment : BaseNavigationFragment() {
         }.root
     }
 
-    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        navController.goTo(
-            action = action,
-            animation = null,
-            shouldAddWrapper = false
+        toolbarViewModel.attachToNavigationController(
+            fragmentManager = childFragmentManager
         )
+
+        navController.putInWrapper(action = action)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        navController.detachFromNavigationController()
     }
 }

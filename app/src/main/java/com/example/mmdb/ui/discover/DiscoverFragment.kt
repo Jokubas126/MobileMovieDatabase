@@ -8,25 +8,14 @@ import com.example.mmdb.config.AppConfig
 import com.example.mmdb.databinding.FragmentDiscoverBinding
 import com.example.mmdb.extensions.requireAppConfig
 import com.example.mmdb.extensions.requireNavController
-import com.example.mmdb.navigation.ConfigFragmentArgs
-import com.example.mmdb.navigation.NavigationController
-import com.example.mmdb.navigation.action
+import com.example.mmdb.navigation.*
 import com.example.mmdb.navigation.actions.DiscoverFragmentAction
-import com.example.mmdb.navigation.config
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_discover.*
 
 object DiscoverFragmentArgs: ConfigFragmentArgs<DiscoverFragmentAction, DiscoverFragmentConfig>()
 
-class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking {
-
-    private val appConfig: AppConfig by lazy {
-        requireAppConfig()
-    }
-
-    private val navController: NavigationController by lazy {
-        requireNavController()
-    }
+class DiscoverFragment : BaseNavigationFragment(), CategoryRecyclerView.AppBarTracking {
 
     private val action: DiscoverFragmentAction by action()
     private val config: DiscoverFragmentConfig by config()
@@ -40,7 +29,7 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking {
         return FragmentDiscoverBinding.inflate(inflater, container, false).apply {
             discoverViewModel = ViewModelProvider(
                 this@DiscoverFragment,
-                DiscoverViewModelFactory(appConfig, navController, action, config)
+                DiscoverViewModelFactory(appConfig, navController, action, config, toolbarViewModel)
             ).get(DiscoverViewModel::class.java)
             viewModel = discoverViewModel
         }.root

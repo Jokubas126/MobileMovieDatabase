@@ -14,5 +14,9 @@ interface NavigationDirections {
         toRoot: Boolean = false
     )
 
+    fun putInWrapper(
+        action: Parcelable
+    )
+
     fun isOnForeground(): Boolean
 }

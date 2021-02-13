@@ -109,6 +109,18 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
+                        <ImageView
+                            android:id="@+id/menu_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:onClick="@{() -> viewModel.toolbarViewModel.onBackClicked.invoke()}"
+                            android:paddingTop="@dimen/spacing_m"
+                            android:paddingEnd="@dimen/spacing_s"
+                            android:paddingBottom="@dimen/spacing_m"
+                            android:src="@drawable/ic_close_x"
+                            app:layout_constraintStart_toStartOf="parent" />
+
                         <TextView
                             android:id="@+id/title_text_view"
                             android:layout_width="wrap_content"
