@@ -44,7 +44,7 @@ val actionRoutes: List<ActionFragmentProviderPair<*>> = listOf(
                 )
             }
         },
-        screenDecoration = ScreenDecoration.Full
+        screenDecoration = ScreenDecoration.NoDrawer
     ),
     ActionFragmentProviderPair(
         key = AboutFragmentAction::class.java,
@@ -62,5 +62,5 @@ val actionRoutes: List<ActionFragmentProviderPair<*>> = listOf(
 data class ActionFragmentProviderPair<T : Parcelable>(
     internal val key: Class<T>,
     internal val value: FragmentProvider<T>,
-    internal val screenDecoration: ScreenDecoration = ScreenDecoration.Wrapped
+    internal val screenDecoration: ScreenDecoration = ScreenDecoration.WithDrawer
 )

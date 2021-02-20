@@ -10,9 +10,7 @@ interface NavigationDirections {
         shouldAddWrapper: Boolean = true
     )
 
-    fun goBack(
-        toRoot: Boolean = false
-    )
+    fun goBack()
 
     fun putInWrapper(
         action: Parcelable

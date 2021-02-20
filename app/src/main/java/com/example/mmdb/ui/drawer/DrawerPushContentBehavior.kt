@@ -10,26 +10,29 @@ class DrawerPushContentBehavior(
     private val drawerConfig: DrawerConfig
 ) : DrawerLayout.DrawerListener {
 
-    private var drawerOpened = false
-
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
         val translationX = drawerView.width * slideOffset
         contentView.translationX = translationX
     }
 
     override fun onDrawerOpened(drawerView: View) {
-        drawerOpened = true
     }
 
     override fun onDrawerClosed(drawerView: View) {
-        drawerOpened = false
     }
 
     override fun onDrawerStateChanged(newState: Int) {
-        when {
-            drawerConfig.isDrawerEnabled.get() -> drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-            !drawerConfig.isDrawerEnabled.get() && !drawerOpened -> drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-            !drawerConfig.isDrawerEnabled.get() && drawerOpened -> drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN)
+        setLock()
+    }
+
+    private fun setLock(){
+        when (drawerConfig.isDrawerEnabled.get()) {
+            true -> {
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            }
+            else -> {
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            }
         }
     }
 }

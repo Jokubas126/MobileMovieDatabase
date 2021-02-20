@@ -4,5 +4,5 @@ import androidx.databinding.ObservableBoolean
 
 class DrawerConfig {
 
-    var isDrawerEnabled = ObservableBoolean(false)
+    var isDrawerEnabled = ObservableBoolean(true)
 }

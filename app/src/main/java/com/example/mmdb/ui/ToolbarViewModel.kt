@@ -20,10 +20,6 @@ class ToolbarViewModel(
         navController.goBack()
     }
 
-    init {
-        drawerConfig.isDrawerEnabled.set(toolbarConfig.drawerButtonEnabled.get())
-    }
-
     fun attachToNavigationController(
         fragmentManager: FragmentManager
     ) {

@@ -32,7 +32,8 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
                 drawerLayout = drawerLayout,
                 drawerConfig = appConfig.drawerConfig,
                 contentView = rootContainer
-            )
+            ),
+            drawerConfig = appConfig.drawerConfig
         )
     }
 

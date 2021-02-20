@@ -18,7 +18,8 @@ import java.util.*
 
 class NavigationController(
     activity: NavigationActivity,
-    private val drawerInteractor: DrawerBehaviorInterface
+    private val drawerInteractor: DrawerBehaviorInterface,
+    private val drawerConfig: DrawerConfig
 ) : NavigationDirections {
 
     private fun resolveFragment(action: Parcelable): Fragment? =
@@ -34,41 +35,6 @@ class NavigationController(
         actionRoutes.find { actionFragmentProviderPair ->
             actionFragmentProviderPair.key == action::class.java
         }?.screenDecoration
-
-    private val Animation?.toRootFrame: Boolean
-        get() = this?.showInFullscreen ?: false
-
-    enum class Animation(
-        @AnimatorRes @AnimRes val enter: Int,
-        @AnimatorRes @AnimRes val exit: Int,
-        @AnimatorRes @AnimRes val popEnter: Int,
-        @AnimatorRes @AnimRes val popExit: Int,
-        val showInFullscreen: Boolean = false
-    ) {
-        FromRight(
-            R.anim.in_from_right,
-            R.anim.out_to_left,
-            R.anim.in_from_left,
-            R.anim.out_to_right,
-            true
-        ),
-        FromBottom(
-            R.anim.in_from_bottom,
-            R.anim.out_to_top,
-            R.anim.in_from_top,
-            R.anim.out_to_bottom,
-            true
-        ),
-        FadeIn(
-            R.anim.fade_in,
-            R.anim.fade_out,
-            R.anim.fade_in,
-            R.anim.fade_out,
-            true
-        )
-    }
-
-    private var isTerminalFragment: Boolean = false
 
     private val parentFragmentManager: FragmentManager = activity.supportFragmentManager
 
@@ -107,11 +73,10 @@ class NavigationController(
             else -> {
                 resolveFragment(action)?.let { fragment ->
                     resolveScreenDecoration(action)?.let { decoration ->
-                        if (isTerminalFragment) {
-                            goBack()
-                        }
+                        if (shouldAddWrapper)
+                            resetStacks()
                         showFragment(action, fragment, decoration, animation, shouldAddWrapper)
-                        isTerminalFragment = decoration == ScreenDecoration.Wrapped
+                        drawerConfig.isDrawerEnabled.set(decoration is ScreenDecoration.WithDrawer)
                     }
                 }
             }
@@ -119,20 +84,10 @@ class NavigationController(
 
     }
 
-    override fun goBack(toRoot: Boolean) {
+    override fun goBack() {
         when {
             dialogFragmentStack.isNotEmpty() -> {
                 dialogFragmentStack.popSafe()?.dismiss()
-            }
-            toRoot -> {
-                currentNavigationHolder?.onToolbarChanged?.invoke(true)
-                resetStacks()
-                parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                isTerminalFragment = false
-            }
-            isTerminalFragment -> {
-                parentFragmentManager.popBackStack()
-                isTerminalFragment = false
             }
             hasNoChild -> {
                 currentNavigationHolder?.onToolbarChanged?.invoke(true)
@@ -158,10 +113,8 @@ class NavigationController(
                 dialogFragmentStack.push(fragment)
                 fragment.show(currentFragmentManager, fragment.javaClass.simpleName)
             }
-            !animation.toRootFrame && decoration is ScreenDecoration.Wrapped -> {
-                if (isTopFragment) {
-                    resetStacks()
-                }
+            decoration is ScreenDecoration.WithDrawer -> {
+                resetStacks()
                 showFragmentInFullscreen(
                     fragment = if (shouldAddWrapper) createWrapperFragment(action) else fragment,
                     animation = animation
@@ -176,44 +129,28 @@ class NavigationController(
 
     override fun putInWrapper(action: Parcelable) {
         resolveFragment(action)?.let { fragment ->
-            val transactionId: String = UUID.randomUUID().toString()
-            val containerId: Int = R.id.wrapperContainer
-
             currentFragmentManager
                 .beginTransaction()
                 .apply {
-                    this.replace(containerId, fragment, transactionId)
+                    val transactionId: String = UUID.randomUUID().toString()
+                    this.replace(R.id.wrapperContainer, fragment, transactionId)
                 }
                 .commitAllowingStateLoss()
-
-            if (isTopFragment)
-                resetStacks()
         }
     }
 
     private fun showFragmentInFullscreen(fragment: Fragment, animation: Animation?) {
         val transactionId: String = UUID.randomUUID().toString()
-        val isToRootFrame = animation.toRootFrame
+        val containerId: Int = R.id.rootContainer
 
-        val containerId: Int = if (isToRootFrame) {
-            R.id.rootContainer
-        } else R.id.wrapperContainer
-
-        val fragmentManager = if (isToRootFrame) {
-            parentFragmentManager
-        } else currentFragmentManager
-
-        fragmentManager
+        parentFragmentManager
             .beginTransaction()
             .apply {
                 animation?.let { anim ->
                     setCustomAnimations(anim.enter, anim.exit, anim.popEnter, anim.popExit)
                 }
-                if (isToRootFrame) {
-                    this.add(containerId, fragment, transactionId)
-                } else {
-                    this.replace(containerId, fragment, transactionId)
-                }
+                this.add(containerId, fragment, transactionId)
+
                 animation?.let { this.addToBackStack(fragment.id.toString()) }
             }
             .commitAllowingStateLoss()
@@ -254,5 +191,31 @@ class NavigationController(
         val fragmentManager: FragmentManager,
         val onToolbarChanged: ((isTopFragment: Boolean) -> Unit)?
     )
+
+    enum class Animation(
+        @AnimatorRes @AnimRes val enter: Int,
+        @AnimatorRes @AnimRes val exit: Int,
+        @AnimatorRes @AnimRes val popEnter: Int,
+        @AnimatorRes @AnimRes val popExit: Int
+    ) {
+        FromRight(
+            R.anim.in_from_right,
+            R.anim.out_to_left,
+            R.anim.in_from_left,
+            R.anim.out_to_right
+        ),
+        FromBottom(
+            R.anim.in_from_bottom,
+            R.anim.out_to_top,
+            R.anim.in_from_top,
+            R.anim.out_to_bottom
+        ),
+        FadeIn(
+            R.anim.fade_in,
+            R.anim.fade_out,
+            R.anim.fade_in,
+            R.anim.fade_out
+        )
+    }
 }
 
