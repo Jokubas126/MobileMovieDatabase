@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -40,7 +41,7 @@
                     android:onClick="@{() -> viewModel.onDrawerOpenClicked.invoke()}"
                     android:padding="@dimen/spacing_s"
                     android:src="@drawable/ic_drawer_menu"
-                    android:visibility="@{viewModel.toolbarConfig.drawerButtonEnabled ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.burgerMenuButtonEnabled ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <ImageView
@@ -51,8 +52,9 @@
                     android:onClick="@{() -> viewModel.onBackClicked.invoke()}"
                     android:padding="@dimen/spacing_s"
                     android:src="@drawable/ic_arrow_back"
-                    android:visibility="@{viewModel.toolbarConfig.backButtonEnabled ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:visibility="@{viewModel.backButtonEnabled ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:visibility="gone"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"

@@ -19,7 +19,7 @@ class DrawerBehaviorInteractor(
     }
 
     override fun openDrawer() {
-        if (drawerConfig.isDrawerEnabled.get())
+        if (drawerConfig.isDrawerEnabled())
             drawerLayout.openDrawer(GravityCompat.START)
     }
 
@@ -32,9 +32,7 @@ class DrawerBehaviorInteractor(
         style: DrawerStyle
     ) {
         val drawerListener: DrawerLayout.DrawerListener = when (style.behavior) {
-            DrawerBehavior.PushContent -> DrawerPushContentBehavior(
-                drawerLayout, contentView, drawerConfig
-            )
+            DrawerBehavior.PushContent -> DrawerPushContentBehavior(contentView)
         }
 
         drawerLayout.apply {

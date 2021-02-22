@@ -43,8 +43,7 @@ val actionRoutes: List<ActionFragmentProviderPair<*>> = listOf(
                     configProvider = DiscoverFragmentConfigProvider::class.java
                 )
             }
-        },
-        screenDecoration = ScreenDecoration.NoDrawer
+        }
     ),
     ActionFragmentProviderPair(
         key = AboutFragmentAction::class.java,
@@ -61,6 +60,5 @@ val actionRoutes: List<ActionFragmentProviderPair<*>> = listOf(
 
 data class ActionFragmentProviderPair<T : Parcelable>(
     internal val key: Class<T>,
-    internal val value: FragmentProvider<T>,
-    internal val screenDecoration: ScreenDecoration = ScreenDecoration.WithDrawer
+    internal val value: FragmentProvider<T>
 )

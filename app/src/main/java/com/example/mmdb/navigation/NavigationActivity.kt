@@ -8,10 +8,8 @@ abstract class NavigationActivity(@LayoutRes layoutId: Int) : AppCompatActivity(
     abstract val navigationController: NavigationController
 
     override fun onBackPressed() {
-        if (navigationController.isOnForeground()) {
-            super.onBackPressed()
-        } else {
-            navigationController.goBack()
-        }
+        navigationController.goBack(
+            alt = { super.onBackPressed() }
+        )
     }
 }

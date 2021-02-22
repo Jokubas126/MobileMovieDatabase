@@ -24,7 +24,7 @@ class DrawerLayoutInteractor(private val context: Context) {
                     navigationController.goTo(
                         action = DiscoverFragmentAction(),
                         animation = NavigationController.Animation.FromBottom,
-                        shouldAddWrapper = false
+                        useWrapper = false
                     )
                 }
                 //R.id.menu_watchlist -> navController?.navigate(NavGraphDirections.actionGlobalWatchlistFragment())
@@ -47,7 +47,8 @@ class DrawerLayoutInteractor(private val context: Context) {
                 )
                 R.id.menu_about -> navigationController.goTo(
                     action = AboutFragmentAction(),
-                    animation = NavigationController.Animation.FromBottom
+                    animation = NavigationController.Animation.FromBottom,
+                    useWrapper = false
                 )
             }
             navigationController.goTo(DrawerAction.Close)

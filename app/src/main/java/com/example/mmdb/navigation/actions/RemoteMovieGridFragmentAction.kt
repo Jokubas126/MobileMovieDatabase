@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 class RemoteMovieGridFragmentAction(
     val movieListType: MovieListType = MovieListType.Popular
-) : Action
+) : WrappedFragmentAction
 
 @Parcelize
 open class MovieListType : Parcelable {

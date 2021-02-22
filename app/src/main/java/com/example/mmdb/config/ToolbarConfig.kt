@@ -1,7 +1,6 @@
 package com.example.mmdb.config
 
 import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
 
 class ToolbarConfig {
 
@@ -9,7 +8,6 @@ class ToolbarConfig {
     val drawerButtonEnabled = ObservableBoolean(false)
 
     val confirmButtonEnabled = ObservableBoolean(false)
-    val onConfirmClicked = ObservableField<() -> Unit>()
 
     fun setBackFragment() {
         backButtonEnabled.set(true)

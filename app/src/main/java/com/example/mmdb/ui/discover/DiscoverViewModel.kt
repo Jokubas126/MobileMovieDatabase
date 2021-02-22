@@ -89,10 +89,10 @@ class DiscoverViewModel(
     }
 
     private fun setupConfirmButton() {
-        appConfig.toolbarConfig.apply {
-            confirmButtonEnabled.set(true)
-            onConfirmClicked.set {
-                setBackFragment()
+        toolbarViewModel.setClickListener(object : ToolbarViewModel.ClickListener {
+            override fun onConfirmClicked() {
+                super.onConfirmClicked()
+                appConfig.toolbarConfig.setBackFragment()
                 navigationController.goTo(
                     action = RemoteMovieGridFragmentAction(
                         MovieListType.Discover(
@@ -106,7 +106,7 @@ class DiscoverViewModel(
                     animation = NavigationController.Animation.FromRight
                 )
             }
-        }
+        })
     }
 
     override fun onCleared() {

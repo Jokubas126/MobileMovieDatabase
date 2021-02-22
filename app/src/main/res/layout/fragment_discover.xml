@@ -160,10 +160,10 @@
                             android:layout_height="wrap_content"
                             android:adjustViewBounds="true"
                             android:background="?android:selectableItemBackground"
-                            android:onClick="@{() -> viewModel.toolbarViewModel.toolbarConfig.onConfirmClicked.invoke()}"
+                            android:onClick="@{() -> viewModel.toolbarViewModel.onConfirmClicked.invoke()}"
                             android:padding="@dimen/spacing_s"
                             android:src="@drawable/ic_check"
-                            android:visibility="@{viewModel.toolbarViewModel.toolbarConfig.confirmButtonEnabled ? View.VISIBLE : View.GONE}"
+                            android:visibility="@{viewModel.toolbarViewModel.confirmButtonEnabled ? View.VISIBLE : View.GONE}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />

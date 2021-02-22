@@ -5,9 +5,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.example.mmdb.config.DrawerConfig
 
 class DrawerPushContentBehavior(
-    private val drawerLayout: DrawerLayout,
-    private val contentView: View,
-    private val drawerConfig: DrawerConfig
+    private val contentView: View
 ) : DrawerLayout.DrawerListener {
 
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
@@ -22,17 +20,5 @@ class DrawerPushContentBehavior(
     }
 
     override fun onDrawerStateChanged(newState: Int) {
-        setLock()
-    }
-
-    private fun setLock(){
-        when (drawerConfig.isDrawerEnabled.get()) {
-            true -> {
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-            }
-            else -> {
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-            }
-        }
     }
 }

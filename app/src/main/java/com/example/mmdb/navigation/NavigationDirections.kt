@@ -6,15 +6,14 @@ interface NavigationDirections {
 
     fun goTo(
         action: Parcelable,
-        animation: NavigationController.Animation? = NavigationController.Animation.FromRight,
-        shouldAddWrapper: Boolean = true
+        animation: NavigationController.Animation = NavigationController.Animation.FadeIn,
+        useWrapper: Boolean = true
     )
 
-    fun goBack()
+    fun goBack(alt: (() -> Unit)? = null)
 
     fun putInWrapper(
-        action: Parcelable
+        action: Parcelable,
+        animation: NavigationController.Animation? = null
     )
-
-    fun isOnForeground(): Boolean
 }

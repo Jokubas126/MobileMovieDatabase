@@ -1,8 +1,17 @@
 package com.example.mmdb.config
 
-import androidx.databinding.ObservableBoolean
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 class DrawerConfig {
 
-    var isDrawerEnabled = ObservableBoolean(true)
+    private val isDrawerEnabled = MutableLiveData(true)
+
+    fun setDrawerEnabled(isEnabled: Boolean){
+        isDrawerEnabled.postValue(isEnabled)
+    }
+
+    fun isDrawerEnabled(): Boolean = isDrawerEnabled.value ?: false
+
+    fun isDrawerEnabledLiveData(): LiveData<Boolean> = isDrawerEnabled
 }

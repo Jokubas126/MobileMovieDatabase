@@ -10,22 +10,50 @@ import com.example.mmdb.extensions.requireAppConfig
 import com.example.mmdb.extensions.requireNavController
 import com.example.mmdb.navigation.*
 import com.example.mmdb.navigation.actions.DiscoverFragmentAction
-import com.example.mmdb.navigation.actions.MovieListType
-import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
+import com.example.mmdb.ui.ToolbarViewModel
 import com.google.android.material.appbar.AppBarLayout
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_discover.*
 
 object DiscoverFragmentArgs: ConfigFragmentArgs<DiscoverFragmentAction, DiscoverFragmentConfig>()
 
-class DiscoverFragment : BaseNavigationFragment(), CategoryRecyclerView.AppBarTracking {
+class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking {
+
+    private val appConfig: AppConfig by lazy {
+        requireAppConfig()
+    }
+
+    private val navController: NavigationController by lazy {
+        requireNavController()
+    }
 
     private val action: DiscoverFragmentAction by action()
     private val config: DiscoverFragmentConfig by config()
 
-    private lateinit var discoverViewModel: DiscoverViewModel
+    private val discoverViewModel: DiscoverViewModel by lazy {
+        ViewModelProvider(
+            this@DiscoverFragment,
+            DiscoverViewModelFactory(
+                appConfig = appConfig,
+                navigationController = navController,
+                action = action,
+                config = config,
+                toolbarViewModel = ToolbarViewModel(
+                    toolbarConfig = appConfig.toolbarConfig,
+                    navController = navController
+                ).apply {
+                    attachToNavigationController(
+                        fragmentManager = childFragmentManager
+                    )
+                }
+            )
+        ).get(DiscoverViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appConfig.toolbarConfig.confirmButtonEnabled.set(true)
+        appConfig.toolbarConfig.setBackFragment()
     }
 
     override fun onCreateView(
@@ -33,11 +61,8 @@ class DiscoverFragment : BaseNavigationFragment(), CategoryRecyclerView.AppBarTr
         savedInstanceState: Bundle?
     ): View {
         return FragmentDiscoverBinding.inflate(inflater, container, false).apply {
-            discoverViewModel = ViewModelProvider(
-                this@DiscoverFragment,
-                DiscoverViewModelFactory(appConfig, navController, action, config, toolbarViewModel)
-            ).get(DiscoverViewModel::class.java)
             viewModel = discoverViewModel
+            lifecycleOwner = this@DiscoverFragment
         }.root
     }
 
@@ -49,6 +74,11 @@ class DiscoverFragment : BaseNavigationFragment(), CategoryRecyclerView.AppBarTr
         }
 
         setupToolbar()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        navController.detachFromNavigationController()
     }
 
     // --------- Toolbar functionality ------------//

@@ -2,7 +2,6 @@ package com.example.mmdb.ui
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.core.content.ContextCompat
 import com.example.mmdb.R
 import com.example.mmdb.config.AppConfig
 import com.example.mmdb.config.requireAppConfig
@@ -13,7 +12,7 @@ import com.example.mmdb.ui.drawer.DrawerBehaviorInteractor
 import com.example.mmdb.ui.drawer.DrawerLayoutInteractor
 import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
 import com.jokubas.mmdb.util.extensions.adjustStatusBar
-import com.jokubas.mmdb.util.extensions.setLightStatusBar
+import com.jokubas.mmdb.util.extensions.setLockMode
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : NavigationActivity(R.layout.activity_main) {
@@ -44,22 +43,34 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        observeDrawerLock()
+
         supportFragmentManager
             .beginTransaction()
             .replace(
                 R.id.rootContainer,
-                NavigationWrapperFragment().apply {
+                NavigationWrapperFragment(attachToNavigation = false).apply {
                     arguments = NavigationWrapperFragmentArgs.create(
                         action = RemoteMovieGridFragmentAction(),
                         configProvider = NavigationWrapperFragmentConfigProvider::class.java
                     )
+                    appConfig.toolbarConfig.setDrawerFragment()
                 })
             .commit()
 
-        appConfig.toolbarConfig.setDrawerFragment()
-
         drawerLayoutInteractor.configureDrawerItems(navigationView, navigationController)
         window.adjustStatusBar(R.color.white)
+    }
+
+    private fun observeDrawerLock(){
+        appConfig.drawerConfig.isDrawerEnabledLiveData().observe(this, { isEnabled ->
+            drawerLayout.setLockMode(isEnabled)
+        })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        appConfig.drawerConfig.isDrawerEnabledLiveData().removeObservers(this)
     }
     // TODO setup dynamic options menu in the toolbar through its viewModel
 
