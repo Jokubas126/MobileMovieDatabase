@@ -18,9 +18,9 @@
         android:id="@+id/toolbarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginStart="@dimen/spacing_xs"
+        android:layout_marginTop="@dimen/spacing_xs"
+        android:layout_marginEnd="@dimen/spacing_xs"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="8dp">
 
@@ -38,6 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
+                    android:background="?android:selectableItemBackground"
                     android:onClick="@{() -> viewModel.onDrawerOpenClicked.invoke()}"
                     android:padding="@dimen/spacing_s"
                     android:src="@drawable/ic_drawer_menu"
@@ -54,7 +55,7 @@
                     android:src="@drawable/ic_arrow_back"
                     android:visibility="@{viewModel.backButtonEnabled ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
-                    tools:visibility="gone"/>
+                    tools:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

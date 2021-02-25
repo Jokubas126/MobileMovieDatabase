@@ -1,7 +1,6 @@
 package com.example.mmdb.ui.launcher
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.mmdb.config.AppConfig
 import com.jokubas.mmdb.util.LiveEvent
 import kotlinx.coroutines.CoroutineScope
@@ -41,7 +40,7 @@ class LauncherViewModel(
     }
 
     private fun checkForGenre() {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             //isGenresRequired = genresRepository.getAnyGenre() == null
             checkIfAnyUpdateRequired()
         }

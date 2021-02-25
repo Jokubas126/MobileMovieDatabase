@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.mmdb.R
 import com.example.mmdb.config.DrawerConfig
+import com.example.mmdb.navigation.actions.InnerDetailsAction
 import com.example.mmdb.navigation.actions.WrappedFragmentAction
 import com.example.mmdb.navigation.configproviders.NavigationWrapperFragmentConfigProvider
 import com.example.mmdb.ui.NavigationWrapperFragment
 import com.example.mmdb.ui.NavigationWrapperFragmentArgs
+import com.example.mmdb.ui.details.DetailsNavigationController
 import com.example.mmdb.ui.drawer.DrawerAction
 import com.example.mmdb.ui.drawer.DrawerBehaviorInterface
 import com.jokubas.mmdb.util.extensions.popSafe
@@ -31,6 +33,8 @@ class NavigationController(
         }?.let { fragmentProvider ->
             fragmentProvider(action)
         }
+
+    private val detailsNavigationController = DetailsNavigationController()
 
     private val parentFragmentManager: FragmentManager = activity.supportFragmentManager
 
@@ -68,6 +72,13 @@ class NavigationController(
                 if (action == DrawerAction.Open)
                     drawerInteractor.openDrawer()
                 else drawerInteractor.closeDrawer()
+            action is InnerDetailsAction -> {
+                resolveFragment(action)?.let { fragment ->
+                    detailsNavigationController.goTo(currentFragmentManager, fragment, animation)
+                    if (action is InnerDetailsAction.OverviewAction)
+                        detailsNavigationController.detailsNavigationStack.clear()
+                }
+            }
             action is WrappedFragmentAction && !animation.isInner -> {
                 resetStacks()
                 putInWrapper(action, animation)
@@ -88,6 +99,9 @@ class NavigationController(
         when {
             dialogFragmentStack.isNotEmpty() -> {
                 dialogFragmentStack.popSafe()?.dismiss()
+            }
+            detailsNavigationController.detailsNavigationStack.isNotEmpty() -> {
+                detailsNavigationController.detailsNavigationStack.popSafe()
             }
             hasNoChild && !isTopFragment -> {
                 currentNavigationHolder?.onToolbarChanged?.invoke(true)

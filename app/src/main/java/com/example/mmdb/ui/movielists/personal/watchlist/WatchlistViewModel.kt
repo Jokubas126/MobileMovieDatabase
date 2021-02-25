@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.mmdb.R
 import com.example.mmdb.config.AppConfig
 import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
@@ -62,7 +61,7 @@ class WatchlistViewModel(
     }
 
     private fun getMovies(watchlistMovies: List<WatchlistMovie>) {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             _movies.value = remoteMovieRepository.getMovieListFromWatchlists(watchlistMovies)
             if (watchlistMovies.isEmpty())
                 progressManager.error()

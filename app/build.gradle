@@ -49,11 +49,6 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    implementation "androidx.navigation:navigation-fragment:$navVersion"
-    implementation "androidx.navigation:navigation-ui:$navVersion"
-    implementation "androidx.navigation:navigation-fragment-ktx:$navKtxVersion"
-    implementation "androidx.navigation:navigation-ui-ktx:$navKtxVersion"
-
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
 

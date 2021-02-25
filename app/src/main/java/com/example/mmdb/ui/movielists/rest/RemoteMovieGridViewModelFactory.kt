@@ -10,8 +10,7 @@ class RemoteMovieGridViewModelFactory(
     private val application: Application,
     private val appConfig: AppConfig,
     private val action: RemoteMovieGridFragmentAction,
-    private val config: RemoteMovieGridFragmentConfig,
-    private val onMovieSelected: (movieRemoteId: Int) -> Unit
+    private val config: RemoteMovieGridFragmentConfig
 ) : ViewModelProvider.AndroidViewModelFactory(application) {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -20,8 +19,7 @@ class RemoteMovieGridViewModelFactory(
             application,
             appConfig,
             action,
-            config,
-            onMovieSelected
+            config
         ) as T
     }
 }

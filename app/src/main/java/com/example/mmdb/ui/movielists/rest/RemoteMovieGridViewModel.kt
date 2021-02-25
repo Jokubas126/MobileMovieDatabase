@@ -8,10 +8,8 @@ import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
 import com.example.mmdb.config.AppConfig
-import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
-import com.example.mmdb.ui.movielists.ItemMovieConfig
 import com.example.mmdb.ui.movielists.ItemMovieViewModel
 import com.jokubas.mmdb.model.room.repositories.GenresRepository
 import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
@@ -27,14 +25,14 @@ import com.jokubas.mmdb.util.showToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
 class RemoteMovieGridViewModel(
     application: Application,
     private val appConfig: AppConfig,
     private val action: RemoteMovieGridFragmentAction,
-    private val config: RemoteMovieGridFragmentConfig,
-    private val onMovieClicked: (movieId: Int) -> Unit
+    private val config: RemoteMovieGridFragmentConfig
 ) : AndroidViewModel(application) {
 
     private val progressManager = RemoteListProgressManager()
@@ -148,13 +146,14 @@ class RemoteMovieGridViewModel(
                 movie.isInWatchlist = watchlistMovieIdList.value?.contains(movie.remoteId) == true
             }
         }
-        insertMovieListToData(results)
+        populateMovieList(results)
     }
 
-    private fun insertMovieListToData(results: MovieResults) {
+    // TODO move to config
+    private fun populateMovieList(results: MovieResults) {
         when (results.movieList.isNotEmpty()) {
             true -> {
-                viewModelScope.launch {
+                CoroutineScope(Dispatchers.IO).launch {
                     pageSelectionListViewModel.set(
                         PageSelectionListViewModel(results.totalPages, results.page)
                         { pageNumber ->
@@ -162,40 +161,27 @@ class RemoteMovieGridViewModel(
                         }
                     )
 
-                    itemsMovie.removeAll { true }
 
-                    results.movieList.forEach { movie ->
-                        itemsMovie.add(
-                            movie.toItemMovieViewModel(
-                                getItemMovieConfig(movie, results.page, itemsMovie.size)
+                    withContext(Dispatchers.Main) {
+                        itemsMovie.removeAll { true }
+                        results.movieList.forEach { movie ->
+                            itemsMovie.add(
+                                movie.toItemMovieViewModel(
+                                    config.itemMovieConfig(results.page, itemsMovie.size, movie)
+                                )
                             )
-                        )
+                        }
+                        progressManager.success()
                     }
-                    progressManager.success()
                 }
             }
             else -> progressManager.error()
         }
     }
 
-    private fun getItemMovieConfig(movie: Movie, page: Int, position: Int) =
-        ItemMovieConfig(
-            position = position,
-            page = page,
-            onItemSelected = {
-                onMovieClicked(movie.remoteId)
-            },
-            onCustomListSelected = {
-                Toast.makeText(getApplication(), "Playlist clicked", Toast.LENGTH_SHORT).show()
-                //onPlaylistAddCLicked(movie) // TODO implement this
-            },
-            onWatchlistSelected = {
-                updateWatchlist(movie)
-            }
-        )
-
 //------------------------ Watchlist ----------------------------//
 
+    // TODO move to config
     private fun updateWatchlist(movie: Movie) {
         if (movie.isInWatchlist) {
             watchlistRepository.deleteWatchlistMovie(movie.remoteId)

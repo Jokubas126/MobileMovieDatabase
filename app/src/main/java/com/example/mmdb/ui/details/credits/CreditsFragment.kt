@@ -5,9 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import com.example.mmdb.R
 import com.example.mmdb.databinding.FragmentMovieCreditsBinding
 import kotlinx.android.synthetic.main.fragment_movie_credits.bottom_navigation
 

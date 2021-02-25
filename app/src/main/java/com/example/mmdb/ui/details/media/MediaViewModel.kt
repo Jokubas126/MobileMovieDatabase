@@ -12,6 +12,8 @@ import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.jokubas.mmdb.util.*
 import com.jokubas.mmdb.util.constants.KEY_TRAILER_TYPE
 import com.jokubas.mmdb.util.constants.KEY_YOUTUBE_SITE
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
@@ -38,7 +40,7 @@ class MediaViewModel(
 
     init {
         progressManager.loading()
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             when (movieLocalId) {
                 DEFAULT_ID_VALUE -> {
                     if (appConfig.networkCheckConfig.isNetworkAvailable()) {

@@ -6,54 +6,36 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import com.example.mmdb.R
 import com.example.mmdb.databinding.FragmentMovieOverviewBinding
+import com.example.mmdb.navigation.ConfigFragmentArgs
+import com.example.mmdb.navigation.action
+import com.example.mmdb.navigation.actions.InnerDetailsAction
+import com.example.mmdb.navigation.config
 import kotlinx.android.synthetic.main.fragment_movie_overview.*
+
+object OverviewFragmentArgs : ConfigFragmentArgs<InnerDetailsAction.OverviewAction, OverviewConfig>()
 
 class OverviewFragment : Fragment() {
 
-    private lateinit var viewModel: OverviewViewModel
+    private val action: InnerDetailsAction.OverviewAction by action()
+    private val config: OverviewConfig by config()
+
+    private val overviewViewModel: OverviewViewModel by lazy {
+        ViewModelProvider(
+            this,
+            OverviewViewModelFactory(
+                action = action,
+                config = config
+            )
+        ).get(OverviewViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val binding =
-            FragmentMovieOverviewBinding.inflate(inflater, container, false)
-/*        viewModel = ViewModelProvider(
-            this,
-            OverviewViewModelFactory(
-                activity!!.application,
-                args.movieLocalId,
-                args.movieRemoteId
-            )
-        ).get(OverviewViewModel::class.java)*/
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
-            /*when (menuItem.itemId) {
-                R.id.media_menu_item ->
-                    OverviewFragmentDirections.actionMovieMedia().apply {
-                        movieRemoteId = args.movieRemoteId
-                        movieLocalId = args.movieLocalId
-                        findNavController().navigate(this)
-                    }
-                R.id.credits_menu_item ->
-                    OverviewFragmentDirections.actionMovieCredits().apply {
-                        movieRemoteId = args.movieRemoteId
-                        movieLocalId = args.movieLocalId
-                        findNavController().navigate(this)
-                    }
-            }*/
-            true
-        }
-    }
+    ): View = FragmentMovieOverviewBinding.inflate(inflater, container, false).apply {
+        viewModel = overviewViewModel
+        lifecycleOwner = this@OverviewFragment
+    }.root
 }

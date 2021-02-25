@@ -2,15 +2,14 @@ package com.example.mmdb.ui.details.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.mmdb.config.AppConfig
+import com.example.mmdb.navigation.actions.InnerDetailsAction
 
 class OverviewViewModelFactory(
-    private val appConfig: AppConfig,
-    private val movieLocalId: Int,
-    private val movieRemoteId: Int
+    private val action: InnerDetailsAction.OverviewAction,
+    private val config: OverviewConfig
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return OverviewViewModel(appConfig, movieLocalId, movieRemoteId) as T
+        return OverviewViewModel(action, config) as T
     }
 }

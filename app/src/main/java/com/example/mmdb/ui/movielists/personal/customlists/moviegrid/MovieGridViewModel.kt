@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.*
-import androidx.navigation.Navigation
 import com.example.mmdb.R
 import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
@@ -63,7 +62,7 @@ class MovieGridViewModel(application: Application, arguments: Bundle?) :
     }
 
     private fun getMovies(movieIdList: List<Int>) {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             _movieList.value = movieRepository.getMoviesFromIdList(movieIdList)
             if (movieIdList.isEmpty())
                 progressManager.error()

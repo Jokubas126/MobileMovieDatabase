@@ -41,12 +41,7 @@ class RemoteMovieGridFragment : Fragment() {
                 requireAppConfig(),
                 action,
                 config
-            ) { movieRemoteId ->
-                /*val action =
-                    RestMovieGridFragmentDirections.actionMovieDetails()
-                action.movieRemoteId = movieRemoteId
-                findNavController().navigate(action)*/
-            }
+            )
         ).get(RemoteMovieGridViewModel::class.java)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -61,36 +56,6 @@ class RemoteMovieGridFragment : Fragment() {
             viewModel.refresh()
             refresh_layout.isRefreshing = false
         }
-    }
-
-    private fun setupTitle() {
-        /*arguments?.let { arguments ->
-            val args = RestMovieGridFragmentArgs.fromBundle(arguments)
-            val title =
-                when (args.movieGridType) {
-                    TYPE_MOVIE_LIST ->
-                        args.keyCategory?.let {
-                            val title = StringBuilder()
-                            val array = it.split("_").toTypedArray()
-                            for (stringPart in array)
-                                title.append(stringPart.capitalize(Locale.getDefault())).append(" ")
-                            title.append("Movies")
-                        } ?: run {
-                            KEY_POPULAR.capitalize(Locale.ROOT) + " Movies"
-                        }
-                    SEARCH_MOVIE_LIST -> args.searchQuery
-                    DISCOVER_MOVIE_LIST -> args.discoverNameArray?.let {
-                        stringListToString(it.toList())
-                    }
-                    else -> ""
-                }
-            (activity as AppCompatActivity).supportActionBar?.title = title.toString()
-        }*/
-    }
-
-    override fun onResume() {
-        super.onResume()
-        setupTitle()
     }
 
     override fun onPause() {

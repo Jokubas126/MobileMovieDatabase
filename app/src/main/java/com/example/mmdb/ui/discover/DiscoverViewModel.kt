@@ -3,7 +3,6 @@ package com.example.mmdb.ui.discover
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.*
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.ConcatAdapter
 import com.example.mmdb.config.AppConfig
 import com.example.mmdb.navigation.NavigationController
@@ -13,6 +12,8 @@ import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
 import com.example.mmdb.ui.ToolbarViewModel
 import com.jokubas.mmdb.model.data.entities.CategoryType
 import com.jokubas.mmdb.model.data.entities.Subcategory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.util.*
 
 class DiscoverViewModel(
@@ -37,7 +38,7 @@ class DiscoverViewModel(
     val categoriesAdapter = ObservableField<ConcatAdapter>()
 
     private val categories = appConfig.movieConfig.categoryRepository.getCategories()
-        .asLiveData(viewModelScope.coroutineContext).apply {
+        .asLiveData(CoroutineScope(Dispatchers.IO).coroutineContext).apply {
             observeForever { categoryList ->
                 val adapters = arrayListOf<ItemsExpandableAdapter>()
                 categoryList.forEach { category ->

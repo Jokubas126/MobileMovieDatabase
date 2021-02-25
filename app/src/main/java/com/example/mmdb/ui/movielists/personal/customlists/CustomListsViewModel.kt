@@ -5,13 +5,13 @@ import android.content.Context
 import android.view.View
 import android.widget.FrameLayout
 import androidx.lifecycle.*
-import androidx.navigation.Navigation
 import com.example.mmdb.R
 import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.example.mmdb.ui.movielists.personal.customlists.createlist.CreateListPopupWindow
 import com.example.mmdb.ui.movielists.personal.customlists.createlist.CreateListTaskManager
 import com.jokubas.mmdb.model.data.entities.CustomMovieList
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -19,7 +19,7 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
 
     private val _movieLists =
         CustomMovieListRepository(application).getAllCustomMovieListFlow()
-        .asLiveData(Dispatchers.Default + viewModelScope.coroutineContext)
+        .asLiveData(CoroutineScope(Dispatchers.IO).coroutineContext)
 
     val movieLists: LiveData<List<CustomMovieList>>
         get() = _movieLists
@@ -45,7 +45,7 @@ class CustomListsViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun updateMovieList(list: CustomMovieList) {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             movieListRepository.insertOrUpdateMovieList(list)
         }
     }

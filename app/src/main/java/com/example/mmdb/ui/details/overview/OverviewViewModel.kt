@@ -1,17 +1,17 @@
 package com.example.mmdb.ui.details.overview
 
 import androidx.lifecycle.*
-import com.example.mmdb.config.AppConfig
 import com.example.mmdb.managers.ProgressManager
+import com.example.mmdb.navigation.actions.InnerDetailsAction
 import com.jokubas.mmdb.model.data.entities.Movie
-import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
-import com.jokubas.mmdb.util.DEFAULT_ID_VALUE
+import com.jokubas.mmdb.util.DataResponse
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class OverviewViewModel(
-    private val appConfig: AppConfig,
-    movieLocalId: Int,
-    movieRemoteId: Int
+    private val action: InnerDetailsAction.OverviewAction,
+    private val config: OverviewConfig
 ) : ViewModel() {
 
     private var _currentMovie = MutableLiveData<Movie?>()
@@ -21,36 +21,18 @@ class OverviewViewModel(
 
     val progressManager = ProgressManager()
 
-    //private val roomMovieRepository by lazy { RoomMovieRepository(application) }
-    private val remoteMovieRepository = appConfig.movieConfig.remoteMovieRepository
-
     init {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             progressManager.loading()
-            when (movieLocalId) {
-                DEFAULT_ID_VALUE -> getRemoteMovieDetails(movieRemoteId)
-                else -> getLocalMovieDetails(movieLocalId)
-            }
-        }
-    }
 
-    private suspend fun getRemoteMovieDetails(movieId: Int) {
-        when {
-            appConfig.networkCheckConfig.isNetworkAvailable() -> {
-                _currentMovie.postValue(remoteMovieRepository.getMovieDetails(movieId))
-                progressManager.loaded()
+            when (val response = config.provideOverviewInfo.invoke(action.movieId)){
+                is DataResponse.Success -> {
+                    _currentMovie.postValue((response.value as OverviewInfo).movie)
+                    progressManager.loaded()
+                }
+                is DataResponse.Error -> progressManager.error()
             }
-            else -> {
-                appConfig.networkCheckConfig.networkUnavailableNotification()
-                progressManager.error()
-            }
-        }
-    }
 
-    private suspend fun getLocalMovieDetails(movieId: Int) {
-        /*roomMovieRepository.getMovieById(movieId)?.let { movie ->
-            _currentMovie.postValue(movie)
-            progressManager.loaded()
-        } ?: progressManager.error()*/
+        }
     }
 }
