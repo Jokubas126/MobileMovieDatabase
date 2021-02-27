@@ -34,7 +34,7 @@ class NavigationController(
             fragmentProvider(action)
         }
 
-    private val detailsNavigationController = DetailsNavigationController()
+    val detailsNavigationController = DetailsNavigationController()
 
     private val parentFragmentManager: FragmentManager = activity.supportFragmentManager
 
@@ -75,7 +75,7 @@ class NavigationController(
             action is InnerDetailsAction -> {
                 resolveFragment(action)?.let { fragment ->
                     detailsNavigationController.goTo(currentFragmentManager, fragment, animation)
-                    if (action is InnerDetailsAction.OverviewAction)
+                    if (action is InnerDetailsAction.Overview)
                         detailsNavigationController.detailsNavigationStack.clear()
                 }
             }

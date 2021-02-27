@@ -48,7 +48,7 @@ interface MovieService {
         @Path(PATH_MOVIE_ID) movieId: String, @Query(
             QUERY_API_KEY
         ) apiKey: String
-    ): Credits
+    ): Credits?
 
     @GET("/3/configuration/languages")
     suspend fun getLanguages(@Query(QUERY_API_KEY) apiKey: String): List<Subcategory>

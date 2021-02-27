@@ -13,7 +13,7 @@ interface CreditsDao {
     fun insertOrUpdateCredits(credits: Credits): Long
 
     @Query("SELECT * FROM credits WHERE movieRoomId = :movieId")
-    suspend fun getCreditsById(movieId: Int): Credits
+    suspend fun getCreditsById(movieId: Int): Credits?
 
     @Query("DELETE FROM credits WHERE movieRoomId = :movieId")
     fun deleteCreditsByMovieId(movieId: Int)

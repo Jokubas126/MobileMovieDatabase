@@ -94,11 +94,11 @@ class RemoteMovieRepository(
     )
 
     fun getCreditsFlow(movieId: Int) = flow {
-        emit(
-            service.getCredits(
-                movieId.toString(),
-                MOVIE_DB_API_KEY
-            )
-        )
+        service.getCredits(
+            movieId.toString(),
+            MOVIE_DB_API_KEY
+        )?.let { credits ->
+            emit(DataResponse.Success(credits))
+        } ?: DataResponse.Error("Credits not found")
     }
 }

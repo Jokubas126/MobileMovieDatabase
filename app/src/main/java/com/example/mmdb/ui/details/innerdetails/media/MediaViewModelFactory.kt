@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.navigation.actions.InnerDetailsAction
 
 class MediaViewModelFactory(
-    private val action: InnerDetailsAction.MediaAction,
+    private val action: InnerDetailsAction.Media,
     private val config: MediaConfig
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

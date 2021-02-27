@@ -7,17 +7,17 @@ import kotlinx.android.parcel.Parcelize
 sealed class InnerDetailsAction: Action {
 
     @Parcelize
-    class OverviewAction(
+    class Overview(
         val movieIdWrapper: IdWrapper
     ): InnerDetailsAction()
 
     @Parcelize
-    class MediaAction(
+    class Media(
         val movieIdWrapper: IdWrapper
     ): InnerDetailsAction()
 
     @Parcelize
-    class CreditsAction(
+    class Credits(
         val movieIdWrapper: IdWrapper
     ): InnerDetailsAction()
 }

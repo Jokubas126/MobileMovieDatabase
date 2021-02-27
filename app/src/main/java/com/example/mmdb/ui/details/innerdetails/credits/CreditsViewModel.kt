@@ -1,70 +1,57 @@
 package com.example.mmdb.ui.details.innerdetails.credits
 
-import androidx.databinding.ObservableArrayList
-import androidx.databinding.ObservableList
 import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
-import com.example.mmdb.config.AppConfig
 import com.example.mmdb.managers.ProgressManager
+import com.example.mmdb.navigation.actions.InnerDetailsAction
 import com.jokubas.mmdb.model.data.entities.Credits
 import com.jokubas.mmdb.model.data.entities.Person
-import com.jokubas.mmdb.util.DEFAULT_ID_VALUE
+import com.jokubas.mmdb.util.DataResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
 class CreditsViewModel(
-    appConfig: AppConfig,
-    movieLocalId: Int,
-    movieRemoteId: Int
+    action: InnerDetailsAction.Credits,
+    config: CreditsConfig
 ) : ViewModel() {
 
     val progressManager = ProgressManager().apply { loading() }
 
-    private val credits =
-        when (movieLocalId) {
-            DEFAULT_ID_VALUE -> {
-                if (appConfig.networkCheckConfig.isNetworkAvailable()) {
-                    /*RemoteMovieRepository()
-                        .getCreditsFlow(movieRemoteId)
-                        .asLiveData(viewModelScope.coroutineContext)*/
-                } else {
-                    appConfig.networkCheckConfig.networkUnavailableNotification()
-                    progressManager.error()
-                    null
-                }
+    private val creditsObserver: (response: DataResponse) -> Unit = { response ->
+        when {
+            response is DataResponse.Success<*> && (response.value as? Credits?) != null -> {
+                val credits = response.value as Credits?
+                _castList.postValue(credits?.castList ?: emptyList())
+                _crewList.postValue(credits?.crewList ?: emptyList())
+                progressManager.success()
             }
-            else -> {
-                null
-                //RoomMovieRepository(application)
-                    //.getCreditsFlowById(movieLocalId)
-                    //.asLiveData(viewModelScope.coroutineContext)
+            response is DataResponse.Error || response is DataResponse.Success<*> && (response.value as? Credits?) == null -> {
+                progressManager.error()
             }
+            else -> progressManager.loading()
         }
+    }
+
+    private val _castList: MutableLiveData<List<Person?>> = MutableLiveData(emptyList())
+    val castList: LiveData<List<Person?>>
+        get() = _castList
+
+    private val _crewList: MutableLiveData<List<Person?>> = MutableLiveData(emptyList())
+    val crewList: LiveData<List<Person?>>
+        get() = _crewList
+
+    private val response: LiveData<DataResponse> =
+        config.provideCreditsDataFlow.invoke(action.movieIdWrapper).asLiveData(Dispatchers.IO)
+            .apply { observeForever(creditsObserver) }
 
     val creditsItemBinding: ItemBinding<Person> = ItemBinding.of(BR.person, R.layout.item_person)
 
-    val castItems: ObservableList<Person?> = ObservableArrayList()
-    val crewItems: ObservableArrayList<Person?> = ObservableArrayList()
-
-    private val creditsObserver: (credits: Credits?) -> Unit = { credits ->
-        credits?.let {
-            when {
-                it.castList.isNullOrEmpty() && it.crewList.isNullOrEmpty() -> progressManager.error()
-                else -> {
-                    it.castList?.let { cast -> castItems.addAll(cast) }
-                    it.crewList?.let { crew -> crewItems.addAll(crew) }
-                    progressManager.loaded()
-                }
-            }
-        } ?: progressManager.error()
-    }
-
-    init {
-        //credits?.observeForever(creditsObserver)
-    }
-
     override fun onCleared() {
         super.onCleared()
-        //credits?.removeObserver(creditsObserver)
+        response.removeObserver(creditsObserver)
     }
+
 }

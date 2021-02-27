@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.navigation.actions.InnerDetailsAction
 
 class OverviewViewModelFactory(
-    private val action: InnerDetailsAction.OverviewAction,
+    private val action: InnerDetailsAction.Overview,
     private val config: OverviewConfig
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

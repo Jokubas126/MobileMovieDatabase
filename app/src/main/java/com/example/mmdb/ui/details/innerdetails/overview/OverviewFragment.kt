@@ -7,17 +7,22 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.databinding.FragmentMovieOverviewBinding
+import com.example.mmdb.extensions.requireNavController
 import com.example.mmdb.navigation.ConfigFragmentArgs
 import com.example.mmdb.navigation.action
 import com.example.mmdb.navigation.actions.InnerDetailsAction
 import com.example.mmdb.navigation.config
 import kotlinx.android.synthetic.main.fragment_movie_overview.*
 
-object OverviewFragmentArgs : ConfigFragmentArgs<InnerDetailsAction.OverviewAction, OverviewConfig>()
+object OverviewFragmentArgs : ConfigFragmentArgs<InnerDetailsAction.Overview, OverviewConfig>()
 
 class OverviewFragment : Fragment() {
 
-    private val action: InnerDetailsAction.OverviewAction by action()
+    private val navController by lazy {
+        requireNavController()
+    }
+
+    private val action: InnerDetailsAction.Overview by action()
     private val config: OverviewConfig by config()
 
     private val overviewViewModel: OverviewViewModel by lazy {
@@ -38,4 +43,15 @@ class OverviewFragment : Fragment() {
         viewModel = overviewViewModel
         lifecycleOwner = this@OverviewFragment
     }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        navController.detailsNavigationController.attachToNavigationController(childFragmentManager)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        navController.detailsNavigationController.detachFromNavigationController()
+    }
 }

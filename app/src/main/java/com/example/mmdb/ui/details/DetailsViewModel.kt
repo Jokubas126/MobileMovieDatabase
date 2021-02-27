@@ -16,11 +16,11 @@ class DetailsViewModel(
     val onMenuItemSelected = { menuItem: MenuItem ->
         when (menuItem.itemId) {
             R.id.overview_menu_item ->
-                config.onBottomNavigationAction.invoke(InnerDetailsAction.OverviewAction(action.idWrapper))
+                config.onBottomNavigationAction.invoke(InnerDetailsAction.Overview(action.idWrapper))
             R.id.media_menu_item ->
-                config.onBottomNavigationAction.invoke(InnerDetailsAction.MediaAction(action.idWrapper))
+                config.onBottomNavigationAction.invoke(InnerDetailsAction.Media(action.idWrapper))
             R.id.credits_menu_item ->
-                config.onBottomNavigationAction.invoke(InnerDetailsAction.CreditsAction(action.idWrapper))
+                config.onBottomNavigationAction.invoke(InnerDetailsAction.Credits(action.idWrapper))
         }
     }
 }

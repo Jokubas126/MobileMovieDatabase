@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
 class MediaViewModel(
-    action: InnerDetailsAction.MediaAction,
+    action: InnerDetailsAction.Media,
     config: MediaConfig
 ) : ViewModel() {
 

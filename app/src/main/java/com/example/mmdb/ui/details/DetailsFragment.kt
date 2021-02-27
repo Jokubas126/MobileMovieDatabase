@@ -65,7 +65,13 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         navController.goTo(
-            action = InnerDetailsAction.OverviewAction(action.idWrapper)
+            action = InnerDetailsAction.Overview(action.idWrapper)
         )
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        navController.detailsNavigationController.detachFromNavigationController()
     }
 }

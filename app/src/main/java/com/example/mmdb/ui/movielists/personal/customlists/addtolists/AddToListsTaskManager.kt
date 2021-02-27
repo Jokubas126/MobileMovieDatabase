@@ -77,12 +77,14 @@ class AddToListsTaskManager(
             val fullMovie = remoteMovieRepository.getMovieDetails(movie.remoteId)
             fullMovie.finalizeInitialization(application)
             for (list in checkedLists) {
-                roomMovieRepository.insertOrUpdateMovie(
-                    fullMovie,
-                    getImages(fullMovie),
-                    getCredits(fullMovie),
-                    list
-                )
+                getCredits(fullMovie)?.let {
+                    roomMovieRepository.insertOrUpdateMovie(
+                        fullMovie,
+                        getImages(fullMovie),
+                        it,
+                        list
+                    )
+                }
             }
         } catch (e: Exception) {
             onInsertFailed()
@@ -95,7 +97,7 @@ class AddToListsTaskManager(
         }
 
     private suspend fun getCredits(movie: Movie) =
-        remoteMovieRepository.getCredits(movie.remoteId).apply {
+        remoteMovieRepository.getCredits(movie.remoteId)?.apply {
             generateFileUris(application)
         }
 

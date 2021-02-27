@@ -9,6 +9,8 @@ import com.example.mmdb.ui.about.AboutFragmentArgs
 import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragment
 import com.example.mmdb.ui.details.DetailsFragment
 import com.example.mmdb.ui.details.DetailsFragmentArgs
+import com.example.mmdb.ui.details.innerdetails.credits.CreditsFragment
+import com.example.mmdb.ui.details.innerdetails.credits.CreditsFragmentArgs
 import com.example.mmdb.ui.details.innerdetails.media.MediaFragment
 import com.example.mmdb.ui.details.innerdetails.media.MediaFragmentArgs
 import com.example.mmdb.ui.details.innerdetails.overview.OverviewFragment
@@ -26,7 +28,7 @@ internal typealias FragmentProvider<T> = (action: T) -> Fragment
  */
 val actionRoutes: List<ActionFragmentProviderPair<*>> = listOf(
     ActionFragmentProviderPair(
-        key = InnerDetailsAction.OverviewAction::class.java,
+        key = InnerDetailsAction.Overview::class.java,
         value = { action ->
             OverviewFragment().apply {
                 arguments = OverviewFragmentArgs.create(
@@ -37,12 +39,23 @@ val actionRoutes: List<ActionFragmentProviderPair<*>> = listOf(
         }
     ),
     ActionFragmentProviderPair(
-        key = InnerDetailsAction.MediaAction::class.java,
+        key = InnerDetailsAction.Media::class.java,
         value = { action ->
             MediaFragment().apply {
                 arguments = MediaFragmentArgs.create(
                     action = action,
                     configProvider = MediaConfigProvider::class.java
+                )
+            }
+        }
+    ),
+    ActionFragmentProviderPair(
+        key = InnerDetailsAction.Credits::class.java,
+        value = { action ->
+            CreditsFragment().apply {
+                arguments = CreditsFragmentArgs.create(
+                    action = action,
+                    configProvider = CreditsConfigProvider::class.java
                 )
             }
         }

@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class OverviewViewModel(
-    private val action: InnerDetailsAction.OverviewAction,
+    private val action: InnerDetailsAction.Overview,
     private val config: OverviewConfig
 ) : ViewModel() {
 

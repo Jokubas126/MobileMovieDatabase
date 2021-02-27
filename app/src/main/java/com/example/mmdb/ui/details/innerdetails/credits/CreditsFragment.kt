@@ -5,56 +5,52 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.databinding.FragmentMovieCreditsBinding
-import kotlinx.android.synthetic.main.fragment_movie_credits.bottom_navigation
+import com.example.mmdb.extensions.requireNavController
+import com.example.mmdb.navigation.ConfigFragmentArgs
+import com.example.mmdb.navigation.action
+import com.example.mmdb.navigation.actions.InnerDetailsAction
+import com.example.mmdb.navigation.config
+
+object CreditsFragmentArgs: ConfigFragmentArgs<InnerDetailsAction.Credits, CreditsConfig>()
 
 class CreditsFragment : Fragment() {
-/*
-    private val args by lazy {
-        MovieDetailsArgs.fromBundle(arguments ?: Bundle())
-    }*/
+
+    private val navController by lazy {
+        requireNavController()
+    }
+
+    private val action: InnerDetailsAction.Credits by action()
+    private val config: CreditsConfig by config()
+
+    private val creditsViewModel: CreditsViewModel by lazy {
+        ViewModelProvider(
+            this,
+            CreditsViewModelFactory(
+                action = action,
+                config = config
+            )
+        ).get(CreditsViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val binding =
-            FragmentMovieCreditsBinding.inflate(inflater, container, false)
+    ): View = FragmentMovieCreditsBinding.inflate(inflater, container, false).apply {
+        lifecycleOwner = viewLifecycleOwner
+        viewModel = creditsViewModel
+    }.root
 
-/*        binding.viewModel =
-            ViewModelProvider(
-                this,
-                CreditsViewModelFactory(
-                    activity!!.application,
-                    args.movieLocalId,
-                    args.movieRemoteId
-                )
-            ).get(CreditsViewModel::class.java)*/
-        binding.lifecycleOwner = this
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
-            /*when (menuItem.itemId) {
-                R.id.media_menu_item -> {
-                    CreditsFragmentDirections.actionMovieMedia().apply {
-                        movieRemoteId = args.movieRemoteId
-                        movieLocalId = args.movieLocalId
-                        findNavController().navigate(this)
-                    }
-                }
-                R.id.overview_menu_item -> {
-                    CreditsFragmentDirections.actionMovieOverview().apply {
-                        movieRemoteId = args.movieRemoteId
-                        movieLocalId = args.movieLocalId
-                        findNavController().navigate(this)
-                    }
-                }
-            }*/
-            true
-        }
+        navController.detailsNavigationController.attachToNavigationController(childFragmentManager)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        navController.detailsNavigationController.detachFromNavigationController()
     }
 }

@@ -7,17 +7,22 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.databinding.FragmentMovieMediaBinding
+import com.example.mmdb.extensions.requireNavController
 import com.example.mmdb.navigation.ConfigFragmentArgs
 import com.example.mmdb.navigation.action
 import com.example.mmdb.navigation.actions.InnerDetailsAction
 import com.example.mmdb.navigation.config
 import kotlinx.android.synthetic.main.fragment_movie_media.*
 
-object MediaFragmentArgs: ConfigFragmentArgs<InnerDetailsAction.MediaAction, MediaConfig>()
+object MediaFragmentArgs: ConfigFragmentArgs<InnerDetailsAction.Media, MediaConfig>()
 
 class MediaFragment : Fragment() {
 
-    private val action: InnerDetailsAction.MediaAction by action()
+    private val navController by lazy {
+        requireNavController()
+    }
+
+    private val action: InnerDetailsAction.Media by action()
     private val config: MediaConfig by config()
 
     private val mediaViewModel: MediaViewModel by lazy {
@@ -41,5 +46,11 @@ class MediaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycle.addObserver(youtubePlayerView)
+        navController.detailsNavigationController.attachToNavigationController(childFragmentManager)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        navController.detailsNavigationController.detachFromNavigationController()
     }
 }

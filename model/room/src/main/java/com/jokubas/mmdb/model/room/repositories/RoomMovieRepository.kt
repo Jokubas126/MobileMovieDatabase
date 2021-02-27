@@ -9,6 +9,7 @@ import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.room.databases.CreditsDatabase
 import com.jokubas.mmdb.model.room.databases.ImagesDatabase
 import com.jokubas.mmdb.model.room.databases.MovieDatabase
+import com.jokubas.mmdb.util.DataResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
@@ -48,7 +49,9 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
     suspend fun getImagesById(movieId: Int) = imagesDao.getImagesById(movieId)
 
     fun getCreditsFlowById(movieId: Int) = flow {
-        emit(creditsDao.getCreditsById(movieId))
+        creditsDao.getCreditsById(movieId)?.let { credits ->
+            emit(DataResponse.Success(credits))
+        } ?: DataResponse.Error("No credits found")
     }
 
     suspend fun getMovieById(movieId: Int) = movieDao.getMovieById(movieId)
@@ -66,7 +69,7 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
         withContext(Dispatchers.Default) {
             deleteImageFiles(imagesDao.getImagesById(movieId))
             imagesDao.deleteImagesByMovieId(movieId)
-            deleteCreditsFiles(creditsDao.getCreditsById(movieId))
+            creditsDao.getCreditsById(movieId)?.let { deleteCreditsFiles(it) }
             creditsDao.deleteCreditsByMovieId(movieId)
             movieDao.getMovieById(movieId)?.let { deleteMovieFiles(it) }
             movieDao.deleteMovieById(movieId)
