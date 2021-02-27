@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.details.overview
+package com.example.mmdb.ui.details.innerdetails.overview
 
 import com.jokubas.mmdb.model.data.entities.Movie
 

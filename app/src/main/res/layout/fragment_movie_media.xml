@@ -7,11 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.mmdb.ui.details.media.MediaViewModel" />
-
-        <variable
-            name="fragmentManager"
-            type="android.app.FragmentManager" />
+            type="com.example.mmdb.ui.details.innerdetails.media.MediaViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -44,9 +40,8 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_above="@id/bottom_navigation"
             android:scrollbars="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -58,22 +53,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:padding="@dimen/spacing_xs"
                     android:visibility="@{viewModel.trailer == null ? View.GONE : View.VISIBLE}">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/general_margin_half"
-                        android:textAppearance="@style/SectionTitleDetails"
-                        android:text="@{viewModel.trailer.name}"/>
+                        android:layout_marginBottom="@dimen/spacing_xs"
+                        android:text="@{viewModel.trailer.name}"
+                        android:textAppearance="@style/SectionTitleDetails" />
 
-                    <com.example.mmdb.ui.details.media.YoutubePlayerFragmentView
-                        android:id="@+id/youtube_fragment"
+                    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                        android:id="@+id/youtubePlayerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/general_margin_half"
-                        app:fragmentManager="@{fragmentManager}"
-                        app:key="@{viewModel.trailer.key}"/>
+                        app:autoPlay="false"
+                        app:showFullScreenButton="false"
+                        app:videoKey="@{viewModel.trailer.key}"/>
 
                 </LinearLayout>
 
@@ -81,12 +77,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="@{viewModel.images.posterList.isEmpty() || viewModel.images.posterList == null ? View.GONE : View.VISIBLE}">
+                    android:visibility="@{viewModel.images.posterList != null &amp; !viewModel.images.posterList.isEmpty() ? View.VISIBLE : View.GONE}">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/general_margin_half"
+                        android:padding="@dimen/spacing_xs"
                         android:text="@string/posters_section"
                         android:textAppearance="@style/SectionTitleDetails" />
 
@@ -104,12 +100,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="@{viewModel.images.backdropList.isEmpty() || viewModel.images.backdropList == null ? View.GONE : View.VISIBLE}">
+                    android:visibility="@{viewModel.images.backdropList != null &amp; !viewModel.images.backdropList.isEmpty() ? View.VISIBLE : View.GONE}">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/general_margin_half"
+                        android:padding="@dimen/spacing_xs"
                         android:text="@string/backdrops_section"
                         android:textAppearance="@style/SectionTitleDetails" />
 
@@ -124,19 +120,6 @@
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/secondary_500"
-            app:itemIconTint="@android:color/white"
-            app:itemTextColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/details_bottom_bar_menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

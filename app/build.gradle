@@ -60,7 +60,8 @@ dependencies {
     implementation "androidx.cardview:cardview:$cardViewVersion"
     implementation "com.etsy.android.grid:library:$gridLayoutVersion"
 
-    implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:$youtubePlayerVersion"
+
     implementation project(':model:data')
     implementation project(':model:remote')
     implementation project(':model:room')

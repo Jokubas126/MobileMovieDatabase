@@ -1,6 +1,5 @@
-package com.example.mmdb.ui.details.credits
+package com.example.mmdb.ui.details.innerdetails.credits
 
-import android.app.Application
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
 import androidx.lifecycle.*
@@ -10,7 +9,6 @@ import com.example.mmdb.config.AppConfig
 import com.example.mmdb.managers.ProgressManager
 import com.jokubas.mmdb.model.data.entities.Credits
 import com.jokubas.mmdb.model.data.entities.Person
-import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.jokubas.mmdb.util.DEFAULT_ID_VALUE
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 

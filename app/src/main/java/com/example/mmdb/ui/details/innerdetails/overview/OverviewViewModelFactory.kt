@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.details.overview
+package com.example.mmdb.ui.details.innerdetails.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

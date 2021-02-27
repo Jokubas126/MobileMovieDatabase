@@ -71,7 +71,6 @@ interface MovieService {
     ): MovieResults
 
     companion object {
-        //private val contentType = "application/json".toMediaType()
 
         fun create(baseUrl: String, httpClient: OkHttpClient): MovieService {
             val retrofit = Retrofit.Builder()

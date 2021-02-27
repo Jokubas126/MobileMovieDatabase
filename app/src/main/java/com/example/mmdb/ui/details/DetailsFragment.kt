@@ -65,7 +65,7 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         navController.goTo(
-            action = InnerDetailsAction.OverviewAction(action.movieId)
+            action = InnerDetailsAction.OverviewAction(action.idWrapper)
         )
     }
 }

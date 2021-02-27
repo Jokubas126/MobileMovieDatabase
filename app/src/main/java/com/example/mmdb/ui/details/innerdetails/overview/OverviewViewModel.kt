@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.details.overview
+package com.example.mmdb.ui.details.innerdetails.overview
 
 import androidx.lifecycle.*
 import com.example.mmdb.managers.ProgressManager
@@ -25,10 +25,12 @@ class OverviewViewModel(
         CoroutineScope(Dispatchers.IO).launch {
             progressManager.loading()
 
-            when (val response = config.provideOverviewInfo.invoke(action.movieId)){
-                is DataResponse.Success -> {
-                    _currentMovie.postValue((response.value as OverviewInfo).movie)
-                    progressManager.loaded()
+            when (val response = config.provideOverviewInfo.invoke(action.movieIdWrapper)){
+                is DataResponse.Success<*> -> {
+                    (response.value as? OverviewInfo)?.let {
+                        _currentMovie.postValue(it.movie)
+                        progressManager.loaded()
+                    } ?: progressManager.error()
                 }
                 is DataResponse.Error -> progressManager.error()
             }

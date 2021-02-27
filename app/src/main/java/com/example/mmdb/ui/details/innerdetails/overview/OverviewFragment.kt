@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.details.overview
+package com.example.mmdb.ui.details.innerdetails.overview
 
 import android.os.Bundle
 import android.view.LayoutInflater

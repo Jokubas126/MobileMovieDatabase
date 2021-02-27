@@ -20,6 +20,7 @@ class DetailsNavigationController {
                 setCustomAnimations(anim.enter, anim.exit, anim.popEnter, anim.popExit)
             }
             replace(R.id.detailsContentContainer, fragment)
+            //addToBackStack(fragment.tag)
         }.commit()
     }
 }

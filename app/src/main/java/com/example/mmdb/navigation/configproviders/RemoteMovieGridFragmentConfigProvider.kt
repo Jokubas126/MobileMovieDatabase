@@ -8,7 +8,7 @@ import com.example.mmdb.extensions.requireNavController
 import com.example.mmdb.navigation.ConfigProvider
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.actions.DetailsFragmentAction
-import com.example.mmdb.ui.details.DetailsMovieId
+import com.example.mmdb.ui.details.IdWrapper
 import com.example.mmdb.ui.movielists.ItemMovieConfig
 import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragmentConfig
 
@@ -27,7 +27,7 @@ class RemoteMovieGridFragmentConfigProvider : ConfigProvider<RemoteMovieGridFrag
                         //onMovieClicked(movie.remoteId)
                         navController.goTo(
                             action = DetailsFragmentAction(
-                                movieId = DetailsMovieId.Remote(movie.remoteId)
+                                idWrapper = IdWrapper.Remote(movie.remoteId)
                             ),
                             animation = NavigationController.Animation.FromBottom,
                             useWrapper = false

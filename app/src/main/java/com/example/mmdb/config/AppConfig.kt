@@ -7,16 +7,17 @@ import com.example.mmdb.MainApplication
 import com.jokubas.mmdb.util.NetworkCheckConfig
 import okhttp3.OkHttpClient
 
-class AppConfig(context: Context) {
+class AppConfig(application: Application) {
 
     private val configVars: ConfigVars = ConfigVars()
 
     val networkCheckConfig: NetworkCheckConfig by lazy {
-        NetworkCheckConfig(context = context)
+        NetworkCheckConfig(context = application.applicationContext)
     }
 
     val movieConfig: MovieConfig by lazy {
         MovieConfig(
+            application = application,
             movieServiceUrl = configVars.BASE_MOVIE_URL,
             httpClientBuilder = OkHttpClient.Builder()
         )

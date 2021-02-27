@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.mmdb.ui.details.credits.CreditsViewModel" />
+            type="com.example.mmdb.ui.details.innerdetails.credits.CreditsViewModel" />
 
         <import type="android.view.View"/>
     </data>

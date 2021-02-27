@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.details.credits
+package com.example.mmdb.ui.details.innerdetails.credits
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

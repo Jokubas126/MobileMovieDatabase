@@ -9,8 +9,10 @@ import com.example.mmdb.ui.about.AboutFragmentArgs
 import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragment
 import com.example.mmdb.ui.details.DetailsFragment
 import com.example.mmdb.ui.details.DetailsFragmentArgs
-import com.example.mmdb.ui.details.overview.OverviewFragment
-import com.example.mmdb.ui.details.overview.OverviewFragmentArgs
+import com.example.mmdb.ui.details.innerdetails.media.MediaFragment
+import com.example.mmdb.ui.details.innerdetails.media.MediaFragmentArgs
+import com.example.mmdb.ui.details.innerdetails.overview.OverviewFragment
+import com.example.mmdb.ui.details.innerdetails.overview.OverviewFragmentArgs
 import com.example.mmdb.ui.discover.DiscoverFragment
 import com.example.mmdb.ui.discover.DiscoverFragmentArgs
 import com.example.mmdb.ui.movielists.rest.RemoteMovieGridFragmentArgs
@@ -30,6 +32,17 @@ val actionRoutes: List<ActionFragmentProviderPair<*>> = listOf(
                 arguments = OverviewFragmentArgs.create(
                     action = action,
                     configProvider = OverviewConfigProvider::class.java
+                )
+            }
+        }
+    ),
+    ActionFragmentProviderPair(
+        key = InnerDetailsAction.MediaAction::class.java,
+        value = { action ->
+            MediaFragment().apply {
+                arguments = MediaFragmentArgs.create(
+                    action = action,
+                    configProvider = MediaConfigProvider::class.java
                 )
             }
         }
