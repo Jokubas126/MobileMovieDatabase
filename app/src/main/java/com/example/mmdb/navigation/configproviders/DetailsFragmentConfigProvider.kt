@@ -35,7 +35,7 @@ class DetailsFragmentConfigProvider : ConfigProvider<DetailsFragmentConfig> {
             }
         )
     }
-    
+
     private fun handleDetailsFragment(
         fragmentManager: FragmentManager,
         fragment: Fragment,
