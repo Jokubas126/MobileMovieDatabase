@@ -23,4 +23,8 @@ class DetailsViewModel(
                 config.onBottomNavigationAction.invoke(InnerDetailsAction.Credits(action.idWrapper))
         }
     }
+
+    init {
+        config.loadInitialView.invoke(action.idWrapper)
+    }
 }

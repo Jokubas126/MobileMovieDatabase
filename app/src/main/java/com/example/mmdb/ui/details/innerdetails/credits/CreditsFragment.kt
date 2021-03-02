@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.databinding.FragmentMovieCreditsBinding
-import com.example.mmdb.extensions.requireNavController
 import com.example.mmdb.navigation.ConfigFragmentArgs
 import com.example.mmdb.navigation.action
 import com.example.mmdb.navigation.actions.InnerDetailsAction
@@ -16,10 +15,6 @@ import com.example.mmdb.navigation.config
 object CreditsFragmentArgs: ConfigFragmentArgs<InnerDetailsAction.Credits, CreditsConfig>()
 
 class CreditsFragment : Fragment() {
-
-    private val navController by lazy {
-        requireNavController()
-    }
 
     private val action: InnerDetailsAction.Credits by action()
     private val config: CreditsConfig by config()
@@ -41,16 +36,4 @@ class CreditsFragment : Fragment() {
         lifecycleOwner = viewLifecycleOwner
         viewModel = creditsViewModel
     }.root
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        navController.detailsNavigationController.attachToNavigationController(childFragmentManager)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        navController.detailsNavigationController.detachFromNavigationController()
-    }
 }

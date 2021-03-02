@@ -60,18 +60,4 @@ class DetailsFragment : Fragment() {
         viewModel = detailsViewModel
         lifecycleOwner = this@DetailsFragment
     }.root
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        navController.goTo(
-            action = InnerDetailsAction.Overview(action.idWrapper)
-        )
-
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        navController.detailsNavigationController.detachFromNavigationController()
-    }
 }
