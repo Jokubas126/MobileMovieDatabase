@@ -8,7 +8,7 @@ import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.actions.AboutFragmentAction
 import com.example.mmdb.navigation.actions.DiscoverFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
-import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
+import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.google.android.material.navigation.NavigationView
 
 class DrawerLayoutInteractor(private val context: Context) {
@@ -30,19 +30,19 @@ class DrawerLayoutInteractor(private val context: Context) {
                 //R.id.menu_watchlist -> navController?.navigate(NavGraphDirections.actionGlobalWatchlistFragment())
                 //R.id.menu_custom_lists -> navController?.navigate(NavGraphDirections.actionGlobalCustomListsFragment())
                 R.id.menu_popular -> navigationController.goTo(
-                    action = RemoteMovieGridFragmentAction(MovieListType.Popular),
+                    action = MovieGridFragmentAction(MovieListType.Popular),
                     animation = NavigationController.Animation.FadeIn
                 )
                 R.id.menu_top_rated -> navigationController.goTo(
-                    action = RemoteMovieGridFragmentAction(MovieListType.TopRated),
+                    action = MovieGridFragmentAction(MovieListType.TopRated),
                     animation = NavigationController.Animation.FadeIn
                 )
                 R.id.menu_now_playing -> navigationController.goTo(
-                    action = RemoteMovieGridFragmentAction(MovieListType.NowPlaying),
+                    action = MovieGridFragmentAction(MovieListType.NowPlaying),
                     animation = NavigationController.Animation.FadeIn
                 )
                 R.id.menu_upcoming -> navigationController.goTo(
-                    action = RemoteMovieGridFragmentAction(MovieListType.Upcoming),
+                    action = MovieGridFragmentAction(MovieListType.Upcoming),
                     animation = NavigationController.Animation.FadeIn
                 )
                 R.id.menu_about -> navigationController.goTo(

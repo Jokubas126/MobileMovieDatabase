@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.movielists.personal.customlists.createlist
+package com.example.mmdb.ui.movielists.customlists.createlist
 
 import android.app.Application
 import com.jokubas.mmdb.model.data.entities.CustomMovieList

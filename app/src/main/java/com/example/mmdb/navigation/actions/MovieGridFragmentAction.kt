@@ -1,28 +1,27 @@
 package com.example.mmdb.navigation.actions
 
 import android.os.Parcelable
-import com.example.mmdb.navigation.Action
+import com.jokubas.mmdb.util.constants.*
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class RemoteMovieGridFragmentAction(
+class MovieGridFragmentAction(
     val movieListType: MovieListType = MovieListType.Popular
 ) : WrappedFragmentAction
 
-@Parcelize
-open class MovieListType : Parcelable {
+sealed class MovieListType(val key: String = KEY_DEFAULT) : Parcelable {
 
     @Parcelize
-    object Popular : MovieListType()
+    object Popular : MovieListType(KEY_POPULAR)
 
     @Parcelize
-    object TopRated : MovieListType()
+    object TopRated : MovieListType(KEY_TOP_RATED)
 
     @Parcelize
-    object NowPlaying : MovieListType()
+    object NowPlaying : MovieListType(KEY_NOW_PLAYING)
 
     @Parcelize
-    object Upcoming : MovieListType()
+    object Upcoming : MovieListType(KEY_UPCOMING)
 
     @Parcelize
     data class Discover(
@@ -43,4 +42,6 @@ open class MovieListType : Parcelable {
 
     @Parcelize
     data class Search(val searchQuery: String? = null) : MovieListType()
+
+    //TODO implement local, custom list and watchlist types
 }

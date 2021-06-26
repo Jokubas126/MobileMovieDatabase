@@ -50,7 +50,7 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/movie_image"
                         android:gravity="center_horizontal"
-                        android:onClick="@{() -> viewModel.itemMovieConfig.onItemSelected.invoke()}"
+                        android:onClick="@{() -> viewModel.eventListener.onItemSelected.invoke()}"
                         app:imageUriString="@{viewModel.movie.posterImageUriString}"
                         app:imageUrl="@{viewModel.movie.posterImageUrl}" />
 
@@ -73,8 +73,8 @@
                                 android:layout_marginEnd="7dp"
                                 android:background="@drawable/ic_watchlist_star"
                                 android:activated="@{viewModel.movie.inWatchlist}"
-                                android:onClick="@{() -> viewModel.itemMovieConfig.onWatchlistSelected.invoke()}"
-                                android:visibility="@{viewModel.itemMovieConfig.onWatchlistSelected != null ? View.VISIBLE : View.GONE}"
+                                android:onClick="@{() -> viewModel.eventListener.onWatchlistSelected.invoke()}"
+                                android:visibility="@{viewModel.eventListener.onWatchlistSelected != null ? View.VISIBLE : View.GONE}"
                                 tools:ignore="ContentDescription" />
 
                             <ImageButton
@@ -83,8 +83,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="7dp"
                                 android:background="@drawable/ic_playlist_add"
-                                android:onClick="@{() -> viewModel.itemMovieConfig.onCustomListSelected.invoke()}"
-                                android:visibility="@{viewModel.itemMovieConfig.onCustomListSelected != null ? View.VISIBLE : View.GONE}"
+                                android:onClick="@{() -> viewModel.eventListener.onCustomListSelected.invoke()}"
+                                android:visibility="@{viewModel.eventListener.onCustomListSelected != null ? View.VISIBLE : View.GONE}"
                                 tools:ignore="ContentDescription" />
 
                             <ImageButton
@@ -93,8 +93,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="7dp"
                                 android:background="@drawable/ic_delete"
-                                android:onClick="@{() -> viewModel.itemMovieConfig.onDeleteSelected.invoke()}"
-                                android:visibility="@{viewModel.itemMovieConfig.onDeleteSelected != null ? View.VISIBLE : View.GONE}"
+                                android:onClick="@{() -> viewModel.eventListener.onDeleteSelected.invoke()}"
+                                android:visibility="@{viewModel.eventListener.onDeleteSelected != null ? View.VISIBLE : View.GONE}"
                                 tools:ignore="ContentDescription" />
 
                         </LinearLayout>

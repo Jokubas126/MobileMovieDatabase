@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.movielists.personal.customlists.addtolists
+package com.example.mmdb.ui.movielists.customlists.addtolists
 
 import android.app.Application
 import android.widget.Toast

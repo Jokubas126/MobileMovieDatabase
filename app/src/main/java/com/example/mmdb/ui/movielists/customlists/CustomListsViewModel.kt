@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.movielists.personal.customlists
+package com.example.mmdb.ui.movielists.customlists
 
 import android.app.Application
 import android.content.Context
@@ -8,8 +8,8 @@ import androidx.lifecycle.*
 import com.example.mmdb.R
 import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
-import com.example.mmdb.ui.movielists.personal.customlists.createlist.CreateListPopupWindow
-import com.example.mmdb.ui.movielists.personal.customlists.createlist.CreateListTaskManager
+import com.example.mmdb.ui.movielists.customlists.createlist.CreateListPopupWindow
+import com.example.mmdb.ui.movielists.customlists.createlist.CreateListTaskManager
 import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,31 +1,31 @@
 package com.example.mmdb.managers
 
-import androidx.lifecycle.MutableLiveData
+import androidx.databinding.ObservableBoolean
 
 open class ProgressManager {
-    val loading = MutableLiveData<Boolean>()
-    val error = MutableLiveData<Boolean>()
+    val loading = ObservableBoolean()
+    val error = ObservableBoolean()
 
     open fun loading() {
-        loading.postValue(true)
-        error.postValue(false)
+        loading.set(true)
+        error.set(false)
     }
 
     open fun load() {
-        loading.postValue(true)
+        loading.set(true)
     }
 
     open fun loaded() {
-        loading.postValue(false)
+        loading.set(false)
     }
 
     open fun error() {
-        loading.postValue(false)
-        error.postValue(true)
+        loading.set(false)
+        error.set(true)
     }
 
     open fun success() {
-        loading.postValue(false)
-        error.postValue(false)
+        loading.set(false)
+        error.set(false)
     }
 }

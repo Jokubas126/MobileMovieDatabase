@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.movielists.personal.customlists
+package com.example.mmdb.ui.movielists.customlists
 
 import android.content.Context
 import android.view.LayoutInflater

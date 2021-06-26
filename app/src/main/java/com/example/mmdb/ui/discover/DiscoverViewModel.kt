@@ -8,7 +8,7 @@ import com.example.mmdb.config.AppConfig
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.actions.DiscoverFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
-import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
+import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.example.mmdb.ui.ToolbarViewModel
 import com.jokubas.mmdb.model.data.entities.CategoryType
 import com.jokubas.mmdb.model.data.entities.Subcategory
@@ -95,7 +95,7 @@ class DiscoverViewModel(
                 super.onConfirmClicked()
                 appConfig.toolbarConfig.setBackFragment()
                 navigationController.goTo(
-                    action = RemoteMovieGridFragmentAction(
+                    action = MovieGridFragmentAction(
                         MovieListType.Discover(
                             startYear = if (startYear.get() == INITIAL_START_YEAR_VALUE) null
                             else startYear.get().toString(),

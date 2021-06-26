@@ -10,7 +10,7 @@ import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.configproviders.NavigationWrapperFragmentConfigProvider
 import com.example.mmdb.ui.drawer.DrawerBehaviorInteractor
 import com.example.mmdb.ui.drawer.DrawerLayoutInteractor
-import com.example.mmdb.navigation.actions.RemoteMovieGridFragmentAction
+import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.jokubas.mmdb.util.extensions.adjustStatusBar
 import com.jokubas.mmdb.util.extensions.setLockMode
 import kotlinx.android.synthetic.main.activity_main.*
@@ -51,7 +51,7 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
                 R.id.rootContainer,
                 NavigationWrapperFragment(attachToNavigation = false).apply {
                     arguments = NavigationWrapperFragmentArgs.create(
-                        action = RemoteMovieGridFragmentAction(),
+                        action = MovieGridFragmentAction(),
                         configProvider = NavigationWrapperFragmentConfigProvider::class.java
                     )
                     appConfig.toolbarConfig.setDrawerFragment()

@@ -4,7 +4,9 @@ import android.app.Application
 import com.jokubas.mmdb.model.remote.repositories.CategoryRepository
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.remote.services.MovieService
+import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
+import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
 import okhttp3.OkHttpClient
 
 class MovieConfig(
@@ -24,6 +26,14 @@ class MovieConfig(
                 httpClient = httpClientBuilder.build()
             )
         )
+    }
+
+    val customMovieListRepository: CustomMovieListRepository by lazy {
+        CustomMovieListRepository(application)
+    }
+
+    val watchlistRepository: WatchlistRepository by lazy {
+        WatchlistRepository(application)
     }
 
     val categoryRepository: CategoryRepository by lazy {

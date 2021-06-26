@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.mmdb.ui.movielists.rest.RemoteMovieGridViewModel" />
+            type="com.example.mmdb.ui.movielists.moviegrid.MovieGridViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -55,8 +55,10 @@
                         android:layout_height="wrap_content"
                         app:itemBinding="@{viewModel.itemMoviesBinding}"
                         app:items="@{viewModel.itemsMovie}"
+                        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
                         app:layout_constraintTop_toBottomOf="@id/pages"
-                        app:movieGridLayoutManager="@{4}" />
+                        app:movieGridLayoutManager="@{4}"
+                        app:saveState="@{viewModel.saveState}" />
 
                     <TextView
                         android:id="@+id/loading_error_text_view"
@@ -64,7 +66,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:text="@string/loading_list_empty"
-                        android:visibility="@{viewModel.error &amp; viewModel.itemsMovie.isEmpty() ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.progressManager.error &amp; viewModel.itemsMovie.isEmpty() ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +77,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:visibility="@{viewModel.loading ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.progressManager.loading ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

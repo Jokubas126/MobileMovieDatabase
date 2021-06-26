@@ -12,6 +12,7 @@ const val KEY_ENGLISH_NAME = "english_name"
 const val KEY_TOTAL_PAGES = "total_pages"
 
 // MOVIE LIST TYPES
+const val KEY_DEFAULT = "default"
 const val KEY_POPULAR = "popular"
 const val KEY_TOP_RATED = "top_rated"
 const val KEY_NOW_PLAYING = "now_playing"
