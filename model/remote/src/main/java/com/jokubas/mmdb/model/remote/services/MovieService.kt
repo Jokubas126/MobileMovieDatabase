@@ -8,7 +8,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import okhttp3.OkHttpClient
-import retrofit2.http.*
 
 interface MovieService {
 

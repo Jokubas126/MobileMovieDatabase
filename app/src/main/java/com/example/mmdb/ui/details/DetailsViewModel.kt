@@ -25,6 +25,5 @@ class DetailsViewModel(
     }
 
     init {
-        config.loadInitialView.invoke(action.idWrapper)
     }
 }

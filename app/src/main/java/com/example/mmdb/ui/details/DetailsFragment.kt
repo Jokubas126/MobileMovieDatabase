@@ -14,7 +14,6 @@ import com.example.mmdb.navigation.ConfigFragmentArgs
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.action
 import com.example.mmdb.navigation.actions.DetailsFragmentAction
-import com.example.mmdb.navigation.actions.InnerDetailsAction
 import com.example.mmdb.navigation.config
 import com.example.mmdb.ui.ToolbarViewModel
 
@@ -60,4 +59,10 @@ class DetailsFragment : Fragment() {
         viewModel = detailsViewModel
         lifecycleOwner = this@DetailsFragment
     }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        config.loadInitialView.invoke(action.idWrapper)
+    }
 }

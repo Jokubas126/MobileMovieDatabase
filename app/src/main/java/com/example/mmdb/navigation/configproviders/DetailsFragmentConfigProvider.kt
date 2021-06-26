@@ -17,18 +17,18 @@ class DetailsFragmentConfigProvider : ConfigProvider<DetailsFragmentConfig> {
 
         return DetailsFragmentConfig(
             loadInitialView = { idWrapper ->
-                navController.resolveFragment(InnerDetailsAction.Overview(idWrapper))?.let { fragment ->
+                navController.resolveFragment(InnerDetailsAction.Overview(idWrapper))?.let { resolvedFragment ->
                     handleDetailsFragment(
                         fragmentManager = fragment.childFragmentManager,
-                        fragment = fragment
+                        fragment = resolvedFragment
                     )
                 }
             },
             onBottomNavigationAction = { action ->
-                navController.resolveFragment(action)?.let { fragment ->
+                navController.resolveFragment(action)?.let { resolvedFragment ->
                     handleDetailsFragment(
                         fragmentManager = fragment.childFragmentManager,
-                        fragment = fragment,
+                        fragment = resolvedFragment,
                         animation = null //TODO figure out animation
                     )
                 }
@@ -46,7 +46,6 @@ class DetailsFragmentConfigProvider : ConfigProvider<DetailsFragmentConfig> {
                 setCustomAnimations(anim.enter, anim.exit, anim.popEnter, anim.popExit)
             }
             replace(R.id.detailsContentContainer, fragment)
-
         }.commit()
     }
 }
