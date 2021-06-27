@@ -96,7 +96,7 @@ class DiscoverViewModel(
                 appConfig.toolbarConfig.setBackFragment()
                 navigationController.goTo(
                     action = MovieGridFragmentAction(
-                        MovieListType.Discover(
+                        MovieListType.Remote.Discover(
                             startYear = if (startYear.get() == INITIAL_START_YEAR_VALUE) null
                             else startYear.get().toString(),
                             endYear = endYear.get().toString(),

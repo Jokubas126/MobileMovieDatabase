@@ -26,7 +26,7 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
         return MovieGridFragmentConfig(
             provideMovies = { movieListType, page ->
                 when (movieListType) {
-                    MovieListType.Popular -> {
+                    MovieListType.Remote.Popular -> {
                         remoteMovieRepository.getTypeMovies(
                             movieListType.key,
                             page

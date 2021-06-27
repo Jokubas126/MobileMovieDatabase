@@ -23,8 +23,8 @@ import kotlinx.coroutines.withContext
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
 class MovieGridViewModel(
-    action: MovieGridFragmentAction,
-    config: MovieGridFragmentConfig,
+    private val action: MovieGridFragmentAction,
+    private val config: MovieGridFragmentConfig,
     lifecycle: Lifecycle
 ) : ViewModel() {
 
@@ -33,12 +33,15 @@ class MovieGridViewModel(
 
     val progressManager = ProgressManager()
 
-    val pageSelectionListViewModel = ObservableField<PageSelectionListViewModel>()
+    val pageSelectionListViewModel = PageSelectionListViewModel(
+        onSelected = { pageNumber ->
+            loadMovieList(pageNumber)
+        }
+    )
     val discoverSelectionViewModel: DiscoverSelectionViewModel? =
-        if (action.movieListType is MovieListType.Discover) {
+        if (action.movieListType is MovieListType.Remote.Discover) {
             DiscoverSelectionViewModel(action.movieListType.discoverNameList)
         } else null
-
 
     val itemsMovie = ObservableArrayList<ItemMovieViewModel>()
     val itemMoviesBinding: ItemBinding<ItemMovieViewModel> =
@@ -58,25 +61,34 @@ class MovieGridViewModel(
     }
 
     init {
+        loadMovieList(1)
+        lifecycle.addObserver(saveStateLifecycleListener)
+    }
+
+    fun loadMovieList(page: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             progressManager.loading()
             config.provideMovies(
                 action.movieListType,
-                1
+                page
             ).apply {
+
                 val itemMovieViewModelList = movieList.mapIndexed { index, movie ->
                     movie.toItemMovieViewModel(
                         position = index,
-                        itemMovieEventListener = config.itemMovieEventListener.invoke(IdWrapper.Remote(movie.remoteId)),
+                        itemMovieEventListener = config.itemMovieEventListener.invoke(
+                            IdWrapper.Remote(movie.remoteId)
+                        ),
                         page = page
                     )
                 }
+
                 withContext(Dispatchers.Main) {
-                    itemsMovie.removeAll{ true }
+                    pageSelectionListViewModel.update(page, totalPages)
+                    itemsMovie.removeAll { true }
                     itemsMovie.addAll(itemMovieViewModelList)
                 }
             }
         }
-        lifecycle.addObserver(saveStateLifecycleListener)
     }
 }

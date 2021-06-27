@@ -30,19 +30,19 @@ class DrawerLayoutInteractor(private val context: Context) {
                 //R.id.menu_watchlist -> navController?.navigate(NavGraphDirections.actionGlobalWatchlistFragment())
                 //R.id.menu_custom_lists -> navController?.navigate(NavGraphDirections.actionGlobalCustomListsFragment())
                 R.id.menu_popular -> navigationController.goTo(
-                    action = MovieGridFragmentAction(MovieListType.Popular),
+                    action = MovieGridFragmentAction(MovieListType.Remote.Popular),
                     animation = NavigationController.Animation.FadeIn
                 )
                 R.id.menu_top_rated -> navigationController.goTo(
-                    action = MovieGridFragmentAction(MovieListType.TopRated),
+                    action = MovieGridFragmentAction(MovieListType.Remote.TopRated),
                     animation = NavigationController.Animation.FadeIn
                 )
                 R.id.menu_now_playing -> navigationController.goTo(
-                    action = MovieGridFragmentAction(MovieListType.NowPlaying),
+                    action = MovieGridFragmentAction(MovieListType.Remote.NowPlaying),
                     animation = NavigationController.Animation.FadeIn
                 )
                 R.id.menu_upcoming -> navigationController.goTo(
-                    action = MovieGridFragmentAction(MovieListType.Upcoming),
+                    action = MovieGridFragmentAction(MovieListType.Remote.Upcoming),
                     animation = NavigationController.Animation.FadeIn
                 )
                 R.id.menu_about -> navigationController.goTo(

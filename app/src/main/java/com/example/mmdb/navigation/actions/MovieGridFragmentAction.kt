@@ -6,42 +6,49 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class MovieGridFragmentAction(
-    val movieListType: MovieListType = MovieListType.Popular
+    val movieListType: MovieListType = MovieListType.Remote.Popular
 ) : WrappedFragmentAction
 
 sealed class MovieListType(val key: String = KEY_DEFAULT) : Parcelable {
 
-    @Parcelize
-    object Popular : MovieListType(KEY_POPULAR)
+    sealed class Remote(key: String = KEY_DEFAULT) : MovieListType(key) {
 
-    @Parcelize
-    object TopRated : MovieListType(KEY_TOP_RATED)
+        @Parcelize
+        object Popular : MovieListType(KEY_POPULAR)
 
-    @Parcelize
-    object NowPlaying : MovieListType(KEY_NOW_PLAYING)
+        @Parcelize
+        object TopRated : MovieListType(KEY_TOP_RATED)
 
-    @Parcelize
-    object Upcoming : MovieListType(KEY_UPCOMING)
+        @Parcelize
+        object NowPlaying : MovieListType(KEY_NOW_PLAYING)
 
-    @Parcelize
-    data class Discover(
-        val startYear: String? = null,
-        val endYear: String? = null,
-        val genreKeys: List<String?> = listOf(),
-        val languageKeys: List<String?> = listOf()
-    ) : MovieListType() {
+        @Parcelize
+        object Upcoming : MovieListType(KEY_UPCOMING)
 
-        val discoverNameList =
-            listOf(
-                startYear?.let { "From: $startYear" },
-                "To: $endYear"
-            )
-                .plus(genreKeys)
-                .plus(languageKeys)
+        @Parcelize
+        data class Discover(
+            val startYear: String? = null,
+            val endYear: String? = null,
+            val genreKeys: List<String?> = listOf(),
+            val languageKeys: List<String?> = listOf()
+        ) : MovieListType() {
+
+            val discoverNameList =
+                listOf(
+                    startYear?.let { "From: $startYear" },
+                    "To: $endYear"
+                )
+                    .plus(genreKeys)
+                    .plus(languageKeys)
+        }
+
+        @Parcelize
+        data class Search(val searchQuery: String? = null) : MovieListType()
     }
 
-    @Parcelize
-    data class Search(val searchQuery: String? = null) : MovieListType()
+    sealed class Local(key: String = KEY_DEFAULT) : MovieListType(key) {
 
-    //TODO implement local, custom list and watchlist types
+    }
+    //TODO implement custom list and watchlist types
+
 }
