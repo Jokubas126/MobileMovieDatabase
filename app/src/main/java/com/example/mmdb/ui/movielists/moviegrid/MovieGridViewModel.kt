@@ -1,8 +1,10 @@
 package com.example.mmdb.ui.movielists.moviegrid
 
 import android.os.Parcelable
+import android.view.View
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
@@ -67,8 +69,8 @@ class MovieGridViewModel(
     }
 
     fun loadMovieList(page: Int) {
+        progressManager.loading()
         CoroutineScope(Dispatchers.IO).launch {
-            progressManager.loading()
             config.provideMovies(
                 action.movieListType,
                 page
@@ -79,7 +81,10 @@ class MovieGridViewModel(
                 val itemMovieViewModelList = movieList.mapIndexed { index, movie ->
                     movie.toItemMovieViewModel(
                         position = index,
-                        itemMovieEventListener = config.itemMovieEventListener.invoke(movie.id, action.movieListType is MovieListType.Remote),
+                        itemMovieEventListener = config.itemMovieEventListener.invoke(
+                            movie.id,
+                            action.movieListType is MovieListType.Remote
+                        ),
                         page = page,
                         isInWatchlist = watchlist.find { it.movieId == movie.id } != null
                     )
@@ -89,6 +94,7 @@ class MovieGridViewModel(
                     pageSelectionListViewModel.update(page, totalPages)
                     itemsMovie.removeAll { true }
                     itemsMovie.addAll(itemMovieViewModelList)
+                    progressManager.success()
                 }
             }
         }

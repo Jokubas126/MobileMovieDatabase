@@ -1,5 +1,6 @@
 package com.example.mmdb.ui.movielists.pageselection
 
+import android.view.View
 import androidx.databinding.Observable
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
@@ -9,6 +10,8 @@ import com.example.mmdb.R
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
 class PageSelectionListViewModel(private val onSelected: (pageNumber: Int) -> Unit) {
+
+    val pageSelectionListVisibility: ObservableInt = ObservableInt(View.GONE)
 
     val currentPage: ObservableInt = ObservableInt(1)
 
@@ -52,5 +55,7 @@ class PageSelectionListViewModel(private val onSelected: (pageNumber: Int) -> Un
 
         if (this.totalPages.get() != totalPages)
             this.totalPages.set(totalPages)
+
+        pageSelectionListVisibility.set(if (totalPages > 1) View.VISIBLE else View.GONE)
     }
 }

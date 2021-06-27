@@ -23,6 +23,6 @@ data class Video(
     val videoType: String
 )
 
-fun VideoResults.filterMainTrailer(): Video? = videoList.firstOrNull { video ->
+fun VideoResults.filterMainTrailer(): Video? = videoList.find { video ->
     video.siteType == KEY_YOUTUBE_SITE && video.videoType == KEY_TRAILER_TYPE
 }

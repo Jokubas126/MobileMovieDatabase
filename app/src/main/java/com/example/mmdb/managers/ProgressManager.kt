@@ -6,25 +6,21 @@ open class ProgressManager {
     val loading = ObservableBoolean()
     val error = ObservableBoolean()
 
-    open fun loading() {
+    fun loading() {
         loading.set(true)
         error.set(false)
     }
 
-    open fun load() {
-        loading.set(true)
-    }
-
-    open fun loaded() {
+    fun loaded() {
         loading.set(false)
     }
 
-    open fun error() {
+    fun error() {
         loading.set(false)
         error.set(true)
     }
 
-    open fun success() {
+    fun success() {
         loading.set(false)
         error.set(false)
     }
