@@ -63,6 +63,6 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        config.loadInitialView.invoke(action.idWrapper)
+        config.loadInitialView.invoke(action.movieId, action.isRemote)
     }
 }

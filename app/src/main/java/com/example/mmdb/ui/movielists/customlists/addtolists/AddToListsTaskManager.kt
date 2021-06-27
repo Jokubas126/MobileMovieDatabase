@@ -74,30 +74,30 @@ class AddToListsTaskManager(
     private suspend fun insertMovie(movie: Movie, checkedLists: List<CustomMovieList>) {
         // to get all the details of movie
         try {
-            val fullMovie = remoteMovieRepository.getMovieDetails(movie.remoteId)
-            fullMovie.finalizeInitialization(application)
-            for (list in checkedLists) {
-                getCredits(fullMovie)?.let {
-                    roomMovieRepository.insertOrUpdateMovie(
-                        fullMovie,
-                        getImages(fullMovie),
-                        it,
-                        list
-                    )
-                }
-            }
+//            val fullMovie = remoteMovieRepository.getMovieDetails(movie.remoteId)
+//            fullMovie.finalizeInitialization(application)
+//            for (list in checkedLists) {
+//                getCredits(fullMovie)?.let {
+//                    roomMovieRepository.insertOrUpdateMovie(
+//                        fullMovie,
+//                        getImages(fullMovie),
+//                        it,
+//                        list
+//                    )
+//                }
+//            }
         } catch (e: Exception) {
             onInsertFailed()
         }
     }
 
     private suspend fun getImages(movie: Movie) =
-        remoteMovieRepository.getImages(movie.remoteId).apply {
+        remoteMovieRepository.getImages(movie.id).apply {
             generateFileUris(application)
         }
 
     private suspend fun getCredits(movie: Movie) =
-        remoteMovieRepository.getCredits(movie.remoteId)?.apply {
+        remoteMovieRepository.getCredits(movie.id)?.apply {
             generateFileUris(application)
         }
 

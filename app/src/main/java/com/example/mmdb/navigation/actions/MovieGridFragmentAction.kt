@@ -44,11 +44,14 @@ sealed class MovieListType(val key: String = KEY_DEFAULT) : Parcelable {
 
         @Parcelize
         data class Search(val searchQuery: String? = null) : MovieListType()
+
+        @Parcelize
+        object Watchlist: MovieListType()
     }
 
     sealed class Local(key: String = KEY_DEFAULT) : MovieListType(key) {
 
+        @Parcelize
+        object CustomList: Local()
     }
-    //TODO implement custom list and watchlist types
-
 }

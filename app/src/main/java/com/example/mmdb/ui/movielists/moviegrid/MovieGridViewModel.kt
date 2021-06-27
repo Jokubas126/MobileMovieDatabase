@@ -9,7 +9,6 @@ import com.example.mmdb.R
 import com.example.mmdb.managers.ProgressManager
 import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
-import com.example.mmdb.ui.details.IdWrapper
 import com.example.mmdb.ui.movielists.discover.DiscoverSelectionViewModel
 import com.example.mmdb.ui.movielists.pageselection.PageSelectionListViewModel
 import com.jokubas.mmdb.util.SaveState
@@ -75,13 +74,14 @@ class MovieGridViewModel(
                 page
             ).apply {
 
+                val watchlist = config.provideWatchlist.invoke()
+
                 val itemMovieViewModelList = movieList.mapIndexed { index, movie ->
                     movie.toItemMovieViewModel(
                         position = index,
-                        itemMovieEventListener = config.itemMovieEventListener.invoke(
-                            IdWrapper.Remote(movie.remoteId)
-                        ),
-                        page = page
+                        itemMovieEventListener = config.itemMovieEventListener.invoke(movie.id, action.movieListType is MovieListType.Remote),
+                        page = page,
+                        isInWatchlist = watchlist.find { it.movieId == movie.id } != null
                     )
                 }
 
@@ -93,23 +93,4 @@ class MovieGridViewModel(
             }
         }
     }
-
-
-    // TODO put this to config provider
-//    override fun onDeleteClicked(view: View, movie: Movie, position: Int) {
-//        gridAdapter.movieList.removeAt(position)
-//        gridAdapter.notifyItemRemoved(position)
-//        var restored = false
-//        Snackbar.make(view, R.string.movie_deleted, Snackbar.LENGTH_LONG)
-//            .setAction(R.string.undo) {
-//                restored = true
-//                gridAdapter.movieList.add(position, movie)
-//                gridAdapter.notifyItemInserted(position)
-//            }.show()
-//
-//        Handler().postDelayed({
-//            if (!restored)
-//                viewModel.deleteMovie(movie)
-//        }, SNACKBAR_LENGTH_LONG_MS.toLong())
-//    }
 }

@@ -9,7 +9,7 @@ import com.jokubas.mmdb.model.room.dao.WatchlistMovieDao
 
 private const val DATABASE = "watchlist"
 
-@Database(entities = [WatchlistMovie::class], version = 1, exportSchema = false)
+@Database(entities = [WatchlistMovie::class], version = 2, exportSchema = false)
 abstract class WatchlistDatabase: RoomDatabase() {
 
     abstract fun watchlistMovieDao(): WatchlistMovieDao

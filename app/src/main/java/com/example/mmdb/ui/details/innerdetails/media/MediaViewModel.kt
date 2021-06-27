@@ -35,7 +35,7 @@ class MediaViewModel(
         CoroutineScope(Dispatchers.IO).launch {
             progressManager.loading()
 
-            when (val response = config.provideMediaInfo.invoke(action.movieIdWrapper)){
+            when (val response = config.provideMediaInfo.invoke(action.movieId, action.isRemote)){
                 is DataResponse.Success<*> -> {
                     (response.value as? MediaInfo)?.let {
                         _images.postValue(it.images)

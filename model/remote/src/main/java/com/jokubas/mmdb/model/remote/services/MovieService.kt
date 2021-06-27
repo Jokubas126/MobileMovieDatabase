@@ -19,7 +19,7 @@ interface MovieService {
     ): MovieResults
 
     @GET("/3/movie/{$PATH_MOVIE_ID}")
-    suspend fun getMovieDetails(
+    suspend fun getMovieById(
         @Path(PATH_MOVIE_ID) movieId: String, @Query(
             QUERY_API_KEY
         ) apiKey: String, @Query(QUERY_LANGUAGE) language: String?

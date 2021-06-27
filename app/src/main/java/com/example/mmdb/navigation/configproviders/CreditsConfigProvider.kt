@@ -3,7 +3,6 @@ package com.example.mmdb.navigation.configproviders
 import androidx.fragment.app.Fragment
 import com.example.mmdb.extensions.requireAppConfig
 import com.example.mmdb.navigation.ConfigProvider
-import com.example.mmdb.ui.details.IdWrapper
 import com.example.mmdb.ui.details.innerdetails.credits.CreditsConfig
 
 class CreditsConfigProvider : ConfigProvider<CreditsConfig> {
@@ -15,15 +14,10 @@ class CreditsConfigProvider : ConfigProvider<CreditsConfig> {
         val remoteMovieRepository = appConfig.movieConfig.remoteMovieRepository
 
         return CreditsConfig(
-            provideCreditsDataFlow = { idWrapper ->
-                when (idWrapper) {
-                    is IdWrapper.Remote -> {
-                        remoteMovieRepository.getCreditsFlow(idWrapper.id)
-                    }
-                    is IdWrapper.Local -> {
-                        roomMovieRepository.getCreditsFlowById(idWrapper.id)
-                    }
-                }
+            provideCreditsDataFlow = { isRemote, movieId ->
+                if (isRemote) {
+                    remoteMovieRepository.getCreditsFlow(movieId)
+                } else roomMovieRepository.getCreditsFlowById(movieId)
             }
         )
     }

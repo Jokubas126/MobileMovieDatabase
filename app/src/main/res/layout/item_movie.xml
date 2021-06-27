@@ -64,7 +64,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="7dp"
                                 android:background="@drawable/ic_watchlist_star"
-                                android:activated="@{viewModel.movie.inWatchlist}"
+                                android:activated="@{viewModel.inWatchlist}"
                                 android:onClick="@{() -> viewModel.eventListener.onWatchlistSelected.invoke()}"
                                 android:visibility="@{viewModel.eventListener.onWatchlistSelected != null ? View.VISIBLE : View.GONE}"
                                 tools:ignore="ContentDescription" />

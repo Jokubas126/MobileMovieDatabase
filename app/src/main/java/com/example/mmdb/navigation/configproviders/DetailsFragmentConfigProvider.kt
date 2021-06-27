@@ -16,8 +16,8 @@ class DetailsFragmentConfigProvider : ConfigProvider<DetailsFragmentConfig> {
         val navController = fragment.requireNavController()
 
         return DetailsFragmentConfig(
-            loadInitialView = { idWrapper ->
-                navController.resolveFragment(InnerDetailsAction.Overview(idWrapper))?.let { resolvedFragment ->
+            loadInitialView = { idWrapper, isRemote ->
+                navController.resolveFragment(InnerDetailsAction.Overview(idWrapper, isRemote))?.let { resolvedFragment ->
                     handleDetailsFragment(
                         fragmentManager = fragment.childFragmentManager,
                         fragment = resolvedFragment

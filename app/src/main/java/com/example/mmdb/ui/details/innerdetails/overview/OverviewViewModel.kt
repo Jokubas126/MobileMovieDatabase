@@ -25,7 +25,7 @@ class OverviewViewModel(
         CoroutineScope(Dispatchers.IO).launch {
             progressManager.loading()
 
-            when (val response = config.provideOverviewInfo.invoke(action.movieIdWrapper)){
+            when (val response = config.provideOverviewInfo.invoke(action.movieId, action.isRemote)){
                 is DataResponse.Success<*> -> {
                     (response.value as? OverviewInfo)?.let {
                         _currentMovie.postValue(it.movie)

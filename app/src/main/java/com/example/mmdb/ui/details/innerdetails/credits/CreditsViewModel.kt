@@ -44,7 +44,8 @@ class CreditsViewModel(
         get() = _crewList
 
     private val response: LiveData<DataResponse> =
-        config.provideCreditsDataFlow.invoke(action.movieIdWrapper).asLiveData(Dispatchers.IO)
+        config.provideCreditsDataFlow.invoke(action.isRemote, action.movieId)
+            .asLiveData(Dispatchers.IO)
             .apply { observeForever(creditsObserver) }
 
     val creditsItemBinding: ItemBinding<Person> = ItemBinding.of(BR.person, R.layout.item_person)

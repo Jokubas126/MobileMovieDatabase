@@ -1,55 +1,18 @@
 package com.jokubas.mmdb.model.data.entities
 
 import android.content.Context
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
+import androidx.annotation.NonNull
+import androidx.room.*
 import com.google.gson.annotations.SerializedName
 import com.jokubas.mmdb.model.data.util.*
 import com.jokubas.mmdb.util.stringListToString
-import java.util.*
-
-class MovieResults(
-    @SerializedName("page")
-    val page: Int,
-
-    @SerializedName(KEY_RESULT_LIST)
-    val movieList: List<Movie>,
-
-    @SerializedName(KEY_TOTAL_PAGES)
-    val totalPages: Int
-)
-
-@Entity(tableName = "movie_list")
-data class CustomMovieList(
-    @PrimaryKey(autoGenerate = true)
-    var roomId: Int,
-
-    @ColumnInfo(name = KEY_UPDATE_DATE)
-    var updateDate: Date?,
-
-    @ColumnInfo(name = KEY_LIST_TITLE)
-    var listTitle: String?,
-
-    @ColumnInfo(name = KEY_MOVIE_LIST_IDS)
-    var movieIdList: List<Int>?
-) {
-    constructor() : this(0, Date(), "", null)
-}
-
-@Entity(tableName = "watchlist_movie")
-data class WatchlistMovie(
-    @PrimaryKey(autoGenerate = false) var movieId: Int
-)
 
 @Entity(tableName = "movie")
 data class Movie(
-
-    @PrimaryKey(autoGenerate = true) var roomId: Int,
-
+    @PrimaryKey(autoGenerate = false)
+    @NonNull
     @SerializedName(KEY_ID)
-    @ColumnInfo(name = KEY_MOVIE_ID) var remoteId: Int,
+    var id: Int,
 
     var title: String?,
 
@@ -93,10 +56,7 @@ data class Movie(
     var posterImageUriString: String?,
 
     @ColumnInfo(name = KEY_MOVIE_BACKDROP_URI_STRING)
-    var backdropImageUriString: String?,
-
-    @Ignore
-    var isInWatchlist: Boolean
+    var backdropImageUriString: String?
 ) {
 
     fun formatGenresString(genreList: List<Genre>) {
@@ -113,7 +73,6 @@ data class Movie(
 
     constructor() : this(
         0,
-        0,
         "",
         "",
         "",
@@ -126,7 +85,6 @@ data class Movie(
         "",
         "",
         null,
-        null,
-        false
+        null
     )
 }

@@ -6,23 +6,19 @@ data class ItemMovieViewModel(
     val movie: Movie,
     val position: Int,
     val eventListener: ItemMovieEventListener,
-    val page: Int? = null //TODO not sure if it should actually be nullable (check offline lists)
-)
-
-data class ItemMovieEventListener(
-    val onItemSelected: (() -> Unit)? = null,
-    val onCustomListSelected: (() -> Unit)? = null,
-    val onWatchlistSelected: (() -> Unit)? = null,
-    val onDeleteSelected: (() -> Unit)? = null
+    val page: Int? = null,//TODO not sure if it should actually be nullable (check offline lists)
+    val isInWatchlist: Boolean
 )
 
 fun Movie.toItemMovieViewModel(
     position: Int,
     itemMovieEventListener: ItemMovieEventListener,
-    page: Int? = null
+    page: Int? = null,
+    isInWatchlist: Boolean
 ) = ItemMovieViewModel(
     movie = this,
     position = position,
     eventListener = itemMovieEventListener,
-    page = page
+    page = page,
+    isInWatchlist = isInWatchlist
 )
