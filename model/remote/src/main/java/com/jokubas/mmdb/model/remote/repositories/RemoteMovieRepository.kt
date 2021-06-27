@@ -4,6 +4,7 @@ import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.data.entities.WatchlistMovie
 import com.jokubas.mmdb.model.remote.services.MovieService
 import com.jokubas.mmdb.util.*
+import com.jokubas.mmdb.util.constants.KEY_POPULAR
 import com.jokubas.mmdb.util.constants.MOVIE_DB_API_KEY
 import com.jokubas.mmdb.util.constants.MOVIE_DB_IMAGE_LANGUAGE_EN
 import com.jokubas.mmdb.util.constants.MOVIE_DB_LANGUAGE_EN
@@ -32,7 +33,7 @@ class RemoteMovieRepository(
     ) = searchQuery?.let { getSearchedMovies(searchQuery, page) }*/
 
 
-    suspend fun getTypeMovies(listType: String, page: Int) =
+    suspend fun getTypeMovies(listType: String = KEY_POPULAR, page: Int) =
         service.getMovies(listType, MOVIE_DB_API_KEY, page.toString())
 
     suspend fun getSearchedMovies(query: String, page: Int) =
@@ -42,8 +43,8 @@ class RemoteMovieRepository(
         page: Int,
         startYear: String?,
         endYear: String?,
-        genreKeys: Array<String?>?,
-        languageKeys: Array<String?>?
+        genreKeys: List<String?>?,
+        languageKeys: List<String?>?
     ) = service.getDiscoveredMovies(
         MOVIE_DB_API_KEY,
         page.toString(),

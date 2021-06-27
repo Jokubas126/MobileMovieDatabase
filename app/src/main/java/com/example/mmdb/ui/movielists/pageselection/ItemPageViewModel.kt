@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.movielists.rest
+package com.example.mmdb.ui.movielists.pageselection
 
 import androidx.databinding.ObservableBoolean
 

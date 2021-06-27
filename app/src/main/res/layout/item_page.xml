@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.mmdb.ui.movielists.rest.ItemPageViewModel" />
+            type="com.example.mmdb.ui.movielists.pageselection.ItemPageViewModel" />
     </data>
 
     <FrameLayout

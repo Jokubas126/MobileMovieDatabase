@@ -34,7 +34,6 @@ class OverviewViewModel(
                 }
                 is DataResponse.Error -> progressManager.error()
             }
-
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.movielists.rest
+package com.example.mmdb.ui.movielists.discover
 
 import androidx.databinding.ObservableArrayList
 import com.example.mmdb.BR

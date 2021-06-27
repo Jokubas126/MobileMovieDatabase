@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.mmdb.ui.movielists.ItemMovieViewModel" />
+            type="com.example.mmdb.ui.movielists.moviegrid.ItemMovieViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -28,15 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?android:selectableItemBackground"
-                android:orientation="vertical">
-
-                <!-- TODO remove this text view-->
-                <TextView
-                    android:id="@+id/movie_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(viewModel.movie.remoteId)}"
-                    android:visibility="gone" />
+                android:orientation="vertical"
+                android:onClick="@{() -> viewModel.eventListener.onItemSelected.invoke()}">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -50,7 +43,6 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/movie_image"
                         android:gravity="center_horizontal"
-                        android:onClick="@{() -> viewModel.eventListener.onItemSelected.invoke()}"
                         app:imageUriString="@{viewModel.movie.posterImageUriString}"
                         app:imageUrl="@{viewModel.movie.posterImageUrl}" />
 

@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.movielists
+package com.example.mmdb.ui.movielists.moviegrid
 
 import com.jokubas.mmdb.model.data.entities.Movie
 

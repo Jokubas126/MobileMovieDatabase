@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.movielists.rest
+package com.example.mmdb.ui.movielists.pageselection
 
 import androidx.databinding.Observable
 import androidx.databinding.ObservableArrayList
@@ -10,7 +10,7 @@ import me.tatarka.bindingcollectionadapter2.ItemBinding
 
 class PageSelectionListViewModel(private val onSelected: (pageNumber: Int) -> Unit) {
 
-    private val currentPage: ObservableInt = ObservableInt(1)
+    val currentPage: ObservableInt = ObservableInt(1)
 
     private val totalPages: ObservableInt = ObservableInt(0)
 

@@ -10,11 +10,8 @@ import com.example.mmdb.managers.ProgressManager
 import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.ui.details.IdWrapper
-import com.example.mmdb.ui.movielists.ItemMovieViewModel
-import com.example.mmdb.ui.movielists.rest.DiscoverSelectionViewModel
-import com.example.mmdb.ui.movielists.rest.PageSelectionListViewModel
-import com.example.mmdb.ui.movielists.rest.MovieGridFragmentConfig
-import com.example.mmdb.ui.movielists.toItemMovieViewModel
+import com.example.mmdb.ui.movielists.discover.DiscoverSelectionViewModel
+import com.example.mmdb.ui.movielists.pageselection.PageSelectionListViewModel
 import com.jokubas.mmdb.util.SaveState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +35,7 @@ class MovieGridViewModel(
             loadMovieList(pageNumber)
         }
     )
+
     val discoverSelectionViewModel: DiscoverSelectionViewModel? =
         if (action.movieListType is MovieListType.Remote.Discover) {
             DiscoverSelectionViewModel(action.movieListType.discoverNameList)
@@ -60,8 +58,12 @@ class MovieGridViewModel(
         }
     }
 
+    val refreshEventListener = {
+        loadMovieList(pageSelectionListViewModel.currentPage.get())
+    }
+
     init {
-        loadMovieList(1)
+        loadMovieList(pageSelectionListViewModel.currentPage.get())
         lifecycle.addObserver(saveStateLifecycleListener)
     }
 
@@ -91,4 +93,23 @@ class MovieGridViewModel(
             }
         }
     }
+
+
+    // TODO put this to config provider
+//    override fun onDeleteClicked(view: View, movie: Movie, position: Int) {
+//        gridAdapter.movieList.removeAt(position)
+//        gridAdapter.notifyItemRemoved(position)
+//        var restored = false
+//        Snackbar.make(view, R.string.movie_deleted, Snackbar.LENGTH_LONG)
+//            .setAction(R.string.undo) {
+//                restored = true
+//                gridAdapter.movieList.add(position, movie)
+//                gridAdapter.notifyItemInserted(position)
+//            }.show()
+//
+//        Handler().postDelayed({
+//            if (!restored)
+//                viewModel.deleteMovie(movie)
+//        }, SNACKBAR_LENGTH_LONG_MS.toLong())
+//    }
 }

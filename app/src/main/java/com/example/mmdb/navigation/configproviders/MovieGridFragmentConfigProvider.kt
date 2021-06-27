@@ -9,8 +9,8 @@ import com.example.mmdb.navigation.ConfigProvider
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.actions.DetailsFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
-import com.example.mmdb.ui.movielists.ItemMovieEventListener
-import com.example.mmdb.ui.movielists.rest.MovieGridFragmentConfig
+import com.example.mmdb.ui.movielists.moviegrid.ItemMovieEventListener
+import com.example.mmdb.ui.movielists.moviegrid.MovieGridFragmentConfig
 
 class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> {
     override fun config(fragment: Fragment): MovieGridFragmentConfig {
@@ -26,16 +26,29 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
         return MovieGridFragmentConfig(
             provideMovies = { movieListType, page ->
                 when (movieListType) {
-                    MovieListType.Remote.Popular -> {
+                    MovieListType.Remote.Popular,
+                    MovieListType.Remote.TopRated,
+                    MovieListType.Remote.Upcoming,
+                    MovieListType.Remote.NowPlaying -> {
                         remoteMovieRepository.getTypeMovies(
-                            movieListType.key,
-                            page
+                            listType = movieListType.key,
+                            page = page
                         )
+                    }
+                    is MovieListType.Remote.Discover -> {
+                        with(movieListType) {
+                            remoteMovieRepository.getDiscoveredMovies(
+                                page = page,
+                                startYear = startYear,
+                                endYear = endYear,
+                                genreKeys = genreKeys,
+                                languageKeys = languageKeys
+                            )
+                        }
                     }
                     else -> {
                         remoteMovieRepository.getTypeMovies(
-                            movieListType.key,
-                            page
+                            page = page
                         )
                     }
                 }
