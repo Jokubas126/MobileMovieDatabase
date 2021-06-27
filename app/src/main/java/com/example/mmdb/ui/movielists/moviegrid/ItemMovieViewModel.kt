@@ -1,5 +1,6 @@
 package com.example.mmdb.ui.movielists.moviegrid
 
+import androidx.databinding.ObservableBoolean
 import com.jokubas.mmdb.model.data.entities.Movie
 
 data class ItemMovieViewModel(
@@ -7,18 +8,26 @@ data class ItemMovieViewModel(
     val position: Int,
     val eventListener: ItemMovieEventListener,
     val page: Int? = null,//TODO not sure if it should actually be nullable (check offline lists)
-    val isInWatchlist: Boolean
-)
+    val isInWatchlist: ObservableBoolean,
+    val isRemote: Boolean
+) {
+
+    fun onWatchlistClicked() {
+        eventListener.onWatchlistSelected?.invoke(isInWatchlist.get())
+    }
+}
 
 fun Movie.toItemMovieViewModel(
     position: Int,
     itemMovieEventListener: ItemMovieEventListener,
     page: Int? = null,
-    isInWatchlist: Boolean
+    isInWatchlist: Boolean,
+    isRemote: Boolean
 ) = ItemMovieViewModel(
     movie = this,
     position = position,
     eventListener = itemMovieEventListener,
     page = page,
-    isInWatchlist = isInWatchlist
+    isInWatchlist = ObservableBoolean(isInWatchlist),
+    isRemote = isRemote
 )

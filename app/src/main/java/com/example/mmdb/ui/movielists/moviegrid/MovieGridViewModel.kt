@@ -5,6 +5,7 @@ import android.view.View
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
+import androidx.databinding.ObservableList
 import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
@@ -13,12 +14,16 @@ import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.ui.movielists.discover.DiscoverSelectionViewModel
 import com.example.mmdb.ui.movielists.pageselection.PageSelectionListViewModel
+import com.jokubas.mmdb.model.data.entities.WatchlistMovie
 import com.jokubas.mmdb.util.SaveState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.tatarka.bindingcollectionadapter2.ItemBinding
+import me.tatarka.bindingcollectionadapter2.collections.DiffObservableList
+import kotlin.coroutines.CoroutineContext
 
 class MovieGridViewModel(
     private val action: MovieGridFragmentAction,
@@ -42,7 +47,7 @@ class MovieGridViewModel(
             DiscoverSelectionViewModel(action.movieListType.discoverNameList)
         } else null
 
-    val itemsMovie = ObservableArrayList<ItemMovieViewModel>()
+    val itemsMovie: ObservableList<ItemMovieViewModel> = ObservableArrayList()
     val itemMoviesBinding: ItemBinding<ItemMovieViewModel> =
         ItemBinding.of(BR.viewModel, R.layout.item_movie)
 
@@ -63,8 +68,23 @@ class MovieGridViewModel(
         loadMovieList(pageSelectionListViewModel.currentPage.get())
     }
 
+    private val watchlist =
+        config.provideWatchlist.invoke().asLiveData(Dispatchers.IO).apply {
+            loadMovieList(pageSelectionListViewModel.currentPage.get())
+            observeForever { watchlistMovies ->
+                itemsMovie.forEach { movieItem ->
+                    movieItem.isInWatchlist.set(
+                        watchlistMovies.any { watchlistMovie ->
+                            movieItem.movie.id == watchlistMovie.movieId
+                        }
+                    )
+                }
+                if (action.movieListType is MovieListType.Remote.Watchlist)
+                    itemsMovie.removeAll { !it.isInWatchlist.get() }
+            }
+        }
+
     init {
-        loadMovieList(pageSelectionListViewModel.currentPage.get())
         lifecycle.addObserver(saveStateLifecycleListener)
     }
 
@@ -76,8 +96,6 @@ class MovieGridViewModel(
                 page
             ).apply {
 
-                val watchlist = config.provideWatchlist.invoke()
-
                 val itemMovieViewModelList = movieList.mapIndexed { index, movie ->
                     movie.toItemMovieViewModel(
                         position = index,
@@ -86,7 +104,8 @@ class MovieGridViewModel(
                             action.movieListType is MovieListType.Remote
                         ),
                         page = page,
-                        isInWatchlist = watchlist.find { it.movieId == movie.id } != null
+                        isInWatchlist = watchlist.value?.find { it.movieId == movie.id } != null,
+                        isRemote = action.movieListType is MovieListType.Remote
                     )
                 }
 

@@ -15,7 +15,7 @@ class PageSelectionListViewModel(private val onSelected: (pageNumber: Int) -> Un
 
     val currentPage: ObservableInt = ObservableInt(1)
 
-    private val totalPages: ObservableInt = ObservableInt(0)
+    private val totalPages: ObservableInt = ObservableInt(1)
 
     val itemsPage = ObservableArrayList<ItemPageViewModel>()
 

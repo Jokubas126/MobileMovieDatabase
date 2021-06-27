@@ -28,8 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?android:selectableItemBackground"
-                android:orientation="vertical"
-                android:onClick="@{() -> viewModel.eventListener.onItemSelected.invoke()}">
+                android:onClick="@{() -> viewModel.eventListener.onItemSelected.invoke()}"
+                android:orientation="vertical">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -63,10 +63,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="7dp"
-                                android:background="@drawable/ic_watchlist_star"
                                 android:activated="@{viewModel.inWatchlist}"
-                                android:onClick="@{() -> viewModel.eventListener.onWatchlistSelected.invoke()}"
-                                android:visibility="@{viewModel.eventListener.onWatchlistSelected != null ? View.VISIBLE : View.GONE}"
+                                android:background="@drawable/ic_watchlist_star"
+                                android:onClick="@{() -> viewModel.onWatchlistClicked()}"
+                                android:visibility="@{viewModel.isRemote ? View.GONE : View.VISIBLE}"
                                 tools:ignore="ContentDescription" />
 
                             <ImageButton
@@ -76,7 +76,7 @@
                                 android:layout_marginEnd="7dp"
                                 android:background="@drawable/ic_playlist_add"
                                 android:onClick="@{() -> viewModel.eventListener.onCustomListSelected.invoke()}"
-                                android:visibility="@{viewModel.eventListener.onCustomListSelected != null ? View.VISIBLE : View.GONE}"
+                                android:visibility="@{viewModel.isRemote ? View.GONE : View.VISIBLE}"
                                 tools:ignore="ContentDescription" />
 
                             <ImageButton
@@ -86,7 +86,7 @@
                                 android:layout_marginEnd="7dp"
                                 android:background="@drawable/ic_delete"
                                 android:onClick="@{() -> viewModel.eventListener.onDeleteSelected.invoke()}"
-                                android:visibility="@{viewModel.eventListener.onDeleteSelected != null ? View.VISIBLE : View.GONE}"
+                                android:visibility="@{viewModel.isRemote ? View.VISIBLE : View.GONE}"
                                 tools:ignore="ContentDescription" />
 
                         </LinearLayout>

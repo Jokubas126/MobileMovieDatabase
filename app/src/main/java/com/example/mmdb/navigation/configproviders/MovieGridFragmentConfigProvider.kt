@@ -52,7 +52,7 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
                         }
                     }
                     is MovieListType.Remote.Watchlist -> {
-                        val watchlist = watchlistRepository.getWatchlist()
+                        val watchlist = watchlistRepository.getWatchlistNow()
                         val watchlistMovies = remoteMovieRepository.getMoviesFromIdList(
                             watchlist.map { it.movieId }
                         )
@@ -73,7 +73,7 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
                 }
             },
             provideWatchlist = {
-                watchlistRepository.getWatchlist()
+                watchlistRepository.getWatchlistFlow()
             },
             itemMovieEventListener = { movieId, isRemote ->
                 ItemMovieEventListener(
@@ -92,10 +92,11 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
                             .show()
                         //onPlaylistAddCLicked(movie) // TODO implement this
                     },
-                    onWatchlistSelected = {
-                        Toast.makeText(fragment.context, "Watchlist clicked", Toast.LENGTH_SHORT)
-                            .show()
-                        watchlistRepository.insertOrUpdateMovie(id = movieId)
+                    onWatchlistSelected = { isInWatchlist ->
+                        if (isInWatchlist)
+                            watchlistRepository.deleteWatchlistMovie(id = movieId)
+                        else
+                            watchlistRepository.insertOrUpdateMovie(id = movieId)
                     },
                     onDeleteSelected = {
                         //        gridAdapter.movieList.removeAt(position)

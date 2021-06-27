@@ -26,15 +26,17 @@ class WatchlistRepository(application: Application) : CoroutineScope {
         }
     }
 
-    fun getWatchlist() = watchlistMovieDao.getWatchlist()
+    fun getWatchlistNow() = watchlistMovieDao.getWatchlistNow()
 
-    fun deleteWatchlistMovie(movieId: Int) {
-        launch { deleteWatchlistMovieBG(movieId) }
+    fun getWatchlistFlow() = watchlistMovieDao.getWatchlistFlow()
+
+    fun deleteWatchlistMovie(id: Int) {
+        launch { deleteWatchlistMovieBG(id) }
     }
 
-    private suspend fun deleteWatchlistMovieBG(movieId: Int) {
+    private suspend fun deleteWatchlistMovieBG(id: Int) {
         withContext(Dispatchers.IO) {
-            watchlistMovieDao.deleteMovieById(movieId)
+            watchlistMovieDao.deleteMovieById(id)
         }
     }
 }
