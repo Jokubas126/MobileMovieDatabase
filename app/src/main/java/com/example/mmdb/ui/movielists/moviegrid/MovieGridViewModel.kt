@@ -107,7 +107,7 @@ class MovieGridViewModel(
                             action.movieListType is MovieListType.Remote
                         ),
                         page = page,
-                        isInWatchlist = watchlist.value?.find { it.movieId == movie.id } != null,
+                        isInWatchlist = watchlist.value?.any { it.movieId == movie.id } ?: false,
                         isRemote = action.movieListType is MovieListType.Remote
                     )
                 }
