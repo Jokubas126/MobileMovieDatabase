@@ -14,16 +14,16 @@ sealed class MovieListType(val key: String = KEY_DEFAULT) : Parcelable {
     sealed class Remote(key: String = KEY_DEFAULT) : MovieListType(key) {
 
         @Parcelize
-        object Popular : MovieListType(KEY_POPULAR)
+        object Popular : Remote(KEY_POPULAR)
 
         @Parcelize
-        object TopRated : MovieListType(KEY_TOP_RATED)
+        object TopRated : Remote(KEY_TOP_RATED)
 
         @Parcelize
-        object NowPlaying : MovieListType(KEY_NOW_PLAYING)
+        object NowPlaying : Remote(KEY_NOW_PLAYING)
 
         @Parcelize
-        object Upcoming : MovieListType(KEY_UPCOMING)
+        object Upcoming : Remote(KEY_UPCOMING)
 
         @Parcelize
         data class Discover(
@@ -31,7 +31,7 @@ sealed class MovieListType(val key: String = KEY_DEFAULT) : Parcelable {
             val endYear: String? = null,
             val genreKeys: List<String?> = listOf(),
             val languageKeys: List<String?> = listOf()
-        ) : MovieListType() {
+        ) : Remote() {
 
             val discoverNameList =
                 listOf(
@@ -43,10 +43,10 @@ sealed class MovieListType(val key: String = KEY_DEFAULT) : Parcelable {
         }
 
         @Parcelize
-        data class Search(val searchQuery: String? = null) : MovieListType()
+        data class Search(val searchQuery: String? = null) : Remote()
 
         @Parcelize
-        object Watchlist: MovieListType()
+        object Watchlist: Remote()
     }
 
     sealed class Local(key: String = KEY_DEFAULT) : MovieListType(key) {
