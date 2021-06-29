@@ -79,8 +79,11 @@ class MovieGridViewModel(
                         }
                     )
                 }
-                if (action.movieListType is MovieListType.Remote.Watchlist)
-                    itemsMovie.removeAll { !it.isInWatchlist.get() }
+                if (action.movieListType is MovieListType.Remote.Watchlist) {
+                    itemsMovie.filter { !it.isInWatchlist.get() }.forEach {
+                        itemsMovie.remove(it)
+                    }
+                }
             }
         }
 
