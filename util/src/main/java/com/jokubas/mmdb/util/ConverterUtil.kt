@@ -10,28 +10,6 @@ import java.io.*
 import java.lang.reflect.Type
 import java.util.*
 
-// ---------------- Text related -------------//
-
-fun stringListToString(list: List<String>): String {
-    val stringBuilder = java.lang.StringBuilder()
-    for (word in list) {
-        if (stringBuilder.isNotBlank())
-            stringBuilder.append(", ").append(word)
-        else stringBuilder.append(word)
-    }
-    return stringBuilder.toString()
-}
-
-fun stringListToListedString(list: List<String>): String {
-    val stringBuilder = java.lang.StringBuilder()
-    for (word in list) {
-        if (stringBuilder.isNotBlank())
-            stringBuilder.append("\n").append(word)
-        else stringBuilder.append(word)
-    }
-    return stringBuilder.toString()
-}
-
 // --------------- Image Related ---------------- //
 
 fun saveBitmapToFile(context: Context, bitmap: Bitmap?): File? {

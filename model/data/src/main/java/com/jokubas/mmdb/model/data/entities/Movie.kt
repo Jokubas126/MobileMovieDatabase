@@ -59,16 +59,31 @@ data class Movie(
     var backdropImageUriString: String?
 ) {
 
+    val productionCountriesListed = productionCountryList.joinToString(separator = "\n")
+
     fun formatGenresString(genreList: List<Genre>) {
-        genresString = stringListToString(getAnyNameList(genreList))
+        genresString = getAnyNameList(genreList).joinToString()
     }
 
     fun finalizeInitialization(context: Context): Movie {
-        genresString = stringListToString(getAnyNameList(genres))
-        productionCountryString = stringListToString(getAnyNameList(productionCountryList))
+
+        genresString = genres.joinToString { it.name }
+        productionCountryString = productionCountryList.joinToString{ it.name }
         posterImageUriString = imageUrlToFileUriString(context, posterImageUrl)
         backdropImageUriString = imageUrlToFileUriString(context, backdropImageUrl)
         return this
+    }
+
+    fun getAnyNameList(list: List<*>?): List<String> {
+        val nameList = mutableListOf<String>()
+        list?.let {
+            for (value in it)
+                when (value) {
+                    is Genre -> nameList.add(value.name)
+                    is Country -> nameList.add(value.name)
+                }
+        }
+        return nameList
     }
 
     constructor() : this(
