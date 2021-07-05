@@ -10,8 +10,6 @@
             type="com.example.mmdb.ui.details.innerdetails.overview.OverviewViewModel" />
 
         <import type="android.view.View" />
-        <import type="com.jokubas.mmdb.util.ConverterUtilKt" />
-        <import type="com.jokubas.mmdb.model.data.util.DataFormatterKt" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,7 +41,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -153,7 +151,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{ConverterUtilKt.stringListToString(DataFormatterKt.getAnyNameList(viewModel.currentMovie.genres))}"
+                            android:text="@{viewModel.currentMovie.genresString}"
                             android:textAppearance="@style/ContentOverview" />
 
                     </LinearLayout>
@@ -216,16 +214,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:text="@{ConverterUtilKt.stringListToListedString(DataFormatterKt.getAnyNameList(viewModel.currentMovie.productionCountryList))}"
+                            android:text="@{viewModel.currentMovie.productionCountriesListed}"
                             android:textAppearance="@style/DescriptionDetails" />
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
         </ScrollView>
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

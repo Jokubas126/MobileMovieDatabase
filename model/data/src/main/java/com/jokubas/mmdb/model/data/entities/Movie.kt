@@ -5,7 +5,6 @@ import androidx.annotation.NonNull
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
 import com.jokubas.mmdb.model.data.util.*
-import com.jokubas.mmdb.util.stringListToString
 
 @Entity(tableName = "movie")
 data class Movie(
@@ -59,10 +58,11 @@ data class Movie(
     var backdropImageUriString: String?
 ) {
 
+    @Ignore
     val productionCountriesListed = productionCountryList.joinToString(separator = "\n")
 
     fun formatGenresString(genreList: List<Genre>) {
-        genresString = getAnyNameList(genreList).joinToString()
+        genresString = genreList.joinToString { it.name }
     }
 
     fun finalizeInitialization(context: Context): Movie {
@@ -72,18 +72,6 @@ data class Movie(
         posterImageUriString = imageUrlToFileUriString(context, posterImageUrl)
         backdropImageUriString = imageUrlToFileUriString(context, backdropImageUrl)
         return this
-    }
-
-    fun getAnyNameList(list: List<*>?): List<String> {
-        val nameList = mutableListOf<String>()
-        list?.let {
-            for (value in it)
-                when (value) {
-                    is Genre -> nameList.add(value.name)
-                    is Country -> nameList.add(value.name)
-                }
-        }
-        return nameList
     }
 
     constructor() : this(
