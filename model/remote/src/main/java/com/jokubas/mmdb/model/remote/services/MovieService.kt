@@ -1,9 +1,12 @@
 package com.jokubas.mmdb.model.remote.services
 
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.jokubas.mmdb.model.data.entities.*
 import com.jokubas.mmdb.util.constants.*
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -71,9 +74,17 @@ interface MovieService {
 
     companion object {
 
+        private val contentType = "application/json".toMediaType()
+
+        @ExperimentalSerializationApi
         fun create(baseUrl: String, httpClient: OkHttpClient): MovieService {
             val retrofit = Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(
+                    Json {
+                        ignoreUnknownKeys = true
+                        isLenient = true
+                    }.asConverterFactory(contentType)
+                )
                 .baseUrl(baseUrl)
                 .client(httpClient)
                 .build()

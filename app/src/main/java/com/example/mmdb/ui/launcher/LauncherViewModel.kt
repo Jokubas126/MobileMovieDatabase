@@ -19,7 +19,7 @@ class LauncherViewModel(
     val loadedEvent = LiveEvent<Loaded>()
 
     private val movieRepository = appConfig.movieConfig.remoteMovieRepository
-    //private val genresRepository = GenresRepository(application)
+    private val genresRepository = appConfig.movieConfig.genresRepository
 
     private var isGenresLoaded: Boolean = false
     private var isGenresRequired: Boolean = false
@@ -32,16 +32,12 @@ class LauncherViewModel(
         if (appConfig.networkCheckConfig.isNetworkAvailable()) {
             updateGenres()
         } else
-            checkForUpdates()
-    }
-
-    private fun checkForUpdates() {
-        checkForGenre()
+            checkForGenre()
     }
 
     private fun checkForGenre() {
         CoroutineScope(Dispatchers.IO).launch {
-            //isGenresRequired = genresRepository.getAnyGenre() == null
+            isGenresRequired = genresRepository.getAnyGenre() == null
             checkIfAnyUpdateRequired()
         }
     }
@@ -49,7 +45,7 @@ class LauncherViewModel(
     private fun updateGenres() {
         CoroutineScope(Dispatchers.IO).launch {
             val genres = movieRepository.getGenres()
-            //genresRepository.updateGenres(genres.genreList)
+            genresRepository.updateGenres(genres.genreList)
             isGenresLoaded = true
             checkIfAllLoaded()
         }

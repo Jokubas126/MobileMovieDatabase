@@ -6,9 +6,13 @@ import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
 import com.jokubas.mmdb.model.data.util.*
+import com.jokubas.mmdb.util.extensions.urlToFileUriString
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.lang.reflect.Type
 import java.util.*
 
+@Serializable
 @Entity(tableName = "credits")
 class Credits(
 
@@ -17,12 +21,12 @@ class Credits(
 
     @TypeConverters(PersonListTypeConverter::class)
     @ColumnInfo(name = KEY_CAST_LIST)
-    @SerializedName(KEY_CAST_LIST)
+    @SerialName(KEY_CAST_LIST)
     val castList: List<Person>?,
 
     @TypeConverters(PersonListTypeConverter::class)
     @ColumnInfo(name = KEY_CREW_LIST)
-    @SerializedName(KEY_CREW_LIST)
+    @SerialName(KEY_CREW_LIST)
     val crewList: List<Person>?
 ) {
     // upload images to file system and get their URIs
@@ -30,24 +34,25 @@ class Credits(
         if (!castList.isNullOrEmpty())
             for (cast in castList)
                 if (!cast.profileImageUrl.isNullOrBlank())
-                    cast.profileImageUriString = imageUrlToFileUriString(context, cast.profileImageUrl)
+                    cast.profileImageUriString = context.urlToFileUriString(cast.profileImageUrl)
 
         if (!crewList.isNullOrEmpty())
             for (crew in crewList)
                 if (!crew.profileImageUrl.isNullOrBlank())
-                    crew.profileImageUriString = imageUrlToFileUriString(context, crew.profileImageUrl)
+                    crew.profileImageUriString = context.urlToFileUriString(crew.profileImageUrl)
         return this
     }
 }
 
+@Serializable
 data class Person(
     val name: String?,
 
-    @SerializedName(KEY_CAST_POSITION, alternate = [KEY_CREW_POSITION])
+    @SerialName(KEY_CAST_POSITION/*, alternate = [KEY_CREW_POSITION]*/)
     val position: String?,
 
     @Ignore
-    @SerializedName(KEY_PROFILE_IMAGE_URL)
+    @SerialName(KEY_PROFILE_IMAGE_URL)
     val profileImageUrl: String?,
 
     @ColumnInfo(name = KEY_PROFILE_IMAGE_URI_STRING)

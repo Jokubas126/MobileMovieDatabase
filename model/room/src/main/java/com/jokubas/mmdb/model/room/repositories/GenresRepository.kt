@@ -20,4 +20,6 @@ class GenresRepository(context: Context) : CoroutineScope {
     suspend fun getAnyGenre() = genreDao.getAnyGenre()
 
     fun getGenresByIdList(genreIdList: List<Int>) = genreDao.getGenresByIdList(genreIdList)
+
+    fun getAllGenres() = genreDao.getAllGenres()
 }

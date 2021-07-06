@@ -3,91 +3,72 @@ package com.jokubas.mmdb.model.data.entities
 import android.content.Context
 import androidx.annotation.NonNull
 import androidx.room.*
-import com.google.gson.annotations.SerializedName
 import com.jokubas.mmdb.model.data.util.*
+import com.jokubas.mmdb.util.extensions.urlToFileUriString
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "movie")
 data class Movie(
     @PrimaryKey(autoGenerate = false)
     @NonNull
-    @SerializedName(KEY_ID)
-    var id: Int,
+    @SerialName(KEY_ID)
+    val id: Int = 0,
 
-    var title: String?,
+    val title: String? = null,
 
     @ColumnInfo(name = KEY_MOVIE_RELEASE_DATE)
-    @SerializedName(KEY_MOVIE_RELEASE_DATE)
-    var releaseDate: String?,
+    @SerialName(KEY_MOVIE_RELEASE_DATE)
+    val releaseDate: String? = null,
 
     @ColumnInfo(name = KEY_LOCAL_MOVIE_SCORE)
-    @SerializedName(KEY_MOVIE_SCORE)
-    var score: String?,
+    @SerialName(KEY_MOVIE_SCORE)
+    val score: String? = null,
 
-    @Ignore
-    @SerializedName(KEY_MOVIE_GENRE_ID_LIST)
-    val genreIds: List<Int>,
+    @ColumnInfo(name = KEY_MOVIE_GENRE_ID_LIST)
+    @SerialName(KEY_MOVIE_GENRE_ID_LIST)
+    val genreIds: List<Int> = emptyList(),
 
-    @Ignore
-    val genres: List<Genre>,
+    @ColumnInfo(name = KEY_MOVIE_PRODUCTION_COUNTRY_LIST)
+    @SerialName(KEY_MOVIE_PRODUCTION_COUNTRY_LIST)
+    val productionCountryList: List<Country> = emptyList(),
 
-    @ColumnInfo(name = KEY_MOVIE_GENRES_STRING)
-    var genresString: String?,
+    val runtime: Int = 0,
 
-    @Ignore
-    @SerializedName(KEY_MOVIE_PRODUCTION_COUNTRY_LIST)
-    val productionCountryList: List<Country>,
+    @SerialName(KEY_MOVIE_DESCRIPTION)
+    val description: String? = null,
 
-    @ColumnInfo(name = KEY_MOVIE_PRODUCTION_COUNTRY_STRING)
-    var productionCountryString: String?,
+    @SerialName(KEY_MOVIE_POSTER_URL)
+    val posterImageUrl: String? = null,
 
-    var runtime: Int,
-
-    @SerializedName(KEY_MOVIE_DESCRIPTION)
-    var description: String?,
-
-    @SerializedName(KEY_MOVIE_POSTER_URL)
-    var posterImageUrl: String?,
-
-    @SerializedName(KEY_MOVIE_BACKDROP_URL)
-    var backdropImageUrl: String?,
+    @SerialName(KEY_MOVIE_BACKDROP_URL)
+    val backdropImageUrl: String? = null,
 
     @ColumnInfo(name = KEY_MOVIE_POSTER_URI_STRING)
-    var posterImageUriString: String?,
+    var posterImageUriString: String? = null,
 
     @ColumnInfo(name = KEY_MOVIE_BACKDROP_URI_STRING)
-    var backdropImageUriString: String?
+    var backdropImageUriString: String? = null
 ) {
+    @Ignore
+    var genres: List<Genre>? = null
+
+    val genresString: String?
+        get() = genres?.joinToString { it.name }
 
     @Ignore
-    val productionCountriesListed = productionCountryList.joinToString(separator = "\n")
+    val productionCountriesListed: String =
+        productionCountryList.joinToString(separator = "\n") { it.name }
+}
 
-    fun formatGenresString(genreList: List<Genre>) {
-        genresString = genreList.joinToString { it.name }
+fun Movie.mapGenres(availableGenres: List<Genre>) {
+    genres = availableGenres.filter { genre ->
+        genreIds.any { genre.id == it }
     }
+}
 
-    fun finalizeInitialization(context: Context): Movie {
-
-        genresString = genres.joinToString { it.name }
-        productionCountryString = productionCountryList.joinToString{ it.name }
-        posterImageUriString = imageUrlToFileUriString(context, posterImageUrl)
-        backdropImageUriString = imageUrlToFileUriString(context, backdropImageUrl)
-        return this
-    }
-
-    constructor() : this(
-        0,
-        "",
-        "",
-        "",
-        emptyList(),
-        emptyList(),
-        "",
-        emptyList(),
-        "",
-        0, "",
-        "",
-        "",
-        null,
-        null
-    )
+fun Movie.saveMainImages(context: Context) {
+    posterImageUriString = context.urlToFileUriString(posterImageUrl)
+    backdropImageUriString = context.urlToFileUriString(backdropImageUrl)
 }

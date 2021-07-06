@@ -5,6 +5,7 @@ import com.jokubas.mmdb.model.remote.repositories.CategoryRepository
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.remote.services.MovieService
 import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository
+import com.jokubas.mmdb.model.room.repositories.GenresRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
 import okhttp3.OkHttpClient
@@ -43,5 +44,9 @@ class MovieConfig(
                 httpClient = httpClientBuilder.build()
             )
         )
+    }
+
+    val genresRepository: GenresRepository by lazy {
+        GenresRepository(application)
     }
 }

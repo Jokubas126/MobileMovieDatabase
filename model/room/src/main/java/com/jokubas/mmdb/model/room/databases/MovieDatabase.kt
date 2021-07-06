@@ -4,12 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.jokubas.mmdb.model.data.entities.Movie
+import com.jokubas.mmdb.model.data.util.CountryListTypeConverter
+import com.jokubas.mmdb.model.data.util.IntListTypeConverter
 import com.jokubas.mmdb.model.room.dao.MovieDao
 
 private const val DATABASE = "movie"
 
 @Database(entities = [Movie::class], version = 7, exportSchema = false)
+@TypeConverters(value = [IntListTypeConverter::class, CountryListTypeConverter::class])
 abstract class MovieDatabase : RoomDatabase() {
 
     abstract fun movieDao(): MovieDao

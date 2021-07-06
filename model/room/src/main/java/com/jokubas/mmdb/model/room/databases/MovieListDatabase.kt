@@ -7,8 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import com.jokubas.mmdb.model.room.dao.MovieListDao
-import com.jokubas.mmdb.util.DateConverter
-import com.jokubas.mmdb.util.IntListTypeConverter
+import com.jokubas.mmdb.model.data.util.DateConverter
+import com.jokubas.mmdb.model.data.util.IntListTypeConverter
 
 private const val DATABASE = "movie_list"
 

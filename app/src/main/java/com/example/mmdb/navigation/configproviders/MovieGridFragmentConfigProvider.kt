@@ -11,7 +11,9 @@ import com.example.mmdb.navigation.actions.DetailsFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.ui.movielists.moviegrid.ItemMovieEventListener
 import com.example.mmdb.ui.movielists.moviegrid.MovieGridFragmentConfig
+import com.jokubas.mmdb.model.data.entities.Genre
 import com.jokubas.mmdb.model.data.entities.MovieResults
+import com.jokubas.mmdb.model.data.entities.mapGenres
 import kotlin.math.min
 
 const val MAX_MOVIES_FOR_PAGE = 20
@@ -27,9 +29,11 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
         val localMovieRepository = appConfig.movieConfig.roomMovieRepository
         val watchlistRepository = appConfig.movieConfig.watchlistRepository
         val customMovieListRepository = appConfig.movieConfig.customMovieListRepository
+        val genresRepository = appConfig.movieConfig.genresRepository
 
         return MovieGridFragmentConfig(
             provideMovies = { movieListType, page ->
+                val availableGenres: List<Genre> = genresRepository.getAllGenres()
                 when (movieListType) {
                     MovieListType.Remote.Popular,
                     MovieListType.Remote.TopRated,
@@ -69,6 +73,10 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
                         remoteMovieRepository.getTypeMovies(
                             page = page
                         )
+                    }
+                }.apply {
+                    movieList.forEach {
+                        it.mapGenres(availableGenres)
                     }
                 }
             },

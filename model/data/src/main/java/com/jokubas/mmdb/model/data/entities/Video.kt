@@ -6,9 +6,10 @@ import com.jokubas.mmdb.model.data.util.KEY_VIDEO_SITE
 import com.jokubas.mmdb.model.data.util.KEY_VIDEO_TYPE
 import com.jokubas.mmdb.util.constants.KEY_TRAILER_TYPE
 import com.jokubas.mmdb.util.constants.KEY_YOUTUBE_SITE
+import kotlinx.serialization.SerialName
 
 class VideoResults(
-    @SerializedName(KEY_RESULT_LIST)
+    @SerialName(KEY_RESULT_LIST)
     val videoList: List<Video>
 )
 
@@ -16,10 +17,10 @@ data class Video(
     val key: String,
     val name: String,
 
-    @SerializedName(KEY_VIDEO_SITE)
+    @SerialName(KEY_VIDEO_SITE)
     val siteType: String,
 
-    @SerializedName(KEY_VIDEO_TYPE)
+    @SerialName(KEY_VIDEO_TYPE)
     val videoType: String
 )
 
