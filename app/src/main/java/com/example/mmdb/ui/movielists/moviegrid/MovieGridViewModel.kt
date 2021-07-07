@@ -99,15 +99,15 @@ class MovieGridViewModel(
                 page
             ).apply {
 
-                val itemMovieViewModelList = movieList.mapIndexed { index, movie ->
-                    movie.toItemMovieViewModel(
+                val itemMovieViewModelList = movieList.mapIndexed { index, movieSummary ->
+                    movieSummary.toItemMovieViewModel(
                         position = index,
                         itemMovieEventListener = config.itemMovieEventListener.invoke(
-                            movie.id,
+                            movieSummary.id,
                             action.movieListType is MovieListType.Remote
                         ),
                         page = page,
-                        isInWatchlist = watchlist.value?.any { it.movieId == movie.id } ?: false,
+                        isInWatchlist = watchlist.value?.any { it.movieId == movieSummary.id } ?: false,
                         isRemote = action.movieListType is MovieListType.Remote
                     )
                 }

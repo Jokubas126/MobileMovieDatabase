@@ -2,9 +2,8 @@ package com.jokubas.mmdb.model.data.entities
 
 import android.content.Context
 import androidx.room.*
-import com.google.gson.annotations.SerializedName
 import com.jokubas.mmdb.model.data.util.*
-import com.jokubas.mmdb.util.extensions.urlToFileUriString
+import com.jokubas.mmdb.util.extensions.imageUrlToFileUriString
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -12,34 +11,29 @@ import kotlinx.serialization.Serializable
 @Entity(tableName = "images")
 class Images(
     @PrimaryKey(autoGenerate = false)
-    var movieRoomId: Int,
+    var movieRoomId: Int = 0,
 
     @TypeConverters(ImageListTypeConverter::class)
     @ColumnInfo(name = KEY_LOCAL_POSTER_LIST)
     @SerialName(KEY_POSTER_LIST)
-    val posterList: List<Image>?,
+    val posterList: List<Image> = emptyList(),
 
     @TypeConverters(ImageListTypeConverter::class)
     @ColumnInfo(name = KEY_LOCAL_BACKDROP_LIST)
     @SerialName(KEY_BACKDROP_LIST)
-    val backdropList: List<Image>?
+    val backdropList: List<Image> = emptyList()
 ) {
     fun generateFileUris(context: Context): Images {
         if (!posterList.isNullOrEmpty())
             for (poster in posterList)
-                poster.imageUriString = context.urlToFileUriString(poster.imageUrl)
+                poster.imageUriString = context.imageUrlToFileUriString(poster.imageUrl)
 
         if (!backdropList.isNullOrEmpty())
             for (backdrop in backdropList)
-                backdrop.imageUriString = context.urlToFileUriString(backdrop.imageUrl)
+                backdrop.imageUriString = context.imageUrlToFileUriString(backdrop.imageUrl)
 
         return this
     }
-    constructor() : this(
-        movieRoomId = 0,
-        posterList = emptyList(),
-        backdropList = emptyList()
-    )
 }
 
 @Serializable

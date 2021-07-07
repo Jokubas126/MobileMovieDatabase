@@ -14,6 +14,7 @@ import com.example.mmdb.ui.movielists.moviegrid.MovieGridFragmentConfig
 import com.jokubas.mmdb.model.data.entities.Genre
 import com.jokubas.mmdb.model.data.entities.MovieResults
 import com.jokubas.mmdb.model.data.entities.mapGenres
+import com.jokubas.mmdb.model.data.entities.toMovieSummary
 import kotlin.math.min
 
 const val MAX_MOVIES_FOR_PAGE = 20
@@ -65,7 +66,7 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
                             movieList = watchlistMovies.subList(
                                 page * MAX_MOVIES_FOR_PAGE - MAX_MOVIES_FOR_PAGE,
                                 min(page * MAX_MOVIES_FOR_PAGE, watchlistMovies.size)
-                            ),
+                            ).map { it.toMovieSummary() },
                             totalPages = watchlistMovies.size / MAX_MOVIES_FOR_PAGE + 1
                         )
                     }

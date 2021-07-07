@@ -2,9 +2,10 @@ package com.example.mmdb.ui.movielists.moviegrid
 
 import androidx.databinding.ObservableBoolean
 import com.jokubas.mmdb.model.data.entities.Movie
+import com.jokubas.mmdb.model.data.entities.MovieSummary
 
 data class ItemMovieViewModel(
-    val movie: Movie,
+    val movie: MovieSummary,
     val position: Int,
     val eventListener: ItemMovieEventListener,
     val page: Int? = null,//TODO not sure if it should actually be nullable (check offline lists)
@@ -17,7 +18,7 @@ data class ItemMovieViewModel(
     }
 }
 
-fun Movie.toItemMovieViewModel(
+fun MovieSummary.toItemMovieViewModel(
     position: Int,
     itemMovieEventListener: ItemMovieEventListener,
     page: Int? = null,

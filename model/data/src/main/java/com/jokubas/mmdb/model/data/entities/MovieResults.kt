@@ -11,7 +11,7 @@ class MovieResults(
     val page: Int,
 
     @SerialName(KEY_RESULT_LIST)
-    val movieList: List<Movie>,
+    val movieList: List<MovieSummary>,
 
     @SerialName(KEY_TOTAL_PAGES)
     val totalPages: Int

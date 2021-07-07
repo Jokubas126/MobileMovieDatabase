@@ -7,13 +7,20 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.data.util.CountryListTypeConverter
+import com.jokubas.mmdb.model.data.util.GenreListTypeConverter
 import com.jokubas.mmdb.model.data.util.IntListTypeConverter
 import com.jokubas.mmdb.model.room.dao.MovieDao
 
 private const val DATABASE = "movie"
 
 @Database(entities = [Movie::class], version = 7, exportSchema = false)
-@TypeConverters(value = [IntListTypeConverter::class, CountryListTypeConverter::class])
+@TypeConverters(
+    value = [
+        IntListTypeConverter::class,
+        CountryListTypeConverter::class,
+        GenreListTypeConverter::class
+    ]
+)
 abstract class MovieDatabase : RoomDatabase() {
 
     abstract fun movieDao(): MovieDao
@@ -31,10 +38,10 @@ abstract class MovieDatabase : RoomDatabase() {
 
         private fun buildDatabase(context: Context): MovieDatabase {
             return Room.databaseBuilder(
-                    context.applicationContext,
-                    MovieDatabase::class.java,
-                    DATABASE
-                )
+                context.applicationContext,
+                MovieDatabase::class.java,
+                DATABASE
+            )
                 .fallbackToDestructiveMigration()
                 .build()
         }

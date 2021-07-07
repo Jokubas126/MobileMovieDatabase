@@ -3,10 +3,9 @@ package com.jokubas.mmdb.model.data.entities
 import android.content.Context
 import androidx.room.*
 import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
 import com.jokubas.mmdb.model.data.util.*
-import com.jokubas.mmdb.util.extensions.urlToFileUriString
+import com.jokubas.mmdb.util.extensions.imageUrlToFileUriString
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.lang.reflect.Type
@@ -34,12 +33,12 @@ class Credits(
         if (!castList.isNullOrEmpty())
             for (cast in castList)
                 if (!cast.profileImageUrl.isNullOrBlank())
-                    cast.profileImageUriString = context.urlToFileUriString(cast.profileImageUrl)
+                    cast.profileImageUriString = context.imageUrlToFileUriString(cast.profileImageUrl)
 
         if (!crewList.isNullOrEmpty())
             for (crew in crewList)
                 if (!crew.profileImageUrl.isNullOrBlank())
-                    crew.profileImageUriString = context.urlToFileUriString(crew.profileImageUrl)
+                    crew.profileImageUriString = context.imageUrlToFileUriString(crew.profileImageUrl)
         return this
     }
 }

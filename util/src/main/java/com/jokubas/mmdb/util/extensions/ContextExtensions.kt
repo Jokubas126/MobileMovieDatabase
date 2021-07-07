@@ -13,6 +13,19 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 
+fun Context.imageUrlToFileUriString(url: String?): String? {
+    return if (!url.isNullOrBlank()) {
+        try {
+            val connection = URL(BASE_IMAGE_URL + url).openConnection() as HttpURLConnection
+            connection.connect()
+            val file = this.saveBitmapToFile(BitmapFactory.decodeStream(connection.inputStream))
+            Uri.parse(file?.absolutePath).toString()
+        } catch (e: Exception) {
+            null
+        }
+    } else null
+}
+
 fun Context.saveBitmapToFile(bitmap: Bitmap?): File? {
     return bitmap?.let {
         ContextWrapper(this).getDir("images", Context.MODE_PRIVATE)?.let { parentFile ->
@@ -24,21 +37,4 @@ fun Context.saveBitmapToFile(bitmap: Bitmap?): File? {
             file
         }
     }
-}
-
-fun Context.urlToFileUriString(url: String?): String? {
-    return if (!url.isNullOrBlank()) {
-        try {
-            val connection: HttpURLConnection =
-                URL(BASE_IMAGE_URL + url).openConnection() as HttpURLConnection
-            connection.connect()
-            val inputStream = connection.inputStream
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            val file = this.saveBitmapToFile(bitmap)
-            Uri.parse(file?.absolutePath).toString()
-        } catch (e: Exception) {
-            null
-        }
-    } else
-        null
 }

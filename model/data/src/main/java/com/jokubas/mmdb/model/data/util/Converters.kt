@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jokubas.mmdb.model.data.entities.Country
+import com.jokubas.mmdb.model.data.entities.Genre
 import com.jokubas.mmdb.model.data.entities.Image
 import java.lang.reflect.Type
 import java.util.*
@@ -72,6 +73,22 @@ class CountryListTypeConverter {
         if (string == null)
             return Collections.emptyList()
         val listType: Type = object : TypeToken<List<Country?>?>() {}.type
+        return Gson().fromJson(string, listType)
+    }
+}
+
+class GenreListTypeConverter {
+
+    @TypeConverter
+    fun genreListToString(genreList: List<Genre>): String? {
+        return Gson().toJson(genreList)
+    }
+
+    @TypeConverter
+    fun stringToGenreList(string: String?): List<Genre>? {
+        if (string == null)
+            return Collections.emptyList()
+        val listType: Type = object : TypeToken<List<Genre?>?>() {}.type
         return Gson().fromJson(string, listType)
     }
 }
