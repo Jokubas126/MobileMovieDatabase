@@ -66,6 +66,9 @@ dependencies {
     implementation "androidx.cardview:cardview:$cardViewVersion"
     implementation "com.etsy.android.grid:library:$gridLayoutVersion"
 
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$retrofit_kotlin_converter"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofit_adapter_coroutines"
+
     implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:$youtubePlayerVersion"
 
     implementation project(':model:data')
