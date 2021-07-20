@@ -14,8 +14,11 @@ import com.example.mmdb.ui.movielists.moviegrid.MovieGridFragmentConfig
 import com.jokubas.mmdb.model.data.entities.Genre
 import com.jokubas.mmdb.model.data.entities.MovieResults
 import com.jokubas.mmdb.model.data.entities.mapGenres
-import com.jokubas.mmdb.model.data.entities.toMovieSummary
-import kotlin.math.min
+import com.jokubas.mmdb.util.DataResponse
+import com.jokubas.mmdb.util.toDataResponseFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 
 const val MAX_MOVIES_FOR_PAGE = 20
 
@@ -40,15 +43,15 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
                     MovieListType.Remote.TopRated,
                     MovieListType.Remote.Upcoming,
                     MovieListType.Remote.NowPlaying -> {
-                        remoteMovieRepository.getTypeMovies(
+                        remoteMovieRepository.typeMovies(
                             listType = movieListType.key,
-                            page = page
+                            pageFlow = page
                         )
                     }
                     is MovieListType.Remote.Discover -> {
                         with(movieListType) {
-                            remoteMovieRepository.getDiscoveredMovies(
-                                page = page,
+                            remoteMovieRepository.discoveredMovies(
+                                pageFlow = page,
                                 startYear = startYear,
                                 endYear = endYear,
                                 genreKeys = genreKeys,
@@ -57,26 +60,19 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
                         }
                     }
                     is MovieListType.Remote.Watchlist -> {
-                        val watchlist = watchlistRepository.getWatchlistNow()
-                        val watchlistMovies = remoteMovieRepository.getMoviesFromIdList(
-                            watchlist.map { it.movieId }
-                        )
-                        MovieResults(
-                            page = page,
-                            movieList = watchlistMovies.subList(
-                                page * MAX_MOVIES_FOR_PAGE - MAX_MOVIES_FOR_PAGE,
-                                min(page * MAX_MOVIES_FOR_PAGE, watchlistMovies.size)
-                            ).map { it.toMovieSummary() },
-                            totalPages = watchlistMovies.size / MAX_MOVIES_FOR_PAGE + 1
+                        remoteMovieRepository.moviesFromIdFlow(
+                            idFlow = watchlistRepository.getWatchlistIdsFlow(),
+                            pageFlow = page,
+                            maxPerPage = MAX_MOVIES_FOR_PAGE
                         )
                     }
                     else -> {
-                        remoteMovieRepository.getTypeMovies(
-                            page = page
+                        remoteMovieRepository.typeMovies(
+                            pageFlow = page
                         )
                     }
-                }.apply {
-                    movieList.forEach {
+                }.onEach { response ->
+                    (response as? DataResponse.Success<MovieResults>)?.value?.movieList?.forEach {
                         it.mapGenres(availableGenres)
                     }
                 }

@@ -26,9 +26,11 @@ class WatchlistRepository(application: Application) : CoroutineScope {
         }
     }
 
-    fun getWatchlistNow() = watchlistMovieDao.getWatchlistNow()
+    suspend fun getWatchlistNow() = watchlistMovieDao.getWatchlistNow()
 
     fun getWatchlistFlow() = watchlistMovieDao.getWatchlistFlow()
+
+    fun getWatchlistIdsFlow() = watchlistMovieDao.getWatchlistIdsFlow()
 
     fun deleteWatchlistMovie(id: Int) {
         launch { deleteWatchlistMovieBG(id) }

@@ -91,15 +91,15 @@ class AddToListsTaskManager(
         }
     }
 
-    private suspend fun getImages(movie: Movie) =
-        remoteMovieRepository.getImages(movie.id).apply {
-            generateFileUris(application)
-        }
-
-    private suspend fun getCredits(movie: Movie) =
-        remoteMovieRepository.getCredits(movie.id)?.apply {
-            generateFileUris(application)
-        }
+//    private suspend fun getImages(movie: Movie) =
+//        remoteMovieRepository.images(movie.id).apply {
+//            generateFileUris(application)
+//        }
+//
+//    private suspend fun getCredits(movie: Movie) =
+//        remoteMovieRepository.getCredits(movie.id)?.apply {
+//            generateFileUris(application)
+//        }
 
 
     private fun onMovieInserted() {

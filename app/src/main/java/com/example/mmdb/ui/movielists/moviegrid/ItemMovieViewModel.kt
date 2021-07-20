@@ -1,7 +1,6 @@
 package com.example.mmdb.ui.movielists.moviegrid
 
 import androidx.databinding.ObservableBoolean
-import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.model.data.entities.MovieSummary
 
 data class ItemMovieViewModel(

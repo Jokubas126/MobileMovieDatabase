@@ -11,10 +11,13 @@ interface WatchlistMovieDao {
     fun insertOrUpdateMovie(watchlistMovie: WatchlistMovie): Long
 
     @Query("SELECT * FROM Watchlist")
-    fun getWatchlistNow(): List<WatchlistMovie>
+    suspend fun getWatchlistNow(): List<WatchlistMovie>
 
     @Query("SELECT * FROM Watchlist")
     fun getWatchlistFlow(): Flow<List<WatchlistMovie>>
+
+    @Query("SELECT movieId FROM Watchlist")
+    fun getWatchlistIdsFlow(): Flow<List<Int>>
 
     @Query("DELETE FROM Watchlist WHERE movieId = :movieId")
     fun deleteMovieById(movieId: Int)

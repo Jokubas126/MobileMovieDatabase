@@ -1,6 +1,5 @@
 package com.jokubas.mmdb.model.data.entities
 
-import androidx.room.ColumnInfo
 import com.jokubas.mmdb.model.data.util.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

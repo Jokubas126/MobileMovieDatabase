@@ -68,16 +68,16 @@
                                 android:onClick="@{() -> viewModel.onWatchlistClicked()}"
                                 tools:ignore="ContentDescription" />
 
-                            <ImageButton
+                            <!--<ImageButton
                                 android:id="@+id/playlist_add_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="7dp"
                                 android:background="@drawable/ic_playlist_add"
                                 android:onClick="@{() -> viewModel.eventListener.onCustomListSelected.invoke()}"
-                                tools:ignore="ContentDescription" />
+                                tools:ignore="ContentDescription" />-->
 
-                            <ImageButton
+                            <!--<ImageButton
                                 android:id="@+id/delete_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
                                 android:background="@drawable/ic_delete"
                                 android:onClick="@{() -> viewModel.eventListener.onDeleteSelected.invoke()}"
                                 android:visibility="@{viewModel.isRemote ? View.GONE : View.VISIBLE}"
-                                tools:ignore="ContentDescription" />
+                                tools:ignore="ContentDescription" />-->
 
                         </LinearLayout>
                     </FrameLayout>

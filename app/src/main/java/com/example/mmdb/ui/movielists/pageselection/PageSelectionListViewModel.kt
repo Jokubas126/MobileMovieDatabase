@@ -7,13 +7,20 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableInt
 import com.example.mmdb.BR
 import com.example.mmdb.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
-class PageSelectionListViewModel(private val onSelected: (pageNumber: Int) -> Unit) {
+class PageSelectionListViewModel(collectCoroutineScope: CoroutineScope) {
 
     val pageSelectionListVisibility: ObservableInt = ObservableInt(View.GONE)
 
-    val currentPage: ObservableInt = ObservableInt(1)
+    private val _currentPage: MutableStateFlow<Int> = MutableStateFlow(1)
+    val currentPage: StateFlow<Int>
+        get() = _currentPage
 
     private val totalPages: ObservableInt = ObservableInt(1)
 
@@ -23,12 +30,13 @@ class PageSelectionListViewModel(private val onSelected: (pageNumber: Int) -> Un
         ItemBinding.of(BR.viewModel, R.layout.item_page)
 
     init {
-        currentPage.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+        collectCoroutineScope.launch {
+            currentPage.collect { page ->
                 itemsPage.find { it.isCurrentPage.get() }?.isCurrentPage?.set(false)
-                itemsPage.find { it.pageNumber == currentPage.get() }?.isCurrentPage?.set(true)
+                itemsPage.find { it.pageNumber == currentPage.value }?.isCurrentPage?.set(true)
             }
-        })
+
+        }
         totalPages.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
                 itemsPage.removeAll { true }
@@ -42,16 +50,18 @@ class PageSelectionListViewModel(private val onSelected: (pageNumber: Int) -> Un
             itemsPage.add(
                 ItemPageViewModel(
                     pageNumber = it,
-                    isCurrentPage = ObservableBoolean(it == currentPage.get()),
-                    onSelected = onSelected
+                    isCurrentPage = ObservableBoolean(it == currentPage.value),
+                    onSelected = { pageNumber ->
+                        _currentPage.value = pageNumber
+                    }
                 )
             )
         }
     }
 
     fun update(currentPage: Int, totalPages: Int) {
-        if (this.currentPage.get() != currentPage)
-            this.currentPage.set(currentPage)
+        if (this.currentPage.value != currentPage)
+            this._currentPage.value = currentPage
 
         if (this.totalPages.get() != totalPages)
             this.totalPages.set(totalPages)
