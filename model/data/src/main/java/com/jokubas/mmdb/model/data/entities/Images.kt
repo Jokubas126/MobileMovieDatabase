@@ -6,43 +6,42 @@ import com.jokubas.mmdb.model.data.util.*
 import com.jokubas.mmdb.util.extensions.imageUrlToFileUriString
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 @Entity(tableName = "images")
 class Images(
+    @SerialName("id")
     @PrimaryKey(autoGenerate = false)
-    var movieRoomId: Int = 0,
+    val id: Int,
 
     @TypeConverters(ImageListTypeConverter::class)
-    @ColumnInfo(name = KEY_LOCAL_POSTER_LIST)
-    @SerialName(KEY_POSTER_LIST)
+    @ColumnInfo(name = "posters")
+    @SerialName("posters")
     val posterList: List<Image> = emptyList(),
 
     @TypeConverters(ImageListTypeConverter::class)
-    @ColumnInfo(name = KEY_LOCAL_BACKDROP_LIST)
-    @SerialName(KEY_BACKDROP_LIST)
+    @ColumnInfo(name = "backdrops")
+    @SerialName("backdrops")
     val backdropList: List<Image> = emptyList()
 ) {
-    fun generateFileUris(context: Context): Images {
-        if (!posterList.isNullOrEmpty())
-            for (poster in posterList)
-                poster.imageUriString = context.imageUrlToFileUriString(poster.imageUrl)
-
-        if (!backdropList.isNullOrEmpty())
-            for (backdrop in backdropList)
-                backdrop.imageUriString = context.imageUrlToFileUriString(backdrop.imageUrl)
-
-        return this
+    fun generateFileUris(context: Context) {
+        posterList.forEach {
+            it.imageUriString = context.imageUrlToFileUriString(it.imageUrl)
+        }
+        backdropList.forEach {
+            it.imageUriString = context.imageUrlToFileUriString(it.imageUrl)
+        }
     }
 }
 
 @Serializable
 data class Image(
     @Ignore
-    @SerialName(KEY_IMAGE_URL)
-    val imageUrl: String?,
-
-    @ColumnInfo(name = KEY_IMAGE_URI_STRING)
-    var imageUriString: String?
-)
-
+    @SerialName("file_path")
+    val imageUrl: String?
+) {
+    @Transient
+    @ColumnInfo(name = "image_uri_string")
+    var imageUriString: String? = null
+}

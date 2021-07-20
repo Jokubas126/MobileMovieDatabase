@@ -5,8 +5,6 @@ import com.example.mmdb.config.AppConfig
 import com.example.mmdb.extensions.requireAppConfig
 import com.example.mmdb.navigation.ConfigProvider
 import com.example.mmdb.ui.details.innerdetails.overview.OverviewConfig
-import com.example.mmdb.ui.details.innerdetails.overview.OverviewInfo
-import com.jokubas.mmdb.util.DataResponse
 
 class OverviewConfigProvider : ConfigProvider<OverviewConfig> {
     override fun config(fragment: Fragment): OverviewConfig {
@@ -16,18 +14,9 @@ class OverviewConfigProvider : ConfigProvider<OverviewConfig> {
 
         return OverviewConfig(
             provideOverviewInfo = { movieId, isRemote ->
-                if(isRemote) {
-                    when {
-                        appConfig.networkCheckConfig.isNetworkAvailable() -> {
-                            val movie = remoteMovieRepository.getMovieById(movieId)
-                            DataResponse.Success(OverviewInfo(movie))
-                        }
-                        else -> {
-                            appConfig.networkCheckConfig.networkUnavailableNotification()
-                            DataResponse.Error()
-                        }
-                    }
-                } else DataResponse.Empty
+                //if(isRemote) {
+                    remoteMovieRepository.movieByIdFlow(movieId)
+                //}
 
                 //TODO implement local movie data fetching
                 /*roomMovieRepository.getMovieById(movieId)?.let { movie ->

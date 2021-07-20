@@ -96,31 +96,31 @@ class RemoteMovieRepository(
 
     suspend fun getGenres() = service.genres(MOVIE_DB_API_KEY)
 
-    suspend fun getImages(movieId: Int) =
-        service.getImages(
+    suspend fun imagesFlow(movieId: Int) = dataResponseFlow {
+        service.images(
             movieId.toString(),
             MOVIE_DB_API_KEY,
             MOVIE_DB_IMAGE_LANGUAGE_EN
         )
+    }
 
-    suspend fun getVideo(movieId: Int) =
-        service.getVideo(
+    suspend fun videoFlow(movieId: Int) = dataResponseFlow {
+        service.video(
             movieId.toString(),
             MOVIE_DB_API_KEY,
             MOVIE_DB_IMAGE_LANGUAGE_EN
         )
+    }
 
-    suspend fun getCredits(movieId: Int) = service.getCredits(
+    suspend fun getCredits(movieId: Int) = service.credits(
         movieId.toString(),
         MOVIE_DB_API_KEY
     )
 
-    fun getCreditsFlow(movieId: Int) = flow {
-        service.getCredits(
+    suspend fun creditsFlow(movieId: Int) = dataResponseFlow {
+        service.credits(
             movieId.toString(),
             MOVIE_DB_API_KEY
-        )?.let { credits ->
-            emit(DataResponse.Success(credits))
-        } ?: DataResponse.Error("Credits not found")
+        )
     }
 }

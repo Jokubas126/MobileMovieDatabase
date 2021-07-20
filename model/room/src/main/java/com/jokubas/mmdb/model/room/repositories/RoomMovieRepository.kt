@@ -10,9 +10,12 @@ import com.jokubas.mmdb.model.room.databases.CreditsDatabase
 import com.jokubas.mmdb.model.room.databases.ImagesDatabase
 import com.jokubas.mmdb.model.room.databases.MovieDatabase
 import com.jokubas.mmdb.util.DataResponse
+import com.jokubas.mmdb.util.toDataResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -36,23 +39,28 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
         credits: Credits,
         customMovieList: CustomMovieList
     ) {
-        val movieRoomId = movieDao.insertOrUpdateMovie(movie).toInt()
-        images.movieRoomId = movieRoomId
-        credits.movieRoomId = movieRoomId
+        movieDao.insertOrUpdateMovie(movie)
         imagesDao.insertOrUpdateImages(images)
         creditsDao.insertOrUpdateCredits(credits)
-        movieListRepository.addMovieToMovieList(customMovieList, movieRoomId)
+        movieListRepository.addMovieToMovieList(customMovieList, movie.id)
     }
 
     // -------- GETTERS --------//
 
-    suspend fun getImagesById(movieId: Int) = imagesDao.getImagesById(movieId)
-
-    fun getCreditsFlowById(movieId: Int) = flow {
-        creditsDao.getCreditsById(movieId)?.let { credits ->
-            emit(DataResponse.Success(credits))
-        } ?: DataResponse.Error("No credits found")
+    suspend fun imagesFlow(movieId: Int) = imagesDao.images(movieId).mapNotNull { images ->
+        DataResponse.Success(
+            value = images
+        ).takeUnless { it.value?.posterList.isNullOrEmpty() && it.value?.backdropList.isNullOrEmpty() }
+            ?: DataResponse.Error()
     }
+
+    suspend fun creditsFlow(movieId: Int) =
+        creditsDao.credits(movieId).mapNotNull { credits ->
+            DataResponse.Success(
+                value = credits
+            ).takeUnless { it.value?.castList.isNullOrEmpty() && it.value?.crewList.isNullOrEmpty() }
+                ?: DataResponse.Error()
+        }
 
     suspend fun getMovieById(movieId: Int) = movieDao.getMovieById(movieId)
 
@@ -66,10 +74,10 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
     }
 
     private suspend fun deleteMovieByIdBG(movieId: Int) {
-        withContext(Dispatchers.Default) {
-            deleteImageFiles(imagesDao.getImagesById(movieId))
+        withContext(Dispatchers.IO) {
+            imagesDao.imagesNow(movieId)?.let { deleteImageFiles(it) }
             imagesDao.deleteImagesByMovieId(movieId)
-            creditsDao.getCreditsById(movieId)?.let { deleteCreditsFiles(it) }
+            creditsDao.creditsNow(movieId)?.let { deleteCreditsFiles(it) }
             creditsDao.deleteCreditsByMovieId(movieId)
             movieDao.getMovieById(movieId)?.let { deleteMovieFiles(it) }
             movieDao.deleteMovieById(movieId)
@@ -79,22 +87,18 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
     private fun deleteMovieFiles(movie: Movie) {
         movie.posterImageUriString?.let {
             com.jokubas.mmdb.util.deleteFile(
-                File(
-                    Uri.parse(it).path!!
-                )
+                File(Uri.parse(it).path!!)
             )
         }
         movie.backdropImageUriString?.let {
             com.jokubas.mmdb.util.deleteFile(
-                File(
-                    Uri.parse(it).path!!
-                )
+                File(Uri.parse(it).path!!)
             )
         }
     }
 
     private fun deleteImageFiles(images: Images) {
-        images.posterList?.let { posterList ->
+        images.posterList.let { posterList ->
             for (poster in posterList)
                 poster.imageUriString?.let {
                     com.jokubas.mmdb.util.deleteFile(
@@ -102,7 +106,7 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
                     )
                 }
         }
-        images.backdropList?.let { backdropList ->
+        images.backdropList.let { backdropList ->
             for (backdrop in backdropList)
                 backdrop.imageUriString?.let {
                     com.jokubas.mmdb.util.deleteFile(

@@ -16,8 +16,8 @@ class CreditsConfigProvider : ConfigProvider<CreditsConfig> {
         return CreditsConfig(
             provideCreditsDataFlow = { isRemote, movieId ->
                 if (isRemote) {
-                    remoteMovieRepository.getCreditsFlow(movieId)
-                } else roomMovieRepository.getCreditsFlowById(movieId)
+                    remoteMovieRepository.creditsFlow(movieId)
+                } else roomMovieRepository.creditsFlow(movieId)
             }
         )
     }

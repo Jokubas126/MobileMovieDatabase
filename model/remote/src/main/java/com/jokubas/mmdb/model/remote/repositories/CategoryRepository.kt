@@ -4,7 +4,6 @@ import com.jokubas.mmdb.model.data.entities.*
 import com.jokubas.mmdb.model.remote.services.MovieService
 import com.jokubas.mmdb.util.constants.MOVIE_DB_API_KEY
 import kotlinx.coroutines.flow.flow
-import java.util.Collections.sort
 
 class CategoryRepository(
     private val service: MovieService
@@ -14,27 +13,17 @@ class CategoryRepository(
         emit(listOf(getGenresCategory(), getLanguagesCategory()))
     }
 
-    private suspend fun getLanguagesCategory(): Category {
-        val languages = service.getLanguages(MOVIE_DB_API_KEY)
-        return Category(CategoryType.LANGUAGES, formatSubcategories(languages))
-    }
+    private suspend fun getLanguagesCategory(): Category =
+        Category(
+            type = CategoryType.LANGUAGES,
+            subcategoryList = service.languages(MOVIE_DB_API_KEY).sortedBy { it.name }
+        )
 
-    private suspend fun getGenresCategory(): Category {
-        val genres = service.getGenres(MOVIE_DB_API_KEY)
-        val subcategoryList = genresToSubcategoryList(genres)
-        return Category(CategoryType.GENRES, formatSubcategories(subcategoryList))
-    }
-
-    private fun genresToSubcategoryList(genres: Genres): List<Subcategory> {
-        val subcategoryList = mutableListOf<Subcategory>()
-        for (genre in genres.genreList) {
-            subcategoryList.add(Subcategory(genre.id.toString(), genre.name))
-        }
-        return subcategoryList
-    }
-
-    private fun formatSubcategories(list: List<Subcategory>): List<Subcategory> {
-        sort(list) { o1: Subcategory, o2: Subcategory -> o1.name.compareTo(o2.name) }
-        return list
-    }
+    private suspend fun getGenresCategory(): Category =
+        Category(
+            type = CategoryType.GENRES,
+            subcategoryList = service.genres(MOVIE_DB_API_KEY).genreList.map {
+                Subcategory(it.id.toString(), it.name)
+            }.sortedBy { it.name }
+        )
 }

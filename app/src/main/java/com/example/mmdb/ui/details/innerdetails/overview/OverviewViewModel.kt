@@ -7,6 +7,7 @@ import com.jokubas.mmdb.model.data.entities.Movie
 import com.jokubas.mmdb.util.DataResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class OverviewViewModel(
@@ -22,17 +23,20 @@ class OverviewViewModel(
     val progressManager = ProgressManager()
 
     init {
-        CoroutineScope(Dispatchers.IO).launch {
-            progressManager.loading()
-
-            when (val response = config.provideOverviewInfo.invoke(action.movieId, action.isRemote)){
-                is DataResponse.Success<*> -> {
-                    (response.value as? OverviewInfo)?.let {
-                        _currentMovie.postValue(it.movie)
-                        progressManager.loaded()
-                    } ?: progressManager.error()
+        viewModelScope.launch(Dispatchers.IO) {
+            config.provideOverviewInfo.invoke(action.movieId, action.isRemote).collect { response ->
+                when (response) {
+                    is DataResponse.Success<Movie> -> {
+                        response.body()?.let {
+                            _currentMovie.postValue(it)
+                            progressManager.success()
+                        } ?: progressManager.error()
+                    }
+                    is DataResponse.Error -> progressManager.error()
+                    is DataResponse.Loading -> progressManager.loading()
+                    else -> progressManager.error()
                 }
-                is DataResponse.Error -> progressManager.error()
+
             }
         }
     }

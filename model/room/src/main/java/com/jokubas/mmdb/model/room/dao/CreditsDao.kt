@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.jokubas.mmdb.model.data.entities.Credits
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CreditsDao {
@@ -12,9 +13,12 @@ interface CreditsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrUpdateCredits(credits: Credits): Long
 
-    @Query("SELECT * FROM credits WHERE movieRoomId = :movieId")
-    suspend fun getCreditsById(movieId: Int): Credits?
+    @Query("SELECT * FROM credits WHERE id = :movieId")
+    fun credits(movieId: Int): Flow<Credits?>
 
-    @Query("DELETE FROM credits WHERE movieRoomId = :movieId")
+    @Query("SELECT * FROM credits WHERE id = :movieId")
+    suspend fun creditsNow(movieId: Int): Credits?
+
+    @Query("DELETE FROM credits WHERE id = :movieId")
     fun deleteCreditsByMovieId(movieId: Int)
 }

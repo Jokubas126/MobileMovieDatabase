@@ -20,21 +20,17 @@ class MediaFragment : Fragment() {
     private val action: InnerDetailsAction.Media by action()
     private val config: MediaConfig by config()
 
-    private val mediaViewModel: MediaViewModel by lazy {
-        ViewModelProvider(
-            this,
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = FragmentMovieMediaBinding.inflate(inflater, container, false).apply {
+        viewModel = ViewModelProvider(
+            this@MediaFragment,
             MediaViewModelFactory(
                 action = action,
                 config = config
             )
         ).get(MediaViewModel::class.java)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = FragmentMovieMediaBinding.inflate(inflater, container, false).apply {
-        viewModel = mediaViewModel
         lifecycleOwner = this@MediaFragment
     }.root
 

@@ -11,7 +11,7 @@ class CustomMovieListRepository(application: Application) : CoroutineScope {
         get() = Dispatchers.Main
 
     private val movieListDao = MovieListDatabase.getInstance(application)
-            .movieListDao()
+        .movieListDao()
 
     suspend fun insertOrUpdateMovieList(movieList: CustomMovieList) {
         movieList.updateDate = com.jokubas.mmdb.util.getCurrentDate()
@@ -19,13 +19,12 @@ class CustomMovieListRepository(application: Application) : CoroutineScope {
     }
 
     suspend fun addMovieToMovieList(movieList: CustomMovieList, movieRoomId: Int) {
-        movieList.movieIdList =
-            movieList.movieIdList?.let {
-                val list = mutableListOf<Int>()
-                list.addAll(it)
-                list.add(movieRoomId)
-                list
-            } ?: listOf(movieRoomId)
+        movieList.movieIdList = movieList.movieIdList?.let {
+            val list = mutableListOf<Int>()
+            list.addAll(it)
+            list.add(movieRoomId)
+            list
+        } ?: listOf(movieRoomId)
         insertOrUpdateMovieList(movieList)
     }
 

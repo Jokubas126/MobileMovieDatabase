@@ -1,18 +1,20 @@
 package com.jokubas.mmdb.model.data.entities
 
-import com.google.gson.annotations.SerializedName
 import com.jokubas.mmdb.model.data.util.KEY_RESULT_LIST
 import com.jokubas.mmdb.model.data.util.KEY_VIDEO_SITE
 import com.jokubas.mmdb.model.data.util.KEY_VIDEO_TYPE
 import com.jokubas.mmdb.util.constants.KEY_TRAILER_TYPE
 import com.jokubas.mmdb.util.constants.KEY_YOUTUBE_SITE
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 class VideoResults(
     @SerialName(KEY_RESULT_LIST)
     val videoList: List<Video>
 )
 
+@Serializable
 data class Video(
     val key: String,
     val name: String,
