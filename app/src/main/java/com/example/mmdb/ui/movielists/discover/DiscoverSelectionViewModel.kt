@@ -11,7 +11,7 @@ class DiscoverSelectionViewModel(
 
     val items = ObservableArrayList<ItemDiscoverSelectionViewModel>().apply {
         addAll(
-            discoverSelections.map {
+            discoverSelections.mapNotNull {
                 it?.let { ItemDiscoverSelectionViewModel(it) }
             }
         )

@@ -97,8 +97,8 @@ class DiscoverViewModel(
                 navigationController.goTo(
                     action = MovieGridFragmentAction(
                         MovieListType.Remote.Discover(
-                            startYear = if (startYear.get() == INITIAL_START_YEAR_VALUE) null
-                            else startYear.get().toString(),
+                            startYear = startYear.get().toString()
+                                .takeUnless { startYear.get() == INITIAL_START_YEAR_VALUE },
                             endYear = endYear.get().toString(),
                             genreKeys = genreSubcategory.map { it.code },
                             languageKeys = languageSubcategory.map { it.code }
