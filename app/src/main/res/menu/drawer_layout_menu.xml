@@ -23,9 +23,9 @@
                 <item
                     android:id="@+id/menu_watchlist"
                     android:title="Watchlist" />
-                <item
+                <!--<item
                     android:id="@+id/menu_custom_lists"
-                    android:title="Custom lists" />
+                    android:title="Custom lists" />-->
             </menu>
         </item>
 
