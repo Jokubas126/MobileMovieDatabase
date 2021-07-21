@@ -27,28 +27,7 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking {
         requireNavController()
     }
 
-    private val action: DiscoverFragmentAction by action()
     private val config: DiscoverFragmentConfig by config()
-
-    private val discoverViewModel: DiscoverViewModel by lazy {
-        ViewModelProvider(
-            this@DiscoverFragment,
-            DiscoverViewModelFactory(
-                appConfig = appConfig,
-                navigationController = navController,
-                action = action,
-                config = config,
-                toolbarViewModel = ToolbarViewModel(
-                    toolbarConfig = appConfig.toolbarConfig,
-                    navController = navController
-                ).apply {
-                    attachToNavigationController(
-                        fragmentManager = childFragmentManager
-                    )
-                }
-            )
-        ).get(DiscoverViewModel::class.java)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,17 +40,26 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking {
         savedInstanceState: Bundle?
     ): View {
         return FragmentDiscoverBinding.inflate(inflater, container, false).apply {
-            viewModel = discoverViewModel
+            viewModel = ViewModelProvider(
+                this@DiscoverFragment,
+                DiscoverViewModelFactory(
+                    config = config,
+                    toolbarViewModel = ToolbarViewModel(
+                        toolbarConfig = appConfig.toolbarConfig,
+                        navController = navController
+                    ).apply {
+                        attachToNavigationController(
+                            fragmentManager = childFragmentManager
+                        )
+                    }
+                )
+            ).get(DiscoverViewModel::class.java)
             lifecycleOwner = this@DiscoverFragment
         }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        rangeSlider.addOnChangeListener { slider, value, _ ->
-            discoverViewModel.onRangeSliderValueChanged(slider.activeThumbIndex == 0, value.toInt())
-        }
 
         setupToolbar()
     }

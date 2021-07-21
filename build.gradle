@@ -23,6 +23,7 @@ buildscript {
     ext.gridLayoutVersion = '1.0.5'
     ext.tatarkaBindingAdapterVersion = '4.0.0'
     ext.youtubePlayerVersion = '10.0.5'
+    ext.swiperefreshlayoutVersion = '1.1.0'
 
     repositories {
         google()

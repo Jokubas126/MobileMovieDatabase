@@ -48,7 +48,8 @@ dependencies {
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
-    implementation "com.android.support:design:$supportVersion"
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefreshlayoutVersion"
 
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
 
