@@ -1,6 +1,7 @@
 package com.example.mmdb.navigation.actions
 
 import android.os.Parcelable
+import com.jokubas.mmdb.model.data.entities.Subcategory
 import com.jokubas.mmdb.util.constants.*
 import kotlinx.android.parcel.Parcelize
 
@@ -29,8 +30,8 @@ sealed class MovieListType(val key: String = KEY_DEFAULT) : Parcelable {
         data class Discover(
             val startYear: String? = null,
             val endYear: String? = null,
-            val genreKeys: List<String?> = listOf(),
-            val languageKeys: List<String?> = listOf()
+            val genres: List<Subcategory> = emptyList(),
+            val languages: List<Subcategory> = emptyList()
         ) : Remote() {
 
             val discoverNameList =
@@ -38,8 +39,8 @@ sealed class MovieListType(val key: String = KEY_DEFAULT) : Parcelable {
                     startYear?.let { "From: $startYear" },
                     "To: $endYear"
                 )
-                    .plus(genreKeys)
-                    .plus(languageKeys)
+                    .plus(genres.map { it.name })
+                    .plus(languages.map { it.name })
         }
 
         @Parcelize

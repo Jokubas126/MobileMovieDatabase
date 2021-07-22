@@ -29,8 +29,8 @@ class DiscoverFragmentConfigProvider : ConfigProvider<DiscoverFragmentConfig> {
     private val startYear = MutableStateFlow(INITIAL_START_YEAR_VALUE)
     private val endYear = MutableStateFlow(INITIAL_END_YEAR_VALUE)
 
-    private var languageSubcategory = mutableListOf<Subcategory>()
-    private var genreSubcategory = mutableListOf<Subcategory>()
+    private var checkedLanguages = mutableListOf<Subcategory>()
+    private var checkedGenres = mutableListOf<Subcategory>()
 
     override fun config(fragment: Fragment): DiscoverFragmentConfig {
 
@@ -54,13 +54,13 @@ class DiscoverFragmentConfigProvider : ConfigProvider<DiscoverFragmentConfig> {
             onSubcategoryClicked = { categoryType: CategoryType, subcategory: Subcategory ->
                 if (subcategory.isChecked) {
                     when (categoryType) {
-                        CategoryType.LANGUAGES -> languageSubcategory.addSubcategory(subcategory)
-                        CategoryType.GENRES -> genreSubcategory.addSubcategory(subcategory)
+                        CategoryType.LANGUAGES -> checkedLanguages.addSubcategory(subcategory)
+                        CategoryType.GENRES -> checkedGenres.addSubcategory(subcategory)
                     }
                 } else {
                     when (categoryType) {
-                        CategoryType.LANGUAGES -> languageSubcategory.remove(subcategory)
-                        CategoryType.GENRES -> genreSubcategory.remove(subcategory)
+                        CategoryType.LANGUAGES -> checkedLanguages.remove(subcategory)
+                        CategoryType.GENRES -> checkedGenres.remove(subcategory)
                     }
                 }
             },
@@ -74,8 +74,8 @@ class DiscoverFragmentConfigProvider : ConfigProvider<DiscoverFragmentConfig> {
                                 startYear = startYear.value.toString()
                                     .takeUnless { startYear.value == INITIAL_START_YEAR_VALUE },
                                 endYear = endYear.value.toString(),
-                                genreKeys = genreSubcategory.map { it.code },
-                                languageKeys = languageSubcategory.map { it.code }
+                                genres = checkedGenres,
+                                languages = checkedLanguages
                             )
                         ),
                         animation = NavigationController.Animation.FromRight

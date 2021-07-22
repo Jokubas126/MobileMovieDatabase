@@ -54,8 +54,8 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
                                 pageFlow = page,
                                 startYear = startYear,
                                 endYear = endYear,
-                                genreKeys = genreKeys,
-                                languageKeys = languageKeys
+                                genreKeys = genres.map { it.code },
+                                languageKeys = languages.map { it.code }
                             )
                         }
                     }

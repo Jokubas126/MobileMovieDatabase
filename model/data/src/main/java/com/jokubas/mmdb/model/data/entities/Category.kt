@@ -1,11 +1,13 @@
 package com.jokubas.mmdb.model.data.entities
 
-import com.jokubas.mmdb.model.data.util.KEY_ENGLISH_NAME
+import android.os.Parcelable
 import com.jokubas.mmdb.model.data.util.KEY_LANGUAGE_ISO_CODE
+import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
-enum class CategoryType{
+enum class CategoryType {
     GENRES, LANGUAGES
 }
 
@@ -14,13 +16,16 @@ class Category(
     val subcategoryList: List<Subcategory>
 )
 
+@Parcelize
 @Serializable
 class Subcategory(
     @SerialName(KEY_LANGUAGE_ISO_CODE)
     val code: String,
 
-    @SerialName(KEY_ENGLISH_NAME)
+    @SerialName("english_name")
     val name: String
-){
-    var isChecked = false
+) : Parcelable {
+
+    @Transient
+    var isChecked: Boolean = false
 }

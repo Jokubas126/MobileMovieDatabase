@@ -14,7 +14,7 @@ interface CreditsDao {
     fun insertOrUpdateCredits(credits: Credits): Long
 
     @Query("SELECT * FROM credits WHERE id = :movieId")
-    fun credits(movieId: Int): Flow<Credits?>
+    fun credits(movieId: Int): Flow<Credits>
 
     @Query("SELECT * FROM credits WHERE id = :movieId")
     suspend fun creditsNow(movieId: Int): Credits?

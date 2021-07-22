@@ -14,7 +14,7 @@ interface ImagesDao {
     fun insertOrUpdateImages(images: Images): Long
 
     @Query("SELECT * FROM images WHERE id = :movieId")
-    fun images(movieId: Int): Flow<Images?>
+    fun images(movieId: Int): Flow<Images>
 
     @Query("SELECT * FROM images WHERE id = :movieId")
     suspend fun imagesNow(movieId: Int): Images?

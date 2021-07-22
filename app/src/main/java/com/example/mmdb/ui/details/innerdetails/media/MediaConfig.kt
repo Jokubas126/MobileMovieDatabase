@@ -6,6 +6,6 @@ import com.jokubas.mmdb.util.DataResponse
 import kotlinx.coroutines.flow.Flow
 
 class MediaConfig(
-    val provideImages: suspend (movieId: Int, isRemote: Boolean) -> Flow<DataResponse<Images?>>,
+    val provideImages: suspend (movieId: Int, isRemote: Boolean) -> Flow<DataResponse<Images>>,
     val provideTrailer: suspend (movieId: Int, isRemote: Boolean) -> Flow<DataResponse<VideoResults>>
 )

@@ -1,6 +1,7 @@
 package com.example.mmdb.ui.launcher
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.mmdb.config.AppConfig
 import com.jokubas.mmdb.util.LiveEvent
 import kotlinx.coroutines.CoroutineScope
@@ -8,10 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LauncherViewModel(
-    private val appConfig: AppConfig
+    appConfig: AppConfig
 ) : ViewModel() {
 
-    inner class UpdateRequired
+    inner class UpdateRequired(val update: () -> Unit)
 
     inner class Loaded
 
@@ -29,21 +30,14 @@ class LauncherViewModel(
     }
 
     fun updateApplication() {
-        if (appConfig.networkCheckConfig.isNetworkAvailable()) {
-            updateGenres()
-        } else
-            checkForGenre()
-    }
-
-    private fun checkForGenre() {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch(Dispatchers.IO) {
             isGenresRequired = genresRepository.getAnyGenre() == null
             checkIfAnyUpdateRequired()
         }
     }
 
-    private fun updateGenres() {
-        CoroutineScope(Dispatchers.IO).launch {
+    val update: () -> Unit = {
+        viewModelScope.launch(Dispatchers.IO) {
             val genres = movieRepository.getGenres()
             genres.body()?.let {
                 genresRepository.updateGenres(it.genreList)
@@ -58,7 +52,7 @@ class LauncherViewModel(
     // done in this way for potential scaling later and checking other types of data
     private fun checkIfAnyUpdateRequired() {
         if (isGenresRequired)
-            updateRequiredEvent.postValue(UpdateRequired())
+            updateRequiredEvent.postValue(UpdateRequired(update))
         else
             loadedEvent.postValue(Loaded())
     }

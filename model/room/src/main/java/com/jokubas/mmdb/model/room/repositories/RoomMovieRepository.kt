@@ -47,18 +47,18 @@ class RoomMovieRepository(application: Application) : CoroutineScope {
 
     // -------- GETTERS --------//
 
-    suspend fun imagesFlow(movieId: Int) = imagesDao.images(movieId).mapNotNull { images ->
+    fun imagesFlow(movieId: Int) = imagesDao.images(movieId).mapNotNull { images ->
         DataResponse.Success(
             value = images
-        ).takeUnless { it.value?.posterList.isNullOrEmpty() && it.value?.backdropList.isNullOrEmpty() }
+        ).takeUnless { it.value.posterList.isNullOrEmpty() && it.value.backdropList.isNullOrEmpty() }
             ?: DataResponse.Error()
     }
 
-    suspend fun creditsFlow(movieId: Int) =
+    fun creditsFlow(movieId: Int) =
         creditsDao.credits(movieId).mapNotNull { credits ->
             DataResponse.Success(
                 value = credits
-            ).takeUnless { it.value?.castList.isNullOrEmpty() && it.value?.crewList.isNullOrEmpty() }
+            ).takeUnless { it.value.castList.isNullOrEmpty() && it.value.crewList.isNullOrEmpty() }
                 ?: DataResponse.Error()
         }
 
