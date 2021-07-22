@@ -1,43 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F92814</color>
-    <color name="colorAccent">#F92814</color>
-    <color name="colorBackground">#E0E7FF</color>
-    <color name="tintBackgroundImage">#CBE4E7FC</color>
-    <color name="colorCardBackground">#B2EAEDFD</color>
-    <color name="colorPopupWindow">#EAEDFD</color>
-    <color name="colorPopupWindowBackground">#65EAEDFD</color>
 
-    <color name="colorCancelButtonBackground">#838383</color>
-
-    <color name="colorNavigationViewBackground">#E6E4E7FC</color>
-    <color name="navigationViewItem">#686868</color>
-
-    <color name="iconBlack">#535353</color>
-    <color name="iconYellow">#F9A825</color>
-
-    <color name="itemTextDarkGrey">#595959</color>
-    <color name="itemTextLightGrey">#808080</color>
-
-    <!-- DISCOVER -->
-
-    <color name="colorCategoryBackground">#B2EAEDFD</color>
-    <color name="colorSubcategoryText">#3D3D47</color>
-
-    <!-- MOVIES -->
-
-    <color name="cardTitle">#3C3C3C</color>
-    <color name="cardContent">#686868</color>
-
-    <color name="detailsTop">#D21B1B1B</color>
-    <color name="detailsTitle">#FFFFFF</color>
-    <color name="detailsContent">#C2C2C2</color>
-    <color name="detailsDescription">#242424</color>
-
-    <color name="personDetails">#202020</color>
-
-    <!-- PERSONAL -->
-
-    <color name="customListTitleBlack">#242424</color>
-
+    <color name="primary">#141414</color>
+    <color name="secondary_100">#d7787f</color>
+    <color name="secondary_300">#ca4b54</color>
+    <color name="secondary_500">#ad2025</color>
+    <color name="secondary_700">#84151d</color>
+    <color name="secondary_900">#5f0f15</color>
+    <color name="teritary_100">#ffecb3</color>
+    <color name="teritary_300">#ffd54f</color>
+    <color name="teritary_500">#ffc107</color>
+    <color name="teritary_700">#ffa000</color>
+    <color name="teritary_900">#ff6f00</color>
+    <color name="grey_100">#fcfcfc</color>
+    <color name="grey_150">#f9f9f9</color>
+    <color name="grey_200">#f6f6f6</color>
+    <color name="grey_300">#e8e8e8</color>
+    <color name="grey_500">#b4b4b4</color>
+    <color name="grey_700">#727272</color>
+    <color name="grey_800">#434343</color>
+    <color name="grey_900">#252525</color>
+    <color name="black_80">#cc141414</color>
+    <color name="black_60">#99141414</color>
+    <color name="black_40">#66141414</color>
+    <color name="black_20">#33141414</color>
+    <color name="black_10">#19141414</color>
+    <color name="black_3">#07141414</color>
+    <color name="white">#ffffff</color>
+    <color name="white_80">#ccffffff</color>
+    <color name="white_60">#99ffffff</color>
+    <color name="white_40">#66ffffff</color>
+    <color name="white_20">#33ffffff</color>
+    <color name="white_10">#1AFFFFFF</color>
+    <color name="support_error">#d03a3a</color>
+    <color name="support_success">#109877</color>
+    <color name="support_alert">#fab900</color>
+    <color name="black">#000</color>
 </resources>

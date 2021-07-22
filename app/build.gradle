@@ -2,89 +2,79 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'androidx.navigation.safeargs'
+apply plugin: 'kotlinx-serialization'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 30
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.example.mmdb"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding.enabled = true
+    buildFeatures {
+        dataBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
-
-def lifecycleExtensionVersion = '1.1.1'
-def lifecycleVersion = '2.2.0'
-def ktxVersion = '1.2.0'
-def coroutinesVersion = '1.3.0'
-def supportVersion = '28.0.0'
-def navVersion = '2.2.1'
-def navKtxVersion = '2.2.1'
-def retrofitVersion = '2.6.0'
-def roomVersion = "2.2.5"
-
-def glideVersion = '4.11.0'
-def materialVersion = '1.1.0'
-def recyclerViewVersion = '1.1.0'
-def expandableRecyclerViewVersion = '1.3'
-def expandableCheckableRecyclerViewVersion = '1.4'
-def cardViewVersion = '1.0.0'
-def gridLayoutVersion = '1.0.5'
-def multiSliderVersion = '1.3'
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
     implementation "androidx.core:core-ktx:$ktxVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
     implementation "com.google.android.material:material:$materialVersion"
 
     implementation "com.android.support:design:$supportVersion"
     implementation "android.arch.lifecycle:extensions:$lifecycleExtensionVersion"
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleLiveDataVersion"
+
+    api "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-
-    implementation "androidx.room:room-runtime:$roomVersion"
-    implementation "androidx.room:room-ktx:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
-
-    implementation "androidx.navigation:navigation-fragment:$navVersion"
-    implementation "androidx.navigation:navigation-ui:$navVersion"
-    implementation "androidx.navigation:navigation-fragment-ktx:$navKtxVersion"
-    implementation "androidx.navigation:navigation-ui-ktx:$navKtxVersion"
-
-    implementation "com.github.bumptech.glide:glide:$glideVersion"
 
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
-    implementation "com.thoughtbot:expandablerecyclerview:$expandableRecyclerViewVersion"
-    implementation "com.thoughtbot:expandablecheckrecyclerview:$expandableCheckableRecyclerViewVersion"
+
+    implementation "me.tatarka.bindingcollectionadapter2:bindingcollectionadapter:$tatarkaBindingAdapterVersion"
+    implementation "me.tatarka.bindingcollectionadapter2:bindingcollectionadapter-recyclerview:$tatarkaBindingAdapterVersion"
+
     implementation "androidx.cardview:cardview:$cardViewVersion"
     implementation "com.etsy.android.grid:library:$gridLayoutVersion"
-    implementation "io.apptik.widget:multislider:$multiSliderVersion"
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$retrofit_kotlin_converter"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofit_adapter_coroutines"
+
+    implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:$youtubePlayerVersion"
+
+    implementation project(':model:data')
+    implementation project(':model:remote')
+    implementation project(':model:room')
+    implementation project(':util')
 }
 repositories {
     mavenCentral()

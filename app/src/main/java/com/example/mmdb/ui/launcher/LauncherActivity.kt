@@ -3,44 +3,46 @@ package com.example.mmdb.ui.launcher
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.R
+import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.ui.MainActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_launcher.*
 
-class LauncherActivity : AppCompatActivity() {
+class LauncherActivity : AppCompatActivity(R.layout.activity_launcher) {
 
-    private lateinit var viewModel: LauncherViewModel
+    private val viewModel: LauncherViewModel by lazy {
+        ViewModelProvider(
+            this,
+            LauncherViewModelFactory(requireAppConfig())
+        ).get(LauncherViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_launcher)
-        viewModel = ViewModelProvider(this).get(LauncherViewModel::class.java)
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        viewModel.isLoaded.observe(this, Observer { isLoaded ->
+        viewModel.loadedEvent.observe(this, { isLoaded ->
             isLoaded?.let {
-                if (it) startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
             }
         })
-        viewModel.isUpdateRequired.observe(this, Observer { isUpdateRequired ->
-            isUpdateRequired?.let {
-                if (it)
-                    Snackbar.make(launcher_layout, "Data update required. Connect to internet and try again", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("TRY AGAIN") {
-                            viewModel.updateApplication()
-                        }
-                        .show()
+        viewModel.updateRequiredEvent.observe(this, { isUpdateRequired ->
+            isUpdateRequired?.let { updateEvent ->
+                Snackbar.make(launcher_layout, R.string.update_required, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.try_again) {
+                        updateEvent.update.invoke()
+                    }
+                    .show()
             }
         })
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onDestroy() {
+        super.onDestroy()
         finish()
     }
 }

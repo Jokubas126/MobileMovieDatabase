@@ -6,7 +6,7 @@
 
         <variable
             name="person"
-            type="com.example.mmdb.model.data.Person" />
+            type="com.jokubas.mmdb.model.data.entities.Person" />
     </data>
 
     <FrameLayout
@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:layout_margin="@dimen/general_margin_half"
             app:cardCornerRadius="@dimen/default_card_corner_radius"
-            app:cardBackgroundColor="@color/colorCardBackground"
+            app:cardBackgroundColor="@color/white_80"
             app:cardElevation="0dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,7 +45,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/person_image_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:adjustViewBounds="true"
@@ -70,14 +69,12 @@
                     app:layout_constraintTop_toTopOf="@+id/guideline">
 
                     <TextView
-                        android:id="@+id/person_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{person.name}"
                         android:textAppearance="@style/PersonName" />
 
                     <TextView
-                        android:id="@+id/person_position"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{person.position}"

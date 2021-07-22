@@ -1,76 +1,63 @@
 package com.example.mmdb.ui.discover
 
-import android.app.Application
-import android.view.View
+import androidx.databinding.ObservableField
 import androidx.lifecycle.*
-import androidx.navigation.Navigation
-import com.example.mmdb.model.data.Category
-import com.example.mmdb.model.data.Subcategory
-import com.example.mmdb.model.remote.repositories.CategoryRepository
-import com.example.mmdb.util.*
-import kotlinx.coroutines.CoroutineScope
+import androidx.recyclerview.widget.ConcatAdapter
+import com.example.mmdb.ui.ToolbarViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.text.DecimalFormatSymbols
 
-class DiscoverViewModel(application: Application) : AndroidViewModel(application) {
+class DiscoverViewModel(
+    private val discoverFragmentConfig: DiscoverFragmentConfig,
+    val toolbarViewModel: ToolbarViewModel
+) : ViewModel() {
 
-    private val _categories =
-        CategoryRepository(application).getCategories().asLiveData(viewModelScope.coroutineContext)
+    val onRangeSliderValueChangedListener = discoverFragmentConfig.onRangeSliderValueChangedListener
 
-    val categories
-        get() = _categories
+    val valueFrom: Float = discoverFragmentConfig.startYearFlow.value.toFloat()
+    val valueTo: Float = discoverFragmentConfig.endYearFlow.value.toFloat()
 
-    private var languageSubcategory: Subcategory? = null
-    private var genreSubcategory: Subcategory? = null
+    val startYear: ObservableField<String> = ObservableField(valueFrom.toInt().toString())
+    val endYear: ObservableField<String> = ObservableField(valueTo.toInt().toString())
+
+    val categoriesAdapter = ObservableField<ConcatAdapter>()
 
     init {
-        CoroutineScope(Dispatchers.IO).launch {
-            if (!isNetworkAvailable(getApplication()))
-                networkUnavailableNotification(getApplication())
-        }
-    }
-
-    fun onSubcategorySelected(checked: Boolean, category: Category, itemIndex: Int) {
-        if (checked) {
-            if ((category.items[itemIndex] as Subcategory).name.isBlank()) {
-                when (category.name) {
-                    LANGUAGE_CATEGORY -> languageSubcategory = null
-                    GENRE_CATEGORY -> genreSubcategory = null
-                }
-            } else {
-                when (category.name) {
-                    LANGUAGE_CATEGORY -> languageSubcategory =
-                        category.items[itemIndex] as Subcategory
-                    GENRE_CATEGORY -> genreSubcategory =
-                        category.items[itemIndex] as Subcategory
-                }
-            }
-        } else {
-            when (category.name) {
-                LANGUAGE_CATEGORY -> languageSubcategory = null
-                GENRE_CATEGORY -> genreSubcategory = null
+        toolbarViewModel.setClickListener(discoverFragmentConfig.toolbarClickListener)
+        viewModelScope.launch(Dispatchers.IO) {
+            combine(
+                discoverFragmentConfig.startYearFlow,
+                discoverFragmentConfig.endYearFlow
+            ) { start, end -> Pair(start, end) }.collect { (start, end) ->
+                startYear.set(
+                    start.takeUnless {
+                        start == valueFrom.toInt()
+                    }?.toString() ?: DecimalFormatSymbols.getInstance().infinity
+                )
+                endYear.set(end.toString())
             }
         }
-    }
-
-    fun onConfirmSelectionClicked(view: View, startYear: String, endYear: String) {
-        val action = DiscoverFragmentDirections.actionRemoteMovieGridFragment()
-        action.movieGridType = DISCOVER_MOVIE_LIST
-        action.startYear =
-            if (startYear == "∞") null
-            else startYear
-        action.endYear = endYear
-        val discoveryArrayList = arrayListOf("$startYear - $endYear")
-        genreSubcategory?.let {
-            action.genreId = Integer.parseInt(it.code)
-            discoveryArrayList.add(it.name)
+        viewModelScope.launch(Dispatchers.IO) {
+            discoverFragmentConfig.provideCategories.invoke().collect { response ->
+                response.body()?.let { categoryList ->
+                    categoriesAdapter.set(
+                        ConcatAdapter(
+                            categoryList.map { category ->
+                                ItemsExpandableAdapter(category) { categoryType, subcategory ->
+                                    discoverFragmentConfig.onSubcategoryClicked.invoke(
+                                        categoryType,
+                                        subcategory
+                                    )
+                                }
+                            }
+                        )
+                    )
+                } ?: run {
+                    //TODO handle other DataResponse types
+                }
+            }
         }
-        languageSubcategory?.let {
-            action.languageKey = it.code
-            discoveryArrayList.add(it.name)
-        }
-        if (discoveryArrayList.isNotEmpty())
-            action.discoverNameArray = discoveryArrayList.toTypedArray()
-        Navigation.findNavController(view).navigate(action)
     }
 }

@@ -6,8 +6,10 @@
     <data>
 
         <variable
-            name="movie"
-            type="com.example.mmdb.model.data.Movie" />
+            name="viewModel"
+            type="com.example.mmdb.ui.movielists.moviegrid.ItemMovieViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <LinearLayout
@@ -18,22 +20,16 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardBackgroundColor="@color/colorCardBackground"
+            app:cardBackgroundColor="@color/grey_150"
             app:cardCornerRadius="@dimen/default_card_corner_radius"
-            app:cardElevation="0dp">
+            app:cardElevation="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?android:selectableItemBackground"
+                android:onClick="@{() -> viewModel.eventListener.onItemSelected.invoke()}"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/movie_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(movie.remoteId)}"
-                    android:visibility="gone" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -47,14 +43,14 @@
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/movie_image"
                         android:gravity="center_horizontal"
-                        app:imageUriString="@{movie.posterImageUriString}"
-                        app:imageUrl="@{movie.posterImageUrl}" />
+                        app:imageUriString="@{viewModel.movie.posterImageUriString}"
+                        app:imageUrl="@{viewModel.movie.posterImageUrl}" />
 
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|top"
-                        android:background="@color/colorCardBackground">
+                        android:background="@color/white_80">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -64,34 +60,35 @@
                             android:layout_marginBottom="3dp">
 
                             <ImageButton
-                                android:id="@+id/watchlist_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="7dp"
-                                android:background="@drawable/ic_star_empty"
-                                android:visibility="gone"
+                                android:activated="@{viewModel.inWatchlist}"
+                                android:background="@drawable/ic_watchlist_star"
+                                android:onClick="@{() -> viewModel.onWatchlistClicked()}"
                                 tools:ignore="ContentDescription" />
 
-                            <ImageButton
+                            <!--<ImageButton
                                 android:id="@+id/playlist_add_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="7dp"
                                 android:background="@drawable/ic_playlist_add"
-                                tools:ignore="ContentDescription" />
+                                android:onClick="@{() -> viewModel.eventListener.onCustomListSelected.invoke()}"
+                                tools:ignore="ContentDescription" />-->
 
-                            <ImageButton
+                            <!--<ImageButton
                                 android:id="@+id/delete_btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="7dp"
                                 android:background="@drawable/ic_delete"
-                                tools:ignore="ContentDescription" />
+                                android:onClick="@{() -> viewModel.eventListener.onDeleteSelected.invoke()}"
+                                android:visibility="@{viewModel.isRemote ? View.GONE : View.VISIBLE}"
+                                tools:ignore="ContentDescription" />-->
 
                         </LinearLayout>
-
                     </FrameLayout>
-
                 </FrameLayout>
 
                 <LinearLayout
@@ -106,14 +103,14 @@
                         android:id="@+id/movie_title_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{movie.title}"
+                        android:text="@{viewModel.movie.title}"
                         android:textAppearance="@style/TitleCard" />
 
                     <TextView
                         android:id="@+id/movie_release_date_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{movie.releaseDate}"
+                        android:text="@{viewModel.movie.releaseDate}"
                         android:textAppearance="@style/ContentCard" />
 
                     <LinearLayout
@@ -124,7 +121,7 @@
                             android:id="@+id/movie_score_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{movie.score}"
+                            android:text="@{viewModel.movie.score}"
                             android:textAppearance="@style/ContentCard" />
 
                         <TextView
@@ -139,7 +136,7 @@
                         android:id="@+id/movie_genre_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{movie.genresString}"
+                        android:text="@{viewModel.movie.genresString}"
                         android:textAppearance="@style/ContentCard" />
 
                 </LinearLayout>

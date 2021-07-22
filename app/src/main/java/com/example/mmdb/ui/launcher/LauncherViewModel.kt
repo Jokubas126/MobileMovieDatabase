@@ -1,77 +1,64 @@
 package com.example.mmdb.ui.launcher
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mmdb.model.remote.repositories.RemoteMovieRepository
-import com.example.mmdb.model.room.repositories.GenresRepository
-import com.example.mmdb.util.isNetworkAvailable
+import com.example.mmdb.config.AppConfig
+import com.jokubas.mmdb.util.LiveEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LauncherViewModel(application: Application) : AndroidViewModel(application) {
+class LauncherViewModel(
+    appConfig: AppConfig
+) : ViewModel() {
 
-    private val _isLoaded = MutableLiveData<Boolean>()
-    val isLoaded: LiveData<Boolean> = _isLoaded
+    inner class UpdateRequired(val update: () -> Unit)
 
-    private val _isUpdateRequired = MutableLiveData<Boolean>()
-    val isUpdateRequired: LiveData<Boolean> = _isUpdateRequired
+    inner class Loaded
 
-    private val movieRepository = RemoteMovieRepository()
-    private val genresRepository = GenresRepository(application)
+    val updateRequiredEvent = LiveEvent<UpdateRequired>()
+    val loadedEvent = LiveEvent<Loaded>()
+
+    private val movieRepository = appConfig.movieConfig.remoteMovieRepository
+    private val genresRepository = appConfig.movieConfig.genresRepository
 
     private var isGenresLoaded: Boolean = false
     private var isGenresRequired: Boolean = false
 
     init {
-        _isLoaded.value = false
         updateApplication()
     }
 
     fun updateApplication() {
-        if (isNetworkAvailable(getApplication())) {
-            updateGenres()
-        } else
-            checkForUpdates()
-    }
-
-    private fun checkForUpdates() {
-        checkForGenre()
-    }
-
-    private fun checkForGenre() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             isGenresRequired = genresRepository.getAnyGenre() == null
             checkIfAnyUpdateRequired()
         }
     }
 
-    private fun updateGenres() {
-        CoroutineScope(Dispatchers.IO).launch {
+    val update: () -> Unit = {
+        viewModelScope.launch(Dispatchers.IO) {
             val genres = movieRepository.getGenres()
-            genresRepository.updateGenres(genres.genreList)
-            isGenresLoaded = true
-            checkIfAllLoaded()
+            genres.body()?.let {
+                genresRepository.updateGenres(it.genreList)
+                isGenresLoaded = true
+                checkIfAllLoaded()
+            } ?: run {
+                checkIfAnyUpdateRequired()
+            }
         }
     }
 
     // done in this way for potential scaling later and checking other types of data
     private fun checkIfAnyUpdateRequired() {
-        viewModelScope.launch {
-            if (isGenresRequired)
-                _isUpdateRequired.value = true
-            else
-                _isLoaded.value = true
-        }
+        if (isGenresRequired)
+            updateRequiredEvent.postValue(UpdateRequired(update))
+        else
+            loadedEvent.postValue(Loaded())
     }
 
     private fun checkIfAllLoaded() {
-        viewModelScope.launch {
-            if (isGenresLoaded)
-                _isLoaded.value = true
-        }
+        if (isGenresLoaded)
+            loadedEvent.postValue(Loaded())
     }
 }
