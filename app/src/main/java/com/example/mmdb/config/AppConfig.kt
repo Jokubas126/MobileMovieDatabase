@@ -2,18 +2,12 @@ package com.example.mmdb.config
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import com.example.mmdb.MainApplication
-import com.jokubas.mmdb.util.NetworkCheckConfig
 import okhttp3.OkHttpClient
 
 class AppConfig(application: Application) {
 
     private val configVars: ConfigVars = ConfigVars()
-
-    val networkCheckConfig: NetworkCheckConfig by lazy {
-        NetworkCheckConfig(context = application.applicationContext)
-    }
 
     val movieConfig: MovieConfig by lazy {
         MovieConfig(

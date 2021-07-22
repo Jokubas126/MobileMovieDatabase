@@ -53,21 +53,7 @@ class AddToListsTaskManager(
                 )
                 false
             }
-            appConfig.networkCheckConfig.isNetworkAvailable() -> {
-                CoroutineScope(Dispatchers.IO).launch {
-                    /*showProgressSnackBar(
-                        root,
-                        application.getString(R.string.being_uploaded_to_list)
-                    )*/
-                    insertMovie(movie, checkedLists)
-                    onMovieInserted()
-                }
-                true
-            }
-            else -> {
-                appConfig.networkCheckConfig.networkUnavailableNotification()
-                false
-            }
+            else -> false
         }
     }
 
