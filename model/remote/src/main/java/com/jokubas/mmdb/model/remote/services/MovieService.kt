@@ -31,7 +31,7 @@ interface MovieService {
     ): Response<Movie>
 
     @GET("/3/genre/movie/list")
-    suspend fun genres(@Query(QUERY_API_KEY) apiKey: String): Genres
+    suspend fun genres(@Query(QUERY_API_KEY) apiKey: String): Response<Genres>
 
     @GET("/3/movie/{$PATH_MOVIE_ID}/images")
     suspend fun images(
@@ -54,7 +54,7 @@ interface MovieService {
     ): Response<Credits?>
 
     @GET("/3/configuration/languages")
-    suspend fun languages(@Query(QUERY_API_KEY) apiKey: String): List<Subcategory>
+    suspend fun languages(@Query(QUERY_API_KEY) apiKey: String): Response<List<Subcategory>>
 
     @GET("/3/search/movie")
     suspend fun searchedMovies(

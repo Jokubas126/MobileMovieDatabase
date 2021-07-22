@@ -26,6 +26,19 @@ sealed class DataResponse<T> {
     data class Error<T>(val message: String = "Something went wrong") : DataResponse<T>()
 
     class Empty<T> : DataResponse<T>()
+
+}
+
+fun <T, R> DataResponse<T>.map(transform: (DataResponse<T>) -> DataResponse<R>): DataResponse<R> =
+    transform.invoke(this)
+
+fun <T, R> DataResponse<T>.defaultRemap(valueTransform: (T) -> R): DataResponse<R> = map {
+    when(this){
+        is DataResponse.Success -> DataResponse.Success(valueTransform.invoke(value))
+        is DataResponse.Error -> DataResponse.Error(message)
+        is DataResponse.Empty -> DataResponse.Empty()
+        is DataResponse.Loading -> DataResponse.Loading()
+    }
 }
 
 suspend fun <T> dataResponseFlow(provideData: suspend () -> Response<T>): Flow<DataResponse<T>> =

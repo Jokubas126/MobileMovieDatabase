@@ -45,9 +45,13 @@ class LauncherViewModel(
     private fun updateGenres() {
         CoroutineScope(Dispatchers.IO).launch {
             val genres = movieRepository.getGenres()
-            genresRepository.updateGenres(genres.genreList)
-            isGenresLoaded = true
-            checkIfAllLoaded()
+            genres.body()?.let {
+                genresRepository.updateGenres(it.genreList)
+                isGenresLoaded = true
+                checkIfAllLoaded()
+            } ?: run {
+                checkIfAnyUpdateRequired()
+            }
         }
     }
 

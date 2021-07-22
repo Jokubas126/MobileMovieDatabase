@@ -41,7 +41,7 @@ class DiscoverFragmentConfigProvider : ConfigProvider<DiscoverFragmentConfig> {
 
         return DiscoverFragmentConfig(
             provideCategories = {
-                emptyFlow()
+                categoryRepository.categories()
             },
             startYearFlow = startYear as StateFlow<Int>,
             endYearFlow = endYear as StateFlow<Int>,
