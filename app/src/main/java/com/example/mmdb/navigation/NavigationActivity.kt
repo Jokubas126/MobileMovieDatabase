@@ -1,9 +1,8 @@
 package com.example.mmdb.navigation
 
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 
-abstract class NavigationActivity(@LayoutRes layoutId: Int) : AppCompatActivity(layoutId) {
+abstract class NavigationActivity() : AppCompatActivity() {
 
     abstract val navigationController: NavigationController
 

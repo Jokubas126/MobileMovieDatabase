@@ -8,11 +8,10 @@ import com.example.mmdb.navigation.actions.DiscoverFragmentAction
 import com.example.mmdb.ui.ToolbarViewModel
 
 class DiscoverViewModelFactory (
-    private val config: DiscoverFragmentConfig,
-    private val toolbarViewModel: ToolbarViewModel
+    private val config: DiscoverFragmentConfig
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return DiscoverViewModel(config, toolbarViewModel) as T
+        return DiscoverViewModel(config) as T
     }
 }

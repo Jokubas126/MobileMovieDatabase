@@ -1,8 +1,7 @@
-package com.example.mmdb.ui.discover
+package com.jokubas.mmdb.ui_kit
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -13,13 +12,8 @@ class CategoryRecyclerView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : RecyclerView(context, attrs, defStyle) {
 
-    private var appBarTracking: AppBarTracking? = null
+    //private var appBarTracking: ScrollingToolbarView.AppBarTracking? = null
     private var layoutManager: LinearLayoutManager? = null
-
-    interface AppBarTracking {
-        fun isAppBarIdle(): Boolean
-        fun isAppBarExpanded(): Boolean
-    }
 
     override fun dispatchNestedPreScroll(
         distanceX: Int, distanceY: Int, consumed: IntArray?, offsetInWindow: IntArray?, type: Int
@@ -36,8 +30,7 @@ class CategoryRecyclerView @JvmOverloads constructor(
         layoutManager = layout as LinearLayoutManager
     }
 
-    fun setAppBarTracking(appBarTracking: AppBarTracking) {
+    /*fun setAppBarTracking(appBarTracking: ScrollingToolbarView.AppBarTracking) {
         this.appBarTracking = appBarTracking
-    }
-
+    }*/
 }

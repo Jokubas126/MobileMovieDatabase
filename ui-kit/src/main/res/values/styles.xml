@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
-        <item name="android:layout">@layout/activity_main</item>
+        <!--<item name="android:layout">@layout/activity_main</item>-->
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
         <item name="android:itemTextAppearance">@style/PopupMenuItemStyle</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
@@ -19,15 +20,15 @@
 
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
         <!-- Background for the search query section (e.g. EditText) -->
-        <item name="queryBackground">@drawable/bg_release_date_layout</item>
-        <!-- Background for the actions section (e.g. voice, submit) -->
+        <!--<item name="queryBackground">@drawable/bg_release_date_layout</item>
+        &lt;!&ndash; Background for the actions section (e.g. voice, submit) &ndash;&gt;
         <item name="submitBackground">@color/black_10</item>
-        <!-- Close button icon
-        <item name="closeIcon">@drawable/ic_big_</item>-->
-        <!-- Search button icon -->
+        &lt;!&ndash; Close button icon
+        <item name="closeIcon">@drawable/ic_big_</item>&ndash;&gt;
+        &lt;!&ndash; Search button icon &ndash;&gt;
         <item name="searchIcon">@drawable/ic_search</item>
-        <!-- Go/commit button icon -->
-        <item name="goIcon">@drawable/ic_check</item>
+        &lt;!&ndash; Go/commit button icon &ndash;&gt;
+        <item name="goIcon">@drawable/ic_check</item>-->
         <!-- Voice search button icon
         <item name="voiceIcon">...</item>-->
         <!-- Commit icon shown in the query suggestion row
@@ -61,7 +62,7 @@
         <item name="android:fontFamily">@font/roboto_condensed_regular</item>
     </style>
 
-        <!-- Welcome Screen -->
+    <!-- Welcome Screen -->
 
     <style name="WelcomeScreenTitle" parent="BaseTextStyle">
         <item name="android:textSize">45sp</item>
@@ -197,5 +198,4 @@
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/grey_700</item>
     </style>
-
 </resources>

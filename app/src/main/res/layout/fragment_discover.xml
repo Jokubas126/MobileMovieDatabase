@@ -19,13 +19,23 @@
 
         <include layout="@layout/view_main_background" />
 
-        <com.google.android.material.appbar.AppBarLayout
+        <com.jokubas.mmdb.ui_kit.ScrollingToolbarView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:expanded="true"
+            app:layout_behavior=".ui.discover.ScrollingToolbarBehavior"
+            app:onBarIdle="@{viewModel.discoverAppBarViewModel.isBarIdleListener()}"
+            app:viewModel="@{viewModel.discoverAppBarViewModel.scrollingAppBarViewModel}" />
+
+        <!--<com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/AppTheme.AppBarOverlay"
             app:expanded="true"
-            app:layout_behavior=".ui.discover.ScrollingToolbarBehavior">
+            app:layout_behavior=".ui.discover.ScrollingToolbarBehavior"
+            app:onOffsetChangedListener="@{viewModel.scrollingAppBarViewModel.appBarOnOffsetChangedListener}">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar_layout"
@@ -33,64 +43,7 @@
                 android:layout_height="match_parent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways">
 
-                <LinearLayout
-                    android:id="@+id/large_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="?attr/actionBarSize"
-                    android:background="@drawable/bg_release_date_layout"
-                    android:orientation="vertical"
-                    android:padding="15dp"
-                    app:layout_collapseMode="parallax"
-                    app:layout_collapseParallaxMultiplier="1.0">
 
-                    <TextView
-                        android:id="@+id/release_year_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/release_year_title"
-                        android:textAppearance="@style/ReleaseYearTextAppearance" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="start"
-                            android:text="@{viewModel.startYear}"
-                            android:textAppearance="@style/ReleaseYearItemsTextAppearance"
-                            tools:text="1951" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:text="@{viewModel.endYear}"
-                            android:textAppearance="@style/ReleaseYearItemsTextAppearance"
-                            tools:text="2021" />
-
-                    </FrameLayout>
-
-                    <com.google.android.material.slider.RangeSlider
-                        android:id="@+id/rangeSlider"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:stepSize="1.0"
-                        android:valueFrom="@{viewModel.valueFrom}"
-                        android:valueTo="@{viewModel.valueTo}"
-                        app:labelBehavior="gone"
-                        app:thumbColor="@color/secondary_500"
-                        app:thumbRadius="10dp"
-                        app:tickColorActive="@color/secondary_300"
-                        app:tickColorInactive="@color/secondary_100"
-                        app:trackColorActive="@color/secondary_500"
-                        app:trackColorInactive="@color/secondary_300"
-                        app:valueChangedListener="@{viewModel.onRangeSliderValueChangedListener}"
-                        app:values="@array/initial_range_slider_values" />
-                </LinearLayout>
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/collapsing_toolbar"
@@ -170,13 +123,13 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.appcompat.widget.Toolbar>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
-        </com.google.android.material.appbar.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/categories_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:nestedScrollingEnabled="false"
+            android:nestedScrollingEnabled="@{viewModel.discoverAppBarViewModel.isCategoryListNesterScrollingEnabled}"
             android:orientation="vertical"
             app:adapter="@{viewModel.categoriesAdapter}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

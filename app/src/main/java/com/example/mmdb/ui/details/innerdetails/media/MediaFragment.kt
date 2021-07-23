@@ -11,7 +11,6 @@ import com.example.mmdb.navigation.ConfigFragmentArgs
 import com.example.mmdb.navigation.action
 import com.example.mmdb.navigation.actions.InnerDetailsAction
 import com.example.mmdb.navigation.config
-import kotlinx.android.synthetic.main.fragment_movie_media.*
 
 object MediaFragmentArgs: ConfigFragmentArgs<InnerDetailsAction.Media, MediaConfig>()
 
@@ -32,10 +31,11 @@ class MediaFragment : Fragment() {
             )
         ).get(MediaViewModel::class.java)
         lifecycleOwner = this@MediaFragment
+
+        viewLifecycleOwner.lifecycle.addObserver(youtubePlayerView)
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.lifecycle.addObserver(youtubePlayerView)
     }
 }

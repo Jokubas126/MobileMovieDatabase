@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mmdb.R
 import com.example.mmdb.databinding.ItemCustomListToAddBinding
 import com.jokubas.mmdb.model.data.entities.CustomMovieList
-import kotlinx.android.synthetic.main.item_custom_list_to_add.view.*
 
 class AddToListsAdapter(
     private val listener: ListCheckedListener,
@@ -39,18 +38,6 @@ class AddToListsAdapter(
 
         fun onBind(listener: ListCheckedListener, movieList: CustomMovieList) {
             view.movieList = movieList
-
-            view.root.information_layout.setOnClickListener {
-                view.root.list_checkbox.isChecked = !view.root.list_checkbox.isChecked
-                listener.onListChecked(movieList, view.root.list_checkbox.isChecked)
-            }
-
-            view.root.list_checkbox.setOnCheckedChangeListener { _, isChecked ->
-                listener.onListChecked(
-                    movieList,
-                    isChecked
-                )
-            }
         }
     }
 }

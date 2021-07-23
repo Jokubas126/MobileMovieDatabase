@@ -10,14 +10,10 @@ import com.example.mmdb.extensions.requireAppConfig
 import com.example.mmdb.extensions.requireNavController
 import com.example.mmdb.navigation.*
 import com.example.mmdb.navigation.actions.DiscoverFragmentAction
-import com.example.mmdb.ui.ToolbarViewModel
-import com.google.android.material.appbar.AppBarLayout
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_discover.*
 
 object DiscoverFragmentArgs: ConfigFragmentArgs<DiscoverFragmentAction, DiscoverFragmentConfig>()
 
-class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking {
+class DiscoverFragment : Fragment() {
 
     private val appConfig: AppConfig by lazy {
         requireAppConfig()
@@ -43,68 +39,15 @@ class DiscoverFragment : Fragment(), CategoryRecyclerView.AppBarTracking {
             viewModel = ViewModelProvider(
                 this@DiscoverFragment,
                 DiscoverViewModelFactory(
-                    config = config,
-                    toolbarViewModel = ToolbarViewModel(
-                        toolbarConfig = appConfig.toolbarConfig,
-                        navController = navController
-                    ).apply {
-                        attachToNavigationController(
-                            fragmentManager = childFragmentManager
-                        )
-                    }
+                    config = config
                 )
             ).get(DiscoverViewModel::class.java)
             lifecycleOwner = this@DiscoverFragment
         }.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setupToolbar()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         navController.detachFromNavigationController()
     }
-
-    // --------- Toolbar functionality ------------//
-
-    private var appBarOffset: Int = 0
-    private var isAppBarIdle = false
-
-    private var isExpanded: Boolean = false
-
-    private fun setupToolbar() {
-        app_bar.addOnOffsetChangedListener(
-            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                appBarOffset = verticalOffset
-                setToolbarArrowRotation(verticalOffset, appBarLayout)
-                isExpanded = verticalOffset == 0
-                // check beyond offset points to be safer
-                isAppBarIdle = appBarOffset >= 0 || appBarOffset <= -app_bar.totalScrollRange
-                if (isAppBarIdle)
-                    setExpandAndCollapseEnabled(isExpanded)
-            })
-
-        expand_collapse_btn.setOnClickListener {
-            isExpanded = !isExpanded
-            app_bar.setExpanded(isExpanded, true)
-        }
-    }
-
-    private fun setToolbarArrowRotation(verticalOffset: Int, appBarLayout: AppBarLayout) {
-        // get percent of progress for scrolling done
-        // current offset / positive max offset
-        val progress = (-verticalOffset).toFloat() / appBarLayout.totalScrollRange
-        arrow_image_view.rotation = 180 + progress * 180
-    }
-
-    private fun setExpandAndCollapseEnabled(enabled: Boolean) {
-        categories_recycler_view.isNestedScrollingEnabled = enabled
-    }
-
-    override fun isAppBarExpanded(): Boolean = appBarOffset == 0
-    override fun isAppBarIdle(): Boolean = isAppBarIdle
 }

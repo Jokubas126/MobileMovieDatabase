@@ -35,7 +35,7 @@ class AddToListsTaskManager(
         CoroutineScope(Dispatchers.IO).launch {
             val customLists = movieListRepository.getAllCustomMovieLists()
             withContext(Dispatchers.Main) {
-                popupWindow.setupLists(customLists)
+                //popupWindow.setupLists(customLists)
             }
         }
     }

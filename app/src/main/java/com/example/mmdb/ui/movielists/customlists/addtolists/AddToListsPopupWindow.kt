@@ -5,11 +5,8 @@ import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.View
 import android.widget.PopupWindow
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import com.jokubas.mmdb.model.data.entities.Movie
-import kotlinx.android.synthetic.main.popup_window_personal_lists_to_add.view.*
 
 class AddToListsPopupWindow(
     private val view: View,
@@ -25,15 +22,6 @@ class AddToListsPopupWindow(
     init {
         setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         showAtLocation(view, Gravity.CENTER, 0, 0)
-
-        view.popup_window_outside.setOnClickListener { dismiss() }
-        view.confirm_btn.setOnClickListener {
-            listsConfirmedClickListener?.let {
-                if (it.onConfirmListsClicked(selectedMovie, checkedLists))
-                    dismiss()
-            }
-        }
-        setupRecyclerView()
     }
 
     interface ListsConfirmedClickListener {
@@ -42,20 +30,6 @@ class AddToListsPopupWindow(
 
     fun setListsConfirmedClickListener(listener: ListsConfirmedClickListener) {
         listsConfirmedClickListener = listener
-    }
-
-    private fun setupRecyclerView(){
-        view.personal_lists_recycler_view.layoutManager = LinearLayoutManager(view.context)
-        view.personal_lists_recycler_view.addItemDecoration(
-            DividerItemDecoration(
-                view.context,
-                DividerItemDecoration.VERTICAL
-            )
-        )
-    }
-
-    fun setupLists(movieLists: List<CustomMovieList>) {
-        view.personal_lists_recycler_view.adapter = AddToListsAdapter(this, movieLists)
     }
 
     override fun onListChecked(movieList: CustomMovieList, isChecked: Boolean) {
