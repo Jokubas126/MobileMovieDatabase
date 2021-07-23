@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -25,111 +24,13 @@
             android:theme="@style/AppTheme.AppBarOverlay"
             app:expanded="true"
             app:layout_behavior=".ui.discover.ScrollingToolbarBehavior"
-            app:onBarIdle="@{viewModel.discoverAppBarViewModel.isBarIdleListener()}"
-            app:viewModel="@{viewModel.discoverAppBarViewModel.scrollingAppBarViewModel}" />
-
-        <!--<com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay"
-            app:expanded="true"
-            app:layout_behavior=".ui.discover.ScrollingToolbarBehavior"
-            app:onOffsetChangedListener="@{viewModel.scrollingAppBarViewModel.appBarOnOffsetChangedListener}">
-
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/collapsing_toolbar_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways">
-
-
-
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/collapsing_toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="@color/white_80"
-                    app:contentInsetStart="0dp"
-                    app:layout_collapseMode="pin"
-                    app:popupTheme="@style/AppTheme.PopupOverlay">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/white"
-                        android:padding="@dimen/spacing_xxs"
-                        app:layout_collapseMode="pin"
-                        app:popupTheme="@style/AppTheme.PopupOverlay">
-
-                        <LinearLayout
-                            android:id="@+id/expand_collapse_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:background="?android:selectableItemBackground"
-                            android:orientation="horizontal"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:adjustViewBounds="true"
-                                android:background="?android:selectableItemBackground"
-                                android:onClick="@{() -> viewModel.toolbarViewModel.onBackClicked.invoke()}"
-                                android:paddingStart="@dimen/spacing_s"
-                                android:paddingTop="@dimen/spacing_m"
-                                android:paddingEnd="@dimen/spacing_s"
-                                android:paddingBottom="@dimen/spacing_m"
-                                android:src="@drawable/ic_close_x"
-                                app:layout_constraintStart_toStartOf="parent" />
-
-                            <TextView
-                                android:id="@+id/title_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                android:text="@string/discover_fragment"
-                                android:textAppearance="@style/ToolbarStyle"
-                                android:textColor="@color/primary" />
-
-                            <ImageView
-                                android:id="@+id/arrow_image_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginStart="4dp"
-                                android:layout_marginEnd="4dp"
-                                app:srcCompat="@drawable/ic_arrow_drop_up"
-                                tools:ignore="ContentDescription" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:adjustViewBounds="true"
-                            android:background="?android:selectableItemBackground"
-                            android:onClick="@{() -> viewModel.toolbarViewModel.onConfirmClicked.invoke()}"
-                            android:padding="@dimen/spacing_s"
-                            android:src="@drawable/ic_check"
-                            android:visibility="@{viewModel.toolbarViewModel.confirmButtonEnabled ? View.VISIBLE : View.GONE}"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </androidx.appcompat.widget.Toolbar>
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-        </com.google.android.material.appbar.AppBarLayout>-->
+            app:scrollingAppBarViewModel="@{viewModel.scrollingAppBarViewModel}" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/categories_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:nestedScrollingEnabled="@{viewModel.discoverAppBarViewModel.isCategoryListNesterScrollingEnabled}"
+            android:nestedScrollingEnabled="@{viewModel.scrollingAppBarViewModel.isCategoryListNesterScrollingEnabled}"
             android:orientation="vertical"
             app:adapter="@{viewModel.categoriesAdapter}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

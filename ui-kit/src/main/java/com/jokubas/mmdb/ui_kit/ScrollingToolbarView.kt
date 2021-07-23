@@ -13,14 +13,6 @@ class ScrollingToolbarView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : AppBarLayout(context, attrs, defStyleAttr) {
 
-    /*interface AppBarTracking {
-        fun isAppBarIdle(): Boolean
-        fun isAppBarExpanded(): Boolean
-    }
-
-    override fun isAppBarExpanded(): Boolean = appBarOffset == 0
-    override fun isAppBarIdle(): Boolean = isAppBarIdle*/
-
     private var appBarOffset: Int = 0
     private var isAppBarIdle = false
 
@@ -28,26 +20,19 @@ class ScrollingToolbarView @JvmOverloads constructor(
 
     private var binding: ScrollingToolbarViewBinding? = null
 
-    var viewModel: ScrollingAppBarViewModel? = null
+    var scrollingAppBarViewModel: ScrollingAppBarViewModel? = null
         set(value) {
             field = value
             init()
         }
 
-    var onBarIdle: ((isExpanded: Boolean) -> Unit)? = null
-
     fun init() {
         binding = ScrollingToolbarViewBinding.inflate(
-        LayoutInflater.from(context),
-        this,
-        true
+            LayoutInflater.from(context),
+            this,
+            true
         ).apply {
-            viewModel = this@ScrollingToolbarView.viewModel
-
-            expandCollapseBtn.setOnClickListener {
-                isBarExpanded = !isBarExpanded
-                appBar.setExpanded(isBarExpanded, true)
-            }
+            viewModel = scrollingAppBarViewModel
 
             addOnOffsetChangedListener(
                 OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -55,11 +40,17 @@ class ScrollingToolbarView @JvmOverloads constructor(
                     arrowImageView.setToolbarArrowRotation(verticalOffset, appBarLayout)
                     isBarExpanded = verticalOffset == 0
                     // check beyond offset points to be safer
-                    isAppBarIdle = appBarOffset >= 0 || appBarOffset <= -appBarLayout.totalScrollRange
+                    isAppBarIdle =
+                        appBarOffset >= 0 || appBarOffset <= -appBarLayout.totalScrollRange
                     if (isAppBarIdle)
-                        onBarIdle?.invoke(isBarExpanded)
+                        scrollingAppBarViewModel?.onAppBarIdle?.invoke(isBarExpanded)
                 }
             )
+
+            expandCollapseBtn.setOnClickListener {
+                isBarExpanded = !isBarExpanded
+                setExpanded(isBarExpanded, true)
+            }
         }
     }
 

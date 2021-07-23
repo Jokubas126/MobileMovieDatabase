@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ScrollingToolbarView">
-        <attr name="viewModel" format="reference" />
-        <attr name="onBarIdle" format="reference" />
+        <attr name="scrollingAppBarViewModel" format="reference" />
     </declare-styleable>
 </resources>
