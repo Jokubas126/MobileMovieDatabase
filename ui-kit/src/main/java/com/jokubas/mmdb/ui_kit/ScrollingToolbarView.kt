@@ -16,7 +16,7 @@ class ScrollingToolbarView @JvmOverloads constructor(
     private var appBarOffset: Int = 0
     private var isAppBarIdle = false
 
-    private var isBarExpanded: Boolean = false
+    private var isBarExpanded: Boolean = true
 
     private var binding: ScrollingToolbarViewBinding? = null
 
