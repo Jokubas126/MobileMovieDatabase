@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.config.AppConfig
 import com.example.mmdb.databinding.FragmentDiscoverBinding
 import com.example.mmdb.extensions.requireAppConfig
-import com.example.mmdb.extensions.requireNavController
 import com.example.mmdb.navigation.*
 import com.example.mmdb.navigation.actions.DiscoverFragmentAction
 
@@ -17,10 +16,6 @@ class DiscoverFragment : Fragment() {
 
     private val appConfig: AppConfig by lazy {
         requireAppConfig()
-    }
-
-    private val navController: NavigationController by lazy {
-        requireNavController()
     }
 
     private val config: DiscoverFragmentConfig by config()
@@ -44,10 +39,5 @@ class DiscoverFragment : Fragment() {
             ).get(DiscoverViewModel::class.java)
             lifecycleOwner = this@DiscoverFragment
         }.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        navController.detachFromNavigationController()
     }
 }
