@@ -22,17 +22,17 @@ class LauncherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = ActivityLauncherBinding.inflate(layoutInflater)
-
-        setContentView(binding.root)
-
-        observeViewModel(binding)
+        ActivityLauncherBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+            observeViewModel(this)
+        }
     }
 
     private fun observeViewModel(binding: ActivityLauncherBinding) {
         viewModel.loadedEvent.observe(this, { isLoaded ->
             isLoaded?.let {
                 startActivity(Intent(this, MainActivity::class.java))
+                finish()
             }
         })
         viewModel.updateRequiredEvent.observe(this, { isUpdateRequired ->
@@ -44,10 +44,5 @@ class LauncherActivity : AppCompatActivity() {
                     .show()
             }
         })
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        finish()
     }
 }
