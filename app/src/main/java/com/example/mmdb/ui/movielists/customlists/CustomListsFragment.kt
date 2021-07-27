@@ -13,7 +13,6 @@ import com.example.mmdb.R
 import com.jokubas.mmdb.util.SNACKBAR_LENGTH_LONG_MS
 import com.google.android.material.snackbar.Snackbar
 import com.jokubas.mmdb.model.data.entities.CustomMovieList
-import kotlinx.android.synthetic.main.fragment_custom_lists.*
 
 class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener,
     CustomListsAdapter.ListOptionsListener {
@@ -38,27 +37,17 @@ class CustomListsFragment : Fragment(), CustomListsAdapter.ListOnClickListener,
         setupRecyclerView()
         observeViewModel()
 
-        button_add_list.setOnClickListener {
-            viewModel.showCreateListPopupWindow(context!!)
-        }
     }
 
     private fun observeViewModel() {
         viewModel.movieLists.observe(viewLifecycleOwner, Observer {
             listAdapter.updateMovieLists(it)
-            loading_error_text_view.visibility =
-                if (it.isNullOrEmpty())
-                    View.VISIBLE
-                else View.GONE
-            progress_bar_loading_movie_list.visibility = View.GONE
         })
     }
 
     private fun setupRecyclerView() {
         context?.let {
             listAdapter = CustomListsAdapter(it)
-            recycler_view.layoutManager = LinearLayoutManager(it)
-            recycler_view.adapter = listAdapter
             listAdapter.setListOnClickListener(this)
             listAdapter.setListOptionsListener(this)
         }

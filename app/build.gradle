@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+    buildToolsVersion "30.0.3"
     defaultConfig {
         applicationId "com.example.mmdb"
         minSdkVersion 21
@@ -24,6 +24,7 @@ android {
     }
     buildFeatures {
         dataBinding true
+        viewBinding true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -75,6 +76,8 @@ dependencies {
     implementation project(':model:remote')
     implementation project(':model:room')
     implementation project(':util')
+    implementation project(':feedback-ui')
+    implementation project(':ui-kit')
 }
 repositories {
     mavenCentral()

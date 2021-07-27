@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mmdb.R
 import com.jokubas.mmdb.model.data.entities.CustomMovieList
 import com.jokubas.mmdb.util.dateToString
-import kotlinx.android.synthetic.main.item_custom_list.view.*
 
 class CustomListsAdapter(val context: Context) :
     RecyclerView.Adapter<CustomListsAdapter.ViewHolder>() {
@@ -65,18 +64,13 @@ class CustomListsAdapter(val context: Context) :
         private lateinit var popupMenu: PopupMenu
 
         private lateinit var movieList: CustomMovieList
-        private val title = itemView.list_title
 
         private val inputManager: InputMethodManager =
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         fun onBind(movieList: CustomMovieList) {
             this.movieList = movieList
-            setupTitle()
-            setupUpdateDate()
-            inflateOptionsMenu(itemView.options_menu_btn)
             itemView.setOnClickListener { listOnClickListener?.onListClicked(it, movieList) }
-            itemView.options_menu_btn.setOnClickListener { popupMenu.show() }
         }
 
         private fun inflateOptionsMenu(view: View) {
@@ -85,45 +79,8 @@ class CustomListsAdapter(val context: Context) :
             popupMenu.setOnMenuItemClickListener(this)
         }
 
-        private fun setupTitle() {
-            title.setText(movieList.listTitle)
-            title.setOnEditorActionListener { titleView, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_NEXT -> {
-                        title.isFocusableInTouchMode = false
-                        title.clearFocus()
-                        movieList.listTitle = titleView.text.toString()
-                        listOptionsOnClickListener?.onEditListTitle(movieList)
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }
-
-        private fun setupUpdateDate() {
-            movieList.updateDate?.let {
-                itemView.update_date.text = dateToString(it)
-            }
-        }
-
         override fun onMenuItemClick(item: MenuItem?): Boolean {
-            when (item?.itemId) {
-                R.id.edit -> {
-                    title.isFocusableInTouchMode = true
-                    title.requestFocus()
-                    title.setSelection(title.text.length)
-                    title.postDelayed({
-                        inputManager.showSoftInput(title, InputMethodManager.SHOW_IMPLICIT)
-                    }, 100)
-                    return true
-                }
-                R.id.delete -> {
-                    listOptionsOnClickListener?.onDeleteClicked(itemView, movieList, adapterPosition)
-                    return true
-                }
-            }
-            return false
+            TODO("Not yet implemented")
         }
     }
 }

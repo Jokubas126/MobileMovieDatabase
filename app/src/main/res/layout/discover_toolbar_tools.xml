@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.mmdb.ui.discover.DiscoverToolbarToolsViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:adjustViewBounds="true"
+            android:background="?android:selectableItemBackground"
+            android:onClick="@{() -> viewModel.onConfirmClicked.invoke()}"
+            android:src="@drawable/ic_check"
+            android:visibility="@{viewModel.onConfirmClicked != null ? View.VISIBLE : View.GONE}" />
+
+    </LinearLayout>
+</layout>

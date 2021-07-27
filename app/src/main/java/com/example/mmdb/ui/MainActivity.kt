@@ -5,6 +5,7 @@ import android.view.MenuItem
 import com.example.mmdb.R
 import com.example.mmdb.config.AppConfig
 import com.example.mmdb.config.requireAppConfig
+import com.example.mmdb.databinding.ActivityMainBinding
 import com.example.mmdb.navigation.NavigationActivity
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.configproviders.NavigationWrapperFragmentConfigProvider
@@ -13,9 +14,8 @@ import com.example.mmdb.ui.drawer.DrawerLayoutInteractor
 import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.jokubas.mmdb.util.extensions.adjustStatusBar
 import com.jokubas.mmdb.util.extensions.setLockMode
-import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : NavigationActivity(R.layout.activity_main) {
+class MainActivity : NavigationActivity() {
 
     private var searchItem: MenuItem? = null
     private var confirmItem: MenuItem? = null
@@ -24,13 +24,15 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
         requireAppConfig()
     }
 
+    private lateinit var binding: ActivityMainBinding
+
     override val navigationController: NavigationController by lazy {
         NavigationController(
             activity = this,
             drawerInteractor = DrawerBehaviorInteractor(
-                drawerLayout = drawerLayout,
+                drawerLayout = binding.drawerLayout,
                 drawerConfig = appConfig.drawerConfig,
-                contentView = rootContainer
+                contentView = binding.rootContainer
             ),
             drawerConfig = appConfig.drawerConfig
         )
@@ -42,6 +44,9 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         observeDrawerLock()
 
@@ -58,13 +63,13 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
                 })
             .commit()
 
-        drawerLayoutInteractor.configureDrawerItems(navigationView, navigationController)
+        drawerLayoutInteractor.configureDrawerItems(binding.navigationView, navigationController)
         window.adjustStatusBar(R.color.white)
     }
 
     private fun observeDrawerLock(){
         appConfig.drawerConfig.isDrawerEnabledLiveData().observe(this, { isEnabled ->
-            drawerLayout.setLockMode(isEnabled)
+            binding.drawerLayout.setLockMode(isEnabled)
         })
     }
 
@@ -72,28 +77,4 @@ class MainActivity : NavigationActivity(R.layout.activity_main) {
         super.onDestroy()
         appConfig.drawerConfig.isDrawerEnabledLiveData().removeObservers(this)
     }
-    // TODO setup dynamic options menu in the toolbar through its viewModel
-
-    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.toolbar_menu, menu)
-        searchItem = menu.findItem(R.id.action_search)
-        (searchItem?.actionView as SearchView?)?.setOnQueryTextListener(
-            object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    val action = NavGraphDirections.actionGlobalRemoteMovieGridFragment()
-                    action.movieGridType = SEARCH_MOVIE_LIST
-                    action.searchQuery = query
-                    navController.popBackStack(navController.currentDestination!!.id, true)
-                    navController.navigate(action)
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String): Boolean {
-                    return false
-                }
-            })
-        confirmItem = menu.findItem(R.id.action_confirm)
-        confirmItem!!.isVisible = false
-        return true
-    }*/
 }
