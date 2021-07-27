@@ -11,7 +11,6 @@ import com.example.mmdb.navigation.ConfigProvider
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
-import com.example.mmdb.ui.ToolbarViewModel
 import com.example.mmdb.ui.discover.DiscoverAppBarContentViewModel
 import com.example.mmdb.ui.discover.DiscoverFragmentConfig
 import com.example.mmdb.ui.discover.DiscoverToolbarToolsViewModel
