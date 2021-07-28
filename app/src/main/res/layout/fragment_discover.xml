@@ -18,7 +18,7 @@
 
         <include layout="@layout/view_main_background" />
 
-        <com.jokubas.mmdb.ui_kit.ScrollingToolbarView
+        <com.jokubas.mmdb.ui_kit.scrollingappbar.ScrollingAppBarView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/AppTheme.AppBarOverlay"

@@ -1,20 +1,18 @@
-package com.jokubas.mmdb.ui_kit
+package com.jokubas.mmdb.ui_kit.scrollingappbar
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.google.android.material.appbar.AppBarLayout
 import com.jokubas.mmdb.ui_kit.databinding.ScrollingToolbarViewBinding
 
-class ScrollingToolbarView @JvmOverloads constructor(
+class ScrollingAppBarView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : AppBarLayout(context, attrs, defStyleAttr) {
-
-    private var appBarOffset: Int = 0
-    private var isAppBarIdle = false
 
     private var isBarExpanded: Boolean = true
 
@@ -27,6 +25,7 @@ class ScrollingToolbarView @JvmOverloads constructor(
         }
 
     fun init() {
+        removeAllViews()
         binding = ScrollingToolbarViewBinding.inflate(
             LayoutInflater.from(context),
             this,
@@ -36,13 +35,11 @@ class ScrollingToolbarView @JvmOverloads constructor(
 
             addOnOffsetChangedListener(
                 OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                    appBarOffset = verticalOffset
                     arrowImageView.setToolbarArrowRotation(verticalOffset, appBarLayout)
                     isBarExpanded = verticalOffset == 0
-                    // check beyond offset points to be safer
-                    isAppBarIdle =
-                        appBarOffset >= 0 || appBarOffset <= -appBarLayout.totalScrollRange
-                    if (isAppBarIdle)
+
+                    //if app bar is idle invoke listener's event
+                    if (verticalOffset >= 0 || verticalOffset <= -appBarLayout.totalScrollRange)
                         scrollingAppBarViewModel?.onAppBarIdle?.invoke(isBarExpanded)
                 }
             )

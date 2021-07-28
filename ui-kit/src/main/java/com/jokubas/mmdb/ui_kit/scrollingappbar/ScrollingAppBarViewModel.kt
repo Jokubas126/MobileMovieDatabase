@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.ui_kit
+package com.jokubas.mmdb.ui_kit.scrollingappbar
 
 import android.view.View
 import androidx.databinding.ObservableBoolean

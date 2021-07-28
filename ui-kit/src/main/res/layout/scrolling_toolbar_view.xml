@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.jokubas.mmdb.ui_kit.ScrollingAppBarViewModel" />
+            type="com.jokubas.mmdb.ui_kit.scrollingappbar.ScrollingAppBarViewModel" />
     </data>
 
     <com.google.android.material.appbar.CollapsingToolbarLayout
