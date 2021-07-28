@@ -92,12 +92,9 @@ class MovieGridViewModel(
                                 MovieGridContentViewModel(
                                     lifecycle = config.lifecycle,
                                     movieListType = action.movieListType,
-                                    pageSelectionListViewModel = pageSelectionListViewModel,
-                                    itemMovieListViewModel = itemMovieListViewModel,
-                                    watchlistMovies = watchlistMovies
+                                    itemMovieListViewModel = itemMovieListViewModel
                                 )
                             )
-
                     }
                 } ?: run {
                     withContext(Dispatchers.Main) {

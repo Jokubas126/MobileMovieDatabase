@@ -9,7 +9,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.example.mmdb.BR
 import com.example.mmdb.R
 import com.example.mmdb.navigation.actions.MovieListType
-import com.example.mmdb.ui.movielists.pageselection.PageSelectionListViewModel
 import com.jokubas.mmdb.model.data.entities.WatchlistMovie
 import com.jokubas.mmdb.util.SaveState
 import me.tatarka.bindingcollectionadapter2.ItemBinding
@@ -17,9 +16,7 @@ import me.tatarka.bindingcollectionadapter2.ItemBinding
 class MovieGridContentViewModel(
     lifecycle: Lifecycle,
     private val movieListType: MovieListType,
-    val pageSelectionListViewModel: PageSelectionListViewModel,
-    private val itemMovieListViewModel: ItemMovieListViewModel,
-    private val watchlistMovies: List<WatchlistMovie>
+    private val itemMovieListViewModel: ItemMovieListViewModel
 ) {
 
     private var state: Parcelable? = null

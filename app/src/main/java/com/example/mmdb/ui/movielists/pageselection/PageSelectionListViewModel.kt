@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
+import kotlin.math.max
 
 class PageSelectionListViewModel(collectCoroutineScope: CoroutineScope) {
 
@@ -39,24 +40,27 @@ class PageSelectionListViewModel(collectCoroutineScope: CoroutineScope) {
         }
         totalPages.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                itemsPage.removeAll { true }
+                itemsPage.removeAll {
+                    it.pageNumber > totalPages.get()
+                }
                 populatePageSelectionList()
             }
         })
     }
 
     private fun populatePageSelectionList() {
-        IntRange(1, totalPages.get()).forEach {
-            itemsPage.add(
-                ItemPageViewModel(
-                    pageNumber = it,
-                    isCurrentPage = ObservableBoolean(it == currentPage.value),
-                    onSelected = { pageNumber ->
-                        _currentPage.value = pageNumber
-                    }
+        if(itemsPage.size < totalPages.get())
+            IntRange(max(1, itemsPage.size), totalPages.get()).forEach {
+                itemsPage.add(
+                    ItemPageViewModel(
+                        pageNumber = it,
+                        isCurrentPage = ObservableBoolean(it == currentPage.value),
+                        onSelected = {
+                            _currentPage.value = it
+                        }
+                    )
                 )
-            )
-        }
+            }
     }
 
     fun update(currentPage: Int, totalPages: Int) {

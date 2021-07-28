@@ -19,7 +19,7 @@
             android:layout_marginHorizontal="5dp"
             android:activated="@{viewModel.currentPage}"
             android:background="@drawable/bg_page_number_selector"
-            android:onClick="@{(Int) -> viewModel.onSelected.invoke(viewModel.pageNumber)}"
+            android:onClick="@{() -> viewModel.onSelected.invoke()}"
             android:paddingHorizontal="10dp"
             android:paddingVertical="3dp"
             android:text="@{String.valueOf(viewModel.pageNumber)}"

@@ -11,7 +11,7 @@ import com.jokubas.mmdb.util.dataResponseFlow
 import com.jokubas.mmdb.util.toDataResponseFlow
 import kotlinx.coroutines.flow.*
 import retrofit2.Response
-import kotlin.math.min
+import kotlin.math.*
 
 class RemoteMovieRepository(
     private val service: MovieService
@@ -75,7 +75,7 @@ class RemoteMovieRepository(
                         ).mapNotNull { movieResponse ->
                             movieResponse.body()?.toMovieSummary()
                         },
-                        totalPages = movies.size / maxPerPage + 1
+                        totalPages = ceil(movies.size.toDouble() / maxPerPage).roundToInt()
                     )
                 )
             } ?: DataResponse.Error()

@@ -13,10 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:background="@android:color/transparent"
         android:orientation="vertical"
-        android:paddingTop="8dp"
-        android:paddingBottom="3dp"
         android:visibility="@{viewModel.pageSelectionListVisibility}">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -25,6 +22,9 @@
             android:orientation="horizontal"
             app:itemBinding="@{viewModel.itemPageBinding}"
             app:items="@{viewModel.itemsPage}"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            android:paddingTop="8dp"
+            android:paddingBottom="3dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:visibility="@{viewModel.pageSelectionListVisibility}"/>
     </LinearLayout>
 </layout>
