@@ -6,7 +6,7 @@ import com.example.mmdb.R
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
 class DiscoverSelectionViewModel(
-    private val discoverSelections: List<String?>
+    private val discoverSelections: List<String?> = emptyList()
 ) {
 
     val items = ObservableArrayList<ItemDiscoverSelectionViewModel>().apply {

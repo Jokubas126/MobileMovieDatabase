@@ -20,73 +20,18 @@
             android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:refreshListener="@{viewModel.refreshEventListener}"
-            >
+            app:refreshListener="@{viewModel.refreshEventListener}">
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:nestedScrollingEnabled="true"
+                app:itemBinding="@{viewModel.contentItemBinding}"
+                app:items="@{viewModel.contentItems}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/discoverSelectionRecyclerView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:itemBinding="@{viewModel.discoverSelectionViewModel.itemBinding}"
-                        app:items="@{viewModel.discoverSelectionViewModel.items}"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <include
-                        android:id="@+id/pages"
-                        layout="@layout/page_selection_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/discoverSelectionRecyclerView"
-                        app:viewModel="@{viewModel.pageSelectionListViewModel}" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/movie_recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:itemBinding="@{viewModel.itemMoviesBinding}"
-                        app:items="@{viewModel.itemsMovie}"
-                        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                        app:layout_constraintTop_toBottomOf="@id/pages"
-                        app:movieGridLayoutManager="@{4}"
-                        app:saveState="@{viewModel.saveState}" />
-
-                    <TextView
-                        android:id="@+id/loading_error_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="@string/loading_list_empty"
-                        android:visibility="@{viewModel.progressManager.error &amp; viewModel.itemsMovie.isEmpty() ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ProgressBar
-                        android:id="@+id/progress_bar_loading_movie_list"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:visibility="@{viewModel.progressManager.loading ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.core.widget.NestedScrollView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 </layout>

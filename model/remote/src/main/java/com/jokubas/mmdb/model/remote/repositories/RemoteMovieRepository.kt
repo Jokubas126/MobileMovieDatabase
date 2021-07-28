@@ -48,15 +48,19 @@ class RemoteMovieRepository(
         maxPerPage: Int
     ) = flow<DataResponse<MovieResults>> {
 
+        var lastPage = pageFlow.value
+
+        emit(DataResponse.Loading())
         combine(
             idFlow,
             pageFlow
         ) { ids, page ->
             Pair(ids, page)
-        }.collect { pair ->
-            emit(DataResponse.Loading())
-            val ids = pair.first
-            val page = pair.second
+        }.collect { (ids, page) ->
+            if(lastPage != page) {
+                emit(DataResponse.Loading())
+                lastPage = page
+            }
             val response = ids.map { movieByIdNow(it) }.takeIf { movies ->
                 movies.any { it.isSuccessful && it.body() != null }
             }?.let { movies ->

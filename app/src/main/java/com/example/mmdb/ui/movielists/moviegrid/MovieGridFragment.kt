@@ -31,7 +31,7 @@ class MovieGridFragment : Fragment() {
         ).apply {
             viewModel = ViewModelProvider(
                 this@MovieGridFragment,
-                MovieGridViewModelFactory(action, config, lifecycle)
+                MovieGridViewModelFactory(action, config)
             ).get(MovieGridViewModel::class.java)
         }.root
     }

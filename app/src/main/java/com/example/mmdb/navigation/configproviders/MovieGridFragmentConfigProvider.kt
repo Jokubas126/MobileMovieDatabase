@@ -36,6 +36,7 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
         val genresRepository = appConfig.movieConfig.genresRepository
 
         return MovieGridFragmentConfig(
+            lifecycle = fragment.lifecycle,
             provideMovies = { movieListType, page ->
                 val availableGenres: List<Genre> = genresRepository.getAllGenres()
                 when (movieListType) {

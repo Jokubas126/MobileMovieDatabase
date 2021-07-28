@@ -16,5 +16,5 @@ fun FrameLayout.setChildView(view: View?) {
 
         addView(view)
     }
-
 }
+
