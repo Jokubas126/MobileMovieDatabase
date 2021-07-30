@@ -10,7 +10,11 @@ import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.ui.movielists.discover.DiscoverSelectionViewModel
 import com.example.mmdb.ui.movielists.pageselection.PageSelectionListViewModel
+import com.jokubas.mmdb.feedback_ui.error.ErrorViewModel
 import com.jokubas.mmdb.feedback_ui.LoadingViewModel
+import com.jokubas.mmdb.feedback_ui.error.ErrorButtonConfig
+import com.jokubas.mmdb.feedback_ui.error.GenericErrorViewModels
+import com.jokubas.mmdb.util.DataResponse
 import com.jokubas.mmdb.util.extensions.replaceAt
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
@@ -30,14 +34,15 @@ class MovieGridViewModel(
     private val pageSelectionListViewModel =
         PageSelectionListViewModel(viewModelScope + Dispatchers.IO)
 
-    val contentItems: ObservableList<Any> = ObservableArrayList<Any>().apply {
+    val items: ObservableList<Any> = ObservableArrayList<Any>().apply {
         discoverSelectionViewModel?.let { add(it) }
         add(pageSelectionListViewModel)
         add(LoadingViewModel)
     }
 
-    val contentItemBinding: OnItemBindClass<Any> = OnItemBindClass<Any>()
+    val itemBinding: OnItemBindClass<Any> = OnItemBindClass<Any>()
         .map(LoadingViewModel::class.java, BR.viewModel, R.layout.loading_view)
+        .map(ErrorViewModel::class.java, BR.viewModel, R.layout.error_view)
         .map(MovieGridContentViewModel::class.java, BR.viewModel, R.layout.movie_grid_content)
         .map(PageSelectionListViewModel::class.java, BR.viewModel, R.layout.page_selection_list)
         .map(DiscoverSelectionViewModel::class.java, BR.viewModel, R.layout.discover_selection_view)
@@ -46,14 +51,28 @@ class MovieGridViewModel(
         loadMovieList()
     }
 
+    private val errorViewModel = GenericErrorViewModels.NetworkErrorViewModel {
+        loadMovieList()
+    }
+
+    private val emptyViewModel = ErrorViewModel(
+        title = "Nothing found",
+        description = "No movies were found"
+    )
+
     init {
         loadMovieList()
     }
 
     fun loadMovieList() {
         viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
-            //progressManager.error()
-            Log.e("MovieGridViewModel", "loadMovieList: ", throwable)
+            viewModelScope.launch(Dispatchers.Main) {
+                items.replaceAt(
+                    index = items.lastIndex,
+                    item = errorViewModel
+                )
+            }
+            Log.e("MovieGridViewModel", "loadMovieList: $throwable")
         }) {
 
             combine(
@@ -84,27 +103,29 @@ class MovieGridViewModel(
                             totalPages = movieResults.totalPages
                         )
 
-                        (contentItems.last() as? MovieGridContentViewModel)?.updateMovieItems(
+                        (items.last() as? MovieGridContentViewModel)?.updateMovieItems(
                             newItemMovieListViewModel = itemMovieListViewModel,
                             watchlistMovies = watchlistMovies
-                        ) ?: contentItems.replaceAt(
-                                contentItems.lastIndex,
-                                MovieGridContentViewModel(
-                                    lifecycle = config.lifecycle,
-                                    movieListType = action.movieListType,
-                                    itemMovieListViewModel = itemMovieListViewModel
-                                )
+                        ) ?: items.replaceAt(
+                            items.lastIndex,
+                            MovieGridContentViewModel(
+                                lifecycle = config.lifecycle,
+                                movieListType = action.movieListType,
+                                itemMovieListViewModel = itemMovieListViewModel
                             )
+                        )
                     }
                 } ?: run {
                     withContext(Dispatchers.Main) {
-                        contentItems.replaceAt(contentItems.lastIndex, LoadingViewModel)
+                        items.replaceAt(
+                            index = items.lastIndex,
+                            item = when (movieResultResponse) {
+                                is DataResponse.Error -> errorViewModel
+                                is DataResponse.Empty -> emptyViewModel
+                                else -> LoadingViewModel
+                            }
+                        )
                     }
-                    /*when (movieListData.movieResultDataResponse) {
-                        is DataResponse.Error,
-                        is DataResponse.Empty -> progressManager.error()
-                        else -> //progressManager.loading()
-                    }*/
                 }
             }
         }

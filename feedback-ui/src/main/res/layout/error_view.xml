@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.jokubas.mmdb.feedback_ui.error.ErrorViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/spacing_s"
+            app:cardBackgroundColor="@color/white_80"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xxl_2">
+
+                <ImageView
+                    android:id="@+id/error_icon"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:src="@drawable/ic_no_connection" />
+
+                <TextView
+                    android:id="@+id/error_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_s"
+                    android:fontFamily="@font/roboto_condensed_bold"
+                    android:gravity="center"
+                    android:text="@{viewModel.title}"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_900"
+                    android:textSize="24sp"
+                    tools:text="No connection" />
+
+                <TextView
+                    android:id="@+id/error_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:text="@{viewModel.description}"
+                    android:textColor="@color/grey_800"
+                    android:textSize="14sp"
+                    tools:text="There is no internet connection. Please reconnect and try again" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/bg_error_button"
+                    android:fontFamily="@font/roboto_bold"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:onClick="@{() -> viewModel.buttonConfig.onClicked.invoke()}"
+                    android:paddingHorizontal="@dimen/spacing_xxl_2"
+                    android:paddingVertical="@dimen/spacing_xs"
+                    android:text="@{viewModel.buttonConfig.title}"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:visibility="@{viewModel.buttonVisibility}"
+                    tools:text="Try again" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
