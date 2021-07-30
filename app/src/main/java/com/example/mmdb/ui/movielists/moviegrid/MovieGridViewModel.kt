@@ -55,8 +55,6 @@ class MovieGridViewModel(
         loadMovieList()
     }
 
-    private val emptyViewModel = GenericErrorViewModels.EmptyViewModel
-
     init {
         loadMovieList()
     }
@@ -66,7 +64,7 @@ class MovieGridViewModel(
             viewModelScope.launch(Dispatchers.Main) {
                 items.replaceAt(
                     index = items.lastIndex,
-                    item = errorViewModel
+                    item = GenericErrorViewModels.Unknown
                 )
             }
             Log.e("MovieGridViewModel", "loadMovieList: $throwable")
@@ -105,12 +103,11 @@ class MovieGridViewModel(
                             watchlistMovies = watchlistMovies
                         ) ?: items.replaceAt(
                             items.lastIndex,
-                            emptyViewModel
-                            /*MovieGridContentViewModel(
+                            MovieGridContentViewModel(
                                 lifecycle = config.lifecycle,
                                 movieListType = action.movieListType,
                                 itemMovieListViewModel = itemMovieListViewModel
-                            )*/
+                            )
                         )
                     }
                 } ?: run {
@@ -119,7 +116,7 @@ class MovieGridViewModel(
                             index = items.lastIndex,
                             item = when (movieResultResponse) {
                                 is DataResponse.Error -> errorViewModel
-                                is DataResponse.Empty -> emptyViewModel
+                                is DataResponse.Empty -> GenericErrorViewModels.EmptyViewModel
                                 else -> LoadingViewModel
                             }
                         )

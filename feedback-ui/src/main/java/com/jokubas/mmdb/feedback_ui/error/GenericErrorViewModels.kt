@@ -7,7 +7,7 @@ sealed class GenericErrorViewModels {
 
     class NetworkErrorViewModel(
         onButtonClicked: () -> Unit
-    ): ErrorViewModel(
+    ) : ErrorViewModel(
         icon = ImageBind.ByResource(R.drawable.ic_no_connection),
         title = "No connection",
         description = "There is no internet connection. Please reconnect and try again.",
@@ -17,9 +17,15 @@ sealed class GenericErrorViewModels {
         )
     )
 
-    object EmptyViewModel: ErrorViewModel(
+    object EmptyViewModel : ErrorViewModel(
         icon = ImageBind.ByResource(R.drawable.ic_nothing_found),
         title = "No data",
         description = "Not content was found by your request."
+    )
+
+    object Unknown : ErrorViewModel(
+        icon = ImageBind.ByResource(R.drawable.ic_unknown_error),
+        title = "Something went wrong...",
+        description = "Unknown failure occurred while handling your request."
     )
 }
