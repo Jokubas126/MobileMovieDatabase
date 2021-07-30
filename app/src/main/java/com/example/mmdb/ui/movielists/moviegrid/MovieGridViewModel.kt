@@ -55,10 +55,7 @@ class MovieGridViewModel(
         loadMovieList()
     }
 
-    private val emptyViewModel = ErrorViewModel(
-        title = "Nothing found",
-        description = "No movies were found"
-    )
+    private val emptyViewModel = GenericErrorViewModels.EmptyViewModel
 
     init {
         loadMovieList()
@@ -108,11 +105,12 @@ class MovieGridViewModel(
                             watchlistMovies = watchlistMovies
                         ) ?: items.replaceAt(
                             items.lastIndex,
-                            MovieGridContentViewModel(
+                            emptyViewModel
+                            /*MovieGridContentViewModel(
                                 lifecycle = config.lifecycle,
                                 movieListType = action.movieListType,
                                 itemMovieListViewModel = itemMovieListViewModel
-                            )
+                            )*/
                         )
                     }
                 } ?: run {

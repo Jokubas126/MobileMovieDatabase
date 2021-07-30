@@ -38,7 +38,8 @@
                     android:id="@+id/error_icon"
                     android:layout_width="96dp"
                     android:layout_height="96dp"
-                    android:src="@drawable/ic_no_connection" />
+                    android:src="@{viewModel.icon}"
+                    tools:src="@drawable/ic_nothing_found" />
 
                 <TextView
                     android:id="@+id/error_title"
@@ -84,8 +85,6 @@
                     tools:text="Try again" />
 
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
