@@ -20,7 +20,7 @@ sealed class GenericErrorViewModels {
     object EmptyViewModel : ErrorViewModel(
         icon = ImageBind.ByResource(R.drawable.ic_nothing_found),
         title = "No data",
-        description = "Not content was found by your request."
+        description = "Not content was found."
     )
 
     object Unknown : ErrorViewModel(

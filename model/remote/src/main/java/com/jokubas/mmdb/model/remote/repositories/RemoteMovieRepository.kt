@@ -57,28 +57,32 @@ class RemoteMovieRepository(
         ) { ids, page ->
             Pair(ids, page)
         }.collect { (ids, page) ->
-            if(lastPage != page) {
+            if (lastPage != page) {
                 emit(DataResponse.Loading())
                 lastPage = page
             }
-            val response = ids.map { movieByIdNow(it) }.takeIf { movies ->
-                movies.any { it.isSuccessful && it.body() != null }
-            }?.let { movies ->
-                DataResponse.Success(
-                    MovieResults(
-                        page = page,
-                        movieList = movies.filter { movieResponse ->
-                            movieResponse.body() != null
-                        }.subList(
-                            page * maxPerPage - maxPerPage,
-                            min(page * maxPerPage, movies.size)
-                        ).mapNotNull { movieResponse ->
-                            movieResponse.body()?.toMovieSummary()
-                        },
-                        totalPages = ceil(movies.size.toDouble() / maxPerPage).roundToInt()
+
+            val response = when {
+                ids.isEmpty() -> DataResponse.Empty()
+                else -> ids.map { movieByIdNow(it) }.takeIf { movies ->
+                    movies.any { it.isSuccessful && it.body() != null }
+                }?.let { movies ->
+                    DataResponse.Success(
+                        MovieResults(
+                            page = page,
+                            movieList = movies.filter { movieResponse ->
+                                movieResponse.body() != null
+                            }.subList(
+                                page * maxPerPage - maxPerPage,
+                                min(page * maxPerPage, movies.size)
+                            ).mapNotNull { movieResponse ->
+                                movieResponse.body()?.toMovieSummary()
+                            },
+                            totalPages = ceil(movies.size.toDouble() / maxPerPage).roundToInt()
+                        )
                     )
-                )
-            } ?: DataResponse.Error()
+                } ?: DataResponse.Error()
+            }
             emit(response)
         }
     }
