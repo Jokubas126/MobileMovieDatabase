@@ -9,6 +9,7 @@ import com.jokubas.mmdb.util.constants.MOVIE_DB_IMAGE_LANGUAGE_EN
 import com.jokubas.mmdb.util.constants.MOVIE_DB_LANGUAGE_EN
 import com.jokubas.mmdb.util.dataResponseFlow
 import com.jokubas.mmdb.util.toDataResponseFlow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import retrofit2.Response
 import kotlin.math.*

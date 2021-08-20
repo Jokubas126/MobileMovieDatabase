@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/app/src/main/res/layout/fragment_movie_overview.xml" value="0.2692502532928065" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/app/src/main/res/layout/fragment_movies_grid.xml" value="0.2692502532928065" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/app/src/main/res/layout/movie_grid_content.xml" value="0.2692502532928065" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/app/src/main/res/layout/movie_overview_content.xml" value="0.4230072463768116" />
       </map>
     </option>
   </component>

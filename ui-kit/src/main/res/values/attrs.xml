@@ -3,4 +3,9 @@
     <declare-styleable name="ScrollingToolbarView">
         <attr name="scrollingAppBarViewModel" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="BoundViewSwitcher">
+        <attr name="item" format="reference" />
+        <attr name="itemBinding" format="reference" />
+    </declare-styleable>
 </resources>
