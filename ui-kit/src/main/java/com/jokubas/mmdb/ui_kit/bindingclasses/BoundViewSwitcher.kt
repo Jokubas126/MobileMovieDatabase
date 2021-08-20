@@ -1,7 +1,6 @@
 package com.jokubas.mmdb.ui_kit.bindingclasses
 
 import android.content.Context
-import android.os.Handler
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -58,9 +57,7 @@ class BoundViewSwitcher @JvmOverloads constructor(
                 showNext()
             }
 
-            post {
-                removeView(currentView)
-            }
+            post { removeView(currentView) }
         } ?: view?.let {
             addView(view)
         }
@@ -74,7 +71,7 @@ class BoundViewSwitcher @JvmOverloads constructor(
         private const val MAX_CHILD_COUNT = 2
     }
 
-    internal class SwitcherAdapter<T>(private val itemBinding: ItemBinding<T>) {
+    inner class SwitcherAdapter<T>(private val itemBinding: ItemBinding<T>) {
 
         private var currentBinding: ViewDataBinding? = null
 
