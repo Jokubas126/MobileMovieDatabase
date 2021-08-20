@@ -12,7 +12,6 @@ import com.example.mmdb.ui.movielists.discover.DiscoverSelectionViewModel
 import com.example.mmdb.ui.movielists.pageselection.PageSelectionListViewModel
 import com.jokubas.mmdb.feedback_ui.error.ErrorViewModel
 import com.jokubas.mmdb.feedback_ui.LoadingViewModel
-import com.jokubas.mmdb.feedback_ui.error.ErrorButtonConfig
 import com.jokubas.mmdb.feedback_ui.error.GenericErrorViewModels
 import com.jokubas.mmdb.util.DataResponse
 import com.jokubas.mmdb.util.extensions.replaceAt
@@ -27,9 +26,9 @@ class MovieGridViewModel(
 ) : ViewModel() {
 
     private val discoverSelectionViewModel: DiscoverSelectionViewModel? =
-        if (action.movieListType is MovieListType.Remote.Discover) {
-            DiscoverSelectionViewModel(action.movieListType.discoverNameList)
-        } else null
+        (action.movieListType as? MovieListType.Remote.Discover)?.let {
+            DiscoverSelectionViewModel(it.discoverNameList)
+        }
 
     private val pageSelectionListViewModel =
         PageSelectionListViewModel(viewModelScope + Dispatchers.IO)
@@ -59,7 +58,7 @@ class MovieGridViewModel(
         loadMovieList()
     }
 
-    fun loadMovieList() {
+    private fun loadMovieList() {
         viewModelScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
             viewModelScope.launch(Dispatchers.Main) {
                 items.replaceAt(
@@ -76,53 +75,52 @@ class MovieGridViewModel(
                     pageSelectionListViewModel.currentPage
                 ),
                 config.provideWatchlist.invoke()
-            ) { movies, watchlistMovies ->
-                Pair(movies, watchlistMovies)
-            }.collect { (movieResultResponse, watchlistMovies) ->
-                movieResultResponse.body()?.let { movieResults ->
-                    val itemMovieListViewModel = ItemMovieListViewModel(
-                        movieListType = action.movieListType,
-                        itemMovieEventListener = { movieId ->
-                            config.itemMovieEventListener.invoke(
-                                movieId,
-                                action.movieListType is MovieListType.Remote
-                            )
-                        },
-                        watchlistMovieIds = watchlistMovies.map { it.movieId },
-                        movieResults = movieResults
-                    )
-
-                    withContext(Dispatchers.Main) {
-                        pageSelectionListViewModel.update(
-                            currentPage = movieResults.page,
-                            totalPages = movieResults.totalPages
+            ) { movies, watchlistMovies -> movies to watchlistMovies }
+                .collect { (movieResultResponse, watchlistMovies) ->
+                    movieResultResponse.body()?.let { movieResults ->
+                        val itemMovieListViewModel = ItemMovieListViewModel(
+                            movieListType = action.movieListType,
+                            itemMovieEventListener = { movieId ->
+                                config.itemMovieEventListener.invoke(
+                                    movieId,
+                                    action.movieListType is MovieListType.Remote
+                                )
+                            },
+                            watchlistMovieIds = watchlistMovies.map { it.movieId },
+                            movieResults = movieResults
                         )
 
-                        (items.last() as? MovieGridContentViewModel)?.updateMovieItems(
-                            newItemMovieListViewModel = itemMovieListViewModel,
-                            watchlistMovies = watchlistMovies
-                        ) ?: items.replaceAt(
-                            items.lastIndex,
-                            MovieGridContentViewModel(
-                                lifecycle = config.lifecycle,
-                                movieListType = action.movieListType,
-                                itemMovieListViewModel = itemMovieListViewModel
+                        withContext(Dispatchers.Main) {
+                            pageSelectionListViewModel.update(
+                                currentPage = movieResults.page,
+                                totalPages = movieResults.totalPages
                             )
-                        )
-                    }
-                } ?: run {
-                    withContext(Dispatchers.Main) {
-                        items.replaceAt(
-                            index = items.lastIndex,
-                            item = when (movieResultResponse) {
-                                is DataResponse.Error -> errorViewModel
-                                is DataResponse.Empty -> GenericErrorViewModels.EmptyViewModel
-                                else -> LoadingViewModel
-                            }
-                        )
+
+                            (items.last() as? MovieGridContentViewModel)?.updateMovieItems(
+                                newItemMovieListViewModel = itemMovieListViewModel,
+                                watchlistMovies = watchlistMovies
+                            ) ?: items.replaceAt(
+                                items.lastIndex,
+                                MovieGridContentViewModel(
+                                    lifecycle = config.lifecycle,
+                                    movieListType = action.movieListType,
+                                    itemMovieListViewModel = itemMovieListViewModel
+                                )
+                            )
+                        }
+                    } ?: run {
+                        withContext(Dispatchers.Main) {
+                            items.replaceAt(
+                                index = items.lastIndex,
+                                item = when (movieResultResponse) {
+                                    is DataResponse.Error -> errorViewModel
+                                    is DataResponse.Empty -> GenericErrorViewModels.EmptyViewModel
+                                    else -> LoadingViewModel
+                                }
+                            )
+                        }
                     }
                 }
-            }
         }
     }
 }
