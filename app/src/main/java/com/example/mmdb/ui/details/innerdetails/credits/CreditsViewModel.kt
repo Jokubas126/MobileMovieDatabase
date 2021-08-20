@@ -1,51 +1,63 @@
 package com.example.mmdb.ui.details.innerdetails.credits
 
+import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
-import com.example.mmdb.managers.ProgressManager
 import com.example.mmdb.navigation.actions.InnerDetailsAction
-import com.jokubas.mmdb.model.data.entities.Credits
-import com.jokubas.mmdb.model.data.entities.Person
+import com.jokubas.mmdb.feedback_ui.LoadingViewModel
+import com.jokubas.mmdb.feedback_ui.error.ErrorViewModel
+import com.jokubas.mmdb.feedback_ui.error.GenericErrorViewModels
 import com.jokubas.mmdb.util.DataResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import me.tatarka.bindingcollectionadapter2.ItemBinding
+import me.tatarka.bindingcollectionadapter2.itembindings.OnItemBindClass
 
 class CreditsViewModel(
-    action: InnerDetailsAction.Credits,
-    config: CreditsConfig
+    private val action: InnerDetailsAction.Credits,
+    private val config: CreditsConfig
 ) : ViewModel() {
 
-    val progressManager = ProgressManager().apply { loading() }
+    private val networkErrorViewModel = GenericErrorViewModels.NetworkErrorViewModel {
+        loadMovieInfo()
+    }
 
-    private val _castList: MutableLiveData<List<Person?>> = MutableLiveData(emptyList())
-    val castList: LiveData<List<Person?>>
-        get() = _castList
+    val item: ObservableField<Any> = ObservableField(LoadingViewModel)
 
-    private val _crewList: MutableLiveData<List<Person?>> = MutableLiveData(emptyList())
-    val crewList: LiveData<List<Person?>>
-        get() = _crewList
+    val itemBinding: OnItemBindClass<Any> = OnItemBindClass<Any>()
+        .map(LoadingViewModel::class.java, BR.viewModel, R.layout.loading_view)
+        .map(ErrorViewModel::class.java, BR.viewModel, R.layout.error_view)
+        .map(CreditsContentViewModel::class.java, BR.viewModel, R.layout.movie_credits_content)
 
     init {
+        loadMovieInfo()
+    }
+
+    private fun loadMovieInfo() {
+        item.set(LoadingViewModel)
         viewModelScope.launch(Dispatchers.IO) {
             config.provideCreditsDataFlow.invoke(action.isRemote, action.movieId).collect { response ->
                 when {
                     response.body() != null -> {
                         val credits = response.body()
-                        _castList.postValue(credits?.castList ?: emptyList())
-                        _crewList.postValue(credits?.crewList ?: emptyList())
-                        progressManager.success()
+                        item.set(
+                            CreditsContentViewModel(
+                                castList = credits?.castList ?: emptyList(),
+                                crewList = credits?.crewList ?: emptyList()
+                            )
+                        )
                     }
-                    response is DataResponse.Error || response is DataResponse.Empty || response.body() == null -> {
-                        progressManager.error()
+                    response is DataResponse.Error -> {
+                        item.set(networkErrorViewModel)
                     }
-                    else -> progressManager.loading()
+                    response is DataResponse.Empty -> {
+                        item.set(GenericErrorViewModels.EmptyViewModel)
+                    }
+                    else -> item.set(LoadingViewModel)
                 }
             }
         }
     }
 
-    val creditsItemBinding: ItemBinding<Person> = ItemBinding.of(BR.person, R.layout.item_person)
 }
