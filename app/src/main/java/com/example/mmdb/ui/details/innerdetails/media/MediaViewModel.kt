@@ -13,7 +13,6 @@ import com.jokubas.mmdb.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.itembindings.OnItemBindClass
 
@@ -32,6 +31,9 @@ class MediaViewModel(
         .map(LoadingViewModel::class.java, BR.viewModel, R.layout.loading_view)
         .map(ErrorViewModel::class.java, BR.viewModel, R.layout.error_view)
         .map(MediaContentViewModel::class.java, BR.viewModel, R.layout.movie_media_content)
+
+    private val mediaContentViewModel: MediaContentViewModel?
+        get() = item.get() as? MediaContentViewModel
 
     init {
         loadMovieInfo()
@@ -59,7 +61,7 @@ class MediaViewModel(
                         }
                         else -> {
                             mainTrailer?.let {
-                                (item.get() as? MediaContentViewModel)?.updateTrailer(mainTrailer)
+                                mediaContentViewModel?.updateTrailer(mainTrailer)
                                     ?: item.set(
                                         MediaContentViewModel(
                                             lifecycle = config.lifecycle,
@@ -69,7 +71,7 @@ class MediaViewModel(
                             }
                             if (imagesResponse is DataResponse.Success<*>) {
                                 imagesResponse.body()?.let {
-                                    (item.get() as? MediaContentViewModel)?.updateImages(it)
+                                    mediaContentViewModel?.updateImages(it)
                                         ?: item.set(
                                             MediaContentViewModel(
                                                 lifecycle = config.lifecycle,
