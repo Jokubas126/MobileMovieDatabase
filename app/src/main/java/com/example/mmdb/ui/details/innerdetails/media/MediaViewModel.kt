@@ -1,71 +1,86 @@
 package com.example.mmdb.ui.details.innerdetails.media
 
+import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import com.example.mmdb.BR
 import com.example.mmdb.R
-import com.example.mmdb.managers.ProgressManager
 import com.example.mmdb.navigation.actions.InnerDetailsAction
-import com.jokubas.mmdb.model.data.entities.Image
-import com.jokubas.mmdb.model.data.entities.Images
-import com.jokubas.mmdb.model.data.entities.Video
+import com.jokubas.mmdb.feedback_ui.LoadingViewModel
+import com.jokubas.mmdb.feedback_ui.error.ErrorViewModel
+import com.jokubas.mmdb.feedback_ui.error.GenericErrorViewModels
 import com.jokubas.mmdb.model.data.entities.filterMainTrailer
 import com.jokubas.mmdb.util.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
-import me.tatarka.bindingcollectionadapter2.ItemBinding
+import me.tatarka.bindingcollectionadapter2.itembindings.OnItemBindClass
 
 class MediaViewModel(
-    action: InnerDetailsAction.Media,
-    config: MediaConfig
+    private val action: InnerDetailsAction.Media,
+    private val config: MediaConfig
 ) : ViewModel() {
 
-    val progressManager = ProgressManager()
+    private val networkErrorViewModel = GenericErrorViewModels.NetworkErrorViewModel {
+        loadMovieInfo()
+    }
 
-    private val _trailer = MutableLiveData<Video?>()
-    private val _images = MutableLiveData<Images?>()
+    val item: ObservableField<Any> = ObservableField(LoadingViewModel)
 
-    val trailer: LiveData<Video?>
-        get() = _trailer
-    val images: LiveData<Images?>
-        get() = _images
-
-    val imageBinding: ItemBinding<Image> = ItemBinding.of(BR.image, R.layout.item_image)
+    val itemBinding: OnItemBindClass<Any> = OnItemBindClass<Any>()
+        .map(LoadingViewModel::class.java, BR.viewModel, R.layout.loading_view)
+        .map(ErrorViewModel::class.java, BR.viewModel, R.layout.error_view)
+        .map(MediaContentViewModel::class.java, BR.viewModel, R.layout.movie_media_content)
 
     init {
+        loadMovieInfo()
+    }
+
+    private fun loadMovieInfo() {
+        item.set(LoadingViewModel)
         viewModelScope.launch(Dispatchers.IO) {
-            config.provideImages.invoke(action.movieId, action.isRemote).collect { images ->
-                if (images is DataResponse.Success<*>) {
-                    images.body()?.let {
-                        _images.postValue(it)
-                    }
-                }
-            }
-            config.provideTrailer.invoke(action.movieId, action.isRemote).collect { trailer ->
-                if (trailer is DataResponse.Success<*>) {
-                    trailer.body()?.let {
-                        _trailer.postValue(it.filterMainTrailer())
-                    }
-                }
-            }
             combine(
-                config.provideImages.invoke(action.movieId, action.isRemote),
-                config.provideTrailer.invoke(action.movieId, action.isRemote)
-            ) { images, trailer ->
-                if (images is DataResponse.Success<*>) {
-                    images.body()?.let {
-                        _images.postValue(it)
+                config.provideTrailer.invoke(action.movieId, action.isRemote),
+                config.provideImages.invoke(action.movieId, action.isRemote)
+            ) { trailerResponse, imagesResponse -> trailerResponse to imagesResponse }
+                .collect { (trailerResponse, imagesResponse) ->
+                    val mainTrailer = trailerResponse.body()?.filterMainTrailer()
+                    when {
+                        trailerResponse is DataResponse.Loading && imagesResponse is DataResponse.Loading -> {
+                            item.set(LoadingViewModel)
+                        }
+                        trailerResponse is DataResponse.Error && imagesResponse is DataResponse.Error -> {
+                            item.set(networkErrorViewModel)
+                        }
+                        mainTrailer == null && imagesResponse.body()?.backdropList?.isEmpty() == true
+                                && imagesResponse.body()?.posterList?.isEmpty() == true -> {
+                            item.set(GenericErrorViewModels.EmptyViewModel)
+                        }
+                        else -> {
+                            mainTrailer?.let {
+                                (item.get() as? MediaContentViewModel)?.updateTrailer(mainTrailer)
+                                    ?: item.set(
+                                        MediaContentViewModel(
+                                            lifecycle = config.lifecycle,
+                                            initialTrailer = mainTrailer
+                                        )
+                                    )
+                            }
+                            if (imagesResponse is DataResponse.Success<*>) {
+                                imagesResponse.body()?.let {
+                                    (item.get() as? MediaContentViewModel)?.updateImages(it)
+                                        ?: item.set(
+                                            MediaContentViewModel(
+                                                lifecycle = config.lifecycle,
+                                                initialImages = it
+                                            )
+                                        )
+                                }
+                            }
+                        }
                     }
                 }
-                if (trailer is DataResponse.Success<*>) {
-                    trailer.body()?.let {
-                        _trailer.postValue(it.filterMainTrailer())
-                    }
-                }
-                //TODO handle other DataResponse types
-            }
         }
     }
 }

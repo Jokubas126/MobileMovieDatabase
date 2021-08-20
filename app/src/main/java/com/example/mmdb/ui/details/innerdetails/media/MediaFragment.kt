@@ -31,11 +31,5 @@ class MediaFragment : Fragment() {
             )
         ).get(MediaViewModel::class.java)
         lifecycleOwner = this@MediaFragment
-
-        viewLifecycleOwner.lifecycle.addObserver(youtubePlayerView)
     }.root
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
 }

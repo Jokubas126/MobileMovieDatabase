@@ -14,6 +14,7 @@ class MediaConfigProvider : ConfigProvider<MediaConfig> {
         val remoteMovieRepository = appConfig.movieConfig.remoteMovieRepository
 
         return MediaConfig(
+            lifecycle = fragment.lifecycle,
             provideImages = { movieId, isRemote ->
                 if (isRemote)
                     remoteMovieRepository.imagesFlow(movieId = movieId)
