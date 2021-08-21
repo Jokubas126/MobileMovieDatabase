@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.moviegrid
+package com.jokubas.mmdb.moviegrid.ui.grid
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

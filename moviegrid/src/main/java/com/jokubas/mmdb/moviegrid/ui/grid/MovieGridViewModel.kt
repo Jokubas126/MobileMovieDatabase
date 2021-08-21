@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.moviegrid
+package com.jokubas.mmdb.moviegrid.ui.grid
 
 import android.util.Log
 import androidx.databinding.ObservableArrayList
@@ -8,10 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.jokubas.mmdb.feedback_ui.LoadingViewModel
 import com.jokubas.mmdb.feedback_ui.error.ErrorViewModel
 import com.jokubas.mmdb.feedback_ui.error.GenericErrorViewModels
+import com.jokubas.mmdb.moviegrid.BR
+import com.jokubas.mmdb.moviegrid.ui.movieitem.ItemMovieListViewModel
+import com.jokubas.mmdb.moviegrid.R
 import com.jokubas.mmdb.moviegrid.actions.MovieGridFragmentAction
 import com.jokubas.mmdb.moviegrid.actions.MovieListType
-import com.jokubas.mmdb.moviegrid.pageselection.PageSelectionListViewModel
-import com.jokubas.mmdb.moviegrid.selection.DiscoverSelectionViewModel
+import com.jokubas.mmdb.moviegrid.ui.pageselection.PageSelectionListViewModel
+import com.jokubas.mmdb.moviegrid.ui.discover.DiscoverSelectionViewModel
 import com.jokubas.mmdb.util.DataResponse
 import com.jokubas.mmdb.util.extensions.replaceAt
 import kotlinx.coroutines.*

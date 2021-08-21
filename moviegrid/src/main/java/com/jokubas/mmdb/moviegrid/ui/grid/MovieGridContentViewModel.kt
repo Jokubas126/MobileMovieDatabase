@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.moviegrid
+package com.jokubas.mmdb.moviegrid.ui.grid
 
 import android.os.Parcelable
 import androidx.databinding.ObservableArrayList
@@ -7,7 +7,11 @@ import androidx.databinding.ObservableList
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.jokubas.mmdb.model.data.entities.WatchlistMovie
+import com.jokubas.mmdb.moviegrid.BR
+import com.jokubas.mmdb.moviegrid.ui.movieitem.ItemMovieListViewModel
+import com.jokubas.mmdb.moviegrid.R
 import com.jokubas.mmdb.moviegrid.actions.MovieListType
+import com.jokubas.mmdb.moviegrid.ui.movieitem.ItemMovieViewModel
 import com.jokubas.mmdb.util.SaveState
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 

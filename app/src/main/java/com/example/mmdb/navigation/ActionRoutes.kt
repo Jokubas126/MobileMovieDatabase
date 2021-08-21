@@ -16,8 +16,8 @@ import com.jokubas.mmdb.moviedetails.ui.overview.OverviewFragment
 import com.jokubas.mmdb.moviedetails.ui.overview.OverviewFragmentArgs
 import com.jokubas.mmdb.moviediscover.ui.discover.DiscoverFragment
 import com.jokubas.mmdb.moviediscover.ui.discover.DiscoverFragmentArgs
-import com.jokubas.mmdb.moviegrid.MovieGridFragment
-import com.jokubas.mmdb.moviegrid.MovieGridFragmentArgs
+import com.jokubas.mmdb.moviegrid.ui.grid.MovieGridFragment
+import com.jokubas.mmdb.moviegrid.ui.grid.MovieGridFragmentArgs
 import com.jokubas.mmdb.moviedetails.actions.DetailsFragmentAction
 import com.jokubas.mmdb.moviedetails.actions.InnerDetailsAction
 import com.jokubas.mmdb.moviegrid.actions.MovieGridFragmentAction

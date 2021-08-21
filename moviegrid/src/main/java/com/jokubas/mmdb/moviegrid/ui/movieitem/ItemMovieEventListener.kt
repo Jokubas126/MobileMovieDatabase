@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.moviegrid
+package com.jokubas.mmdb.moviegrid.ui.movieitem
 
 data class ItemMovieEventListener(
     val onItemSelected: (() -> Unit)? = null,

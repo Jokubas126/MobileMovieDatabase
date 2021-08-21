@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.moviegrid
+package com.jokubas.mmdb.moviegrid.ui.grid
 
 import android.os.Bundle
 import android.view.LayoutInflater

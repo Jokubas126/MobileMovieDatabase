@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.moviegrid
+package com.jokubas.mmdb.moviegrid.ui.movieitem
 
 import androidx.databinding.ObservableBoolean
 import com.jokubas.mmdb.model.data.entities.MovieSummary

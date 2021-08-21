@@ -10,8 +10,8 @@ import com.jokubas.mmdb.model.data.entities.Genre
 import com.jokubas.mmdb.model.data.entities.MovieResults
 import com.jokubas.mmdb.model.data.entities.mapGenres
 import com.jokubas.mmdb.moviedetails.actions.DetailsFragmentAction
-import com.jokubas.mmdb.moviegrid.ItemMovieEventListener
-import com.jokubas.mmdb.moviegrid.MovieGridFragmentConfig
+import com.jokubas.mmdb.moviegrid.ui.movieitem.ItemMovieEventListener
+import com.jokubas.mmdb.moviegrid.ui.grid.MovieGridFragmentConfig
 import com.jokubas.mmdb.moviegrid.actions.MovieListType
 import com.jokubas.mmdb.util.DataResponse
 import com.jokubas.mmdb.util.navigationtools.ConfigProvider

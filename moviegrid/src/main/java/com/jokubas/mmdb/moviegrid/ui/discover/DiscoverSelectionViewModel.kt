@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.moviegrid.selection
+package com.jokubas.mmdb.moviegrid.ui.discover
 
 import androidx.databinding.ObservableArrayList
 import com.jokubas.mmdb.moviegrid.BR

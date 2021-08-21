@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.moviegrid.pageselection
+package com.jokubas.mmdb.moviegrid.ui.pageselection
 
 import android.view.View
 import androidx.databinding.Observable

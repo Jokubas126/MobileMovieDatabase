@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.jokubas.mmdb.moviegrid.MovieGridViewModel" />
+            type="com.jokubas.mmdb.moviegrid.ui.grid.MovieGridViewModel" />
 
         <import type="android.view.View" />
     </data>
