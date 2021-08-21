@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.jokubas.mmdb.moviedetails.credits.CreditsContentViewModel" />
+            type="com.jokubas.mmdb.moviedetails.ui.credits.CreditsContentViewModel" />
 
         <import type="android.view.View"/>
     </data>

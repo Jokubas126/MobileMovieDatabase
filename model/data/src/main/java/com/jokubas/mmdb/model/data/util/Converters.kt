@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jokubas.mmdb.model.data.entities.Country
 import com.jokubas.mmdb.model.data.entities.Genre
-import com.jokubas.mmdb.model.data.entities.Image
 import java.lang.reflect.Type
 import java.util.*
 
@@ -41,22 +40,6 @@ class IntListTypeConverter {
         if (string == null)
             return Collections.emptyList()
         val listType: Type = object : TypeToken<List<Int?>?>() {}.type
-        return Gson().fromJson(string, listType)
-    }
-}
-
-class ImageListTypeConverter {
-
-    @TypeConverter
-    fun imageListToString(imageList: List<Image>?): String? {
-        return Gson().toJson(imageList)
-    }
-
-    @TypeConverter
-    fun stringToImageList(string: String?): List<Image>? {
-        if (string == null)
-            return Collections.emptyList()
-        val listType: Type = object : TypeToken<List<Image?>?>() {}.type
         return Gson().fromJson(string, listType)
     }
 }

@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.jokubas.mmdb.moviedetails.overview.OverviewViewModel" />
+            type="com.jokubas.mmdb.moviedetails.ui.overview.OverviewViewModel" />
     </data>
 
     <com.jokubas.mmdb.ui_kit.bindingclasses.BoundViewSwitcher

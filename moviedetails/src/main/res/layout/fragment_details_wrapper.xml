@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.jokubas.mmdb.moviedetails.DetailsViewModel" />
+            type="com.jokubas.mmdb.moviedetails.ui.DetailsViewModel" />
 
         <import type="android.view.View" />
     </data>

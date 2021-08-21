@@ -6,7 +6,8 @@ import com.example.mmdb.R
 import com.jokubas.mmdb.util.navigationtools.ConfigProvider
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.requireNavController
-import com.jokubas.mmdb.moviedetails.DetailsFragmentConfig
+import com.jokubas.mmdb.moviedetails.actions.InnerDetailsAction
+import com.jokubas.mmdb.moviedetails.ui.DetailsFragmentConfig
 
 class DetailsFragmentConfigProvider : ConfigProvider<DetailsFragmentConfig> {
 
@@ -16,7 +17,7 @@ class DetailsFragmentConfigProvider : ConfigProvider<DetailsFragmentConfig> {
 
         return DetailsFragmentConfig(
             loadInitialView = { idWrapper, isRemote ->
-                navController.resolveFragment(com.jokubas.mmdb.moviedetails.actions.InnerDetailsAction.Overview(idWrapper, isRemote))
+                navController.resolveFragment(InnerDetailsAction.Overview(idWrapper, isRemote))
                     ?.let { resolvedFragment ->
                         handleDetailsFragment(
                             fragmentManager = fragment.childFragmentManager,

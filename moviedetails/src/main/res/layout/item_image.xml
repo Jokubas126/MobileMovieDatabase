@@ -5,7 +5,7 @@
     <data>
         <variable
             name="image"
-            type="com.jokubas.mmdb.model.data.entities.Image" />
+            type="com.jokubas.mmdb.moviedetails.model.entities.Image" />
     </data>
 
     <LinearLayout

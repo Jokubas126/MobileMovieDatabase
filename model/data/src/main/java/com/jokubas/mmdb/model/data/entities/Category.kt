@@ -2,7 +2,8 @@ package com.jokubas.mmdb.model.data.entities
 
 import android.os.Parcelable
 import com.jokubas.mmdb.model.data.util.KEY_LANGUAGE_ISO_CODE
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -26,6 +27,7 @@ class Subcategory(
     val name: String
 ) : Parcelable {
 
+    @IgnoredOnParcel
     @Transient
     var isChecked: Boolean = false
 }
