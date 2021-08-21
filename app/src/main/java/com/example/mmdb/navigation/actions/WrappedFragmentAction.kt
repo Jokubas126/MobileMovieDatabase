@@ -1,5 +1,5 @@
 package com.example.mmdb.navigation.actions
 
-import com.example.mmdb.navigation.Action
+import com.jokubas.mmdb.util.navigationtools.Action
 
 interface WrappedFragmentAction: Action

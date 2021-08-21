@@ -6,18 +6,20 @@ import com.example.mmdb.navigation.actions.*
 import com.example.mmdb.navigation.configproviders.*
 import com.example.mmdb.ui.about.AboutFragment
 import com.example.mmdb.ui.about.AboutFragmentArgs
-import com.example.mmdb.ui.details.DetailsFragment
-import com.example.mmdb.ui.details.DetailsFragmentArgs
-import com.example.mmdb.ui.details.innerdetails.credits.CreditsFragment
-import com.example.mmdb.ui.details.innerdetails.credits.CreditsFragmentArgs
-import com.example.mmdb.ui.details.innerdetails.media.MediaFragment
-import com.example.mmdb.ui.details.innerdetails.media.MediaFragmentArgs
-import com.example.mmdb.ui.details.innerdetails.overview.OverviewFragment
-import com.example.mmdb.ui.details.innerdetails.overview.OverviewFragmentArgs
+import com.jokubas.mmdb.moviedetails.DetailsFragment
+import com.jokubas.mmdb.moviedetails.DetailsFragmentArgs
+import com.jokubas.mmdb.moviedetails.credits.CreditsFragment
+import com.jokubas.mmdb.moviedetails.credits.CreditsFragmentArgs
+import com.jokubas.mmdb.moviedetails.media.MediaFragment
+import com.jokubas.mmdb.moviedetails.media.MediaFragmentArgs
+import com.jokubas.mmdb.moviedetails.overview.OverviewFragment
+import com.jokubas.mmdb.moviedetails.overview.OverviewFragmentArgs
 import com.example.mmdb.ui.discover.DiscoverFragment
 import com.example.mmdb.ui.discover.DiscoverFragmentArgs
 import com.example.mmdb.ui.movielists.moviegrid.MovieGridFragment
 import com.example.mmdb.ui.movielists.moviegrid.MovieGridFragmentArgs
+import com.jokubas.mmdb.moviedetails.actions.DetailsFragmentAction
+import com.jokubas.mmdb.moviedetails.actions.InnerDetailsAction
 
 internal typealias FragmentProvider<T> = (action: T) -> Fragment
 

@@ -75,6 +75,7 @@ dependencies {
     implementation project(':model:data')
     implementation project(':model:remote')
     implementation project(':model:room')
+    implementation project(':moviedetails')
     implementation project(':util')
     implementation project(':feedback-ui')
     implementation project(':ui-kit')

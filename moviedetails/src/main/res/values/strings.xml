@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Parts for movie details -->
+
+    <string name="score_ending">/10</string>
+    <string name="min_ending">&#160;min</string>
+    <string name="parenthesisStart">(</string>
+    <string name="parenthesisEnd">)</string>
+
+    <!-- Section names -->
+
+    <string name="main_cast_section">Main cast:</string>
+    <string name="main_crew_section">Main crew:</string>
+    <string name="description_section">Description</string>
+    <string name="production_countries_section">Production countries</string>
+    <string name="posters_section">Posters:</string>
+    <string name="backdrops_section">Backdrops:</string>
+</resources>

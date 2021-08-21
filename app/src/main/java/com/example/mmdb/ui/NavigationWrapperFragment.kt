@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.mmdb.databinding.FragmentNavigationWrapperBinding
 import com.example.mmdb.navigation.BaseNavigationFragment
-import com.example.mmdb.navigation.ConfigFragmentArgs
-import com.example.mmdb.navigation.action
+import com.jokubas.mmdb.util.navigationtools.ConfigFragmentArgs
+import com.jokubas.mmdb.util.navigationtools.action
 
 object NavigationWrapperFragmentConfig
 object NavigationWrapperFragmentArgs :

@@ -5,10 +5,12 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.config.AppConfig
+import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.databinding.FragmentDiscoverBinding
-import com.example.mmdb.extensions.requireAppConfig
 import com.example.mmdb.navigation.*
 import com.example.mmdb.navigation.actions.DiscoverFragmentAction
+import com.jokubas.mmdb.util.navigationtools.ConfigFragmentArgs
+import com.jokubas.mmdb.util.navigationtools.config
 
 object DiscoverFragmentArgs: ConfigFragmentArgs<DiscoverFragmentAction, DiscoverFragmentConfig>()
 

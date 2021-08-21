@@ -1,6 +1,6 @@
 package com.example.mmdb.navigation.actions
 
-import com.example.mmdb.navigation.Action
+import com.jokubas.mmdb.util.navigationtools.Action
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

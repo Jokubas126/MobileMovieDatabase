@@ -2,6 +2,7 @@ package com.example.mmdb.config
 
 import android.app.Activity
 import android.app.Application
+import androidx.fragment.app.Fragment
 import com.example.mmdb.MainApplication
 import okhttp3.OkHttpClient
 
@@ -28,3 +29,4 @@ class AppConfig(application: Application) {
 
 fun Application.requireAppConfig(): AppConfig = (this as MainApplication).config
 fun Activity.requireAppConfig(): AppConfig = (application as MainApplication).config
+fun Fragment.requireAppConfig(): AppConfig = (requireActivity().application as MainApplication).config

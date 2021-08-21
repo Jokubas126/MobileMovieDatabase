@@ -1,9 +1,9 @@
 package com.example.mmdb.navigation.configproviders
 
 import androidx.fragment.app.Fragment
-import com.example.mmdb.extensions.requireAppConfig
-import com.example.mmdb.navigation.ConfigProvider
-import com.example.mmdb.ui.details.innerdetails.credits.CreditsConfig
+import com.example.mmdb.config.requireAppConfig
+import com.jokubas.mmdb.util.navigationtools.ConfigProvider
+import com.jokubas.mmdb.moviedetails.credits.CreditsConfig
 
 class CreditsConfigProvider : ConfigProvider<CreditsConfig> {
     override fun config(fragment: Fragment): CreditsConfig {

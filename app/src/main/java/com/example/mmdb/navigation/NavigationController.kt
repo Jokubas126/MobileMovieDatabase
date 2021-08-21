@@ -17,6 +17,8 @@ import com.example.mmdb.ui.drawer.DrawerBehaviorInterface
 import com.jokubas.mmdb.util.extensions.popSafe
 import java.util.*
 
+fun Fragment.requireNavController(): NavigationController = (requireActivity() as NavigationActivity).navigationController
+
 class NavigationController(
     activity: NavigationActivity,
     private val drawerInteractor: DrawerBehaviorInterface,

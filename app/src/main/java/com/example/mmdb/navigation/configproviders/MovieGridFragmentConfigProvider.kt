@@ -3,21 +3,17 @@ package com.example.mmdb.navigation.configproviders
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.mmdb.config.AppConfig
-import com.example.mmdb.extensions.requireAppConfig
-import com.example.mmdb.extensions.requireNavController
-import com.example.mmdb.navigation.ConfigProvider
+import com.example.mmdb.config.requireAppConfig
+import com.jokubas.mmdb.util.navigationtools.ConfigProvider
 import com.example.mmdb.navigation.NavigationController
-import com.example.mmdb.navigation.actions.DetailsFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
+import com.example.mmdb.navigation.requireNavController
 import com.example.mmdb.ui.movielists.moviegrid.ItemMovieEventListener
 import com.example.mmdb.ui.movielists.moviegrid.MovieGridFragmentConfig
 import com.jokubas.mmdb.model.data.entities.Genre
 import com.jokubas.mmdb.model.data.entities.MovieResults
 import com.jokubas.mmdb.model.data.entities.mapGenres
 import com.jokubas.mmdb.util.DataResponse
-import com.jokubas.mmdb.util.toDataResponseFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 
 const val MAX_MOVIES_FOR_PAGE = 20
@@ -85,7 +81,7 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
                 ItemMovieEventListener(
                     onItemSelected = {
                         navController.goTo(
-                            action = DetailsFragmentAction(
+                            action = com.jokubas.mmdb.moviedetails.actions.DetailsFragmentAction(
                                 movieId = movieId,
                                 isRemote = isRemote
                             ),

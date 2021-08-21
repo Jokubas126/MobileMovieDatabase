@@ -1,16 +1,5 @@
 <resources>
 
-    <!-- General -->
-
-    <string name="app_name">Mobile Movie Database</string>
-    <string name="no_internet_connection">No internet connection</string>
-    <string name="action_search">Search</string>
-    <string name="loading_list_empty">There are no movies to display</string>
-    <string name="personal_list_empty">There are no lists made yet</string>
-    <string name="loading_error">Error occurred when loading</string>
-    <string name="nothing_to_show">Unfortunately, there is nothing to be shown</string>
-    <string name="undo">Undo</string>
-
     <!-- Error -->
 
     <string name="update_required">Data update required. Please connect to internet and try again</string>
@@ -23,22 +12,8 @@
     <string name="discover_movie_grid">Discover:&#160;</string>
     <string name="discover_fragment">Discover</string>
 
-    <!-- Image descriptions -->
 
-    <string name="background_image">Background image</string>
-    <string name="app_icon">The main icon of application</string>
-    <string name="movie_image">Movie image</string>
-    <string name="person_image">Person profile image</string>
-    <string name="empty_image">No image</string>
 
-    <!-- Section names -->
-
-    <string name="main_cast_section">Main cast:</string>
-    <string name="main_crew_section">Main crew:</string>
-    <string name="description_section">Description</string>
-    <string name="production_countries_section">Production countries</string>
-    <string name="posters_section">Posters:</string>
-    <string name="backdrops_section">Backdrops:</string>
 
     <!-- Release date related -->
 
@@ -61,13 +36,6 @@
 
     <string name="added_to_watchlist">Added to the watchlist</string>
     <string name="deleted_from_watchlist">Deleted from the watchlist</string>
-
-    <!-- Parts for movie details -->
-
-    <string name="score_ending">/10</string>
-    <string name="min_ending">&#160;min</string>
-    <string name="parenthesisStart">(</string>
-    <string name="parenthesisEnd">)</string>
 
     <!-- About app fragment -->
 

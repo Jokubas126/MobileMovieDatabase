@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.databinding.FragmentAboutBinding
-import com.example.mmdb.extensions.requireAppConfig
-import com.example.mmdb.extensions.requireNavController
-import com.example.mmdb.navigation.ConfigFragmentArgs
+import com.jokubas.mmdb.util.navigationtools.ConfigFragmentArgs
 import com.example.mmdb.navigation.actions.AboutFragmentAction
+import com.example.mmdb.navigation.requireNavController
 import com.example.mmdb.ui.ToolbarViewModel
 
 object AboutFragmentArgs : ConfigFragmentArgs<AboutFragmentAction, AboutFragmentConfig>()

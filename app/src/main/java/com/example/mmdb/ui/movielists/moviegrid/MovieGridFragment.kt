@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.mmdb.databinding.FragmentMoviesGridBinding
-import com.example.mmdb.navigation.ConfigFragmentArgs
-import com.example.mmdb.navigation.action
+import com.jokubas.mmdb.util.navigationtools.ConfigFragmentArgs
+import com.jokubas.mmdb.util.navigationtools.action
 import com.example.mmdb.navigation.actions.MovieGridFragmentAction
-import com.example.mmdb.navigation.config
+import com.jokubas.mmdb.util.navigationtools.config
 
 object MovieGridFragmentArgs : ConfigFragmentArgs<MovieGridFragmentAction, MovieGridFragmentConfig>()
 

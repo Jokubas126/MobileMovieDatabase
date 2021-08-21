@@ -33,7 +33,7 @@ class LiveEvent<T> : MediatorLiveData<T>() {
 
     override fun removeObserver(observer: Observer<in T>) {
         observers.forEach {
-            if (it.value.remove(observer)) {
+            if (it.value.remove(observer as ObserverWrapper<in T>)) {
                 if (it.value.isEmpty()) {
                     observers.remove(it.key)
                 }
@@ -57,7 +57,7 @@ class LiveEvent<T> : MediatorLiveData<T>() {
         value = null
     }
 
-    private class ObserverWrapper<T>(private val observer: Observer<T>) : Observer<T> {
+    private class ObserverWrapper<T>(val observer: Observer<T>) : Observer<T> {
 
         private val pending = AtomicBoolean(false)
 
