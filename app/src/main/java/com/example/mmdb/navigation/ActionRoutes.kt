@@ -14,8 +14,8 @@ import com.jokubas.mmdb.moviedetails.ui.media.MediaFragment
 import com.jokubas.mmdb.moviedetails.ui.media.MediaFragmentArgs
 import com.jokubas.mmdb.moviedetails.ui.overview.OverviewFragment
 import com.jokubas.mmdb.moviedetails.ui.overview.OverviewFragmentArgs
-import com.example.mmdb.ui.discover.DiscoverFragment
-import com.example.mmdb.ui.discover.DiscoverFragmentArgs
+import com.jokubas.mmdb.moviediscover.ui.discover.DiscoverFragment
+import com.jokubas.mmdb.moviediscover.ui.discover.DiscoverFragmentArgs
 import com.example.mmdb.ui.movielists.moviegrid.MovieGridFragment
 import com.example.mmdb.ui.movielists.moviegrid.MovieGridFragmentArgs
 import com.jokubas.mmdb.moviedetails.actions.DetailsFragmentAction
@@ -85,7 +85,7 @@ val actionRoutes: List<ActionFragmentProviderPair<*>> = listOf(
         }
     ),
     ActionFragmentProviderPair(
-        key = DiscoverFragmentAction::class.java,
+        key = com.jokubas.mmdb.moviediscover.actions.DiscoverFragmentAction::class.java,
         value = { action ->
             DiscoverFragment().apply {
                 arguments = DiscoverFragmentArgs.create(

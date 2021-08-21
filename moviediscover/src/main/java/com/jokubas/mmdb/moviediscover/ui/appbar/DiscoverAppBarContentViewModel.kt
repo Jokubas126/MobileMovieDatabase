@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.discover
+package com.jokubas.mmdb.moviediscover.ui.appbar
 
 import androidx.databinding.ObservableField
 import com.google.android.material.slider.RangeSlider

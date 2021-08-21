@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.mmdb.ui.discover.DiscoverViewModel" />
+            type="com.jokubas.mmdb.moviediscover.ui.discover.DiscoverViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:theme="@style/AppTheme.AppBarOverlay"
             app:expanded="true"
-            app:layout_behavior=".ui.discover.ScrollingToolbarBehavior"
+            app:layout_behavior="com.jokubas.mmdb.moviediscover.ui.appbar.ScrollingToolbarBehavior"
             app:scrollingAppBarViewModel="@{viewModel.scrollingAppBarViewModel}" />
 
         <androidx.recyclerview.widget.RecyclerView

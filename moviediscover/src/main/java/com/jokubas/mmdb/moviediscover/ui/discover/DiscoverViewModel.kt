@@ -1,8 +1,9 @@
-package com.example.mmdb.ui.discover
+package com.jokubas.mmdb.moviediscover.ui.discover
 
 import androidx.databinding.ObservableField
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.ConcatAdapter
+import com.jokubas.mmdb.moviediscover.ui.category.ItemsExpandableAdapter
 import com.jokubas.mmdb.ui_kit.scrollingappbar.ScrollingAppBarViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

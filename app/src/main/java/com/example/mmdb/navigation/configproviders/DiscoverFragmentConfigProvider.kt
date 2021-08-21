@@ -4,20 +4,21 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import com.example.mmdb.config.AppConfig
 import com.example.mmdb.config.requireAppConfig
-import com.example.mmdb.databinding.DiscoverAppBarContentViewBinding
-import com.example.mmdb.databinding.DiscoverToolbarToolsBinding
-import com.jokubas.mmdb.util.navigationtools.ConfigProvider
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.navigation.requireNavController
-import com.example.mmdb.ui.discover.DiscoverAppBarContentViewModel
-import com.example.mmdb.ui.discover.DiscoverFragmentConfig
-import com.example.mmdb.ui.discover.DiscoverToolbarToolsViewModel
 import com.jokubas.mmdb.model.data.entities.CategoryType
 import com.jokubas.mmdb.model.data.entities.Subcategory
 import com.jokubas.mmdb.model.remote.repositories.CategoryRepository
-import kotlinx.coroutines.flow.*
+import com.jokubas.mmdb.moviediscover.ui.appbar.DiscoverAppBarContentViewModel
+import com.jokubas.mmdb.moviediscover.ui.discover.DiscoverFragmentConfig
+import com.jokubas.mmdb.moviediscover.ui.appbar.DiscoverToolbarToolsViewModel
+import com.jokubas.mmdb.moviediscover.databinding.DiscoverAppBarContentViewBinding
+import com.jokubas.mmdb.moviediscover.databinding.DiscoverToolbarToolsBinding
+import com.jokubas.mmdb.util.navigationtools.ConfigProvider
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.util.*
 
 class DiscoverFragmentConfigProvider : ConfigProvider<DiscoverFragmentConfig> {
@@ -103,7 +104,6 @@ class DiscoverFragmentConfigProvider : ConfigProvider<DiscoverFragmentConfig> {
                             }
                         )
                     }.root
-
                 }
             }
         )

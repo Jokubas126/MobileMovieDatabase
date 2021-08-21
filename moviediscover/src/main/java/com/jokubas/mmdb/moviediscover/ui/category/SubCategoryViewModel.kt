@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.discover
+package com.jokubas.mmdb.moviediscover.ui.category
 
 import androidx.databinding.ObservableBoolean
 import com.jokubas.mmdb.model.data.entities.CategoryType

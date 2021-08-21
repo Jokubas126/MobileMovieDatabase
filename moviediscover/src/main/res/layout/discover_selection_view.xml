@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.mmdb.ui.movielists.discover.DiscoverSelectionViewModel" />
+            type="com.jokubas.mmdb.moviediscover.ui.selection.DiscoverSelectionViewModel" />
     </data>
 
     <androidx.recyclerview.widget.RecyclerView

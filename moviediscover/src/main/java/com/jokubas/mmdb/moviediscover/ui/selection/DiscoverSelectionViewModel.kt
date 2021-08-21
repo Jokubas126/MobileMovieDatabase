@@ -1,8 +1,8 @@
-package com.example.mmdb.ui.movielists.discover
+package com.jokubas.mmdb.moviediscover.ui.selection
 
 import androidx.databinding.ObservableArrayList
-import com.example.mmdb.BR
-import com.example.mmdb.R
+import com.jokubas.mmdb.moviediscover.BR
+import com.jokubas.mmdb.moviediscover.R
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 
 class DiscoverSelectionViewModel(

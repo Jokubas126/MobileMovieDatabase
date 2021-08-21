@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.discover
+package com.jokubas.mmdb.moviediscover.ui.appbar
 
 import android.content.Context
 import android.util.AttributeSet

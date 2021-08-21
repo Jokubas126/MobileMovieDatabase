@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/app/src/main/res/drawable/ic_check.xml" value="0.4111111111111111" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/app/src/main/res/layout/fragment_movie_credits.xml" value="0.2115036231884058" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/app/src/main/res/layout/fragment_movie_media.xml" value="0.2692502532928065" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/app/src/main/res/layout/fragment_movie_overview.xml" value="0.2692502532928065" />
@@ -24,6 +25,15 @@
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviedetails/src/main/res/layout/movie_media_content.xml" value="0.37916666666666665" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviedetails/src/main/res/layout/movie_overview_content.xml" value="0.37916666666666665" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviedetails/src/main/res/menu/details_bottom_bar_menu.xml" value="0.32916666666666666" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/bg_item_discover_selection.xml" value="0.4111111111111111" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/bg_release_date_layout.xml" value="0.4111111111111111" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/discover_app_bar_content_view.xml" value="0.39809782608695654" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/discover_selection_view.xml" value="0.39809782608695654" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/discover_toolbar_tools.xml" value="0.39809782608695654" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/item_category.xml" value="0.39809782608695654" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/item_discover_selection.xml" value="0.39809782608695654" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/item_subcategory.xml" value="0.39809782608695654" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/layout.xml" value="0.39809782608695654" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/ui-kit/src/main/res/layout/view_main_background.xml" value="0.32916666666666666" />
       </map>
     </option>

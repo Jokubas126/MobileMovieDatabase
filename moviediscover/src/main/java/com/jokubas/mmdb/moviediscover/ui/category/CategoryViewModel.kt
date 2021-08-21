@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.discover
+package com.jokubas.mmdb.moviediscover.ui.category
 
 import com.jokubas.mmdb.model.data.entities.Category
 import com.jokubas.mmdb.model.data.entities.CategoryType

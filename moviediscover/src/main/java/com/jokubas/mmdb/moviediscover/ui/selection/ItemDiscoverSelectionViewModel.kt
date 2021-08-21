@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.movielists.discover
+package com.jokubas.mmdb.moviediscover.ui.selection
 
 data class ItemDiscoverSelectionViewModel(
     val selectionName: String

@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.discover
+package com.jokubas.mmdb.moviediscover.ui.discover
 
 import android.view.View
 import com.jokubas.mmdb.model.data.entities.Category

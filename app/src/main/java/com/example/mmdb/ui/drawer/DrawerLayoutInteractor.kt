@@ -6,7 +6,7 @@ import android.text.style.TextAppearanceSpan
 import com.example.mmdb.R
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.actions.AboutFragmentAction
-import com.example.mmdb.navigation.actions.DiscoverFragmentAction
+import com.jokubas.mmdb.moviediscover.actions.DiscoverFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.google.android.material.navigation.NavigationView
@@ -22,7 +22,7 @@ class DrawerLayoutInteractor(private val context: Context) {
             when (menuItem.itemId) {
                 R.id.menu_discover -> {
                     navigationController.goTo(
-                        action = DiscoverFragmentAction(),
+                        action = com.jokubas.mmdb.moviediscover.actions.DiscoverFragmentAction(),
                         animation = NavigationController.Animation.FromBottom,
                         useWrapper = false
                     )

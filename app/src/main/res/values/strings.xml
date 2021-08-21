@@ -12,13 +12,6 @@
     <string name="discover_movie_grid">Discover:&#160;</string>
     <string name="discover_fragment">Discover</string>
 
-
-
-
-    <!-- Release date related -->
-
-    <string name="release_year_title">Release year</string>
-
     <!-- Custom lists -->
 
     <string name="create_new_list">Create a new list</string>

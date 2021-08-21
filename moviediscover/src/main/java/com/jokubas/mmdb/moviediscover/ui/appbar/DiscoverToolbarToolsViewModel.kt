@@ -1,4 +1,4 @@
-package com.example.mmdb.ui.discover
+package com.jokubas.mmdb.moviediscover.ui.appbar
 
 class DiscoverToolbarToolsViewModel(
     val onConfirmClicked: (() -> Unit)? = null

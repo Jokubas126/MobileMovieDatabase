@@ -1,14 +1,14 @@
-package com.example.mmdb.ui.discover
+package com.jokubas.mmdb.moviediscover.ui.category
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mmdb.databinding.ItemCategoryBinding
-import com.example.mmdb.databinding.ItemSubcategoryBinding
 import com.jokubas.mmdb.model.data.entities.Category
 import com.jokubas.mmdb.model.data.entities.CategoryType
 import com.jokubas.mmdb.model.data.entities.Subcategory
+import com.jokubas.mmdb.moviediscover.databinding.ItemCategoryBinding
+import com.jokubas.mmdb.moviediscover.databinding.ItemSubcategoryBinding
 
 class ItemsExpandableAdapter(
     private val category: Category,

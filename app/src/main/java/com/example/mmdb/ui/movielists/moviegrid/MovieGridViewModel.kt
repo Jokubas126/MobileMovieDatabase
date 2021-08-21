@@ -8,7 +8,7 @@ import com.example.mmdb.BR
 import com.example.mmdb.R
 import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.example.mmdb.navigation.actions.MovieListType
-import com.example.mmdb.ui.movielists.discover.DiscoverSelectionViewModel
+import com.jokubas.mmdb.moviediscover.ui.selection.DiscoverSelectionViewModel
 import com.example.mmdb.ui.movielists.pageselection.PageSelectionListViewModel
 import com.jokubas.mmdb.feedback_ui.error.ErrorViewModel
 import com.jokubas.mmdb.feedback_ui.LoadingViewModel
