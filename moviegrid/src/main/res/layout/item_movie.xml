@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.jokubas.mmdb.moviegrid.ItemMovieViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/general_margin_half">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardBackgroundColor="@color/grey_150"
+            app:cardCornerRadius="@dimen/default_card_corner_radius"
+            app:cardElevation="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?android:selectableItemBackground"
+                android:onClick="@{() -> viewModel.eventListener.onItemSelected.invoke()}"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/movie_poster_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/movie_image"
+                        android:gravity="center_horizontal"
+                        app:imageUriString="@{viewModel.movie.posterImageUriString}"
+                        app:imageUrl="@{viewModel.movie.posterImageUrl}" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|top"
+                        android:background="@color/white_80">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginBottom="3dp">
+
+                            <ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="7dp"
+                                android:activated="@{viewModel.inWatchlist}"
+                                android:background="@drawable/ic_watchlist_star"
+                                android:onClick="@{() -> viewModel.onWatchlistClicked()}"
+                                tools:ignore="ContentDescription" />
+
+                            <!--<ImageButton
+                                android:id="@+id/playlist_add_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="7dp"
+                                android:background="@drawable/ic_playlist_add"
+                                android:onClick="@{() -> viewModel.eventListener.onCustomListSelected.invoke()}"
+                                tools:ignore="ContentDescription" />-->
+
+                            <!--<ImageButton
+                                android:id="@+id/delete_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="7dp"
+                                android:background="@drawable/ic_delete"
+                                android:onClick="@{() -> viewModel.eventListener.onDeleteSelected.invoke()}"
+                                android:visibility="@{viewModel.isRemote ? View.GONE : View.VISIBLE}"
+                                tools:ignore="ContentDescription" />-->
+
+                        </LinearLayout>
+                    </FrameLayout>
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/general_margin_half"
+                    android:layout_marginEnd="@dimen/general_margin_half"
+                    android:layout_marginBottom="@dimen/general_margin_half"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/movie_title_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.movie.title}"
+                        android:textAppearance="@style/TitleCard" />
+
+                    <TextView
+                        android:id="@+id/movie_release_date_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.movie.releaseDate}"
+                        android:textAppearance="@style/ContentCard" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/movie_score_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.movie.score}"
+                            android:textAppearance="@style/ContentCard" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/score_ending"
+                            android:textAppearance="@style/ContentCard" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/movie_genre_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.movie.genresString}"
+                        android:textAppearance="@style/ContentCard" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</layout>

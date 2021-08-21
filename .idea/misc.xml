@@ -26,7 +26,16 @@
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviedetails/src/main/res/layout/movie_overview_content.xml" value="0.37916666666666665" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviedetails/src/main/res/menu/details_bottom_bar_menu.xml" value="0.32916666666666666" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/bg_item_discover_selection.xml" value="0.4111111111111111" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/bg_page_list_container.xml" value="0.4074074074074074" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/bg_page_number.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/bg_page_number_disabled.xml" value="0.4074074074074074" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/bg_page_number_selector.xml" value="0.4074074074074074" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/bg_release_date_layout.xml" value="0.4111111111111111" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/ic_delete.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/ic_playlist_add.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/ic_star_empty.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/ic_star_full.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/drawable/ic_watchlist_star.xml" value="0.4759259259259259" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/discover_app_bar_content_view.xml" value="0.39809782608695654" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/discover_selection_view.xml" value="0.39809782608695654" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/discover_toolbar_tools.xml" value="0.39809782608695654" />
@@ -34,6 +43,24 @@
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/item_discover_selection.xml" value="0.39809782608695654" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/item_subcategory.xml" value="0.39809782608695654" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviediscover/src/main/res/layout/layout.xml" value="0.39809782608695654" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/drawable/bg_item_discover_selection.xml" value="0.3892307692307692" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/drawable/bg_page_list_container.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/drawable/bg_page_number.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/drawable/bg_page_number_disabled.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/drawable/bg_page_number_selector.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/drawable/ic_delete.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/drawable/ic_playlist_add.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/drawable/ic_star_empty.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/drawable/ic_star_full.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/drawable/ic_watchlist_star.xml" value="0.4759259259259259" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/layout/discover_selection_view.xml" value="0.37916666666666665" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/layout/fragment_movies_grid.xml" value="0.39311594202898553" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/layout/item_discover_selection.xml" value="0.37916666666666665" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/layout/item_movie.xml" value="0.4841485507246377" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/layout/item_page.xml" value="0.39311594202898553" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/layout/layoutsa.xml" value="0.37916666666666665" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/layout/movie_grid_content.xml" value="0.39311594202898553" />
+        <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/moviegrid/src/main/res/layout/page_selection_list.xml" value="0.39311594202898553" />
         <entry key="..\:/Projects/Personal/Android/MobileMovieDatabase/ui-kit/src/main/res/layout/view_main_background.xml" value="0.32916666666666666" />
       </map>
     </option>

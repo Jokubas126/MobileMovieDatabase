@@ -4,16 +4,17 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.mmdb.config.AppConfig
 import com.example.mmdb.config.requireAppConfig
-import com.jokubas.mmdb.util.navigationtools.ConfigProvider
 import com.example.mmdb.navigation.NavigationController
-import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.navigation.requireNavController
-import com.example.mmdb.ui.movielists.moviegrid.ItemMovieEventListener
-import com.example.mmdb.ui.movielists.moviegrid.MovieGridFragmentConfig
 import com.jokubas.mmdb.model.data.entities.Genre
 import com.jokubas.mmdb.model.data.entities.MovieResults
 import com.jokubas.mmdb.model.data.entities.mapGenres
+import com.jokubas.mmdb.moviedetails.actions.DetailsFragmentAction
+import com.jokubas.mmdb.moviegrid.ItemMovieEventListener
+import com.jokubas.mmdb.moviegrid.MovieGridFragmentConfig
+import com.jokubas.mmdb.moviegrid.actions.MovieListType
 import com.jokubas.mmdb.util.DataResponse
+import com.jokubas.mmdb.util.navigationtools.ConfigProvider
 import kotlinx.coroutines.flow.onEach
 
 const val MAX_MOVIES_FOR_PAGE = 20
@@ -51,8 +52,8 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
                                 pageFlow = page,
                                 startYear = startYear,
                                 endYear = endYear,
-                                genreKeys = genres.map { it.code },
-                                languageKeys = languages.map { it.code }
+                                genreKeys = genres,
+                                languageKeys = languages
                             )
                         }
                     }
@@ -81,7 +82,7 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
                 ItemMovieEventListener(
                     onItemSelected = {
                         navController.goTo(
-                            action = com.jokubas.mmdb.moviedetails.actions.DetailsFragmentAction(
+                            action = DetailsFragmentAction(
                                 movieId = movieId,
                                 isRemote = isRemote
                             ),

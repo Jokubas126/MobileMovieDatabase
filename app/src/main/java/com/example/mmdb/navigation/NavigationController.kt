@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.mmdb.R
 import com.example.mmdb.config.DrawerConfig
-import com.example.mmdb.navigation.actions.WrappedFragmentAction
+import com.jokubas.mmdb.util.navigationtools.WrappedFragmentAction
 import com.example.mmdb.navigation.configproviders.NavigationWrapperFragmentConfigProvider
 import com.example.mmdb.ui.NavigationWrapperFragment
 import com.example.mmdb.ui.NavigationWrapperFragmentArgs

@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import com.example.mmdb.config.AppConfig
 import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.navigation.NavigationController
-import com.example.mmdb.navigation.actions.MovieGridFragmentAction
-import com.example.mmdb.navigation.actions.MovieListType
 import com.example.mmdb.navigation.requireNavController
 import com.jokubas.mmdb.moviediscover.databinding.DiscoverAppBarContentViewBinding
 import com.jokubas.mmdb.moviediscover.databinding.DiscoverToolbarToolsBinding
@@ -16,6 +14,8 @@ import com.jokubas.mmdb.moviediscover.model.repositories.CategoryRepository
 import com.jokubas.mmdb.moviediscover.ui.appbar.DiscoverAppBarContentViewModel
 import com.jokubas.mmdb.moviediscover.ui.appbar.DiscoverToolbarToolsViewModel
 import com.jokubas.mmdb.moviediscover.ui.discover.DiscoverFragmentConfig
+import com.jokubas.mmdb.moviegrid.actions.MovieGridFragmentAction
+import com.jokubas.mmdb.moviegrid.actions.MovieListType
 import com.jokubas.mmdb.util.navigationtools.ConfigProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -84,19 +84,26 @@ class DiscoverFragmentConfigProvider : ConfigProvider<DiscoverFragmentConfig> {
                 }
             },
             provideToolbarToolsView = {
-                fragment.context?.let {
-                    DiscoverToolbarToolsBinding.inflate(LayoutInflater.from(it)).apply {
+                fragment.context?.let { context ->
+                    DiscoverToolbarToolsBinding.inflate(LayoutInflater.from(context)).apply {
                         viewModel = DiscoverToolbarToolsViewModel(
                             onConfirmClicked = {
                                 appConfig.toolbarConfig.setBackFragment()
+                                val startYearString = startYear.value.toString()
+                                    .takeUnless { startYear.value == INITIAL_START_YEAR_VALUE }
                                 navController.goTo(
                                     action = MovieGridFragmentAction(
                                         MovieListType.Remote.Discover(
-                                            startYear = startYear.value.toString()
-                                                .takeUnless { startYear.value == INITIAL_START_YEAR_VALUE },
+                                            startYear = startYearString,
                                             endYear = endYear.value.toString(),
-                                            genres = checkedGenres,
-                                            languages = checkedLanguages
+                                            genres = checkedGenres.map { it.code },
+                                            languages = checkedLanguages.map { it.code },
+                                            discoverNameList = listOfNotNull(
+                                                startYearString?.let { "From: $startYearString" },
+                                                "To: ${endYear.value}"
+                                            )
+                                                .plus(checkedGenres.map { it.name })
+                                                .plus(checkedLanguages.map { it.name })
                                         )
                                     ),
                                     animation = NavigationController.Animation.FromRight

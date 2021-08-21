@@ -77,6 +77,7 @@ dependencies {
     implementation project(':model:room')
     implementation project(':moviediscover')
     implementation project(':moviedetails')
+    implementation project(':moviegrid')
     implementation project(':util')
     implementation project(':feedback-ui')
     implementation project(':ui-kit')

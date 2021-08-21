@@ -6,10 +6,9 @@ import android.text.style.TextAppearanceSpan
 import com.example.mmdb.R
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.actions.AboutFragmentAction
-import com.jokubas.mmdb.moviediscover.actions.DiscoverFragmentAction
-import com.example.mmdb.navigation.actions.MovieListType
-import com.example.mmdb.navigation.actions.MovieGridFragmentAction
 import com.google.android.material.navigation.NavigationView
+import com.jokubas.mmdb.moviegrid.actions.MovieGridFragmentAction
+import com.jokubas.mmdb.moviegrid.actions.MovieListType
 
 class DrawerLayoutInteractor(private val context: Context) {
 

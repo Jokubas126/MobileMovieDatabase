@@ -11,7 +11,7 @@ import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.configproviders.NavigationWrapperFragmentConfigProvider
 import com.example.mmdb.ui.drawer.DrawerBehaviorInteractor
 import com.example.mmdb.ui.drawer.DrawerLayoutInteractor
-import com.example.mmdb.navigation.actions.MovieGridFragmentAction
+import com.jokubas.mmdb.moviegrid.actions.MovieGridFragmentAction
 import com.jokubas.mmdb.util.extensions.adjustStatusBar
 import com.jokubas.mmdb.util.extensions.setLockMode
 
