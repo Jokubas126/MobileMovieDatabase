@@ -1,16 +1,14 @@
 package com.jokubas.mmdb.moviedetails.model.entities
 
 import android.content.Context
-import androidx.room.*
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.jokubas.mmdb.moviedetails.model.local.converters.PersonListTypeConverter
 import com.jokubas.mmdb.util.extensions.imageUrlToFileUriString
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
-import kotlinx.serialization.json.JsonNames
-import java.lang.reflect.Type
-import java.util.*
 
 @Serializable
 @Entity(tableName = "credits")
@@ -44,38 +42,4 @@ class Credits(
     }
 }
 
-class PersonListTypeConverter {
 
-    @TypeConverter
-    fun personListToString(personList: List<Person>?): String? {
-        return Gson().toJson(personList)
-    }
-
-    @TypeConverter
-    fun stringToIntList(string: String?): List<Person>? {
-        if (string == null)
-            return Collections.emptyList()
-        val listType: Type = object : TypeToken<List<Person?>?>() {}.type
-        return Gson().fromJson(string, listType)
-    }
-}
-
-@Serializable
-data class Person(
-    @ColumnInfo(name = "name")
-    @SerialName("name")
-    val name: String,
-
-    @ColumnInfo(name = "position")
-    @JsonNames(*["job"])
-    @SerialName("character")
-    val position: String,
-
-    @ColumnInfo(name = "profile_image_uri_path")
-    @SerialName("profile_path")
-    val profileImageUrl: String? = null
-) {
-    @Transient
-    @ColumnInfo(name = "profile_image_uri_string")
-    var profileImageUriString: String? = null
-}

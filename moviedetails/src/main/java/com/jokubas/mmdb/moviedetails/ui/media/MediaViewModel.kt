@@ -1,11 +1,11 @@
 package com.jokubas.mmdb.moviedetails.ui.media
 
 import androidx.databinding.ObservableField
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.jokubas.mmdb.feedback_ui.LoadingViewModel
 import com.jokubas.mmdb.feedback_ui.error.ErrorViewModel
 import com.jokubas.mmdb.feedback_ui.error.GenericErrorViewModels
-import com.jokubas.mmdb.moviedetails.model.entities.filterMainTrailer
 import com.jokubas.mmdb.moviedetails.BR
 import com.jokubas.mmdb.moviedetails.R
 import com.jokubas.mmdb.moviedetails.actions.InnerDetailsAction
@@ -47,7 +47,6 @@ class MediaViewModel(
                 config.provideImages.invoke(action.movieId, action.isRemote)
             ) { trailerResponse, imagesResponse -> trailerResponse to imagesResponse }
                 .collect { (trailerResponse, imagesResponse) ->
-                    val mainTrailer = trailerResponse.body()?.filterMainTrailer()
                     when {
                         trailerResponse is DataResponse.Loading && imagesResponse is DataResponse.Loading -> {
                             item.set(LoadingViewModel)
@@ -55,12 +54,12 @@ class MediaViewModel(
                         trailerResponse is DataResponse.Error && imagesResponse is DataResponse.Error -> {
                             item.set(networkErrorViewModel)
                         }
-                        mainTrailer == null && imagesResponse.body()?.backdropList?.isEmpty() == true
+                        trailerResponse.body()?.mainTrailer == null && imagesResponse.body()?.backdropList?.isEmpty() == true
                                 && imagesResponse.body()?.posterList?.isEmpty() == true -> {
                             item.set(GenericErrorViewModels.EmptyViewModel)
                         }
                         else -> {
-                            mainTrailer?.let {
+                            trailerResponse.body()?.mainTrailer?.let { mainTrailer ->
                                 mediaContentViewModel?.updateTrailer(mainTrailer)
                                     ?: item.set(
                                         MediaContentViewModel(
