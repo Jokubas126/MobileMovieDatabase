@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.moviedetails.model.local.converters
+package com.jokubas.mmdb.moviedetails.model.room.converters
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

@@ -4,8 +4,8 @@ import android.content.Context
 import android.net.Uri
 import com.jokubas.mmdb.moviedetails.model.entities.Credits
 import com.jokubas.mmdb.moviedetails.model.entities.Images
-import com.jokubas.mmdb.moviedetails.model.local.databases.CreditsDatabase
-import com.jokubas.mmdb.moviedetails.model.local.databases.ImagesDatabase
+import com.jokubas.mmdb.moviedetails.model.room.databases.CreditsDatabase
+import com.jokubas.mmdb.moviedetails.model.room.databases.ImagesDatabase
 import com.jokubas.mmdb.util.DataResponse
 import kotlinx.coroutines.flow.mapNotNull
 import java.io.File

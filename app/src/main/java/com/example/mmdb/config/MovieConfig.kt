@@ -1,18 +1,17 @@
 package com.example.mmdb.config
 
 import android.app.Application
-import com.jokubas.mmdb.model.remote.repositories.CategoryRepository
 import com.jokubas.mmdb.model.remote.repositories.RemoteMovieRepository
 import com.jokubas.mmdb.model.remote.services.MovieService
 import com.jokubas.mmdb.model.room.repositories.CustomMovieListRepository
 import com.jokubas.mmdb.model.room.repositories.GenresRepository
 import com.jokubas.mmdb.model.room.repositories.RoomMovieRepository
 import com.jokubas.mmdb.model.room.repositories.WatchlistRepository
-import com.jokubas.mmdb.moviedetails.model.local.databases.CreditsDatabase
-import com.jokubas.mmdb.moviedetails.model.local.databases.ImagesDatabase
 import com.jokubas.mmdb.moviedetails.model.repositories.RemoteMovieDetailsRepository
 import com.jokubas.mmdb.moviedetails.model.repositories.RoomMovieDetailsRepository
 import com.jokubas.mmdb.moviedetails.model.services.MovieDetailsService
+import com.jokubas.mmdb.moviediscover.model.repositories.CategoryRepository
+import com.jokubas.mmdb.moviediscover.model.services.MovieDiscoverService
 import okhttp3.OkHttpClient
 
 class MovieConfig(
@@ -57,7 +56,7 @@ class MovieConfig(
 
     val categoryRepository: CategoryRepository by lazy {
         CategoryRepository(
-            service = MovieService.create(
+            service = MovieDiscoverService.create(
                 baseUrl = movieServiceUrl,
                 httpClient = httpClientBuilder.build()
             )

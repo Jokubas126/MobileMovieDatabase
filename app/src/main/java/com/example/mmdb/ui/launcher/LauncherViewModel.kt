@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mmdb.config.AppConfig
 import com.jokubas.mmdb.util.LiveEvent
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -38,8 +37,7 @@ class LauncherViewModel(
 
     val update: () -> Unit = {
         viewModelScope.launch(Dispatchers.IO) {
-            val genres = movieRepository.getGenres()
-            genres.body()?.let {
+            movieRepository.getGenres().body()?.let {
                 genresRepository.updateGenres(it.genreList)
                 isGenresLoaded = true
                 checkIfAllLoaded()

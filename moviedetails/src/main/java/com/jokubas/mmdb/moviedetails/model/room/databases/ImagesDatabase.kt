@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.moviedetails.model.local.databases
+package com.jokubas.mmdb.moviedetails.model.room.databases
 
 import android.content.Context
 import androidx.room.Database
@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.jokubas.mmdb.moviedetails.model.entities.Images
-import com.jokubas.mmdb.moviedetails.model.local.converters.ImageListTypeConverter
-import com.jokubas.mmdb.moviedetails.model.local.dao.ImagesDao
+import com.jokubas.mmdb.moviedetails.model.room.converters.ImageListTypeConverter
+import com.jokubas.mmdb.moviedetails.model.room.dao.ImagesDao
 
 private const val DATABASE = "images"
 

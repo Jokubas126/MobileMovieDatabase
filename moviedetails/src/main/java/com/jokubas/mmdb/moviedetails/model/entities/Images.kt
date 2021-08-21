@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.jokubas.mmdb.moviedetails.model.local.converters.ImageListTypeConverter
+import com.jokubas.mmdb.moviedetails.model.room.converters.ImageListTypeConverter
 import com.jokubas.mmdb.util.extensions.imageUrlToFileUriString
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

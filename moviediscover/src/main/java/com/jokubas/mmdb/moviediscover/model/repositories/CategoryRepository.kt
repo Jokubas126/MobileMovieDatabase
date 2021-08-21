@@ -1,14 +1,17 @@
-package com.jokubas.mmdb.model.remote.repositories
+package com.jokubas.mmdb.moviediscover.model.repositories
 
-import com.jokubas.mmdb.model.data.entities.*
-import com.jokubas.mmdb.model.remote.services.MovieService
-import com.jokubas.mmdb.util.*
+import com.jokubas.mmdb.moviediscover.model.entities.Category
+import com.jokubas.mmdb.moviediscover.model.entities.CategoryType
+import com.jokubas.mmdb.moviediscover.model.entities.Subcategory
+import com.jokubas.mmdb.moviediscover.model.services.MovieDiscoverService
+import com.jokubas.mmdb.util.DataResponse
 import com.jokubas.mmdb.util.constants.MOVIE_DB_API_KEY
-import kotlinx.coroutines.flow.*
-import retrofit2.Response
+import com.jokubas.mmdb.util.defaultRemap
+import com.jokubas.mmdb.util.toDataResponse
+import kotlinx.coroutines.flow.flow
 
 class CategoryRepository(
-    private val service: MovieService
+    private val service: MovieDiscoverService
 ) {
 
     fun categories() = flow<DataResponse<List<Category>>> {

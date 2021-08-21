@@ -1,7 +1,7 @@
 package com.jokubas.mmdb.moviediscover.ui.category
 
-import com.jokubas.mmdb.model.data.entities.Category
-import com.jokubas.mmdb.model.data.entities.CategoryType
+import com.jokubas.mmdb.moviediscover.model.entities.Category
+import com.jokubas.mmdb.moviediscover.model.entities.CategoryType
 
 class CategoryViewModel(
     category: Category,

@@ -1,18 +1,18 @@
 package com.jokubas.mmdb.model.remote.services
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.jokubas.mmdb.model.data.entities.*
+import com.jokubas.mmdb.model.data.entities.Genres
+import com.jokubas.mmdb.model.data.entities.Movie
+import com.jokubas.mmdb.model.data.entities.MovieResults
 import com.jokubas.mmdb.util.constants.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import okhttp3.OkHttpClient
-import retrofit2.Response
 
 interface MovieService {
 
@@ -32,9 +32,6 @@ interface MovieService {
 
     @GET("/3/genre/movie/list")
     suspend fun genres(@Query(QUERY_API_KEY) apiKey: String): Response<Genres>
-
-    @GET("/3/configuration/languages")
-    suspend fun languages(@Query(QUERY_API_KEY) apiKey: String): Response<List<Subcategory>>
 
     @GET("/3/search/movie")
     suspend fun searchedMovies(

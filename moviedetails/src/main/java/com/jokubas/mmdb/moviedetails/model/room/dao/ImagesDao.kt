@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.moviedetails.model.local.dao
+package com.jokubas.mmdb.moviedetails.model.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

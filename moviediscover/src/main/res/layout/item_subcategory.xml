@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="com.jokubas.mmdb.moviediscover.ui.discover.category.SubCategoryViewModel" />
+            type="com.jokubas.mmdb.moviediscover.ui.category.SubCategoryViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

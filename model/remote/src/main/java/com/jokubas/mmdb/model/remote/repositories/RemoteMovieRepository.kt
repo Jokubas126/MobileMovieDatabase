@@ -1,18 +1,19 @@
 package com.jokubas.mmdb.model.remote.repositories
 
-import com.jokubas.mmdb.model.data.entities.*
+import com.jokubas.mmdb.model.data.entities.Movie
+import com.jokubas.mmdb.model.data.entities.MovieResults
+import com.jokubas.mmdb.model.data.entities.toMovieSummary
 import com.jokubas.mmdb.model.remote.services.MovieService
 import com.jokubas.mmdb.util.DataResponse
 import com.jokubas.mmdb.util.constants.KEY_POPULAR
 import com.jokubas.mmdb.util.constants.MOVIE_DB_API_KEY
-import com.jokubas.mmdb.util.constants.MOVIE_DB_IMAGE_LANGUAGE_EN
 import com.jokubas.mmdb.util.constants.MOVIE_DB_LANGUAGE_EN
 import com.jokubas.mmdb.util.dataResponseFlow
-import com.jokubas.mmdb.util.toDataResponseFlow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import retrofit2.Response
-import kotlin.math.*
+import kotlin.math.ceil
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 class RemoteMovieRepository(
     private val service: MovieService
@@ -47,17 +48,13 @@ class RemoteMovieRepository(
         idFlow: Flow<List<Int>>,
         pageFlow: StateFlow<Int>,
         maxPerPage: Int
-    ) = flow<DataResponse<MovieResults>> {
+    ) = flow {
 
         var lastPage = pageFlow.value
 
         emit(DataResponse.Loading())
-        combine(
-            idFlow,
-            pageFlow
-        ) { ids, page ->
-            Pair(ids, page)
-        }.collect { (ids, page) ->
+        combine(idFlow, pageFlow) { ids, page -> ids to page }.collect { (ids, page) ->
+
             if (lastPage != page) {
                 emit(DataResponse.Loading())
                 lastPage = page
@@ -104,5 +101,4 @@ class RemoteMovieRepository(
     }
 
     suspend fun getGenres() = service.genres(MOVIE_DB_API_KEY)
-
 }

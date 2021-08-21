@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.moviedetails.model.local.databases
+package com.jokubas.mmdb.moviedetails.model.room.databases
 
 import android.content.Context
 import androidx.room.Database
@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.jokubas.mmdb.moviedetails.model.entities.Credits
-import com.jokubas.mmdb.moviedetails.model.local.converters.PersonListTypeConverter
-import com.jokubas.mmdb.moviedetails.model.local.dao.CreditsDao
+import com.jokubas.mmdb.moviedetails.model.room.converters.PersonListTypeConverter
+import com.jokubas.mmdb.moviedetails.model.room.dao.CreditsDao
 
 private const val DATABASE = "credits"
 

@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.jokubas.mmdb.model.data.entities.Category
-import com.jokubas.mmdb.model.data.entities.CategoryType
-import com.jokubas.mmdb.model.data.entities.Subcategory
+import com.jokubas.mmdb.moviediscover.model.entities.Category
+import com.jokubas.mmdb.moviediscover.model.entities.CategoryType
+import com.jokubas.mmdb.moviediscover.model.entities.Subcategory
 import com.jokubas.mmdb.moviediscover.databinding.ItemCategoryBinding
 import com.jokubas.mmdb.moviediscover.databinding.ItemSubcategoryBinding
 

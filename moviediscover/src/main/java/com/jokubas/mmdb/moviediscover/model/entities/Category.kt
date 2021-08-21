@@ -1,4 +1,4 @@
-package com.jokubas.mmdb.model.data.entities
+package com.jokubas.mmdb.moviediscover.model.entities
 
 import android.os.Parcelable
 import com.jokubas.mmdb.model.data.util.KEY_LANGUAGE_ISO_CODE

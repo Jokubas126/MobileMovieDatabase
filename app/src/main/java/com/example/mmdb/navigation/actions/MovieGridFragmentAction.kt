@@ -1,7 +1,7 @@
 package com.example.mmdb.navigation.actions
 
 import android.os.Parcelable
-import com.jokubas.mmdb.model.data.entities.Subcategory
+import com.jokubas.mmdb.moviediscover.model.entities.Subcategory
 import com.jokubas.mmdb.util.constants.*
 import kotlinx.android.parcel.Parcelize
 

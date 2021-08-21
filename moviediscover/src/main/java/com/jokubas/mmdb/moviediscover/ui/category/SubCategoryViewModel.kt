@@ -1,8 +1,8 @@
 package com.jokubas.mmdb.moviediscover.ui.category
 
 import androidx.databinding.ObservableBoolean
-import com.jokubas.mmdb.model.data.entities.CategoryType
-import com.jokubas.mmdb.model.data.entities.Subcategory
+import com.jokubas.mmdb.moviediscover.model.entities.CategoryType
+import com.jokubas.mmdb.moviediscover.model.entities.Subcategory
 
 data class SubCategoryViewModel(
     val subcategory: Subcategory,
