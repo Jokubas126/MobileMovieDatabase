@@ -10,6 +10,7 @@ import com.jokubas.mmdb.moviegrid.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
@@ -20,8 +21,7 @@ class PageSelectionListViewModel(collectCoroutineScope: CoroutineScope) {
     val pageSelectionListVisibility: ObservableInt = ObservableInt(View.GONE)
 
     private val _currentPage: MutableStateFlow<Int> = MutableStateFlow(1)
-    val currentPage: StateFlow<Int>
-        get() = _currentPage
+    val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
 
     private val totalPages: ObservableInt = ObservableInt(1)
 
@@ -34,9 +34,8 @@ class PageSelectionListViewModel(collectCoroutineScope: CoroutineScope) {
         collectCoroutineScope.launch {
             currentPage.collect { page ->
                 itemsPage.find { it.isCurrentPage.get() }?.isCurrentPage?.set(false)
-                itemsPage.find { it.pageNumber == currentPage.value }?.isCurrentPage?.set(true)
+                itemsPage.find { it.pageNumber == page }?.isCurrentPage?.set(true)
             }
-
         }
         totalPages.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {

@@ -12,16 +12,15 @@ class RemoteMovieRepository(
 ) {
 
     val movieByIdNow: suspend (id: Int) -> Response<Movie> = { id ->
-        service.movieById(
+        service.movie(
             id.toString(),
             MOVIE_DB_API_KEY,
             MOVIE_DB_LANGUAGE_EN
         )
     }
 
-
     suspend fun movieByIdFlow(id: Int) = dataResponseFlow {
-        service.movieById(
+        service.movie(
             id.toString(),
             MOVIE_DB_API_KEY,
             MOVIE_DB_LANGUAGE_EN

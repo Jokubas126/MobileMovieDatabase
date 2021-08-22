@@ -29,7 +29,7 @@ class DiscoverAppBarContentViewModel(
             combine(
                 startYearFlow,
                 endYearFlow
-            ) { start, end -> Pair(start, end) }.collect { (start, end) ->
+            ) { start, end -> start to end }.collect { (start, end) ->
                 startYear.set(
                     start.takeUnless {
                         start == valueFrom.toInt()

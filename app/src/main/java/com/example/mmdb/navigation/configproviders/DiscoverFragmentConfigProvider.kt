@@ -18,7 +18,7 @@ import com.jokubas.mmdb.moviegrid.actions.MovieGridFragmentAction
 import com.jokubas.mmdb.moviegrid.actions.MovieListType
 import com.jokubas.mmdb.util.navigationtools.ConfigProvider
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.util.*
 
 class DiscoverFragmentConfigProvider : ConfigProvider<DiscoverFragmentConfig> {
@@ -34,8 +34,8 @@ class DiscoverFragmentConfigProvider : ConfigProvider<DiscoverFragmentConfig> {
     private val startYear = MutableStateFlow(INITIAL_START_YEAR_VALUE)
     private val endYear = MutableStateFlow(INITIAL_END_YEAR_VALUE)
 
-    private var checkedLanguages = mutableListOf<Subcategory>()
-    private var checkedGenres = mutableListOf<Subcategory>()
+    private val checkedLanguages = mutableListOf<Subcategory>()
+    private val checkedGenres = mutableListOf<Subcategory>()
 
     override fun config(fragment: Fragment): DiscoverFragmentConfig {
 
@@ -71,8 +71,8 @@ class DiscoverFragmentConfigProvider : ConfigProvider<DiscoverFragmentConfig> {
                     ).apply {
                         viewModel = DiscoverAppBarContentViewModel(
                             coroutineScope = coroutineScope,
-                            startYearFlow = startYear as StateFlow<Int>,
-                            endYearFlow = endYear as StateFlow<Int>,
+                            startYearFlow = startYear.asStateFlow(),
+                            endYearFlow = endYear.asStateFlow(),
                             onRangeSliderValueChangedListener = { slider, value, _ ->
                                 when (slider.activeThumbIndex == 0) {
                                     true -> startYear.value = value.toInt()
