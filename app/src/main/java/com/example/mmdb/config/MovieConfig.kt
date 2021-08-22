@@ -12,6 +12,8 @@ import com.jokubas.mmdb.moviedetails.model.repositories.RoomMovieDetailsReposito
 import com.jokubas.mmdb.moviedetails.model.services.MovieDetailsService
 import com.jokubas.mmdb.moviediscover.model.repositories.CategoryRepository
 import com.jokubas.mmdb.moviediscover.model.services.MovieDiscoverService
+import com.jokubas.mmdb.moviegrid.model.repositories.RemoteMovieListRepository
+import com.jokubas.mmdb.moviegrid.model.services.MovieListService
 import okhttp3.OkHttpClient
 
 class MovieConfig(
@@ -27,6 +29,15 @@ class MovieConfig(
     val remoteMovieRepository: RemoteMovieRepository by lazy {
         RemoteMovieRepository(
             service = MovieService.create(
+                baseUrl = movieServiceUrl,
+                httpClient = httpClientBuilder.build()
+            )
+        )
+    }
+
+    val remoteMovieListRepository: RemoteMovieListRepository by lazy {
+        RemoteMovieListRepository(
+            service = MovieListService.create(
                 baseUrl = movieServiceUrl,
                 httpClient = httpClientBuilder.build()
             )

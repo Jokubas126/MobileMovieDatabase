@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.jokubas.mmdb.moviegrid.pageselection.PageSelectionListViewModel" />
+            type="com.jokubas.mmdb.moviegrid.ui.pageselection.PageSelectionListViewModel" />
     </data>
 
     <LinearLayout

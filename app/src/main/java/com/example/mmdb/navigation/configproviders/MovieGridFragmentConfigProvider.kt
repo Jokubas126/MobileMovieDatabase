@@ -6,13 +6,12 @@ import com.example.mmdb.config.AppConfig
 import com.example.mmdb.config.requireAppConfig
 import com.example.mmdb.navigation.NavigationController
 import com.example.mmdb.navigation.requireNavController
-import com.jokubas.mmdb.model.data.entities.Genre
 import com.jokubas.mmdb.model.data.entities.MovieResults
 import com.jokubas.mmdb.model.data.entities.mapGenres
 import com.jokubas.mmdb.moviedetails.actions.DetailsFragmentAction
-import com.jokubas.mmdb.moviegrid.ui.movieitem.ItemMovieEventListener
-import com.jokubas.mmdb.moviegrid.ui.grid.MovieGridFragmentConfig
 import com.jokubas.mmdb.moviegrid.actions.MovieListType
+import com.jokubas.mmdb.moviegrid.ui.grid.MovieGridFragmentConfig
+import com.jokubas.mmdb.moviegrid.ui.movieitem.ItemMovieEventListener
 import com.jokubas.mmdb.util.DataResponse
 import com.jokubas.mmdb.util.navigationtools.ConfigProvider
 import kotlinx.coroutines.flow.onEach
@@ -27,6 +26,7 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
         val navController: NavigationController = fragment.requireNavController()
 
         val remoteMovieRepository = appConfig.movieConfig.remoteMovieRepository
+        val remoteMovieListRepository = appConfig.movieConfig.remoteMovieListRepository
         val localMovieRepository = appConfig.movieConfig.roomMovieRepository
         val watchlistRepository = appConfig.movieConfig.watchlistRepository
         val customMovieListRepository = appConfig.movieConfig.customMovieListRepository
@@ -35,20 +35,19 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
         return MovieGridFragmentConfig(
             lifecycle = fragment.lifecycle,
             provideMovies = { movieListType, page ->
-                val availableGenres: List<Genre> = genresRepository.getAllGenres()
                 when (movieListType) {
                     MovieListType.Remote.Popular,
                     MovieListType.Remote.TopRated,
                     MovieListType.Remote.Upcoming,
                     MovieListType.Remote.NowPlaying -> {
-                        remoteMovieRepository.typeMovies(
+                        remoteMovieListRepository.typeMovies(
                             listType = movieListType.key,
                             pageFlow = page
                         )
                     }
                     is MovieListType.Remote.Discover -> {
                         with(movieListType) {
-                            remoteMovieRepository.discoveredMovies(
+                            remoteMovieListRepository.discoveredMovies(
                                 pageFlow = page,
                                 startYear = startYear,
                                 endYear = endYear,
@@ -58,20 +57,21 @@ class MovieGridFragmentConfigProvider : ConfigProvider<MovieGridFragmentConfig> 
                         }
                     }
                     is MovieListType.Remote.Watchlist -> {
-                        remoteMovieRepository.moviesFromIdFlow(
+                        remoteMovieListRepository.moviesFromIdFlow(
                             idFlow = watchlistRepository.getWatchlistIdsFlow(),
                             pageFlow = page,
+                            provideMovie = remoteMovieRepository.movieByIdNow,
                             maxPerPage = MAX_MOVIES_FOR_PAGE
                         )
                     }
                     else -> {
-                        remoteMovieRepository.typeMovies(
+                        remoteMovieListRepository.typeMovies(
                             pageFlow = page
                         )
                     }
                 }.onEach { response ->
                     (response as? DataResponse.Success<MovieResults>)?.value?.movieList?.forEach {
-                        it.mapGenres(availableGenres)
+                        it.mapGenres(genresRepository.getAllGenres())
                     }
                 }
             },
